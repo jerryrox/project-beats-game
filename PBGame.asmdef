@@ -1,3 +1,16 @@
-﻿{
-	"name": "ProjectBeatsGame"
+{
+    "name": "ProjectBeatsGame",
+    "references": [
+        "GUID:10b2629f775cc431490006156dcdf7c5",
+        "GUID:1bcc9c40bdf0d4875aabc72e48723621",
+        "GUID:8ed0b5b07f2cc47cf9f48cfec9b27d8c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
 }
