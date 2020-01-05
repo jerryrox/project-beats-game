@@ -1,105 +1,101 @@
+using PBGame.Maps;
+using PBGame.Rulesets;
+using PBGame.UI.Navigations.Screens.Songs;
+using PBFramework.Data.Bindables;
+
 namespace PBGame.Configurations
 {
-    /// <summary>
-    /// Types of fields contained in a game configuration.
-    /// </summary>
-    public enum GameConfigTypes {
-    
-        // =================== Convenience
+    public interface IGameConfiguration : IConfiguration
+    {
         /// <summary>
         /// The last selected ruleset mode.
         /// </summary>
-		RulesetMode,
+        ProxyBindable<GameModes> RulesetMode { get; }
         /// <summary>
         /// The last selected mapset sorting field.
         /// </summary>
-		MapsetSort,
+        ProxyBindable<MapsetSorts> MapsetSort { get; }
         /// <summary>
         /// The last selected tab for the map details section in SongsScreen.
         /// </summary>
-		MapDetailTab,
+        ProxyBindable<MapDetailTabs> MapDetailTab { get; }
 
-        // =================== Online
         /// <summary>
         /// Login and displayed username of the player for online access.
         /// </summary>
-		Username,
+        ProxyBindable<string> Username { get; }
         /// <summary>
         /// Login password of the player for online access.
         /// </summary>
-		Password,
+		ProxyBindable<string> Password { get; }
         /// <summary>
         /// Whether the login username should be stored.
         /// </summary>
-		SaveUsername,
+		ProxyBindable<bool> SaveUsername { get; }
         /// <summary>
         /// Whether the login password should be stored.
         /// </summary>
-		SavePassword,
+		ProxyBindable<bool> SavePassword { get; }
 
-        // =================== General
         /// <summary>
         /// Whether unicode texts should be preferred over english/romaji text.
         /// </summary>
-		PreferUnicode,
+		ProxyBindable<bool> PreferUnicode { get; }
 
-        // =================== Audio
         /// <summary>
         /// Overall volume of the game.
         /// </summary>
-		MasterVolume,
+		ProxyBindable<float> MasterVolume { get; }
         /// <summary>
         /// Volume of the music.
         /// </summary>
-		MusicVolume,
+		ProxyBindable<float> MusicVolume { get; }
         /// <summary>
         /// Volume of the hitsounds.
         /// </summary>
-        HitsoundVolume,
+        ProxyBindable<float> HitsoundVolume { get; }
         /// <summary>
         /// Volume of the effect sounds.
         /// </summary>
-		EffectVolume,
+		ProxyBindable<float> EffectVolume { get; }
         /// <summary>
         /// The global offset value in milliseconds.
         /// </summary>
-		GlobalOffset,
+		ProxyBindable<int> GlobalOffset { get; }
         /// <summary>
         /// Whether hitsounds from the beatmap should be used, if available.
         /// </summary>
-		UseBeatmapHitsounds,
+		ProxyBindable<bool> UseBeatmapHitsounds { get; }
 
-        // =================== Graphics
         /// <summary>
         /// Whether FPS counter should be displayed.
         /// </summary>
-		ShowFps,
+		ProxyBindable<bool> ShowFps { get; }
         /// <summary>
         /// Whether storyboard should be enabled during gameplay.
         /// </summary>
-		ShowStoryboard,
+		ProxyBindable<bool> ShowStoryboard { get; }
         /// <summary>
         /// Whether video should be enabled during gameplay.
         /// </summary>
-		ShowVideo,
+		ProxyBindable<bool> ShowVideo { get; }
         /// <summary>
         /// Whether to use the beatmap's skin elements if available.
         /// </summary>
-		UseBeatmapSkins,
+		ProxyBindable<bool> UseBeatmapSkins { get; }
         /// <summary>
         /// Whether blur shader should be used.
         /// </summary>
-		UseBlurShader,
+		ProxyBindable<bool> UseBlurShader { get; }
         /// <summary>
         /// Percentage of the resolution quality.
         /// 1 = 100%, 0.5 = 50%.
         /// </summary>
-		ResolutionQuality,
+		ProxyBindable<float> ResolutionQuality { get; }
 
-        // =================== Gameplay
         /// <summary>
         /// The global setting for background darkness, if not overridden by map configuration.
         /// </summary>
-		BackgroundDim,
+		ProxyBindable<float> BackgroundDim { get; }
     }
 }

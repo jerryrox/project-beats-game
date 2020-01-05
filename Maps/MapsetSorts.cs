@@ -1,4 +1,4 @@
-namespace PBGame.Beatmaps
+namespace PBGame.Maps
 {
     /// <summary>
     /// Types of fields available for mapset sorting.
