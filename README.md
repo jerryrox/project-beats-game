@@ -9,30 +9,30 @@ Slowly making progress 🧩
 - Newtonsoft.Json (Tested with net45 version)
 
 ## To-Dos
+### PBGame
+- BaseGame
+- ProjectBeatsGame
 #### Audio
-- Hitsounds
+- SFX controller poool
+- Music manager
 - Music playlist
 - Metronome
-#### Configurations
-- Mapset config
-- Map config
-- Game config
 #### Graphics
 - Color definitions
 #### IO/Decoding/Beats
+- Establish standard data format for Beats data.
+- Implement decoder for Beats file formats.
 - Decoder for skins
 #### IO/Decoding/Osu
 - Decoder for skins
-- Decoder for Standard map
-- Decoder for Mania map
-- Decoder for Taiko map
-- Decoder for Catch map
+#### IO/Decoding/Osu/Catch
+- HitObjectParser
+#### IO/Decoding/Osu/Mania
+- HitObjectParser
+#### IO/Decoding/Osu/Taiko
+- HitObjectParser
 #### Maps
-- Background
-- Manager
-- Queryer
-- Selection
-- Mapset list
+- Implement date sorting for MapsetList
 #### Networking
 - API to Osu server
 #### Networking/Maps
@@ -40,28 +40,28 @@ Slowly making progress 🧩
 #### Rulesets
 - Ruleset provider for different game modes.
 #### Rulesets/Beats/Simple
-- Implement gameplay elements
 #### Rulesets/Beats/Standard
-- Implement gameplay elements
-#### Rulesets/Judgements
-- Migrate
-#### Rulesets/Maps
-- Mapset
-- Map
-#### Rulesets/Maps/ControlPoints
-#### Rulesets/Maps/Timing
-#### Rulesets/Modes
-#### Rulesets/Objects
-- HitObject
-#### Rulesets/Scoring
+- GameSession
+- ModeService
+#### Rulesets/Beats/Standard/Inputs
+#### Rulesets/Beats/Standard/Maps
+- MapConverter
+- MapProcessor
+#### Rulesets/Beats/Standard/UI
+#### Rulesets/Osu/Catch
+#### Rulesets/Osu/Mania
+#### Rulesets/Osu/Standard
+#### Rulesets/Osu/Taiko
+#### Rulesets/Osu/Catch
+#### Rulesets/UI
 #### Skins
+- Migrate
 #### Stores
+- Migrate
 #### UI
 #### UI/Navigations
 #### UI/Navigations/Overlays
-- 
 #### UI/Navigations/Overlays/Networking
-- 
 #### UI/Navigations/Screens
 - SplashScreen
 - MainMenuScreen
