@@ -2,7 +2,6 @@ using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBFramework;
 using PBFramework.Threading;
-using PBFramework.Networking;
 using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
