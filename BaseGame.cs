@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PBGame.Maps;
+using PBGame.Audio;
+using PBGame.Skins;
 using PBGame.Stores;
 using PBGame.Rulesets;
 using PBGame.Assets.Caching;
 using PBGame.Configurations;
+using PBFramework.Audio;
 using PBFramework.Dependencies;
 
 namespace PBGame
@@ -21,6 +24,11 @@ namespace PBGame
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
+
+        protected SkinManager skinManager;
+
+        protected MusicController musicController;
+        protected SoundPooler soundPooler;
 
         protected MapsetStore mapsetStore;
         protected MapSelection mapSelection;
@@ -59,6 +67,12 @@ namespace PBGame
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
+
+            Dependencies.CacheAs<ISkinManager>(skinManager = new SkinManager());
+            skinManager.DefaultSkin.AssetStore.Load();
+
+            Dependencies.CacheAs<IMusicController>(musicController = MusicController.Create());
+            Dependencies.CacheAs<ISoundPooler>(soundPooler = new SoundPooler(skinManager.DefaultSkin));
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<MapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));

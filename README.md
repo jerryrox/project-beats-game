@@ -13,8 +13,6 @@ Slowly making progress 🧩
 - BaseGame
 - ProjectBeatsGame
 #### Audio
-- SFX controller poool
-- Music manager
 - Music playlist
 - Metronome
 #### Graphics
@@ -22,9 +20,6 @@ Slowly making progress 🧩
 #### IO/Decoding/Beats
 - Establish standard data format for Beats data.
 - Implement decoder for Beats file formats.
-- Decoder for skins
-#### IO/Decoding/Osu
-- Decoder for skins
 #### IO/Decoding/Osu/Catch
 - HitObjectParser
 #### IO/Decoding/Osu/Mania
@@ -54,8 +49,6 @@ Slowly making progress 🧩
 #### Rulesets/Osu/Taiko
 #### Rulesets/Osu/Catch
 #### Rulesets/UI
-#### Skins
-- SkinManager
 #### Stores
 - MapAssetStore
 #### UI

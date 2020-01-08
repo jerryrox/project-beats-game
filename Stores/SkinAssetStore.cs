@@ -40,11 +40,15 @@ namespace PBGame.Stores
         /// </summary>
         protected Dictionary<string, ISkinnable<Texture2D>> textures = new Dictionary<string, ISkinnable<Texture2D>>();
 
-
         /// <summary>
         /// The target skin being serviced.
         /// </summary>
         protected ISkin skin;
+
+
+        public IEnumerable<string> AudioNames => audios.Keys;
+
+        public IEnumerable<string> TextureNames => textures.Keys;
 
 
         public SkinAssetStore(ISkin skin)
