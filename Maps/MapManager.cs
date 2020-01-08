@@ -64,6 +64,9 @@ namespace PBGame.Maps
                 // Refill the mapset list
                 allMapsets.Clear();
                 allMapsets.AddRange(store.Mapsets);
+
+                // TODO: Process for a case where the previously selected map no longer exists.
+
                 // Fill the displayed mapsets list using last search term.
                 Search(lastSearch);
                 // Finished
@@ -80,6 +83,16 @@ namespace PBGame.Maps
         }
 
         public void Sort(MapsetSorts sort) => displayedMapsets.Sort(sort);
+
+        public void DeleteMap(IMap map)
+        {
+            // TODO:
+        }
+
+        public void DeleteMapset(IMapset mapset)
+        {
+            // TODO:
+        }
 
         public IMapset GetRandom()
         {

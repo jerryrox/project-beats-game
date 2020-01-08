@@ -42,6 +42,16 @@ namespace PBGame.Maps
         void Sort(MapsetSorts sort);
 
         /// <summary>
+        /// Deletes the specified map from the current mapset.
+        /// </summary>
+        void DeleteMap(IMap map);
+
+        /// <summary>
+        /// Deletes the specified mapset.
+        /// </summary>
+        void DeleteMapset(IMapset mapset);
+
+        /// <summary>
         /// Returns a random mapset from displayed mapsets.
         /// </summary>
         IMapset GetRandom();
