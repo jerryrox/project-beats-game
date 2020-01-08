@@ -174,7 +174,7 @@ namespace PBGame.Rulesets.Scoring
         protected RankTypes CalculateRank(double acc)
 		{
 			if(acc == 1d)
-				return RankTypes.SS;
+				return RankTypes.X;
 			else if(acc > 0.95)
 				return RankTypes.S;
 			else if(acc > 0.9)

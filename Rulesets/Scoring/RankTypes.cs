@@ -11,8 +11,8 @@ namespace PBGame.Rulesets.Scoring
 		B,
 		A,
 		S,
-		SP, // S plus
-		SS,
-		SSP // SS Plus
+		SH, // S plus
+		X,
+		XH // SS Plus
 	}
 }
