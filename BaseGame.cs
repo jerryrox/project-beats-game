@@ -34,6 +34,7 @@ namespace PBGame
         protected MapSelection mapSelection;
         protected MapManager mapManager;
         protected MusicPlaylist musicPlaylist;
+        protected Metronome metronome;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -79,11 +80,17 @@ namespace PBGame
             Dependencies.CacheAs<MapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
             Dependencies.CacheAs<IMusicPlaylist>(musicPlaylist = new MusicPlaylist(mapManager));
+            Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
         }
 
         /// <summary>
         /// Handles final process after initialization.
         /// </summary>
         protected abstract void PostInitialize();
+
+        protected virtual void Update()
+        {
+            metronome.Update();
+        }
     }
 }

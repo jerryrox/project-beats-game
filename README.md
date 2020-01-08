@@ -12,9 +12,6 @@ Slowly making progress 🧩
 ### PBGame
 - BaseGame
 - ProjectBeatsGame
-#### Audio
-- Music playlist
-- Metronome
 #### Graphics
 - Color definitions
 #### IO/Decoding/Beats
