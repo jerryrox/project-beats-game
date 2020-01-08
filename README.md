@@ -55,9 +55,9 @@ Slowly making progress 🧩
 #### Rulesets/Osu/Catch
 #### Rulesets/UI
 #### Skins
-- Migrate
+- SkinManager
 #### Stores
-- Migrate
+- MapAssetStore
 #### UI
 #### UI/Navigations
 #### UI/Navigations/Overlays

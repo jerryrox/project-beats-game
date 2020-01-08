@@ -18,16 +18,21 @@ namespace PBGame.IO
         /// </summary>
         public static readonly DirectoryInfo Configs;
 
-        
+        /// <summary>
+        /// Skins directory.
+        /// </summary>
+        public static readonly DirectoryInfo Skins;
 
 
         static GameDirectory()
         {
             Maps = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "maps"));
             Configs = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "configs"));
+            Skins = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "skins"));
 
             Maps.Create();
             Configs.Create();
+            Skins.Create();
         }
     }
 }
