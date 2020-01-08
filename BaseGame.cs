@@ -33,6 +33,7 @@ namespace PBGame
         protected MapsetStore mapsetStore;
         protected MapSelection mapSelection;
         protected MapManager mapManager;
+        protected MusicPlaylist musicPlaylist;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -77,6 +78,7 @@ namespace PBGame
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<MapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
+            Dependencies.CacheAs<IMusicPlaylist>(musicPlaylist = new MusicPlaylist(mapManager));
         }
 
         /// <summary>

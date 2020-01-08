@@ -100,6 +100,10 @@ namespace PBGame.Maps
             InvokeChange();
         }
 
+        public IEnumerator<IMapset> GetEnumerator() => mapsets.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
         /// <summary>
         /// Invokes OnChange event.
         /// </summary>

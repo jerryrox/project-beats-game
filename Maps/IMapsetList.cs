@@ -7,7 +7,7 @@ namespace PBGame.Maps
     /// <summary>
     /// Provides helper functionalities wrapped over a plain list of mapsets.
     /// </summary>
-    public interface IMapsetList {
+    public interface IMapsetList : IEnumerable<IMapset> {
     
         /// <summary>
         /// Event called when there was a change in the list.
