@@ -23,8 +23,6 @@ Slowly making progress 🧩
 - HitObjectParser
 #### IO/Decoding/Osu/Taiko
 - HitObjectParser
-#### Maps
-- Implement date sorting for MapsetList
 #### Networking
 - API to Osu server
 #### Networking/Maps
@@ -36,9 +34,6 @@ Slowly making progress 🧩
 - GameSession
 - ModeService
 #### Rulesets/Beats/Standard/Inputs
-#### Rulesets/Beats/Standard/Maps
-- MapConverter
-- MapProcessor
 #### Rulesets/Beats/Standard/UI
 #### Rulesets/Osu/Catch
 #### Rulesets/Osu/Mania
