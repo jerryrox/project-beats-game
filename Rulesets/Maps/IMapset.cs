@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Collections.Generic;
 using PBFramework.Data.Queries;
@@ -13,19 +14,24 @@ namespace PBGame.Rulesets.Maps
         int? MapsetId { get; set; }
 
         /// <summary>
+        /// Date and time of mapset import.
+        /// </summary>
+        DateTime ImportedDate { get; set; }
+
+        /// <summary>
         /// List of maps included in the set.
         /// </summary>
         List<IMap> Maps { get; set; }
 
         /// <summary>
+        /// The storyboard file within the mapset, if exists.
+        /// </summary>
+        FileInfo StoryboardFile { get; set; }
+
+        /// <summary>
         /// Returns the metadata of the mapset.
         /// </summary>
         MapMetadata Metadata { get; }
-
-        /// <summary>
-        /// Returns the storyboard file within the mapset, if exists.
-        /// </summary>
-        FileInfo StoryboardFile { get; }
 
         /// <summary>
         /// Returns the list of files contained in this mapset.

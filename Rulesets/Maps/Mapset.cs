@@ -17,6 +17,8 @@ namespace PBGame.Rulesets.Maps
         [Indexed]
         public int HashCode { get; set; }
 
+        public DateTime ImportedDate { get; set; }
+
         [JsonIgnore]
         public int? MapsetId
         {
@@ -28,10 +30,10 @@ namespace PBGame.Rulesets.Maps
         public List<IMap> Maps { get; set; }
 
         [JsonIgnore]
-        public MapMetadata Metadata => Maps[0].Metadata;
+        public FileInfo StoryboardFile { get; set; }
 
         [JsonIgnore]
-        public virtual FileInfo StoryboardFile => null;
+        public MapMetadata Metadata => Maps[0].Metadata;
 
         [JsonIgnore]
         public List<FileInfo> Files { get; }

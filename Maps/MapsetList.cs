@@ -91,10 +91,8 @@ namespace PBGame.Maps
                 case MapsetSorts.Creator:
                     mapsets.Sort((x, y) => x.Metadata.Creator.CompareTo(y.Metadata.Creator));
                     break;
-
-                    // TODO: Implement
                 case MapsetSorts.Date:
-                    mapsets.Sort((x, y) => x.Metadata.Title.CompareTo(y.Metadata.Title));
+                    mapsets.Sort((x, y) => x.ImportedDate.CompareTo(y.ImportedDate));
                     break;
             }
             InvokeChange();

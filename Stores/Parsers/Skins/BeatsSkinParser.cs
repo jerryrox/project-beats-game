@@ -12,7 +12,7 @@ namespace PBGame.Stores.Parsers.Skins
 {
     public class BeatsSkinParser : ISkinParser {
 
-        public Skin Parse(DirectoryInfo directory)
+        public Skin Parse(DirectoryInfo directory, Skin skin)
         {
             var info = directory.GetFiles("info.txt").FirstOrDefault();
             if(info == null) return null;
@@ -21,7 +21,6 @@ namespace PBGame.Stores.Parsers.Skins
             {
                 var json = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(info.FullName));
 
-                var skin = new Skin();
                 skin.Metadata.Name = json["Name"].ToString();
                 skin.Metadata.Creator = json["Creator"].ToString();
                 return skin;

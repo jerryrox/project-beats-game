@@ -42,10 +42,7 @@ namespace PBGame.Stores
             lock(skins)
             {
                 skins.Clear();
-                using(var results = Database.Query().Preload().GetResult())
-                {
-                    skins.AddRange(results);
-                }
+                skins.AddRange(GetAll());
             }
         }
 
@@ -53,10 +50,14 @@ namespace PBGame.Stores
 
         protected override IDirectoryStorage CreateStorage() => new DirectoryStorage(GameDirectory.Skins.GetSubdirectory("files"));
 
-        protected override Skin ParseData(DirectoryInfo directory)
+        protected override Skin ParseData(DirectoryInfo directory, Skin skin)
         {
+            if (skin == null)
+            {
+                skin = new Skin();
+            }
             // TODO: Support for other data formats.
-            return beatsParser.Parse(directory);
+            return beatsParser.Parse(directory, skin);
         }
     }
 }

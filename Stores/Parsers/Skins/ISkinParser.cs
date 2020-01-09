@@ -11,6 +11,6 @@ namespace PBGame.Stores.Parsers.Skins
         /// <summary>
         /// Parses and returns the skin from specified directory.
         /// </summary>
-        Skin Parse(DirectoryInfo directory);
+        Skin Parse(DirectoryInfo directory, Skin skin);
     }
 }

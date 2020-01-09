@@ -1,11 +1,6 @@
-using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
-using PBGame.Rulesets.Osu.Maps;
 using PBFramework.IO.Decoding;
 using PBFramework.Utils;
 using PBFramework.Debugging;
@@ -22,9 +17,8 @@ namespace PBGame.Stores.Parsers.Maps
             this.modeManager = modeManager;
         }
 
-        public Mapset Parse(DirectoryInfo directory)
+        public Mapset Parse(DirectoryInfo directory, Mapset mapset)
         {
-            OsuMapset mapset = new OsuMapset();
             mapset.Files.AddRange(directory.GetFiles());
 
 			// Search for map files in the directory.

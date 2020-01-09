@@ -48,10 +48,7 @@ namespace PBGame.Stores
             lock (mapsets)
             {
                 mapsets.Clear();
-                using (var results = Database.Query().Preload().GetResult())
-                {
-                    mapsets.AddRange(results);
-                }
+                mapsets.AddRange(GetAll());
             }
         }
 
@@ -59,10 +56,16 @@ namespace PBGame.Stores
 
         protected override IDirectoryStorage CreateStorage() => new DirectoryStorage(GameDirectory.Maps.GetSubdirectory("files"));
 
-        protected override Mapset ParseData(DirectoryInfo directory)
+        protected override Mapset ParseData(DirectoryInfo directory, Mapset mapset)
         {
+            if (mapset == null)
+            {
+                mapset = new Mapset();
+                mapset.ImportedDate = DateTime.Now;
+            }
+            
             // TODO: Support for other data formats.
-            return osuParser.Parse(directory);
+            return osuParser.Parse(directory, mapset);
         }
     }
 }

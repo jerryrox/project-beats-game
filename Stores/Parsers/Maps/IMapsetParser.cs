@@ -11,6 +11,6 @@ namespace PBGame.Stores.Parsers.Maps
         /// <summary>
         /// Parses and returns the mapset from specified directory.
         /// </summary>
-        Mapset Parse(DirectoryInfo directory);
+        Mapset Parse(DirectoryInfo directory, Mapset mapset);
     }
 }
