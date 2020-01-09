@@ -1,10 +1,10 @@
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
+using PBFramework.Graphics;
 
 namespace PBGame.Rulesets
 {
-    // TODO: Provide implementation
     /// <summary>
     /// Interface which provides access to mode-specific evaluations and functions.
     /// </summary>
@@ -49,6 +49,6 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns a new or existing session of this game mode.
         /// </summary>
-        IGameSession GetSession();
+        IGameSession GetSession(IGraphicObject container);
     }
 }

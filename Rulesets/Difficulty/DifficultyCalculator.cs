@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace PBGame.Rulesets.Difficulty
 {
-	public abstract class DifficultyCalculator {
+	public abstract class DifficultyCalculator : IDifficultyCalculator {
 
         /// <summary>
         /// The original map of the converted map.

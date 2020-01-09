@@ -27,9 +27,14 @@ namespace PBGame.Rulesets.Scoring
 		protected Dictionary<HitResults, int> resultCounts = new Dictionary<HitResults, int>();
 
 		/// <summary>
-		/// List of all judgement results recorded for each hit object.
+		/// Table of cached health change factors for each hit result type.
 		/// </summary>
-		protected List<JudgementResult> results = new List<JudgementResult>();
+        protected Dictionary<HitResults, float> healthChangeFactors = new Dictionary<HitResults, float>();
+
+        /// <summary>
+        /// List of all judgement results recorded for each hit object.
+        /// </summary>
+        protected List<JudgementResult> results = new List<JudgementResult>();
 
 		/// <summary>
 		/// The total number of judgement that can be made for current map.
@@ -120,6 +125,10 @@ namespace PBGame.Rulesets.Scoring
 
 			// TODO: Apply mod multiplier.
 			modMultiplier = 1f;
+
+            // Cache health change factor
+            foreach (var hitResult in (HitResults[])Enum.GetValues(typeof(HitResults)))
+                healthChangeFactors[hitResult] = GetHealthChangeFactor(hitResult);
         }
 
         public virtual void ProcessJudgement(JudgementResult result)
@@ -132,6 +141,7 @@ namespace PBGame.Rulesets.Scoring
         public virtual void Dispose()
         {
             resultCounts = null;
+            healthChangeFactors = null;
             results = null;
 
             OnLastJudgement = null;
@@ -166,7 +176,7 @@ namespace PBGame.Rulesets.Scoring
 		/// <summary>
 		/// Returns the amount of health application factor for specified result.
 		/// </summary>
-        protected abstract float GetHealthChangeFactor(JudgementResult result);
+        protected abstract float GetHealthChangeFactor(HitResults hitResult);
 
         /// <summary>
         /// Calculate ranking type from current score progress.
@@ -223,7 +233,7 @@ namespace PBGame.Rulesets.Scoring
             Accuracy.Value = curRawScore / maxRawScore;
 
             // Change health
-            Health.Value = GetHealthChangeFactor(result) * result.Judgement.GetHealthIncrease(result);
+            Health.Value = healthChangeFactors[result.HitResult] * result.Judgement.GetHealthIncrease(result);
         }
 
         /// <summary>

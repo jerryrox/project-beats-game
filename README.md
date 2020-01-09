@@ -32,15 +32,25 @@ Slowly making progress 🧩
 #### Rulesets/Beats/Simple
 #### Rulesets/Beats/Standard
 - GameSession
-- ModeService
+#### Rulesets/Beats/Standard/Difficulty
+- Performance calculator
 #### Rulesets/Beats/Standard/Inputs
 #### Rulesets/Beats/Standard/UI
+- Implement from Rulesets/UI
+#### Rulesets/Beats/Standard/UI/HUD
+- Implement from Rulesets/UI/HUD
 #### Rulesets/Osu/Catch
 #### Rulesets/Osu/Mania
 #### Rulesets/Osu/Standard
 #### Rulesets/Osu/Taiko
 #### Rulesets/Osu/Catch
 #### Rulesets/UI
+- Implement gameplay layer
+- Implement hud container
+- Implement play area container
+- Implement storyboard layer when storyboarding should be supported.
+#### Rulesets/UI/HUD
+- Implement health display
 #### Stores
 - MapAssetStore
 #### UI
