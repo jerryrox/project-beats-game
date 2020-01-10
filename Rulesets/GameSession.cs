@@ -5,6 +5,7 @@ using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.Rulesets
 {
@@ -46,7 +47,11 @@ namespace PBGame.Rulesets
             this.Dependencies.CacheAs<IGameSession<T>>(this);
 
             // Create game gui.
-            CreateGameGui(containerObject, this.Dependencies);
+            GameGui = CreateGameGui(containerObject, this.Dependencies);
+            {
+                GameGui.Anchor = Anchors.Fill;
+                GameGui.RawSize = Vector2.zero;
+            }
         }
 
         public void SetMap(IMap map)

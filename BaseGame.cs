@@ -6,6 +6,7 @@ using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Skins;
 using PBGame.Stores;
+using PBGame.Assets.Fonts;
 using PBGame.Rulesets;
 using PBGame.Assets.Caching;
 using PBGame.Configurations;
@@ -21,6 +22,8 @@ namespace PBGame
         protected GameConfiguration gameConfiguration;
         protected MapConfiguration mapConfiguration;
         protected MapsetConfiguration mapsetConfiguration;
+
+        protected FontManager fontManager;
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
@@ -66,6 +69,8 @@ namespace PBGame
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());
             Dependencies.CacheAs<IMapConfiguration>(mapConfiguration = new MapConfiguration());
             Dependencies.CacheAs<IMapsetConfiguration>(mapsetConfiguration = new MapsetConfiguration());
+
+            Dependencies.CacheAs<IFontManager>(fontManager = new FontManager());
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());

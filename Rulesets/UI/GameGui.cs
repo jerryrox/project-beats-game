@@ -1,5 +1,6 @@
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.Rulesets.UI
 {
@@ -16,10 +17,14 @@ namespace PBGame.Rulesets.UI
             StoryboardLayer = CreateStoryboardLayer();
             {
                 StoryboardLayer.Depth = 0;
+                StoryboardLayer.Anchor = Anchors.Fill;
+                StoryboardLayer.RawSize = Vector2.zero;
             }
             GameplayLayer = CreateGameplayLayer();
             {
                 GameplayLayer.Depth = 1;
+                GameplayLayer.Anchor = Anchors.Fill;
+                GameplayLayer.RawSize = Vector2.zero;
             }
         }
 

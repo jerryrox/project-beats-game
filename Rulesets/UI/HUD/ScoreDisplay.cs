@@ -1,3 +1,4 @@
+using PBGame.Assets.Fonts;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -11,12 +12,13 @@ namespace PBGame.Rulesets.UI.HUD
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IFontManager fontManager)
         {
             ScoreLabel = CreateChild<UguiLabel>("label");
             {
                 ScoreLabel.Anchor = Anchors.Fill;
                 ScoreLabel.RawSize = Vector2.zero;
+                ScoreLabel.Font = fontManager.DefaultFont;
             }
         }
     }
