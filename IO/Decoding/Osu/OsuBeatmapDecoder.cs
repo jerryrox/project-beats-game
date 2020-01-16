@@ -154,7 +154,7 @@ namespace PBGame.IO.Decoding.Osu
 				detail.StackLeniency = ParseUtils.ParseFloat(data.Value);
 				break;
 			case "Mode":
-				detail.GameMode = (GameModes)ParseUtils.ParseInt(data.Value);
+				detail.GameMode = (GameModes)(ParseUtils.ParseInt(data.Value) + GameProviders.Osu);
 
 				switch(detail.GameMode)
 				{

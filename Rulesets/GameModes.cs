@@ -5,11 +5,11 @@ namespace PBGame.Rulesets
     /// </summary>
     public enum GameModes {
     
-        OsuStandard = 0,
+        OsuStandard = GameProviders.Osu,
         // OsuTaiko = 1,
         // OsuCatch = 2,
         // OsuMania = 3,
 
-        BeatsStandard = 10,
+        BeatsStandard = GameProviders.Beats,
     }
 }
