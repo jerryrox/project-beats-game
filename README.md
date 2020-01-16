@@ -23,10 +23,6 @@ Slowly making progress 🧩
 - HitObjectParser
 #### IO/Decoding/Osu/Taiko
 - HitObjectParser
-#### Networking
-- API to Osu server
-#### Networking/Maps
-- Mapset and map info for maps listed on server side
 #### Rulesets
 - Ruleset provider for different game modes.
 #### Rulesets/Beats/Simple
