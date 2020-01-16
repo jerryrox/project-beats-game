@@ -7,8 +7,9 @@ using PBGame.Audio;
 using PBGame.Skins;
 using PBGame.Stores;
 using PBGame.Assets.Fonts;
-using PBGame.Rulesets;
 using PBGame.Assets.Caching;
+using PBGame.Rulesets;
+using PBGame.Networking.API;
 using PBGame.Configurations;
 using PBFramework.Audio;
 using PBFramework.Dependencies;
@@ -38,6 +39,9 @@ namespace PBGame
         protected MapManager mapManager;
         protected MusicPlaylist musicPlaylist;
         protected Metronome metronome;
+
+        protected DownloadStore downloadStore;
+        protected ApiManager apiManager;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -86,6 +90,9 @@ namespace PBGame
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
             Dependencies.CacheAs<IMusicPlaylist>(musicPlaylist = new MusicPlaylist(mapManager));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
+
+            Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
+            Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
         }
 
         /// <summary>
