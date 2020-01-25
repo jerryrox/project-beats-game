@@ -6,6 +6,7 @@ Currently, I'm restructuring my original source to make things more organized an
 Slowly making progress 🧩
 
 ## Dependencies
+- project-beats-framework (https://github.com/jerryrox/project-beats-framework)
 - Newtonsoft.Json (Tested with net45 version)
 
 ## To-Dos
@@ -14,6 +15,7 @@ Slowly making progress 🧩
 - ProjectBeatsGame
 #### Graphics
 - Color definitions
+- Add graphics effect components.
 #### IO/Decoding/Beats
 - Establish standard data format for Beats data.
 - Implement decoder for Beats file formats.

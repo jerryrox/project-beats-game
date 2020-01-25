@@ -1,0 +1,31 @@
+using PBFramework.UI.Navigations;
+using PBFramework.Animations;
+
+namespace PBGame.Animations
+{
+    /// <summary>
+    /// Provides an interface for preset of anime.
+    /// </summary>
+    public interface IAnimePreset {
+
+        /// <summary>
+        /// Returns the default screen show animation for specified screen.
+        /// </summary>
+        IAnime GetDefaultScreenShow(INavigationView screen);
+
+        /// <summary>
+        /// Returns the default screen hide animation for specified screen.
+        /// </summary>
+        IAnime GetDefaultScreenHide(INavigationView screen);
+
+        /// <summary>
+        /// Returns the default overlay show animation for specified overlay.
+        /// </summary>
+        IAnime GetDefaultOverlayShow(INavigationView overlay);
+
+        /// <summary>
+        /// Returns the default overlay hide animation for specifed overlay.
+        /// </summary>
+        IAnime GetDefaultOverlayHIde(INavigationView overlay);
+    }
+}
