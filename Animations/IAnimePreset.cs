@@ -27,5 +27,25 @@ namespace PBGame.Animations
         /// Returns the default overlay hide animation for specifed overlay.
         /// </summary>
         IAnime GetDefaultOverlayHIde(INavigationView overlay);
+
+        /// <summary>
+        /// Returns the default animation for initialize logo startup.
+        /// </summary>
+        IAnime GetInitLogoStartup(UI.Components.Initialize.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the default animation for initialize logo breathe.
+        /// </summary>
+        IAnime GetInitLogoBreathe(UI.Components.Initialize.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the default animation for initialize logo end.
+        /// </summary>
+        IAnime GetInitLogoEnd(UI.Components.Initialize.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the home screen logo pulsating animation.
+        /// </summary>
+        IAnime GetHomeLogoPulse(UI.Components.Home.ILogoDisplay logoDisplay);
     }
 }
