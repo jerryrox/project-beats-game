@@ -54,12 +54,19 @@ Slowly making progress 🧩
 #### UI
 #### UI/Navigations
 #### UI/Navigations/Overlays
+- BackgroundOverlay
+- MenuOverlay
+- HomeMenuOverlay
 #### UI/Navigations/Overlays/Networking
 #### UI/Navigations/Screens
 - SplashScreen
+- InitilaizeScreen
+- HomeScreen
 - MainMenuScreen
 - SongsScreen
 - PlayScreen
 - ResultScreen
 #### UI/Navigations/Screens/Networking
 - DownloaderScreen
+#### Others
+- Utilize MapPlaylist object in music player on menu overlay.

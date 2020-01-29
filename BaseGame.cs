@@ -9,9 +9,13 @@ using PBGame.Stores;
 using PBGame.Assets.Fonts;
 using PBGame.Assets.Caching;
 using PBGame.Rulesets;
+using PBGame.Graphics;
+using PBGame.Animations;
 using PBGame.Networking.API;
 using PBGame.Configurations;
+using PBFramework.UI.Navigations;
 using PBFramework.Audio;
+using PBFramework.Graphics;
 using PBFramework.Dependencies;
 
 namespace PBGame
@@ -37,11 +41,16 @@ namespace PBGame
         protected MapsetStore mapsetStore;
         protected MapSelection mapSelection;
         protected MapManager mapManager;
-        protected MusicPlaylist musicPlaylist;
         protected Metronome metronome;
 
         protected DownloadStore downloadStore;
         protected ApiManager apiManager;
+
+        protected IRootMain rootMain;
+        protected IRoot3D root3D;
+        protected IAnimePreset animePreset;
+        protected IScreenNavigator screenNavigator;
+        protected IOverlayNavigator overlayNavigator;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -88,11 +97,16 @@ namespace PBGame
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<MapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
-            Dependencies.CacheAs<IMusicPlaylist>(musicPlaylist = new MusicPlaylist(mapManager));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
+
+            Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
+            Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));
+            Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
+            Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
+            Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
         }
 
         /// <summary>
