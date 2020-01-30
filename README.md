@@ -7,6 +7,7 @@ Slowly making progress 🧩
 
 ## Dependencies
 - project-beats-framework (https://github.com/jerryrox/project-beats-framework)
+- pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 
 ## To-Dos
