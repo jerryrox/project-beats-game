@@ -118,7 +118,7 @@ namespace PBGame.Animations
                 .Build();
             anime.AnimateVector3((scale) => logoDisplay.Scale = scale)
                 .AddTime(0f, Vector3.one, EaseType.SineEaseOut)
-                .AddTime(1.5f, new Vector3(1.2f, 1.2f, 1.2f))
+                .AddTime(1.5f, new Vector3(1.1f, 1.1f, 1.1f))
                 .Build();
             return anime;
         }
