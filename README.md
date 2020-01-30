@@ -48,10 +48,11 @@ Slowly making progress 🧩
 - Implement play area container
 - Implement storyboard layer when storyboarding should be supported.
 #### Rulesets/UI/HUD
-- Implement health display
+- Implement health display using progress bar element.
 #### Stores
 - MapAssetStore
-#### UI
+#### UI/Components/Background
+- (GradientBackgroundDisplay) Finish off MountBackground implementation when UI effect is implemented.
 #### UI/Navigations
 #### UI/Navigations/Overlays
 - BackgroundOverlay
@@ -59,10 +60,8 @@ Slowly making progress 🧩
 - HomeMenuOverlay
 #### UI/Navigations/Overlays/Networking
 #### UI/Navigations/Screens
-- SplashScreen
-- InitilaizeScreen
-- HomeScreen
-- MainMenuScreen
+- (SplashScreen) Think of the UI design.
+- (HomeScreen) Receive button event from logo display and show home menu overlay when pressed.
 - SongsScreen
 - PlayScreen
 - ResultScreen

@@ -12,11 +12,5 @@ namespace PBGame.Stores
         /// Returns all loaded mapsets.
         /// </summary>
         IEnumerable<Mapset> Mapsets { get; }
-
-
-        /// <summary>
-        /// Loads all mapsets from the storage.
-        /// </summary>
-        Task Reload(ISimpleProgress progress);
     }
 }

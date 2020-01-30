@@ -1,18 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using PBGame.UI.Navigations.Screens;
 
-public class ProjectBeatsGame : MonoBehaviour
+namespace PBGame
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public class ProjectBeatsGame : BaseGame {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void PostInitialize()
+        {
+            // Hook events
+            HookMusicController();
+
+            // Display splash view.
+            screenNavigator.Show<SplashScreen>();
+        }
+
+        /// <summary>
+        /// Triggers actions on music controller on certain events from other dependencies.
+        /// </summary>
+        private void HookMusicController()
+        {
+        }
     }
 }

@@ -17,7 +17,6 @@ namespace PBGame.Graphics
             var root = new GameObject("RootMain").AddComponent<RootMain>();
             if (dependency != null)
             {
-                dependency.CacheAs<IRootMain>(root);
                 dependency.Inject(root);
             }
             return root;

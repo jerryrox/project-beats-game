@@ -15,7 +15,9 @@ using PBGame.Networking.API;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Audio;
+using PBFramework.Assets.Atlasing;
 using PBFramework.Graphics;
+using PBFramework.Services;
 using PBFramework.Dependencies;
 
 namespace PBGame
@@ -29,6 +31,7 @@ namespace PBGame
         protected MapsetConfiguration mapsetConfiguration;
 
         protected FontManager fontManager;
+        protected IAtlas<Sprite> spriteAtlas;
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
@@ -77,6 +80,8 @@ namespace PBGame
         /// </summary>
         protected virtual void InitializeModules()
         {
+            UnityThreadService.Initialize();
+
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());
@@ -84,6 +89,7 @@ namespace PBGame
             Dependencies.CacheAs<IMapsetConfiguration>(mapsetConfiguration = new MapsetConfiguration());
 
             Dependencies.CacheAs<IFontManager>(fontManager = new FontManager());
+            Dependencies.CacheAs<IAtlas<Sprite>>(spriteAtlas = new ResourceSpriteAtlas());
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
@@ -95,7 +101,7 @@ namespace PBGame
             Dependencies.CacheAs<ISoundPooler>(soundPooler = new SoundPooler(skinManager.DefaultSkin));
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
-            Dependencies.CacheAs<MapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));
+            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 
