@@ -16,7 +16,6 @@ using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Audio;
 using PBFramework.Assets.Atlasing;
-using PBFramework.Graphics;
 using PBFramework.Services;
 using PBFramework.Dependencies;
 
@@ -35,6 +34,7 @@ namespace PBGame
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
+        protected WebImageCacher webImageCacher;
 
         protected SkinManager skinManager;
 
@@ -93,6 +93,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
+            Dependencies.CacheAs<IWebImageCacher>(webImageCacher = new WebImageCacher());
 
             Dependencies.CacheAs<ISkinManager>(skinManager = new SkinManager());
             skinManager.DefaultSkin.AssetStore.Load();
