@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using PBGame.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
+using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Dependencies;
+using Coffee.UIExtensions;
 using UnityEngine;
 
 namespace PBGame.UI.Components.Background
@@ -13,6 +15,7 @@ namespace PBGame.UI.Components.Background
     {
         private UguiSprite sprite;
         private CanvasGroup canvasGroup;
+        private UIGradient gradient;
 
         private IMapBackground background;
 
@@ -21,6 +24,12 @@ namespace PBGame.UI.Components.Background
         {
             get => canvasGroup.alpha;
             set => canvasGroup.alpha = value;
+        }
+
+        public Color Color
+        {
+            get => sprite.Color;
+            set => sprite.Color = value;
         }
 
 
@@ -33,6 +42,13 @@ namespace PBGame.UI.Components.Background
             {
                 sprite.Anchor = Anchors.Fill;
                 sprite.RawSize = Vector2.zero;
+
+                var effect = sprite.AddEffect(new GradientEffect());
+                {
+                    gradient = effect.Component;
+                    gradient.direction = UIGradient.Direction.Angle;
+                    gradient.rotation = -30f;
+                }
             }
         }
 
@@ -42,14 +58,17 @@ namespace PBGame.UI.Components.Background
 
             if (background != null)
             {
-                // TODO: Apply gradient.
-
+                gradient.color1 = background.GradientTop;
+                gradient.color2 = background.GradientBottom;
             }
         }
 
         public void UnmountBackground()
         {
             this.background = null;
+
+            gradient.color1 = Color.black;
+            gradient.color2 = new Color(0.25f, 0.25f, 0.25f);
         }
     }
 }

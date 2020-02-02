@@ -4,7 +4,7 @@ using PBFramework.Graphics;
 
 namespace PBGame.UI.Components.Background
 {
-    public interface IBackgroundDisplay : IGraphicObject, IHasAlpha {
+    public interface IBackgroundDisplay : IGraphicObject, IHasColor, IHasAlpha {
 
         /// <summary>
         /// Mounts the specified background to this display.

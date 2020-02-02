@@ -52,8 +52,6 @@ Slowly making progress 🧩
 - Implement health display using progress bar element.
 #### Stores
 - MapAssetStore
-#### UI/Components/Background
-- (GradientBackgroundDisplay) Finish off MountBackground implementation when UI effect is implemented.
 #### UI/Navigations
 #### UI/Navigations/Overlays
 - BackgroundOverlay

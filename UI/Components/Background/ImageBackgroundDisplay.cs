@@ -23,6 +23,12 @@ namespace PBGame.UI.Components.Background
             set => canvasGroup.alpha = value;
         }
 
+        public Color Color
+        {
+            get => texture.Color;
+            set => texture.Color = value;
+        }
+
 
         [InitWithDependency]
         private void Init()

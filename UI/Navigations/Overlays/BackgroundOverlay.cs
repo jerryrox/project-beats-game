@@ -1,10 +1,10 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Background;
 using PBGame.Maps;
 using PBGame.Graphics;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -13,9 +13,35 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class BackgroundOverlay : BaseOverlay, IBackgroundOverlay {
 
+        private Color backgroundTint = Color.white;
+
+
         public IBackgroundDisplay ImageBackground { get; private set; }
 
         public IBackgroundDisplay GradientBackground { get; private set; }
+
+        public Color Color
+        {
+            get => backgroundTint;
+            set
+            {
+                backgroundTint = value;
+                foreach(var background in Backgrounds)
+                    background.Color = value;
+            }
+        }
+
+        /// <summary>
+        /// Returns all backgrounds on the overlay.
+        /// </summary>
+        private IEnumerable<IBackgroundDisplay> Backgrounds
+        {
+            get
+            {
+                yield return ImageBackground;
+                yield return GradientBackground;
+            }
+        }
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
