@@ -133,5 +133,25 @@ namespace PBGame.Animations
                 .Build();
             return anime;
         }
+
+        public IAnime GetHomeLogoHover(UI.Components.Home.ILogoDisplay logoDisplay)
+        {
+            var anime = new Anime();
+            anime.AnimateFloat((alpha) => logoDisplay.Alpha = alpha)
+                .AddTime(0f, () => logoDisplay.Alpha)
+                .AddTime(0.5f, 0.5f)
+                .Build();
+            return anime;
+        }
+
+        public IAnime GetHomeLogoExit(UI.Components.Home.ILogoDisplay logoDisplay)
+        {
+            var anime = new Anime();
+            anime.AnimateFloat((alpha) => logoDisplay.Alpha = alpha)
+                .AddTime(0f, () => logoDisplay.Alpha)
+                .AddTime(0.5f, 1f)
+                .Build();
+            return anime;
+        }
     }
 }

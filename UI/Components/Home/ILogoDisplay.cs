@@ -1,6 +1,13 @@
+using System;
+
 namespace PBGame.UI.Components.Home
 {
     public interface ILogoDisplay : Components.ILogoDisplay {
+
+        /// <summary>
+        /// Event caled on logo press.
+        /// </summary>
+        event Action OnPress;
 
         /// <summary>
         /// The duration of a single pulse.

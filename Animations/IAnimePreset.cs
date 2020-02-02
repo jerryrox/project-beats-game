@@ -47,5 +47,15 @@ namespace PBGame.Animations
         /// Returns the home screen logo pulsating animation.
         /// </summary>
         IAnime GetHomeLogoPulse(UI.Components.Home.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the home screen logo on-hover animation.
+        /// </summary>
+        IAnime GetHomeLogoHover(UI.Components.Home.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the home screen logo on-exit animation.
+        /// </summary>
+        IAnime GetHomeLogoExit(UI.Components.Home.ILogoDisplay logoDisplay);
     }
 }

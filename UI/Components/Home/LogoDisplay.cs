@@ -1,14 +1,24 @@
+using System;
 using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Animations;
+using PBFramework.UI;
+using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.UI.Components.Home
 {
     public class LogoDisplay : Components.LogoDisplay, ILogoDisplay {
 
+        public event Action OnPress;
+
         private IAnime pulseAni;
+        private IAnime pointerEnterAni;
+        private IAnime pointerExitAni;
+
+        private UguiTrigger trigger;
 
         public float PulseDuration
         {
@@ -22,11 +32,27 @@ namespace PBGame.UI.Components.Home
         [ReceivesDependency]
         private IMetronome Metronome { get; set; }
 
+        [ReceivesDependency]
+        private ISoundPooler SoundPooler { get; set; }
+
 
         [InitWithDependency]
         private void Init(IAnimePreset animePreset)
         {
             pulseAni = animePreset.GetHomeLogoPulse(this);
+            pointerEnterAni = animePreset.GetHomeLogoHover(this);
+            pointerExitAni = animePreset.GetHomeLogoExit(this);
+            pointerExitAni.PlayFromStart();
+
+            trigger = CreateChild<UguiTrigger>("trigger", 1000);
+            {
+                trigger.Anchor = Anchors.Fill;
+                trigger.RawSize = Vector2.zero;
+                
+                trigger.OnPointerEnter += OnTriggerEntered;
+                trigger.OnPointerExit += OnTriggerExited;
+                trigger.OnPointerDown += OnTriggerPressed;
+            }
         }
 
         public void SetPulseProgress(float progress)
@@ -42,6 +68,37 @@ namespace PBGame.UI.Components.Home
         public void StopPulse()
         {
             pulseAni.Stop();
+        }
+
+        /// <summary>
+        /// Event called from trigger when the cursor has entered.
+        /// </summary>
+        private void OnTriggerEntered()
+        {
+            pointerExitAni.Stop();
+            pointerEnterAni.PlayFromStart();
+
+            SoundPooler.Play("menuhit");
+        }
+
+        /// <summary>
+        /// Event called from trigger when the cursor has exited.
+        /// </summary>
+        private void OnTriggerExited()
+        {
+            pointerEnterAni.Stop();
+            pointerExitAni.PlayFromStart();
+
+        }
+
+        /// <summary>
+        /// Event called from trigger when the cursor pressed it.
+        /// </summary>
+        private void OnTriggerPressed()
+        {
+            OnPress?.Invoke();
+
+            SoundPooler.Play("menuclick");
         }
 
         /// <summary>
