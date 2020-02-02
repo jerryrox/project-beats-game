@@ -1,5 +1,7 @@
-using PBGame.Maps;
 using PBGame.UI.Components.Home;
+using PBGame.UI.Navigations.Overlays;
+using PBGame.Maps;
+using PBFramework.UI.Navigations;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -11,11 +13,16 @@ namespace PBGame.UI.Navigations.Screens
 
         protected override int ScreenDepth => ViewDepths.HomeScreen;
 
+        private IBackgroundOverlay BackgroundOverlay => OverlayNavigator.Get<BackgroundOverlay>();
+
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -37,11 +44,18 @@ namespace PBGame.UI.Navigations.Screens
         private void OnLogoButton()
         {
             LogoDisplay.SetZoom(true);
+            BackgroundOverlay.Color = Color.gray;
 
-            // TODO: Spawn menu bar overlay.
+            // Show menu bar
+            OverlayNavigator.Show<MenuBarOverlay>();
 
-            // TODO: Spawn home menu overlay
-            // TODO: Listen to home menu close event and set zoom to false.
+            // Show home menu
+            var homeMenuOverlay = OverlayNavigator.Show<HomeMenuOverlay>();
+            homeMenuOverlay.OnViewHide += () =>
+            {
+                LogoDisplay.SetZoom(false);
+                BackgroundOverlay.Color = Color.white;
+            };
         }
 
         /// <summary>
