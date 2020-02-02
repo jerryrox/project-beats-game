@@ -29,5 +29,10 @@ namespace PBGame.UI.Components.Home
         /// Stops playing the pulsating animation.
         /// </summary>
         void StopPulse();
+
+        /// <summary>
+        /// Sets zoom effect on the logo.
+        /// </summary>
+        void SetZoom(bool isZoom);
     }
 }

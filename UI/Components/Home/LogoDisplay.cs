@@ -17,6 +17,8 @@ namespace PBGame.UI.Components.Home
         private IAnime pulseAni;
         private IAnime pointerEnterAni;
         private IAnime pointerExitAni;
+        private IAnime zoomInAni;
+        private IAnime zoomOutAni;
 
         private UguiTrigger trigger;
 
@@ -42,6 +44,9 @@ namespace PBGame.UI.Components.Home
             pulseAni = animePreset.GetHomeLogoPulse(this);
             pointerEnterAni = animePreset.GetHomeLogoHover(this);
             pointerExitAni = animePreset.GetHomeLogoExit(this);
+            zoomInAni = animePreset.GetHomeLogoZoomIn(this);
+            zoomOutAni = animePreset.GetHomeLogoZoomOut(this);
+
             pointerExitAni.PlayFromStart();
 
             trigger = CreateChild<UguiTrigger>("trigger", 1000);
@@ -70,6 +75,20 @@ namespace PBGame.UI.Components.Home
         public void StopPulse()
         {
             pulseAni.Stop();
+        }
+
+        public void SetZoom(bool isZoom)
+        {
+            if (isZoom)
+            {
+                zoomOutAni.Stop();
+                zoomInAni.PlayFromStart();
+            }
+            else
+            {
+                zoomInAni.Stop();
+                zoomOutAni.PlayFromStart();
+            }
         }
 
         /// <summary>

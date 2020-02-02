@@ -11,6 +11,8 @@ namespace PBGame.UI.Navigations.Screens
 {
     public class SplashScreen : BaseScreen, ISplashScreen {
 
+        protected override int ScreenDepth => ViewDepths.SplashScreen;
+
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
 

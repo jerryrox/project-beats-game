@@ -57,5 +57,15 @@ namespace PBGame.Animations
         /// Returns the home screen logo on-exit animation.
         /// </summary>
         IAnime GetHomeLogoExit(UI.Components.Home.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the home screen logo zoom in animation.
+        /// </summary>
+        IAnime GetHomeLogoZoomIn(UI.Components.Home.ILogoDisplay logoDisplay);
+
+        /// <summary>
+        /// Returns the home screen logo zoom out animation.
+        /// </summary>
+        IAnime GetHomeLogoZoomOut(UI.Components.Home.ILogoDisplay logoDisplay);
     }
 }

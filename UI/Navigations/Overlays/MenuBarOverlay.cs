@@ -22,6 +22,8 @@ namespace PBGame.UI.Navigations.Overlays
 
         public IMenuButton NotificationMenuButton { get; private set; }
 
+        protected override int OverlayDepth => ViewDepths.MenuBarOverlay;
+
 
         [InitWithDependency]
         private void Init()

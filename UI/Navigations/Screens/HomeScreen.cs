@@ -9,6 +9,8 @@ namespace PBGame.UI.Navigations.Screens
 
         public ILogoDisplay LogoDisplay { get; private set; }
 
+        protected override int ScreenDepth => ViewDepths.HomeScreen;
+
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
@@ -34,9 +36,12 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLogoButton()
         {
+            LogoDisplay.SetZoom(true);
+
             // TODO: Spawn menu bar overlay.
 
-            // TODO: Spawn home menu overlay.
+            // TODO: Spawn home menu overlay
+            // TODO: Listen to home menu close event and set zoom to false.
         }
 
         /// <summary>

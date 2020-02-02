@@ -153,5 +153,25 @@ namespace PBGame.Animations
                 .Build();
             return anime;
         }
+
+        public IAnime GetHomeLogoZoomIn(UI.Components.Home.ILogoDisplay logoDisplay)
+        {
+            var anime = new Anime();
+            anime.AnimateVector2((size) => logoDisplay.Size = size)
+                .AddTime(0f, () => logoDisplay.Size, EaseType.QuartEaseIn)
+                .AddTime(0.5f, new Vector2(700f, 700f))
+                .Build();
+            return anime;
+        }
+
+        public IAnime GetHomeLogoZoomOut(UI.Components.Home.ILogoDisplay logoDisplay)
+        {
+            var anime = new Anime();
+            anime.AnimateVector2((size) => logoDisplay.Size = size)
+                .AddTime(0f, () => logoDisplay.Size, EaseType.QuartEaseIn)
+                .AddTime(0.5f, new Vector2(352f, 352f))
+                .Build();
+            return anime;
+        }
     }
 }

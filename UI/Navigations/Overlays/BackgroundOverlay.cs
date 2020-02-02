@@ -28,6 +28,10 @@ namespace PBGame.UI.Navigations.Overlays
             }
         }
 
+        protected override int OverlayDepth => ViewDepths.BackgroundOverlay;
+
+        protected override bool IsRoot3D => true;
+
         /// <summary>
         /// Returns all backgrounds on the overlay.
         /// </summary>
@@ -47,8 +51,6 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IRoot3D root3D)
         {
-            SetParent(root3D);
-
             ImageBackground = CreateChild<ImageBackgroundDisplay>("image", 0);
             {
                 ImageBackground.Anchor = Anchors.Fill;
