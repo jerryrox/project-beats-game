@@ -1,5 +1,6 @@
 using PBGame.UI.Components.Initialize;
 using PBGame.UI.Navigations.Screens.Initialize;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Skins;
 using PBFramework.UI.Navigations;
@@ -22,6 +23,9 @@ namespace PBGame.UI.Navigations.Screens
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -75,6 +79,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLogoEnd()
         {
+            OverlayNavigator.Show<BackgroundOverlay>();
             ScreenNavigator.Show<HomeScreen>();
         }
 
