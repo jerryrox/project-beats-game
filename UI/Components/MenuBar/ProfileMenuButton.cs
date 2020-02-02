@@ -83,15 +83,18 @@ namespace PBGame.UI.Components.MenuBar
                 levelLabel.Alignment = TextAnchor.LowerRight;
                 levelLabel.WrapText = true;
             }
+
+            OnEnableInited();
         }
 
-        private void OnEnable()
+        protected override void OnEnableInited()
         {
             // Listen to online user change event.
             OsuApi.User.OnValueChanged += OnUserChange;
+            OnUserChange(OsuApi.User.Value, null);
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
             // Withdraw from online user change event.
             OsuApi.User.OnValueChanged -= OnUserChange;

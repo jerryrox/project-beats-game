@@ -59,6 +59,18 @@ namespace PBGame.UI.Navigations.Overlays
                 GradientBackground.Anchor = Anchors.Fill;
                 GradientBackground.RawSize = Vector2.zero;
             }
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            BindEvents();
+        }
+
+        protected override void OnDisable()
+        {
+            UnbindEvents();
         }
 
         /// <summary>
@@ -86,6 +98,8 @@ namespace PBGame.UI.Navigations.Overlays
         {
             MapSelection.OnBackgroundLoaded += MountBackground;
             MapSelection.OnBackgroundUnloaded += UnmountBackground;
+            
+            MountBackground(MapSelection.Background);
         }
 
         /// <summary>
@@ -95,16 +109,6 @@ namespace PBGame.UI.Navigations.Overlays
         {
             MapSelection.OnBackgroundLoaded -= MountBackground;
             MapSelection.OnBackgroundUnloaded -= UnmountBackground;
-        }
-
-        private void OnEnable()
-        {
-            BindEvents();
-        }
-
-        private void OnDisable()
-        {
-            UnbindEvents();
         }
     }
 }

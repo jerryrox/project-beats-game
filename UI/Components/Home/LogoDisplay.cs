@@ -53,6 +53,8 @@ namespace PBGame.UI.Components.Home
                 trigger.OnPointerExit += OnTriggerExited;
                 trigger.OnPointerDown += OnTriggerPressed;
             }
+
+            OnEnableInited();
         }
 
         public void SetPulseProgress(float progress)
@@ -88,7 +90,6 @@ namespace PBGame.UI.Components.Home
         {
             pointerEnterAni.Stop();
             pointerExitAni.PlayFromStart();
-
         }
 
         /// <summary>
@@ -117,12 +118,12 @@ namespace PBGame.UI.Components.Home
             Metronome.OnBeat -= PlayPulse;
         }
 
-        private void OnEnable()
+        protected override void OnEnableInited()
         {
             BindEvents();
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
             UnbindEvents();
         }
