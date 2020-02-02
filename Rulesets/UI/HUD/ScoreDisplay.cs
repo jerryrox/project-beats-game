@@ -1,3 +1,4 @@
+using PBGame.UI;
 using PBGame.Assets.Fonts;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -14,7 +15,7 @@ namespace PBGame.Rulesets.UI.HUD
         [InitWithDependency]
         private void Init(IFontManager fontManager)
         {
-            ScoreLabel = CreateChild<UguiLabel>("label");
+            ScoreLabel = CreateChild<Label>("label");
             {
                 ScoreLabel.Anchor = Anchors.Fill;
                 ScoreLabel.RawSize = Vector2.zero;

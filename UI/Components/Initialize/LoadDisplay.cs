@@ -1,3 +1,4 @@
+using PBGame.UI;
 using PBGame.Assets.Fonts;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -20,7 +21,7 @@ namespace PBGame.UI.Components.Initialize
         [InitWithDependency]
         private void Init()
         {
-            Status = CreateChild<UguiLabel>("status", 0);
+            Status = CreateChild<Label>("status", 0);
             {
                 Status.Anchor = Anchors.Left;
                 Status.Pivot = Pivots.Left;

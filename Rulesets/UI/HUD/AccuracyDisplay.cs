@@ -1,3 +1,4 @@
+using PBGame.UI;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -13,7 +14,7 @@ namespace PBGame.Rulesets.UI.HUD
         [InitWithDependency]
         private void Init()
         {
-            AccuracyLabel = CreateChild<UguiLabel>("label");
+            AccuracyLabel = CreateChild<Label>("label");
             {
                 AccuracyLabel.Anchor = Anchors.Fill;
                 AccuracyLabel.RawSize = Vector2.zero;
