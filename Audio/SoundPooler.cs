@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using PBGame.Skins;
@@ -35,7 +34,7 @@ namespace PBGame.Audio
             CreatePool("failsound", 1);
             CreatePool("go", 1);
             CreatePool("heartbeat", 2);
-            CreatePool("lewel-up", 1);
+            CreatePool("level-up", 1);
             CreatePool("menuback", 1);
             CreatePool("menuclick", 1);
             CreatePool("menuhit", 1);
@@ -86,6 +85,8 @@ namespace PBGame.Audio
             // Find the pool and play the audio.
             if (pools.TryGetValue(lookupName, out ISoundControlPool value))
                 value.Play(volumeScale);
+            else
+                Logger.LogWarning($"SoundPooler.Play - Missing lookupName: {lookupName}");
         }
 
         public void Stop(string lookupName)
@@ -93,6 +94,8 @@ namespace PBGame.Audio
             // Find the pool and stop.
             if (pools.TryGetValue(lookupName, out ISoundControlPool value))
                 value.Stop();
+            else
+                Logger.LogWarning($"SoundPooler.Stop - Missing lookupName: {lookupName}");
         }
 
         public void SetVolume(float volume)

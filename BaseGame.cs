@@ -109,9 +109,9 @@ namespace PBGame
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
 
+            Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));
-            Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
         }
@@ -119,7 +119,9 @@ namespace PBGame
         /// <summary>
         /// Handles final process after initialization.
         /// </summary>
-        protected abstract void PostInitialize();
+        protected virtual void PostInitialize()
+        {
+        }
 
         protected virtual void Update()
         {

@@ -29,7 +29,7 @@ namespace PBGame.UI.Navigations.Screens
 
 
         [InitWithDependency]
-        private void Init(IMapManager mapManager, ISkinManager skinManager)
+        private void Init()
         {
             Depth = 1000;
 
@@ -52,7 +52,7 @@ namespace PBGame.UI.Navigations.Screens
             }
 
             // Initialize loader
-            initLoader = new InitLoader(mapManager, skinManager);
+            initLoader = new InitLoader(Dependencies);
             initLoader.OnProgress += OnLoaderProgress;
             initLoader.OnStatusChange += OnLoaderStatus;
             initLoader.Load();

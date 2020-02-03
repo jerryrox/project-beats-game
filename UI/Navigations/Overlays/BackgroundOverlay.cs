@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
+    // TODO: Switch modes between different background types.
     public class BackgroundOverlay : BaseOverlay, IBackgroundOverlay {
 
         private Color backgroundTint = Color.white;

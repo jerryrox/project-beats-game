@@ -54,6 +54,7 @@ namespace PBGame.UI.Components.HomeMenu
                 soundPooler.Play("menuclick");
 
                 pulseAni.PlayFromStart();
+                InvokeExit();
             };
 
             IconSprite = CreateChild<UguiSprite>("icon", 2);
@@ -101,8 +102,17 @@ namespace PBGame.UI.Components.HomeMenu
                 .Build();
             pulseAni.AnimateVector3((scale) => pulseSprite.Scale = scale)
                 .AddTime(0f, Vector3.one, EaseType.QuartEaseOut)
-                .AddTime(1f, new Vector3(2.5f, 2.5f, 1f))
+                .AddTime(1f, new Vector3(5f, 5f, 1f))
                 .Build();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            pulseAni.Stop();
+            pulseSprite.Alpha = 0f;
+            pulseSprite.Scale = Vector3.one;
         }
     }
 }

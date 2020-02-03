@@ -53,6 +53,8 @@ namespace PBGame.UI.Navigations.Screens
             var homeMenuOverlay = OverlayNavigator.Show<HomeMenuOverlay>();
             homeMenuOverlay.OnViewHide += () =>
             {
+                OverlayNavigator.Hide<MenuBarOverlay>();
+
                 LogoDisplay.SetZoom(false);
                 BackgroundOverlay.Color = Color.white;
             };

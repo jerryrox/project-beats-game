@@ -1,9 +1,9 @@
 using PBGame.Graphics;
 using PBGame.Animations;
+using PBFramework;
 using PBFramework.UI.Navigations;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
@@ -21,27 +21,28 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         protected virtual bool IsRoot3D { get; } = false;
 
-        [ReceivesDependency]
-        protected IAnimePreset AniPreset { get; set; }
-
 
         [InitWithDependency]
         private void Init(IRoot3D root3D)
         {
             if (IsRoot3D)
+            {
                 SetParent(root3D);
+                myTransform.ResetTransform();
+            }
 
             Depth = ScreenDepth;
         }
 
-        /// <summary>
-        /// Creates a new instance of the screen show animation.
-        /// </summary>
-        protected override IAnime CreateShowAnime() => AniPreset?.GetDefaultScreenShow(this);
 
-        /// <summary>
-        /// Creates a new instance of the screen hide animation.
-        /// </summary>
-        protected override IAnime CreateHideAnime() => AniPreset?.GetDefaultScreenHide(this);
+        protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
+        {
+            return dependencies.Get<IAnimePreset>()?.GetDefaultScreenShow(this);
+        }
+
+        protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
+        {
+            return dependencies.Get<IAnimePreset>()?.GetDefaultScreenHide(this);
+        }
     }
 }

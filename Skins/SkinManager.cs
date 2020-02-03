@@ -2,10 +2,12 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using PBGame.Audio;
 using PBGame.Stores;
 using PBFramework;
 using PBFramework.Services;
 using PBFramework.Threading;
+using PBFramework.Debugging;
 
 namespace PBGame.Skins
 {
@@ -72,25 +74,43 @@ namespace PBGame.Skins
             });
         }
 
-        public IPromise SelectSkin(ISkin skin)
+        public IPromise SelectSkin(ISkin skin, ISoundPooler soundPooler)
         {
-            if(skin == CurrentSkin || skin == null) return null;
+            if (skin == CurrentSkin)
+            {
+                Logger.Log($"SkinManager.SelectSkin - Already selected this skin!");
+                return null;
+            }
+            if (skin == null)
+            {
+                Logger.LogWarning($"SkinManager.SelectSkin - The specified skin is null.");
+                return null;
+            }
+            if (soundPooler == null)
+            {
+                Logger.LogWarning($"SkinManager.SelectSkin - The sound pooler is not specified.");
+                return null;
+            }
+
+            Action skinLoadAction = () =>
+            {
+                CurrentSkin?.AssetStore.Unload();
+                CurrentSkin = skin;
+
+                // Setup sound effects.
+                soundPooler.Prepare(skin);
+            };
 
             // Load the new skin.
             var loadPromise = skin.AssetStore.Load();
             if (loadPromise != null && !loadPromise.IsFinished)
             {
-                loadPromise.OnFinished += () =>
-                {
-                    CurrentSkin?.AssetStore.Unload();
-                    CurrentSkin = skin;
-                };
+                loadPromise.OnFinished += skinLoadAction;
                 return loadPromise;
             }
-            else if (loadPromise.IsFinished)
+            else if (loadPromise == null || loadPromise.IsFinished)
             {
-                CurrentSkin?.AssetStore.Unload();
-                CurrentSkin = skin;
+                skinLoadAction.Invoke();
             }
             return null;
         }

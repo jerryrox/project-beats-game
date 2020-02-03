@@ -1,8 +1,11 @@
 using System;
 using PBGame.Maps;
 using PBGame.Skins;
+using PBGame.Audio;
+using PBGame.Configurations;
 using PBFramework.Services;
 using PBFramework.Threading;
+using PBFramework.Dependencies;
 
 namespace PBGame.UI.Navigations.Screens.Initialize
 {
@@ -14,26 +17,56 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 
         public event Action OnComplete;
 
-        private IMapManager mapManager;
-        private ISkinManager skinManager;
-
 
         public bool IsComplete { get; private set; }
 
         public string State { get; private set; }
 
+        [ReceivesDependency]
+        private IMapManager MapManager { get; set; }
 
-        public InitLoader(IMapManager mapManager, ISkinManager skinManager)
+        [ReceivesDependency]
+        private ISkinManager SkinManager { get; set; }
+
+        [ReceivesDependency]
+        private ISoundPooler SoundPooler { get; set; }
+
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
+
+        [ReceivesDependency]
+        private IMapConfiguration MapConfiguration { get; set; }
+
+        [ReceivesDependency]
+        private IMapsetConfiguration MapsetConfiguration { get; set; }
+
+
+        public InitLoader(IDependencyContainer dependencies)
         {
-            if(mapManager == null) throw new ArgumentNullException(nameof(mapManager));
-            if(skinManager == null) throw new ArgumentNullException(nameof(skinManager));
+            if(dependencies == null) throw new ArgumentNullException(nameof(dependencies));
 
-            this.mapManager = mapManager;
-            this.skinManager = skinManager;
+            dependencies.Inject(this);
         }
 
         public void Load()
         {
+            LoadConfigurations();
+        }
+
+        /// <summary>
+        /// Starts loading the configurations.
+        /// </summary>
+        private void LoadConfigurations()
+        {
+            SetState("Loading configurations");
+
+            GameConfiguration.Load();
+            MapConfiguration.Load();
+            MapsetConfiguration.Load();
+
+            // Apply volume changes.
+            GameConfiguration.MasterVolume.Trigger();
+
             LoadMapManager();
         }
 
@@ -47,7 +80,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
             IEventProgress progress = new EventProgress();
             progress.OnProgress += SetProgress;
             progress.OnFinished += LoadSkinManager;
-            mapManager.Reload(progress);
+            MapManager.Reload(progress);
         }
 
         /// <summary>
@@ -59,8 +92,31 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 
             IEventProgress progress = new EventProgress();
             progress.OnProgress += SetProgress;
-            progress.OnFinished += FinalizeLoad;
-            skinManager.Reload(progress);
+            progress.OnFinished += LoadSkin;
+            SkinManager.Reload(progress);
+        }
+
+        /// <summary>
+        /// Starts loading the player's current skin.
+        /// </summary>
+        private void LoadSkin()
+        {
+            SetState("Loading player skin");
+
+            // TODO: Check configuration for the selected skin.
+            var promise = SkinManager.SelectSkin(SkinManager.DefaultSkin, SoundPooler);
+            // Null promise would mean default skin load.
+            if (promise == null)
+            {
+                SetProgress(1f);
+                FinalizeLoad();
+            }
+            else
+            {
+                promise.OnProgress += SetProgress;
+                promise.OnFinished += FinalizeLoad;
+                promise.Start();
+            }
         }
 
         /// <summary>

@@ -41,6 +41,8 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     BackgroundSprite.Anchor = Anchors.Fill;
                     BackgroundSprite.RawSize = Vector2.zero;
+                    BackgroundSprite.OffsetTop = 0f;
+                    BackgroundSprite.OffsetBottom = 0f;
                 }
                 ComboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu", 1);
                 {

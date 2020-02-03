@@ -46,6 +46,7 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 BlurSprite.Anchor = Anchors.Fill;
                 BlurSprite.RawSize = Vector2.zero;
+                BlurSprite.SpriteName = "null";
 
                 BlurSprite.AddEffect(new BlurShaderEffect());
             }

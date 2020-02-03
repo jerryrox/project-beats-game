@@ -64,23 +64,23 @@ namespace PBGame.UI.Components.MenuBar
             nicknameLabel = CreateChild<Label>("nickname", 6);
             {
                 nicknameLabel.Anchor = Anchors.Fill;
+                nicknameLabel.Alignment = TextAnchor.MiddleLeft;
                 nicknameLabel.OffsetLeft = 66f;
                 nicknameLabel.OffsetRight = 10f;
                 nicknameLabel.OffsetTop = 8f;
                 nicknameLabel.OffsetBottom = 8f;
-                nicknameLabel.Alignment = TextAnchor.MiddleLeft;
                 nicknameLabel.WrapText = true;
 
             }
             levelLabel = CreateChild<Label>("level", 7);
             {
                 levelLabel.Anchor = Anchors.Fill;
+                levelLabel.Alignment = TextAnchor.LowerRight;
                 levelLabel.OffsetLeft = 66f;
                 levelLabel.OffsetRight = 10f;
                 levelLabel.OffsetTop = 8f;
                 levelLabel.OffsetBottom = 8f;
                 levelLabel.FontSize = 14;
-                levelLabel.Alignment = TextAnchor.LowerRight;
                 levelLabel.WrapText = true;
             }
 

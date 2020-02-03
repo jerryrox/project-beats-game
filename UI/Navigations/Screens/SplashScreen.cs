@@ -17,9 +17,9 @@ namespace PBGame.UI.Navigations.Screens
         private IScreenNavigator ScreenNavigator { get; set; }
 
 
-        protected override IAnime CreateShowAnime() => null;
+        protected override IAnime CreateShowAnime(IDependencyContainer dependencies) => null;
 
-        protected override IAnime CreateHideAnime() => null;
+        protected override IAnime CreateHideAnime(IDependencyContainer dependencies) => null;
 
         protected override void OnPostShow()
         {

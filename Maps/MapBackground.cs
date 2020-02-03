@@ -30,7 +30,7 @@ namespace PBGame.Maps
                 // TODO: Apply color using color preset interface.
 				GradientTop = new Color(0.25f, 0.25f, 0.25f);
 				GradientBottom = new Color(0f, 0f, 0f);
-				Highlight = new Color(0.5f, 0.5f, 0.5f);
+				Highlight = new Color(0.125f, 0.125f, 0.125f);
 			}
 			else
 			{

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.IO;
+using PBGame.Audio;
 using PBFramework;
 using PBFramework.Threading;
 
@@ -39,6 +40,6 @@ namespace PBGame.Skins
         /// <summary>
         /// Selects the specified skin for usage.
         /// </summary>
-        IPromise SelectSkin(ISkin skin);
+        IPromise SelectSkin(ISkin skin, ISoundPooler soundPooler);
     }
 }

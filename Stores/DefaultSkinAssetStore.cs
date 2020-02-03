@@ -73,7 +73,7 @@ namespace PBGame.Stores
             LoadAudio("failsound");
             LoadAudio("go");
             LoadAudio("heartbeat");
-            LoadAudio("lewel-up");
+            LoadAudio("level-up");
             LoadAudio("menuback");
             LoadAudio("menuclick");
             LoadAudio("menuhit");

@@ -25,6 +25,8 @@ namespace PBGame.Maps
         private ICacherAgent<IMap, IMusicAudio> musicAgent;
         private ICacherAgent<IMap, IMapBackground> backgroundAgent;
 
+        private IMapBackground emptyBackground;
+
 
         public IMapset Mapset { get; private set; }
 
@@ -44,6 +46,9 @@ namespace PBGame.Maps
             
             this.musicCacher = musicCacher;
             this.backgroundCacher = backgroundCacher;
+
+            // Initial background.
+            Background = emptyBackground = new MapBackground(null);
 
             musicAgent = new CacherAgent<IMap, IMusicAudio>(musicCacher)
             {
@@ -159,6 +164,9 @@ namespace PBGame.Maps
             backgroundAgent.Remove();
             Background = null;
             OnBackgroundUnloaded?.Invoke();
+
+            Background = emptyBackground;
+            OnBackgroundLoaded?.Invoke(Background);
         }
     }
 }

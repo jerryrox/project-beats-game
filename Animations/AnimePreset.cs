@@ -30,8 +30,8 @@ namespace PBGame.Animations
                 .AddTime(0.35f, new Vector3(3f, 3f, 1f))
                 .Build();
             anime.AnimateFloat((alpha) => screen.Alpha = alpha)
-                .AddTime(0f, 0f, EaseType.CubicEaseOut)
-                .AddTime(0.35f, 1f)
+                .AddTime(0f, 1f, EaseType.CubicEaseOut)
+                .AddTime(0.35f, 0f)
                 .Build();
             return anime;
         }
@@ -40,18 +40,18 @@ namespace PBGame.Animations
         {
             IAnime anime = new Anime();
             anime.AnimateFloat((alpha) => overlay.Alpha = alpha)
-                .AddTime(0f, 0f, EaseType.QuadEaseOut)
+                .AddTime(0f, 0f, EaseType.Linear)
                 .AddTime(0.35f, 1f)
                 .Build();
             return anime;
         }
 
-        public IAnime GetDefaultOverlayHIde(INavigationView overlay)
+        public IAnime GetDefaultOverlayHide(INavigationView overlay)
         {
             IAnime anime = new Anime();
             anime.AnimateFloat((alpha) => overlay.Alpha = alpha)
-                .AddTime(0f, 0f, EaseType.QuadEaseOut)
-                .AddTime(0.35f, 1f)
+                .AddTime(0f, 1f, EaseType.QuadEaseOut)
+                .AddTime(0.35f, 0f)
                 .Build();
             return anime;
         }
@@ -159,7 +159,7 @@ namespace PBGame.Animations
             var anime = new Anime();
             anime.AnimateVector2((size) => logoDisplay.Size = size)
                 .AddTime(0f, () => logoDisplay.Size, EaseType.QuartEaseIn)
-                .AddTime(0.5f, new Vector2(700f, 700f))
+                .AddTime(0.35f, new Vector2(700f, 700f))
                 .Build();
             return anime;
         }

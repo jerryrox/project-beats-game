@@ -39,6 +39,7 @@ namespace PBGame.UI.Components.Background
             {
                 texture.Anchor = Anchors.Fill;
                 texture.RawSize = Vector2.zero;
+                texture.Active = false;
             }
         }
 
@@ -50,6 +51,7 @@ namespace PBGame.UI.Components.Background
             {
                 // Render the texture.
                 texture.Texture = background.Image;
+                texture.Active = true;
                 texture.FillTexture();
             }
         }
@@ -57,6 +59,8 @@ namespace PBGame.UI.Components.Background
         public void UnmountBackground()
         {
             this.background = null;
+            texture.Texture = null;
+            texture.Active = true;
         }
     }
 }

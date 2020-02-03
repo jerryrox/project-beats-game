@@ -19,7 +19,8 @@ namespace PBGame.UI.Components.MenuBar
 
         private IAnime toggleOnAni;
         private IAnime toggleOffAni;
-        private IAnime blinkAni;
+        private IAnime hoverAni;
+        private IAnime outAni;
 
 
         public bool IsToggled { get; private set; } = false;
@@ -35,7 +36,14 @@ namespace PBGame.UI.Components.MenuBar
             OnPointerEnter += () =>
             {
                 soundPooler.Play("menuhit");
-                blinkAni.PlayFromStart();
+
+                outAni.Stop();
+                hoverAni.PlayFromStart();
+            };
+            OnPointerExit += () =>
+            {
+                hoverAni.Stop();
+                outAni.PlayFromStart();
             };
             OnPointerClick += () =>
             {
@@ -68,8 +76,13 @@ namespace PBGame.UI.Components.MenuBar
                 .AddTime(0.5f, 0f)
                 .Build();
 
-            blinkAni = new Anime();
-            blinkAni.AnimateFloat((alpha) => BlinkSprite.Alpha = alpha)
+            hoverAni = new Anime();
+            hoverAni.AnimateFloat((alpha) => BlinkSprite.Alpha = alpha)
+                .AddTime(0f, 0f, EaseType.QuadEaseOut)
+                .AddTime(0.25f, 0.25f)
+                .Build();
+            outAni = new Anime();
+            outAni.AnimateFloat((alpha) => BlinkSprite.Alpha = alpha)
                 .AddTime(0f, 0.25f, EaseType.QuadEaseIn)
                 .AddTime(0.25f, 0f)
                 .Build();

@@ -26,7 +26,7 @@ namespace PBGame.Animations
         /// <summary>
         /// Returns the default overlay hide animation for specifed overlay.
         /// </summary>
-        IAnime GetDefaultOverlayHIde(INavigationView overlay);
+        IAnime GetDefaultOverlayHide(INavigationView overlay);
 
         /// <summary>
         /// Returns the default animation for initialize logo startup.

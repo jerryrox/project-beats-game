@@ -1,5 +1,6 @@
 using PBGame.Graphics;
 using PBGame.Animations;
+using PBFramework;
 using PBFramework.UI.Navigations;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -20,21 +21,27 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         protected virtual bool IsRoot3D { get; } = false;
 
-        [ReceivesDependency]
-        protected IAnimePreset AniPreset { get; set; }
-
 
         [InitWithDependency]
         private void Init(IRoot3D root3D)
         {
             if (IsRoot3D)
+            {
                 SetParent(root3D);
+                myTransform.ResetTransform();
+            }
 
             Depth = OverlayDepth;
         }
 
-        protected override IAnime CreateShowAnime() => AniPreset?.GetDefaultScreenShow(this);
+        protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
+        {
+            return dependencies.Get<IAnimePreset>()?.GetDefaultOverlayShow(this);
+        }
 
-        protected override IAnime CreateHideAnime() => AniPreset?.GetDefaultScreenHide(this);
+        protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
+        {
+            return dependencies.Get<IAnimePreset>()?.GetDefaultOverlayHide(this);
+        }
     }
 }
