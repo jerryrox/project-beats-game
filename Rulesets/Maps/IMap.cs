@@ -40,31 +40,36 @@ namespace PBGame.Rulesets.Maps
 		MapMetadata Metadata { get; }
 
 		/// <summary>
-		/// Returns the list of all difficulty informations of the map.
-		/// Converted maps will only have one difficulty info which has a context of the mode this map is converted for.
+		/// Returns the difficulty information of this map.
+		/// Is non-null only if this map is a playable version.
 		/// </summary>
-		List<DifficultyInfo> Difficulties { get; }
+		DifficultyInfo Difficulty { get; }
 
 		/// <summary>
 		/// Returns the total duration of breaks.
 		/// </summary>
 		double BreakDuration { get; }
 
+		/// <summary>
+		/// Returns whether this map is playable.
+		/// </summary>
+		bool IsPlayable { get; }
+
 
 		/// <summary>
-		/// Returns the difficulty info for specified game mode.
-		/// If not found, the difficulty info for the map's original game mode will be returned.
+		/// Creates playable variants of this maps for modes included in specified manager.
 		/// </summary>
-		DifficultyInfo GetDifficulty(GameModes gameMode);
+		void CreatePlayable(IModeManager modeManager);
 
 		/// <summary>
-		/// Creates a playable version of the map by converting the map using specified game mode servicer.
+		/// Returns the playable map variant for specified game mode.
+		/// If specified mode is not supported, it will returns the variant of the game mode the map was created for.
 		/// </summary>
-		IMap CreatePlayable(IModeService service);
+        IMap GetPlayable(GameModes gamemode);
 
-		/// <summary>
-		/// Returns the shallow clone of this map.
-		/// </summary>
-		IMap Clone();
+        /// <summary>
+        /// Returns the shallow clone of this map.
+        /// </summary>
+        IMap Clone();
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PBGame.IO.Decoding.Osu;
 using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Skins;
@@ -9,11 +11,14 @@ using PBGame.Stores;
 using PBGame.Assets.Fonts;
 using PBGame.Assets.Caching;
 using PBGame.Rulesets;
+using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Animations;
 using PBGame.Networking.API;
 using PBGame.Configurations;
+using PBFramework.IO.Decoding;
 using PBFramework.UI.Navigations;
+using PBFramework.Utils;
 using PBFramework.Audio;
 using PBFramework.Assets.Atlasing;
 using PBFramework.Services;
@@ -85,7 +90,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IGame>(this);
 
-            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
+            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager(Dependencies));
 
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());
             Dependencies.CacheAs<IMapConfiguration>(mapConfiguration = new MapConfiguration());
@@ -125,6 +130,10 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
+            Decoders.AddDecoder<Map>(
+                "osu file format v",
+                (header) => new OsuBeatmapDecoder(ParseUtils.ParseInt(header.Split('v').Last(), OsuBeatmapDecoder.LatestVersion))
+            );
         }
 
         protected virtual void Update()

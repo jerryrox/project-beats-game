@@ -12,18 +12,11 @@ namespace PBGame.Rulesets.Difficulty
 {
 	public abstract class DifficultyCalculator : IDifficultyCalculator {
 
-        /// <summary>
-        /// The original map of the converted map.
-        /// </summary>
-        private IMap originalMap;
-
 		/// <summary>
-		/// Map converted for specific game mode.
+		/// Map converted for the mode which difficulty is calculated for.
 		/// </summary>
-		private IMap convertedMap;
+		private IMap map;
 
-
-		public bool IsValid => convertedMap != null;
 
         /// <summary>
         /// The length of a single strain section.
@@ -31,12 +24,9 @@ namespace PBGame.Rulesets.Difficulty
         protected virtual double SectionLength => 400;
 
 
-        protected DifficultyCalculator(IModeService servicer, IMap map)
+        protected DifficultyCalculator(IMap map)
 		{
-			originalMap = map;
-
-			// Convert the map to use for calculation.
-			convertedMap = map.CreatePlayable(servicer);
+            this.map = map;
 		}
 
 		public DifficultyInfo Calculate() => CalculateInternal(1);
@@ -62,9 +52,9 @@ namespace PBGame.Rulesets.Difficulty
 		private DifficultyInfo CalculateInternal(double clockRate)
 		{
 			var skills = CreateSkills();
-			if(convertedMap.HitObjects.Any())
+			if(map.HitObjects.Any())
 			{
-				var convertedObjects = CreateHitObjects(convertedMap, clockRate);
+				var convertedObjects = CreateHitObjects(map, clockRate);
 				// The actual amount of time that has been past when playing on given clockrate.
 				var realSectionLength = SectionLength * clockRate;
 				var nextSectionTime = Math.Ceiling(convertedObjects.First().BaseObject.StartTime / realSectionLength) * realSectionLength;
@@ -90,7 +80,7 @@ namespace PBGame.Rulesets.Difficulty
 					skill.StoreStrainPeak();
 			}
 
-			return CreateDifficultyInfo(convertedMap, skills, clockRate);
+			return CreateDifficultyInfo(map, skills, clockRate);
 		}
 	}
 }

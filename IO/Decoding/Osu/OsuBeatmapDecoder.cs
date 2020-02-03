@@ -1,15 +1,12 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Maps.Timing;
 using PBGame.Rulesets.Maps.ControlPoints;
-using PBGame.Rulesets.Objects;
 using PBGame.Rulesets;
 using PBFramework.IO.Decoding;
 using PBFramework.Utils;
-using UnityEngine;
 
 namespace PBGame.IO.Decoding.Osu
 {

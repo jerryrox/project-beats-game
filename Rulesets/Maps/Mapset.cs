@@ -27,7 +27,7 @@ namespace PBGame.Rulesets.Maps
         }
 
         [JsonIgnore]
-        public List<IMap> Maps { get; set; }
+        public List<IMap> Maps { get; set; } = new List<IMap>();
 
         [JsonIgnore]
         public FileInfo StoryboardFile { get; set; }
@@ -36,7 +36,7 @@ namespace PBGame.Rulesets.Maps
         public MapMetadata Metadata => Maps[0].Metadata;
 
         [JsonIgnore]
-        public List<FileInfo> Files { get; }
+        public List<FileInfo> Files { get; } = new List<FileInfo>();
 
         [JsonIgnore]
         public DirectoryInfo Directory { get; set; }
@@ -45,8 +45,8 @@ namespace PBGame.Rulesets.Maps
         public void SortMapsByMode(GameModes gameMode)
         {
             Maps.Sort((x, y) => {
-				var diffX = x.GetDifficulty(gameMode);
-				var diffY = y.GetDifficulty(gameMode);
+				var diffX = x.GetPlayable(gameMode).Difficulty;
+				var diffY = y.GetPlayable(gameMode).Difficulty;
 				var scaleX = diffX.Scale;
 				var scaleY = diffY.Scale;
 				if(diffX.GameMode != gameMode)

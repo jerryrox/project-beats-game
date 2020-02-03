@@ -84,6 +84,9 @@ namespace PBGame.Maps
                 return;
             }
 
+            UnityEngine.Debug.Log("Mapset dir: " + mapset.Directory);
+            UnityEngine.Debug.Log("Mapset map count: " + mapset.Maps.Count);
+
             // Apply default map.
             if (map == null) map = mapset.Maps[0];
 

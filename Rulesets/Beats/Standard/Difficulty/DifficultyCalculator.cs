@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
-using PBGame.Rulesets.Beats.Standard.Maps;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Beats.Standard.Difficulty.Skills;
 using PBGame.Rulesets.Beats.Standard.Difficulty.Objects;
@@ -19,7 +18,7 @@ namespace PBGame.Rulesets.Beats.Standard.Difficulty
 		private const double DraggerRemovalDelay = 100; // 150 BPM
 
 
-		public DifficultyCalculator(IModeService servicer, IMap map) : base(servicer, map) {}
+		public DifficultyCalculator(IMap map) : base(map) {}
 
         protected override Rulesets.Difficulty.DifficultyInfo CreateDifficultyInfo(IMap map, Skill[] skills, double clockRate)
         {

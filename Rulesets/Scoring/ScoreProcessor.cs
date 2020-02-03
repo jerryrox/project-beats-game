@@ -120,8 +120,7 @@ namespace PBGame.Rulesets.Scoring
         public virtual void ApplyMap(IMap map)
         {
 			// Get difficulty multiplier.
-			// Converted beatmaps will only have one difficulty info so we'll just refer to the first item.
-			difficultyMultiplier = map.Difficulties[0].Scale;
+			difficultyMultiplier = map.Difficulty.Scale;
 
 			// TODO: Apply mod multiplier.
 			modMultiplier = 1f;

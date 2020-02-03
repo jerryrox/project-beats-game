@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.Stores.Parsers.Maps;
@@ -12,6 +11,7 @@ using PBFramework.DB;
 using PBFramework.Stores;
 using PBFramework.Storages;
 using PBFramework.Threading;
+using PBFramework.Debugging;
 
 namespace PBGame.Stores
 {
@@ -48,7 +48,12 @@ namespace PBGame.Stores
             lock (mapsets)
             {
                 mapsets.Clear();
-                mapsets.AddRange(GetAll());
+                foreach (var mapset in GetAll())
+                {
+                    var loadedMapset = LoadData(mapset);
+                    if(loadedMapset != null)
+                        mapsets.Add(loadedMapset);
+                }
             }
         }
 
@@ -63,9 +68,17 @@ namespace PBGame.Stores
                 mapset = new Mapset();
                 mapset.ImportedDate = DateTime.Now;
             }
-            
+
             // TODO: Support for other data formats.
-            return osuParser.Parse(directory, mapset);
+            try
+            {
+                return osuParser.Parse(directory, mapset);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"MapsetStore.ParseData - Error while parsing mapset: {e.Message}\n{e.StackTrace}");
+                return null;
+            }
         }
     }
 }

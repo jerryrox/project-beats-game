@@ -42,7 +42,6 @@ namespace PBGame.Rulesets.Maps
 			newBeatmap.HitObjects = ConvertHitObjects(original.HitObjects);
 			newBeatmap.BreakPoints = original.BreakPoints;
 			newBeatmap.ComboColors = original.ComboColors;
-			newBeatmap.Difficulties = new List<DifficultyInfo>() { original.GetDifficulty(TargetMode) };
 
 			return newBeatmap;
 		}

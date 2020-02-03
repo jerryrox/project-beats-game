@@ -53,27 +53,23 @@ namespace PBGame.Stores.Parsers.Maps
 						}
 					}
 				}
-			}
+            }
 
             // If there is no map included, this is an invalid map.
             if (mapset.Maps.Count == 0)
             {
-                Logger.Log($"OsuMapsetParser - No map file found for directory: {directory.FullName}");
+                Logger.LogWarning($"OsuMapsetParser - No map file found for directory: {directory.FullName}");
                 return null;
             }
 
 			foreach(var map in mapset.Maps)
 			{
-				// Calculate difficulties.
-				foreach(var servicer in modeManager.AllServices())
-				{
-					var calculator = servicer.CreateDifficultyCalculator(map);
-					map.Difficulties.Add(calculator.Calculate());
-				}
-
+                // Prepare converted maps for different modes.
+                map.CreatePlayable(modeManager);
+				
 				// Calculate beatmap file hash.
 				map.Detail.Hash = FileUtils.GetHash(map.Detail.MapFile);
-			}
+            }
 
 			return mapset;
         }
