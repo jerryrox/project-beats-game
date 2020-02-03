@@ -38,6 +38,9 @@ namespace PBGame.UI.Navigations.Overlays
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
+        [ReceivesDependency]
+        private IGame Game { get; set; }
+
 
         [InitWithDependency]
         private void Init(IMapSelection mapSelection)
@@ -102,7 +105,10 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnQuitButton()
         {
-            // TODO: Confirm quit
+            // Confirm quit
+            var dialog = OverlayNavigator.Show<DialogOverlay>();
+            dialog.SetMessage("Are you sure you want to quit Project: Beats?");
+            dialog.AddConfirmCancel(Game.GracefulQuit, null);
         }
 
         /// <summary>

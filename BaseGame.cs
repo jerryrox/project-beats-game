@@ -83,6 +83,8 @@ namespace PBGame
         {
             UnityThreadService.Initialize();
 
+            Dependencies.CacheAs<IGame>(this);
+
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());

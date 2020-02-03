@@ -11,8 +11,8 @@ namespace PBGame.Graphics
 
         public Color Positive { get; private set; } = HexColor.Create("00BC00");
 
-        public Color Negative { get; private set; } = HexColor.Create("00BC00");
+        public Color Negative { get; private set; } = HexColor.Create("D10000");
 
-        public Color Warning { get; private set; } = HexColor.Create("00BC00");
+        public Color Warning { get; private set; } = HexColor.Create("D19500");
     }
 }

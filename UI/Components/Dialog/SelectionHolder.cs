@@ -36,6 +36,12 @@ namespace PBGame.UI.Components.Dialog
                 button.Anchor = Anchors.Top;
                 button.Pivot = Pivots.Top;
                 button.Y = Height == 0f ? 0f : -Height - 2f;
+                
+                button.LabelText = label;
+                button.BackgroundColor = color;
+
+                if(callback != null)
+                    button.OnPointerClick += callback;
             }
             buttons.Add(button);
 

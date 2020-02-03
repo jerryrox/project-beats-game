@@ -14,6 +14,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         private ISprite blurSprite;
         private ISprite bgSprite;
+        private ISprite blocker;
         private ILabel messageLabel;
         private ISelectionHolder selectionHolder;
 
@@ -34,6 +35,7 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 blurSprite.Anchor = Anchors.Fill;
                 blurSprite.RawSize = Vector2.zero;
+                blurSprite.SpriteName = "null";
 
                 blurSprite.AddEffect(new BlurShaderEffect());
             }
@@ -64,6 +66,19 @@ namespace PBGame.UI.Navigations.Overlays
                 selectionHolder.OffsetRight = 0;
                 selectionHolder.Y = 26f;
             }
+            blocker = CreateChild<UguiSprite>("blocker", 4);
+            {
+                blocker.Anchor = Anchors.Fill;
+                blocker.RawSize = Vector2.zero;
+                blocker.SpriteName = "null";
+            }
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            blocker.Active = false;
         }
 
         protected override void OnDisable()
@@ -86,7 +101,13 @@ namespace PBGame.UI.Navigations.Overlays
 
         public void AddSelection(string label, Color color, Action callback = null)
         {
-            selectionHolder.AddSelection(label, color, callback);
+            // Inject closing action.
+            Action newCallback = () =>
+            {
+                callback?.Invoke();
+                CloseOverlay();
+            };
+            selectionHolder.AddSelection(label, color, newCallback);
         }
 
         /// <summary>
@@ -97,6 +118,7 @@ namespace PBGame.UI.Navigations.Overlays
             if(HideAnime.IsPlaying)
                 return;
 
+            blocker.Active = true;
             OverlayNavigator.Hide(this);
         }
     }
