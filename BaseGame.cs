@@ -51,6 +51,7 @@ namespace PBGame
 
         protected IRootMain rootMain;
         protected IRoot3D root3D;
+        protected IColorPreset colorPreset;
         protected IAnimePreset animePreset;
         protected IScreenNavigator screenNavigator;
         protected IOverlayNavigator overlayNavigator;
@@ -109,9 +110,10 @@ namespace PBGame
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
 
-            Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));
+            Dependencies.CacheAs<IColorPreset>(colorPreset = new ColorPreset());
+            Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
         }
