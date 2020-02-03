@@ -47,20 +47,16 @@ namespace PBGame.UI.Components.Background
         {
             this.background = background;
 
-            if (background != null)
+            texture.Texture = background.Image;
+            if (background.Image == null)
             {
-                // Render the texture.
-                texture.Texture = background.Image;
+                texture.Active = false;
+            }
+            else
+            {
                 texture.Active = true;
                 texture.FillTexture();
             }
-        }
-
-        public void UnmountBackground()
-        {
-            this.background = null;
-            texture.Texture = null;
-            texture.Active = true;
         }
     }
 }

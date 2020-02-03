@@ -57,19 +57,8 @@ namespace PBGame.UI.Components.Background
         {
             this.background = background;
 
-            if (background != null)
-            {
-                gradient.color1 = background.GradientTop;
-                gradient.color2 = background.GradientBottom;
-            }
-        }
-
-        public void UnmountBackground()
-        {
-            this.background = null;
-
-            gradient.color1 = Color.black;
-            gradient.color2 = new Color(0.25f, 0.25f, 0.25f);
+            gradient.color1 = background.GradientTop;
+            gradient.color2 = background.GradientBottom;
         }
     }
 }

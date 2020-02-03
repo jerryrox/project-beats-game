@@ -10,10 +10,5 @@ namespace PBGame.UI.Components.Background
         /// Mounts the specified background to this display.
         /// </summary>
         void MountBackground(IMapBackground background);
-
-        /// <summary>
-        /// Unmounts the current background from this display.
-        /// </summary>
-        void UnmountBackground();
     }
 }

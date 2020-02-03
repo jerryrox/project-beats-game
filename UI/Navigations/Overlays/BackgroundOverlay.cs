@@ -84,23 +84,13 @@ namespace PBGame.UI.Navigations.Overlays
             ImageBackground.MountBackground(background);
             GradientBackground.MountBackground(background);
         }
-
-        /// <summary>
-        /// Unmounts the backgrounds from the bg displays.
-        /// </summary>
-        private void UnmountBackground()
-        {
-            ImageBackground.UnmountBackground();
-            GradientBackground.UnmountBackground();
-        }
-
+        
         /// <summary>
         /// Binds events to external dependencies.
         /// </summary>
         private void BindEvents()
         {
             MapSelection.OnBackgroundLoaded += MountBackground;
-            MapSelection.OnBackgroundUnloaded += UnmountBackground;
             
             MountBackground(MapSelection.Background);
         }
@@ -111,7 +101,6 @@ namespace PBGame.UI.Navigations.Overlays
         private void UnbindEvents()
         {
             MapSelection.OnBackgroundLoaded -= MountBackground;
-            MapSelection.OnBackgroundUnloaded -= UnmountBackground;
         }
     }
 }

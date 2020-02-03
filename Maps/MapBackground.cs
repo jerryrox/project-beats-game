@@ -21,13 +21,11 @@ namespace PBGame.Maps
 		public Color Highlight { get; private set; }
 
 
-        // TODO: Receive a color preset interface
 		public MapBackground(Texture2D image)
 		{
 			Image = image;
 			if(image == null)
 			{
-                // TODO: Apply color using color preset interface.
 				GradientTop = new Color(0.25f, 0.25f, 0.25f);
 				GradientBottom = new Color(0f, 0f, 0f);
 				Highlight = new Color(0.125f, 0.125f, 0.125f);
