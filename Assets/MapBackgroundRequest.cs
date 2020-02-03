@@ -12,9 +12,9 @@ namespace PBGame.Assets
         private TextureRequest textureRequest;
 
 
-        public MapBackgroundRequest(string url, bool nonReadable = true)
+        public MapBackgroundRequest(string url)
         {
-            textureRequest = new TextureRequest(url, nonReadable);
+            textureRequest = new TextureRequest(url, false);
 
             startAction = textureRequest.Start;
             revokeAction = textureRequest.Revoke;

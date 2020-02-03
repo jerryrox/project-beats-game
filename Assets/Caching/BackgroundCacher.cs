@@ -30,7 +30,7 @@ namespace PBGame.Assets.Caching
 
         protected override IPromise<IMapBackground> CreateRequest(string key)
         {
-            return new MapBackgroundRequest(key, true);
+            return new MapBackgroundRequest(key);
         }
     }
 }
