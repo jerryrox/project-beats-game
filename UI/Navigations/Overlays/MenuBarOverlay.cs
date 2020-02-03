@@ -1,7 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.MenuBar;
+using PBGame.UI.Navigations.Screens;
+using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -9,8 +10,17 @@ using UnityEngine;
 namespace PBGame.UI.Navigations.Overlays
 {
     public class MenuBarOverlay : BaseOverlay, IMenuBarOverlay {
-
+        
         private UguiObject container;
+
+        /// <summary>
+        /// Table of colors mapped to screen types for automatic color adjustment.
+        /// </summary>
+        private Dictionary<Type, Color> backgroundColors = new Dictionary<Type, Color>()
+        {
+            { typeof(HomeScreen), new Color(0f, 0f, 0f, 0f) }
+        };
+
 
         public IBackgroundSprite BackgroundSprite { get; private set; }
 
@@ -23,6 +33,9 @@ namespace PBGame.UI.Navigations.Overlays
         public IMenuButton NotificationMenuButton { get; private set; }
 
         protected override int OverlayDepth => ViewDepths.MenuBarOverlay;
+
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -81,6 +94,49 @@ namespace PBGame.UI.Navigations.Overlays
                     NotificationMenuButton.Width = 80f;
                 }
             }
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            BindEvents();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            UnbindEvents();
+        }
+
+        /// <summary>
+        /// Binds to screen change events.
+        /// </summary>
+        private void BindEvents()
+        {
+            ScreenNavigator.OnShowView += ChangeBackgroundColor;
+
+            ChangeBackgroundColor(ScreenNavigator.CurrentScreen);
+        }
+
+        /// <summary>
+        /// Unbinds from screen change events.
+        /// </summary>
+        private void UnbindEvents()
+        {
+            ScreenNavigator.OnShowView -= ChangeBackgroundColor;
+        }
+
+        /// <summary>
+        /// Adjusts background sprite color based on the current screen.
+        /// </summary>
+        private void ChangeBackgroundColor(INavigationView screen)
+        {
+            if (backgroundColors.TryGetValue(screen.GetType(), out Color color))
+                BackgroundSprite.Color = color;
         }
     }
 }
