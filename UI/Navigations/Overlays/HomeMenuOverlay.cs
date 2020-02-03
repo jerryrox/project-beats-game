@@ -8,6 +8,7 @@ using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Dependencies;
 using UnityEngine;
+using Coffee.UIExtensions;
 
 namespace PBGame.UI.Navigations.Overlays
 {
@@ -59,6 +60,7 @@ namespace PBGame.UI.Navigations.Overlays
                 GradientSprite.RawSize = Vector2.zero;
 
                 gradientEffect = GradientSprite.AddEffect(new GradientEffect());
+                gradientEffect.Component.direction = UIGradient.Direction.Vertical;
             }
             QuitButton = CreateChild<QuitMenuButton>("quit-button", 2);
             {

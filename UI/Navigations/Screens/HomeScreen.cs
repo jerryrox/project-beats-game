@@ -66,7 +66,7 @@ namespace PBGame.UI.Navigations.Screens
         private void SelectRandomMapset()
         {
             // Try get a random mapset.
-            var mapset = MapManager.DisplayedMapsets.GetRandom();
+            var mapset = MapManager.AllMapsets.GetRandom();
             if (mapset != null)
             {
                 // Select the mapset.
