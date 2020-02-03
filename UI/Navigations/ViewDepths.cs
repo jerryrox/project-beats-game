@@ -20,5 +20,7 @@ namespace PBGame.UI.Navigations
         public const int HomeMenuOverlay = 6;
 
         public const int MenuBarOverlay = 100;
+
+        public const int DialogOverlay = 200;
     }
 }
