@@ -53,13 +53,38 @@ namespace PBGame.UI.Components.Home
             {
                 trigger.Anchor = Anchors.Fill;
                 trigger.RawSize = Vector2.zero;
-                
-                trigger.OnPointerEnter += OnTriggerEntered;
-                trigger.OnPointerExit += OnTriggerExited;
-                trigger.OnPointerDown += OnTriggerPressed;
+
+                trigger.OnPointerEnter += () =>
+                {
+                    pointerExitAni.Stop();
+                    pointerEnterAni.PlayFromStart();
+
+                    SoundPooler.Play("menuhit");
+                };
+                trigger.OnPointerExit += () =>
+                {
+                    pointerEnterAni.Stop();
+                    pointerExitAni.PlayFromStart();
+                };
+                trigger.OnPointerDown += () =>
+                {
+                    OnPress?.Invoke();
+
+                    SoundPooler.Play("menuclick");
+                };
             }
 
             OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            BindEvents();
+        }
+
+        protected override void OnDisable()
+        {
+            UnbindEvents();
         }
 
         public void SetPulseProgress(float progress)
@@ -67,15 +92,9 @@ namespace PBGame.UI.Components.Home
             pulseAni.Seek(progress);
         }
 
-        public void PlayPulse()
-        {
-            pulseAni.PlayFromStart();
-        }
+        public void PlayPulse() => pulseAni.PlayFromStart();
 
-        public void StopPulse()
-        {
-            pulseAni.Stop();
-        }
+        public void StopPulse() => pulseAni.Stop();
 
         public void SetZoom(bool isZoom)
         {
@@ -92,33 +111,11 @@ namespace PBGame.UI.Components.Home
         }
 
         /// <summary>
-        /// Event called from trigger when the cursor has entered.
+        /// Adjusts the speed of the pulse animation for specified length.
         /// </summary>
-        private void OnTriggerEntered()
+        private void AdjustBeatSpeed(double beatLength)
         {
-            pointerExitAni.Stop();
-            pointerEnterAni.PlayFromStart();
-
-            SoundPooler.Play("menuhit");
-        }
-
-        /// <summary>
-        /// Event called from trigger when the cursor has exited.
-        /// </summary>
-        private void OnTriggerExited()
-        {
-            pointerEnterAni.Stop();
-            pointerExitAni.PlayFromStart();
-        }
-
-        /// <summary>
-        /// Event called from trigger when the cursor pressed it.
-        /// </summary>
-        private void OnTriggerPressed()
-        {
-            OnPress?.Invoke();
-
-            SoundPooler.Play("menuclick");
+            pulseAni.Speed = 1000f / (float)beatLength;
         }
 
         /// <summary>
@@ -127,6 +124,7 @@ namespace PBGame.UI.Components.Home
         private void BindEvents()
         {
             Metronome.OnBeat += PlayPulse;
+            Metronome.OnBeatLengthChange += AdjustBeatSpeed;
         }
 
         /// <summary>
@@ -135,16 +133,7 @@ namespace PBGame.UI.Components.Home
         private void UnbindEvents()
         {
             Metronome.OnBeat -= PlayPulse;
-        }
-
-        protected override void OnEnableInited()
-        {
-            BindEvents();
-        }
-
-        protected override void OnDisable()
-        {
-            UnbindEvents();
+            Metronome.OnBeatLengthChange -= AdjustBeatSpeed;
         }
     }
 }

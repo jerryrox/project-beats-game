@@ -128,7 +128,7 @@ namespace PBGame.Animations
             // Animation is created with an assumption of 60 bpm.
             var anime = new Anime();
             anime.AnimateVector3((scale) => logoDisplay.Scale = scale)
-                .AddTime(0f, new Vector3(1.1f, 1.1f, 1f), EaseType.SineEaseIn)
+                .AddTime(0f, new Vector3(1.1f, 1.1f, 1f), EaseType.SineEaseOut)
                 .AddTime(1.5f, Vector3.one)
                 .Build();
             return anime;

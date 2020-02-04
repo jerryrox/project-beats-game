@@ -47,6 +47,11 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 		{
 			return base.CompareTo(other);
 		}
-	}
+
+        public override string ToString()
+        {
+			return $"TimingPoint(Time={Time}, TimeSignature={TimeSignature}, BeatLength={BeatLength})";
+        }
+    }
 }
 
