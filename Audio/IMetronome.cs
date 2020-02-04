@@ -9,7 +9,12 @@ namespace PBGame.Audio
         /// </summary>
         event Action OnBeat;
 
-        
+        /// <summary>
+        /// Event called when the beat length has been changed.
+        /// </summary>
+        event Action<double> OnBeatLengthChange;
+
+
         /// <summary>
         /// Returns the length of a beat in milliseconds.
         /// </summary>

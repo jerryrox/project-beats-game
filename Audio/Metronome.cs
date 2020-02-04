@@ -10,13 +10,16 @@ namespace PBGame.Audio
 
 		public event Action OnBeat;
 
+        public event Action<double> OnBeatLengthChange;
+
         private IMusicController musicController;
 
         private IMap map;
 		private TimingControlPoint curTimingPoint;
 		private TimingControlPoint nextTimingPoint;
+        private int timingPointIndex;
 
-		private double curTime = -1;
+        private double curTime = -1;
 		private double nextBeatTime = 0;
 
 
@@ -30,12 +33,12 @@ namespace PBGame.Audio
             selection.OnMapChange += map =>
             {
                 this.map = map;
+                FindTimingPoint();
             };
             controller.OnSeek += time =>
             {
                 curTime = time;
                 FindTimingPoint();
-                RecalibrateBeatTime();
             };
 		}
 
@@ -59,50 +62,63 @@ namespace PBGame.Audio
 		{
 			if(map == null)
 			{
-				curTimingPoint = new TimingControlPoint();
+                SetCurrentTimingPoint(new TimingControlPoint(), -1);
 				nextTimingPoint = null;
+
+                RecalibrateBeatTime();
 			}
 			else
 			{
 				var timingPoints = map.ControlPoints.TimingPoints;
-				// There must be one timing point anyway
-				curTimingPoint = timingPoints[0];
+                // There must be one timing point anyway
+                SetCurrentTimingPoint(timingPoints[0], 0);
 				nextTimingPoint = null;
 
-				for(int i=1; i<timingPoints.Count; i++)
-				{
-					// Store next timing point
-					nextTimingPoint = timingPoints[i];
-					// If this timing point not reached, preserve next timing point and stop check.
-					if(curTime < timingPoints[i].Time)
-						break;
-					// Set new current timing point and remove next timing point, in case this is the last loop.
-					curTimingPoint = timingPoints[i];
-					nextTimingPoint = null;
-				}
-			}
+				// Find the next timing point at the edge.
+                FindNextTimingPoint();
+            }
 		}
 
 		/// <summary>
-		/// Finds the next beating time from current time.
+		/// Finds the next timing point and applies to current and next timing point references.
 		/// </summary>
-		private void FindNextBeatTime()
+        private void FindNextTimingPoint()
+        {
+            var timingPoints = map.ControlPoints.TimingPoints;
+            for (int i = timingPointIndex + 1; i < timingPoints.Count; i++)
+            {
+                // Store next timing point
+                nextTimingPoint = timingPoints[i];
+                // If this timing point not reached, preserve next timing point and stop check.
+                if (curTime < timingPoints[i].Time)
+                    break;
+
+                // Set new current timing point and remove next timing point, in case this is the last loop.
+                SetCurrentTimingPoint(timingPoints[i], i);
+                nextTimingPoint = null;
+            }
+
+            RecalibrateBeatTime();
+        }
+
+        /// <summary>
+        /// Finds the next beating time from current time.
+        /// </summary>
+        private void FindNextBeatTime()
 		{
 			if(map != null)
 			{
 				// Check if current time has reached the next timing point.
 				if(nextTimingPoint != null && curTime >= nextTimingPoint.Time)
 				{
-					// Find the next timing point.
-					FindTimingPoint();
-					// Recalculate the next beat time, relative to the new timing point.
-					RecalibrateBeatTime();
+                    // Find the next timing point.
+                    FindNextTimingPoint();
 				}
 			}
 
 			// Set next beat time.
 			nextBeatTime += BeatLength;
-		}
+        }
 
 		/// <summary>
 		/// Resets the next beat time to the latest previous beat for current timing point.
@@ -120,6 +136,17 @@ namespace PBGame.Audio
 					nextBeatTime -= BeatLength;
 			}
 		}
-	}
+
+		/// <summary>
+		/// Sets new timing point.
+		/// </summary>
+        private void SetCurrentTimingPoint(TimingControlPoint timingPoint, int index)
+        {
+            curTimingPoint = timingPoint;
+            timingPointIndex = index;
+
+            OnBeatLengthChange?.Invoke(BeatLength);
+        }
+    }
 }
 
