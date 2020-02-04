@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Navigations.Overlays;
 
 namespace PBGame
 {
@@ -12,6 +13,7 @@ namespace PBGame
             base.PostInitialize();
 
             // Hook events
+            HookMusicController();
             HookScreenNavigator();
             HookMapSelection();
             HookConfigurations();
@@ -20,8 +22,27 @@ namespace PBGame
             screenNavigator.Show<SplashScreen>();
         }
 
-        // TODO: Implement music controller looping.
-        // private void 
+        private void HookMusicController()
+        {
+            musicController.OnEnd += () =>
+            {
+                // TODO: Loop the music when not in game screen.
+                // if(!(screenNavigator.CurrentScreen is GameScreen))
+                {
+                    // Check whether menu bar exists and try letting the music menu handle music switching.
+                    var menuBar = overlayNavigator.Get<MenuBarOverlay>();
+                    // if ()
+                    {
+                    }
+                    // else
+                    {
+                        musicController.Seek(musicController.LoopTime);
+                        musicController.Play();
+                    }
+                }
+                // Else, don't do anything.
+            };
+        }
 
         /// <summary>
         /// Triggers actions on certain screen navigator events.
