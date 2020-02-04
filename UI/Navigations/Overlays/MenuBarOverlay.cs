@@ -13,6 +13,7 @@ namespace PBGame.UI.Navigations.Overlays
         
         private UguiObject container;
 
+        // TODO: Register more entries for more screen types.
         /// <summary>
         /// Table of colors mapped to screen types for automatic color adjustment.
         /// </summary>

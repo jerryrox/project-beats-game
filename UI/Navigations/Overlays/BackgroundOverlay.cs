@@ -1,18 +1,31 @@
+using System;
 using System.Collections.Generic;
 using PBGame.UI.Components.Background;
+using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBGame.Graphics;
+using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    // TODO: Switch modes between different background types.
     public class BackgroundOverlay : BaseOverlay, IBackgroundOverlay {
 
         private Color backgroundTint = Color.white;
 
+        // TODO: Register more entries for more screen types.
+        /// <summary>
+        /// Table of background displays mapped for screen types for automatic background change.
+        /// </summary>
+        /// <typeparam name="Type"></typeparam>
+        /// <typeparam name="IBackgroundDisplay"></typeparam>
+        /// <returns></returns>
+        private Dictionary<Type, IBackgroundDisplay> screenBackgrounds;
+
+
+        public IBackgroundDisplay EmptyBackground { get; private set; }
 
         public IBackgroundDisplay ImageBackground { get; private set; }
 
@@ -40,6 +53,7 @@ namespace PBGame.UI.Navigations.Overlays
         {
             get
             {
+                yield return EmptyBackground;
                 yield return ImageBackground;
                 yield return GradientBackground;
             }
@@ -48,20 +62,35 @@ namespace PBGame.UI.Navigations.Overlays
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
+
 
         [InitWithDependency]
         private void Init(IRoot3D root3D)
         {
-            ImageBackground = CreateChild<ImageBackgroundDisplay>("image", 0);
+            EmptyBackground = CreateChild<EmptyBackgroundDisplay>("empty", 0);
+            {
+                EmptyBackground.Anchor = Anchors.Fill;
+                EmptyBackground.RawSize = Vector2.zero;
+            }
+            ImageBackground = CreateChild<ImageBackgroundDisplay>("image", 1);
             {
                 ImageBackground.Anchor = Anchors.Fill;
                 ImageBackground.RawSize = Vector2.zero;
+                ImageBackground.Active = false;
             }
-            GradientBackground = CreateChild<GradientBackgroundDisplay>("gradient", 1);
+            GradientBackground = CreateChild<GradientBackgroundDisplay>("gradient", 2);
             {
                 GradientBackground.Anchor = Anchors.Fill;
                 GradientBackground.RawSize = Vector2.zero;
+                GradientBackground.Active = false;
             }
+
+            screenBackgrounds = new Dictionary<Type, IBackgroundDisplay>()
+            {
+                { typeof(HomeScreen), ImageBackground }
+            };
 
             OnEnableInited();
         }
@@ -76,6 +105,12 @@ namespace PBGame.UI.Navigations.Overlays
             UnbindEvents();
         }
 
+        public void SetBackground(IBackgroundDisplay display)
+        {
+            foreach (var bg in Backgrounds)
+                bg.ToggleDisplay(bg == display);
+        }
+
         /// <summary>
         /// Mounts the specified background image to the bg displays.
         /// </summary>
@@ -84,15 +119,29 @@ namespace PBGame.UI.Navigations.Overlays
             ImageBackground.MountBackground(background);
             GradientBackground.MountBackground(background);
         }
-        
+
+        /// <summary>
+        /// Adjusts background display matching the specified screen.
+        /// </summary>
+        private void ChangeBgDisplay(INavigationView screen)
+        {
+            // Try mounting the pre-defined background. Otherwise, display empty bg.
+            if (screenBackgrounds.TryGetValue(screen.GetType(), out IBackgroundDisplay display))
+                SetBackground(display);
+            else
+                SetBackground(EmptyBackground);
+        }
+
         /// <summary>
         /// Binds events to external dependencies.
         /// </summary>
         private void BindEvents()
         {
             MapSelection.OnBackgroundLoaded += MountBackground;
-            
             MountBackground(MapSelection.Background);
+
+            ScreenNavigator.OnShowView += ChangeBgDisplay;
+            
         }
 
         /// <summary>
@@ -101,6 +150,7 @@ namespace PBGame.UI.Navigations.Overlays
         private void UnbindEvents()
         {
             MapSelection.OnBackgroundLoaded -= MountBackground;
+            ScreenNavigator.OnShowView -= ChangeBgDisplay;
         }
     }
 }

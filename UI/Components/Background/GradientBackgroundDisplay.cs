@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -11,22 +8,13 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Background
 {
-    public class GradientBackgroundDisplay : UguiObject, IBackgroundDisplay
+    public class GradientBackgroundDisplay : BaseBackgroundDisplay, IBackgroundDisplay
     {
         private UguiSprite sprite;
-        private CanvasGroup canvasGroup;
         private UIGradient gradient;
 
-        private IMapBackground background;
 
-
-        public float Alpha
-        {
-            get => canvasGroup.alpha;
-            set => canvasGroup.alpha = value;
-        }
-
-        public Color Color
+        public override Color Color
         {
             get => sprite.Color;
             set => sprite.Color = value;
@@ -36,8 +24,6 @@ namespace PBGame.UI.Components.Background
         [InitWithDependency]
         private void Init()
         {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-
             sprite = CreateChild<UguiSprite>("sprite");
             {
                 sprite.Anchor = Anchors.Fill;
@@ -52,9 +38,9 @@ namespace PBGame.UI.Components.Background
             }
         }
 
-        public void MountBackground(IMapBackground background)
+        public override void MountBackground(IMapBackground background)
         {
-            this.background = background;
+            base.MountBackground(background);
 
             gradient.color1 = background.GradientTop;
             gradient.color2 = background.GradientBottom;

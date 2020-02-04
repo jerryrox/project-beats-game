@@ -9,21 +9,12 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Background
 {
-    public class ImageBackgroundDisplay : UguiObject, IBackgroundDisplay {
+    public class ImageBackgroundDisplay : BaseBackgroundDisplay, IBackgroundDisplay {
 
         private UguiTexture texture;
-        private CanvasGroup canvasGroup;
-
-        private IMapBackground background;
 
 
-        public float Alpha
-        {
-            get => canvasGroup.alpha;
-            set => canvasGroup.alpha = value;
-        }
-
-        public Color Color
+        public override Color Color
         {
             get => texture.Color;
             set => texture.Color = value;
@@ -33,8 +24,6 @@ namespace PBGame.UI.Components.Background
         [InitWithDependency]
         private void Init()
         {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-
             texture = CreateChild<UguiTexture>("texture");
             {
                 texture.Anchor = Anchors.Fill;
@@ -43,9 +32,9 @@ namespace PBGame.UI.Components.Background
             }
         }
 
-        public void MountBackground(IMapBackground background)
+        public override void MountBackground(IMapBackground background)
         {
-            this.background = background;
+            base.MountBackground(background);
 
             texture.Texture = background.Image;
             if (background.Image == null)
