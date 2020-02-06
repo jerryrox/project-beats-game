@@ -141,7 +141,7 @@ namespace PBGame.UI.Navigations.Overlays
             MountBackground(MapSelection.Background);
 
             ScreenNavigator.OnShowView += ChangeBgDisplay;
-            
+            ChangeBgDisplay(ScreenNavigator.CurrentScreen);
         }
 
         /// <summary>

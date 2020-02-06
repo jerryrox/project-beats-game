@@ -19,6 +19,8 @@ namespace PBGame.UI.Navigations
         public const int HomeScreen = 5;
         public const int HomeMenuOverlay = 6;
 
+        public const int SongsScreen = 10;
+
         public const int MenuBarOverlay = 100;
 
         public const int DialogOverlay = 200;
