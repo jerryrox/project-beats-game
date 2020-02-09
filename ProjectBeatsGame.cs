@@ -90,6 +90,7 @@ namespace PBGame
         /// </summary>
         private void HookConfigurations()
         {
+            // Game volume change events
             gameConfiguration.MasterVolume.OnValueChanged += (volume, _) =>
             {
                 musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
@@ -102,6 +103,12 @@ namespace PBGame
             gameConfiguration.EffectVolume.OnValueChanged += (volume, _) =>
             {
                 soundPooler.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
+            };
+
+            // Mapset sort change events
+            gameConfiguration.MapsetSort.OnValueChanged += (sort, _) => 
+            {
+                mapManager.Sort(sort);
             };
         }
     }
