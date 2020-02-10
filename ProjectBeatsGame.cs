@@ -14,6 +14,7 @@ namespace PBGame
             base.PostInitialize();
 
             // Hook events
+            HookEngine();
             HookMusicController();
             HookScreenNavigator();
             HookMapSelection();
