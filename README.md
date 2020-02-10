@@ -71,3 +71,6 @@ Slowly making progress 🧩
 
 ## Bugs
 - Fix an issue where the song won't change to the next song in home screen occasionally.
+
+## Improvements
+- Map background image transition on change.
