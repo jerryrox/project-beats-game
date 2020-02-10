@@ -33,6 +33,7 @@ namespace PBGame.Audio
             selection.OnMapChange += map =>
             {
                 this.map = map;
+                curTime = controller.CurrentTime;
                 FindTimingPoint();
             };
             controller.OnSeek += time =>

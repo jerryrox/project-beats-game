@@ -68,3 +68,6 @@ Slowly making progress 🧩
 - DownloaderScreen
 #### Others
 - Utilize MapPlaylist object in music player on menu overlay.
+
+## Bugs
+- Fix an issue where the song won't change to the next song in home screen occasionally.
