@@ -115,16 +115,10 @@ namespace PBGame.Maps
                 OnMapChange?.Invoke(map);
 
                 // Switch or fresh-load the background and music.
-                if (!musicCacher.IsCached(map))
-                {
-                    UnloadMusic();
-                    LoadMusic();
-                }
-                if (!backgroundCacher.IsCached(map))
-                {
-                    UnloadBackground();
-                    LoadBackground();
-                }
+                UnloadMusic();
+                LoadMusic();
+                UnloadBackground();
+                LoadBackground();
             }
         }
 
