@@ -59,7 +59,12 @@ namespace PBGame
                     // if ()
                     {
                     }
-                    // else
+                    // TODO: Else if homescreen, select a random music.
+                    if (screenNavigator.CurrentScreen is HomeScreen)
+                    {
+                        mapSelection.SelectMapset(mapManager.AllMapsets.GetRandom());
+                    }
+                    else
                     {
                         musicController.Play();
                         musicController.Seek(musicController.LoopTime);
