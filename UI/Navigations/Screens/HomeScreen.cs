@@ -36,6 +36,16 @@ namespace PBGame.UI.Navigations.Screens
 
             // Initially select a random song.
             SelectRandomMapset();
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            // Always hide menubar in home on enter.
+            OverlayNavigator.Hide<MenuBarOverlay>();
         }
 
         /// <summary>
@@ -51,9 +61,10 @@ namespace PBGame.UI.Navigations.Screens
 
             // Show home menu
             var homeMenuOverlay = OverlayNavigator.Show<HomeMenuOverlay>();
-            homeMenuOverlay.OnViewHide += () =>
+            homeMenuOverlay.OnViewHide += (isTransitioning) =>
             {
-                OverlayNavigator.Hide<MenuBarOverlay>();
+                if(!isTransitioning)
+                    OverlayNavigator.Hide<MenuBarOverlay>();
 
                 LogoDisplay.SetZoom(false);
                 BackgroundOverlay.Color = Color.white;

@@ -15,7 +15,7 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class HomeMenuOverlay : BaseOverlay, IHomeMenuOverlay {
 
-        public event Action OnViewHide;
+        public event Action<bool> OnViewHide;
 
         private GradientEffect gradientEffect;
 
@@ -122,7 +122,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnBackButton()
         {
-            HideView();
+            HideView(false);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnPlayButton()
         {
-            HideView();
+            HideView(true);
             ScreenNavigator.Show<SongsScreen>();
         }
 
@@ -139,7 +139,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnDownloadButton()
         {
-            HideView();
+            HideView(true);
             // TODO: Show download screen.
         }
 
@@ -157,9 +157,9 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Hides this view.
         /// </summary>
-        private void HideView()
+        private void HideView(bool isTransitioning)
         {
-            OnViewHide?.Invoke();
+            OnViewHide?.Invoke(isTransitioning);
             OverlayNavigator.Hide(this);
         }
     }
