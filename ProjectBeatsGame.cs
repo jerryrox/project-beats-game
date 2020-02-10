@@ -97,9 +97,25 @@ namespace PBGame
                 // Play music on load.
                 musicController.MountAudio(music);
                 musicController.Play();
+                
                 // Seek to preview time if not home screen.
                 if (!(screenNavigator.CurrentScreen is HomeScreen))
-                    musicController.Seek(mapSelection.Map.Metadata.PreviewTime);
+                {
+                    var previewTime = mapSelection.Map.Metadata.PreviewTime;
+                    // Some songs don't have a proper preview time.
+                    if(previewTime < 0)
+                        previewTime = music.Duration / 2;
+
+                    musicController.LoopTime = previewTime;
+                    musicController.Seek(previewTime);
+                }
+                else
+                {
+                    musicController.LoopTime = 0f;
+                }
+
+                // Play song
+                musicController.Fade(0f, 1f);
             };
             mapSelection.OnMusicUnloaded += () =>
             {
