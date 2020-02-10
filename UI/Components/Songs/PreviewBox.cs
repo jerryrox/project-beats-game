@@ -11,6 +11,7 @@ using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Graphics.Effects.Components;
+using PBFramework.Threading;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -32,6 +33,13 @@ namespace PBGame.UI.Components.Songs
 
         private IAnime hoverAni;
         private IAnime outAni;
+
+        /// <summary>
+        /// Whether it is the first background assignment from map selection after init.
+        /// Required to wait a frame if first load due to an issue where the texture thinks its size is not initialized yet.
+        /// This caused the texture to fit images assuming a 100x100 size.
+        /// </summary>
+        private bool isFirstBackground = true;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -208,7 +216,22 @@ namespace PBGame.UI.Components.Songs
         {
             thumb.Active = background.Image != null;
             thumb.Texture = background.Image;
-            thumb.FillTexture();
+
+            if (isFirstBackground)
+            {
+                isFirstBackground = false;
+                var timer = new SynchronizedTimer()
+                {
+                    WaitFrameOnStart = true,
+                    Limit = 0f
+                };
+                timer.OnFinished += delegate { thumb.FillTexture(); };
+                timer.Start();
+            }
+            else
+            {
+                thumb.FillTexture();
+            }
         }
 
         /// <summary>
