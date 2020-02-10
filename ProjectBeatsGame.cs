@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using UnityEngine;
 
 namespace PBGame
 {
@@ -22,6 +23,29 @@ namespace PBGame
             screenNavigator.Show<SplashScreen>();
         }
 
+        /// <summary>
+        /// Triggers actions on certain system events.
+        /// </summary>
+        private void HookEngine()
+        {
+            // Start listening to any exceptions that occurs during game.
+            AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
+            {
+                var exception = e.ExceptionObject as Exception;
+                Debug.LogError($"Unhandled exception: {exception.ToString()}");
+            };
+            Application.logMessageReceived += (condition, stackTrace, type) =>
+            {
+                if (type == LogType.Exception)
+                {
+                    Debug.LogError($"Unhandled exception at: {stackTrace}");
+                }
+            };
+        }
+
+        /// <summary>
+        /// Triggers actions on certain music controller events.
+        /// </summary>
         private void HookMusicController()
         {
             musicController.OnEnd += () =>

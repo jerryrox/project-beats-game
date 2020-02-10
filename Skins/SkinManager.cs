@@ -51,26 +51,30 @@ namespace PBGame.Skins
             return false;
         }
 
-        public async Task Reload(IEventProgress progress)
+        public Task Reload(IEventProgress progress)
         {
             // Load the default skin.
             DefaultSkin.AssetStore.Load();
-
-            // Wait for store reload
-            await store.Reload(progress);
-            // Run on main thread
-            UnityThreadService.Dispatch(() =>
+            
+            return Task.Run(async () =>
             {
-                // Refill skins list
-                skins.Clear();
-                skins.Add(DefaultSkin);
-                skins.AddRange(store.Skins);
+                // Wait for store reload
+                await store.Reload(progress);
 
-                // TODO: Process for a case where the currently selected skin no longer exists in the store.
+                // Run on main thread
+                UnityThreadService.DispatchUnattended(() =>
+                {
+                    // Refill skins list
+                    skins.Clear();
+                    skins.Add(DefaultSkin);
+                    skins.AddRange(store.Skins);
 
-                // Finished event
-                progress.InvokeFinished();
-                return null;
+                    // TODO: Process for a case where the currently selected skin no longer exists in the store.
+
+                    // Finished event
+                    progress.InvokeFinished();
+                    return null;
+                });
             });
         }
 

@@ -1,5 +1,6 @@
 using System;
 using PBGame.UI.Components.HomeMenu;
+using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
@@ -38,6 +39,9 @@ namespace PBGame.UI.Navigations.Overlays
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
         private IGame Game { get; set; }
@@ -127,7 +131,7 @@ namespace PBGame.UI.Navigations.Overlays
         private void OnPlayButton()
         {
             HideView();
-            // TODO: Show songs screen.
+            ScreenNavigator.Show<SongsScreen>();
         }
 
         /// <summary>

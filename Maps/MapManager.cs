@@ -54,24 +54,28 @@ namespace PBGame.Maps
             return false;
         }
 
-        public async Task Reload(IEventProgress progress)
+        public Task Reload(IEventProgress progress)
         {
-            // Wait for store reloading.
-            await store.Reload(progress);
-            // Run on the main thread
-            UnityThreadService.Dispatch(() =>
+            return Task.Run(async () =>
             {
-                // Refill the mapset list
-                allMapsets.Clear();
-                allMapsets.AddRange(store.Mapsets);
+                // Wait for store reloading.
+                await store.Reload(progress);
 
-                // TODO: Process for a case where the previously selected map no longer exists.
+                // Run on the main thread
+                UnityThreadService.DispatchUnattended(() =>
+                {
+                    // Refill the mapset list
+                    allMapsets.Clear();
+                    allMapsets.AddRange(store.Mapsets);
 
-                // Fill the displayed mapsets list using last search term.
-                Search(lastSearch);
-                // Finished
-                progress.InvokeFinished();
-                return null;
+                    // TODO: Process for a case where the previously selected map no longer exists.
+
+                    // Fill the displayed mapsets list using last search term.
+                    Search(lastSearch);
+                    // Finished
+                    progress.InvokeFinished();
+                    return null;
+                });
             });
         }
 

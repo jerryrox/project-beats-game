@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.IO;
@@ -48,12 +49,18 @@ namespace PBGame.Stores
             lock (mapsets)
             {
                 mapsets.Clear();
-                foreach (var mapset in GetAll())
+                var rawMapsets = GetAll().ToList();
+
+                progress.Report(0f);
+                for (int i = 0; i < rawMapsets.Count; i++)
                 {
-                    var loadedMapset = LoadData(mapset);
-                    if(loadedMapset != null)
+                    var loadedMapset = LoadData(rawMapsets[i]);
+                    if (loadedMapset != null)
                         mapsets.Add(loadedMapset);
+
+                    progress.Report((float)i / rawMapsets.Count);
                 }
+                progress.Report(1f);
             }
         }
 

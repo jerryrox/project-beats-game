@@ -55,6 +55,7 @@ namespace PBGame.UI.Navigations.Screens
             initLoader = new InitLoader(Dependencies);
             initLoader.OnProgress += OnLoaderProgress;
             initLoader.OnStatusChange += OnLoaderStatus;
+            initLoader.OnComplete += LogoDisplay.PlayEnd;
             initLoader.Load();
 
             // Display logo animation.
