@@ -37,6 +37,7 @@ namespace PBGame.UI.Components.Songs
                 label.IsBold = true;
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.WrapText = false;
+                label.Text = "Sort by";
             }
             grid = CreateChild<UguiGrid>("grid", 1);
             {
@@ -46,7 +47,7 @@ namespace PBGame.UI.Components.Songs
                 grid.OffsetBottom = 0f;
                 grid.X = 100f;
                 grid.Width = ButtonSize * Enum.GetNames(typeof(MapsetSorts)).Length;
-                grid.CellSize = new Vector2(ButtonSize, grid.Height);
+                grid.CellSize = new Vector2(ButtonSize, 56f);
             }
 
             foreach (var sortType in (MapsetSorts[])Enum.GetValues(typeof(MapsetSorts)))
@@ -56,7 +57,7 @@ namespace PBGame.UI.Components.Songs
                     button.SortType = sortType;
                     button.LabelText = sortType.ToString();
 
-                    button.OnPointerDown += () => OnSortChange(button.SortType);
+                    button.OnPointerDown += () => SetSort(button.SortType);
                 }
                 sortButtons.Add(button);
             }
@@ -69,7 +70,9 @@ namespace PBGame.UI.Components.Songs
         {
             // Apply on button.
             for (int i = 0; i < sortButtons.Count; i++)
+            {
                 sortButtons[i].SetToggle(sortButtons[i].SortType == sort);
+            }
 
             // Notify change
             OnSortChange(sort);

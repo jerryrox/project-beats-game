@@ -118,13 +118,13 @@ namespace PBGame.UI.Components.Songs
         {
             if (isToggled)
             {
-                outAni.Stop();
-                hoverAni.PlayFromStart();
+                unfocusAni.Stop();
+                focusAni.PlayFromStart();
             }
             else
             {
-                hoverAni.Stop();
-                outAni.PlayFromStart();
+                focusAni.Stop();
+                unfocusAni.PlayFromStart();
             }
         }
     }
