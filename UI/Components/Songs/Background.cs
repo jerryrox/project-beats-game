@@ -31,6 +31,7 @@ namespace PBGame.UI.Components.Songs
             {
                 blurSprite.Anchor = Anchors.Fill;
                 blurSprite.RawSize = Vector2.zero;
+                blurSprite.SpriteName = "null";
 
                 blurSprite.AddEffect(new BlurShaderEffect());
             }
@@ -75,7 +76,7 @@ namespace PBGame.UI.Components.Songs
             var leftSpace = screenSize.x + shadeSprite.X;
             var bottomSpace = screenSize.y;
 
-            shadeSprite.Width = Mathf.Cos(5) * leftSpace;
+            shadeSprite.Width = Mathf.Cos(5 * Mathf.Deg2Rad) * leftSpace;
             shadeSprite.Height = Mathf.Sqrt(leftSpace * leftSpace + bottomSpace * bottomSpace);
         }
     }

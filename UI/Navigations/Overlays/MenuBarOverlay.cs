@@ -19,7 +19,8 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private Dictionary<Type, Color> backgroundColors = new Dictionary<Type, Color>()
         {
-            { typeof(HomeScreen), new Color(0f, 0f, 0f, 0f) }
+            { typeof(HomeScreen), new Color(0f, 0f, 0f, 0f) },
+            { typeof(SongsScreen), new Color(0f, 0f, 0f, 0f) }
         };
 
 

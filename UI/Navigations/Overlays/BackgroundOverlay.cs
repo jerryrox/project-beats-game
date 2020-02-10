@@ -15,13 +15,9 @@ namespace PBGame.UI.Navigations.Overlays
 
         private Color backgroundTint = Color.white;
 
-        // TODO: Register more entries for more screen types.
         /// <summary>
         /// Table of background displays mapped for screen types for automatic background change.
         /// </summary>
-        /// <typeparam name="Type"></typeparam>
-        /// <typeparam name="IBackgroundDisplay"></typeparam>
-        /// <returns></returns>
         private Dictionary<Type, IBackgroundDisplay> screenBackgrounds;
 
 
@@ -87,9 +83,11 @@ namespace PBGame.UI.Navigations.Overlays
                 GradientBackground.Active = false;
             }
 
+            // TODO: Register more entries for more screen types.
             screenBackgrounds = new Dictionary<Type, IBackgroundDisplay>()
             {
-                { typeof(HomeScreen), ImageBackground }
+                { typeof(HomeScreen), ImageBackground },
+                { typeof(SongsScreen), ImageBackground }
             };
 
             OnEnableInited();

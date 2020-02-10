@@ -1,10 +1,10 @@
 using System;
 using PBGame.Maps;
-using PBFramework.Graphics;
+using PBFramework.UI;
 
 namespace PBGame.UI.Components.Songs
 {
-    public interface ISortButton : IGraphicObject {
+    public interface ISortButton : ITrigger {
 
         /// <summary>
         /// The sort type represented by this button.
