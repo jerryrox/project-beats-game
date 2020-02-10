@@ -72,7 +72,7 @@ namespace PBGame.UI.Components.Songs
                 highlightSprite.SpriteName = "glow-bar";
                 highlightSprite.ImageType = Image.Type.Sliced;
             }
-            label = CreateChild<UguiLabel>("label", 2);
+            label = CreateChild<Label>("label", 2);
             {
                 label.Anchor = Anchors.Fill;
                 label.RawSize = Vector2.zero;

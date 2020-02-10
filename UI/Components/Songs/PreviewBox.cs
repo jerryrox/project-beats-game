@@ -95,7 +95,7 @@ namespace PBGame.UI.Components.Songs
                     progressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
                     progressBar.Foreground.OffsetTop = 2f;
                 }
-                titleLabel = mask.CreateChild<UguiLabel>("title", 2);
+                titleLabel = mask.CreateChild<Label>("title", 2);
                 {
                     titleLabel.Anchor = Anchors.TopStretch;
                     titleLabel.Pivot = Pivots.Top;
@@ -113,7 +113,7 @@ namespace PBGame.UI.Components.Songs
                     shadow.effectDistance = Vector2.one;
                     shadow.effectColor = new Color(0f, 0f, 0f, 0.5f);
                 }
-                artistLabel = mask.CreateChild<UguiLabel>("artist", 3);
+                artistLabel = mask.CreateChild<Label>("artist", 3);
                 {
                     artistLabel.Anchor = Anchors.BottomStretch;
                     artistLabel.Pivot = Pivots.Bottom;

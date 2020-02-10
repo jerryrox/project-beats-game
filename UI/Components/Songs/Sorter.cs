@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
-            label = CreateChild<UguiLabel>("label", 0);
+            label = CreateChild<Label>("label", 0);
             {
                 label.Anchor = Anchors.LeftStretch;
                 label.Pivot = Pivots.Left;
