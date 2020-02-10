@@ -77,6 +77,28 @@ namespace PBGame.Maps
             return mapsets[Random.Range(0, mapsets.Count)];
         }
 
+        public IMapset GetPrevious(IMapset mapset)
+        {
+            if(mapsets.Count == 0) return null;
+            if(mapset == null) return null;
+
+            var index = mapsets.IndexOf(mapset);
+            if(index < 0)
+                return mapsets[0];
+            return mapsets[index <= 0 ? mapsets.Count - 1 : index - 1];
+        }
+
+        public IMapset GetNext(IMapset mapset)
+        {
+            if (mapsets.Count == 0) return null;
+            if (mapset == null) return null;
+            
+            var index = mapsets.IndexOf(mapset);
+            if (index < 0)
+                return mapsets[0];
+            return mapsets[index >= mapsets.Count-1 ? 0 : index + 1];
+        }
+
         public void Sort(MapsetSorts sort)
         {
             sortMethod = sort;

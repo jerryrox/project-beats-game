@@ -57,6 +57,16 @@ namespace PBGame.Maps
         IMapset GetRandom();
 
         /// <summary>
+        /// Returns the mapset before the specified mapset.
+        /// </summary>
+        IMapset GetPrevious(IMapset mapset);
+
+        /// <summary>
+        /// Returns the mapset after the specified mapset.
+        /// </summary>
+        IMapset GetNext(IMapset mapset);
+
+        /// <summary>
         /// Sorts the mapsets by specified sorting method.
         /// </summary>
         void Sort(MapsetSorts sort);
