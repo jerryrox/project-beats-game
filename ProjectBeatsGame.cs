@@ -61,8 +61,9 @@ namespace PBGame
                     }
                     // else
                     {
-                        musicController.Seek(musicController.LoopTime);
                         musicController.Play();
+                        musicController.Seek(musicController.LoopTime);
+                        musicController.Fade(0f, 1f);
                     }
                 }
                 // Else, don't do anything.
