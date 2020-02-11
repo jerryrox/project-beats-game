@@ -33,7 +33,7 @@ namespace PBGame.UI.Navigations.Screens
             SongList = CreateChild<SongList>("song-list", 1);
             {
                 SongList.Anchor = Anchors.Fill;
-                SongList.Y = 120f;
+                SongList.OffsetTop = 120f;
                 SongList.OffsetBottom = 72f;
                 SongList.OffsetLeft = 0f;
                 SongList.OffsetRight = 0f;

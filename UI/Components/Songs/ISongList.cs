@@ -3,7 +3,8 @@ using PBFramework.Graphics;
 
 namespace PBGame.UI.Components.Songs
 {
-    public interface ISongList : IGraphicObject {
+    public interface ISongList : IListView {
     
+        
     }
 }
