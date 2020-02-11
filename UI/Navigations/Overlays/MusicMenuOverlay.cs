@@ -57,8 +57,8 @@ namespace PBGame.UI.Navigations.Overlays
             container.Pivot = Pivots.TopRight;
             container.X = -16f;
             container.Y = ContainerPosY;
-            container.Width = 480f;
-            container.Height = 160f;
+            container.Width = 440f;
+            container.Height = 140f;
 
             mask = container.CreateChild<UguiSprite>("mask", 0);
             {
@@ -87,7 +87,7 @@ namespace PBGame.UI.Navigations.Overlays
                 title = mask.CreateChild<Label>("title", 2);
                 {
                     title.Anchor = Anchors.BottomStretch;
-                    title.OffsetLeft = title.OffsetRight = 32f;
+                    title.OffsetLeft = title.OffsetRight = 16f;
                     title.Y = 92f;
                     title.Height = 30f;
                     title.IsBold = true;
@@ -97,7 +97,7 @@ namespace PBGame.UI.Navigations.Overlays
                 artist = mask.CreateChild<Label>("artist", 3);
                 {
                     artist.Anchor = Anchors.BottomStretch;
-                    artist.OffsetLeft = artist.OffsetRight = 32f;
+                    artist.OffsetLeft = artist.OffsetRight = 16f;
                     artist.Y = 70f;
                     artist.Height = 30f;
                     artist.WrapText = false;
