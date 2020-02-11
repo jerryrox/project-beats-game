@@ -103,6 +103,8 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override void OnDisable()
         {
+            OnViewHide = null;
+            
             MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
         }
 

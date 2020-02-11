@@ -340,6 +340,12 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnBackgroundLoaded(IMapBackground background)
         {
+            if (backgroundAgent.CurrentKey != Mapset.Maps[0])
+            {
+                LoadBackground();
+                return;
+            }
+
             // Set highlight color without affecting current alpha.
             SetHighlightColor(background.Highlight);
 

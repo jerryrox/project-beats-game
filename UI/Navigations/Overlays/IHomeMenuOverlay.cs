@@ -9,6 +9,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called on view hide event.
         /// Returns whether the screen is transitioning to another view.
+        /// Reset when hidden.
         /// </summary>
         event Action<bool> OnViewHide;
 
