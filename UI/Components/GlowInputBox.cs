@@ -4,10 +4,12 @@ using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components
 {
-    public class GlowInputBox : InputBox, IInputBox {
+    public class GlowInputBox : InputBox, IInputBox, IPointerClickHandler, IPointerDownHandler
+    {
 
         public event Action OnFocus;
 
@@ -66,6 +68,16 @@ namespace PBGame.UI.Components
                 focusAni.Stop();
                 unfocusAni.PlayFromStart();
             }
+        }
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            SetFocus(true);
+        }
+
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+        {
+            SetFocus(true);
         }
     }
 }
