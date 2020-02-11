@@ -1,18 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Graphics;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine.UI;
 
-using IInputBox = PBGame.UI.Components.IInputBox;
-
 namespace PBGame.UI.Components
 {
-    public class InputBox : UguiInputBox, IInputBox {
+    public class GlowInputBox : InputBox, IInputBox {
 
         public event Action OnFocus;
 

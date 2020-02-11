@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SearchBar : InputBox, ISearchBar {
+    public class SearchBar : GlowInputBox, ISearchBar {
 
         private ISprite icon;
 
