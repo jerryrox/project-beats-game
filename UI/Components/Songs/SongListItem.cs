@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Maps;
+using PBGame.Audio;
 using PBGame.Assets.Caching;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
@@ -21,9 +22,14 @@ namespace PBGame.UI.Components.Songs
     public class SongListItem : UguiTrigger, ISongListItem {
 
         private const float AnimationSpeed = 4f;
+
+        /// <summary>
+        /// Number of seconds to wait before actually loading the background asset.
+        /// </summary>
+        private const float BackgroundLoadWait = 1f;
+
         private const float FocusedWidth = 1100f;
         private const float UnfocusedWidth = 1000f;
-
         private const float UnfocusedHighlightAlpha = 0f;
         private const float FocusedHighlightAlpha = 1f;
         private static readonly Color UnfocusedGlowColor = new Color(0f, 0f, 0f, 0.4f);
@@ -46,8 +52,11 @@ namespace PBGame.UI.Components.Songs
         private UIShadow creatorShadow;
 
         private CacherAgent<IMap, IMapBackground> backgroundAgent;
+        private bool isAnimating = false;
         private bool isFocused = false;
+        private bool isBackgroundWait = false;
         private float aniTime = 1f;
+        private float bgWaitTime = BackgroundLoadWait;
 
 
         public int ItemIndex { get; set; }
@@ -60,10 +69,29 @@ namespace PBGame.UI.Components.Songs
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
 
+        [ReceivesDependency]
+        private IBackgroundCacher BackgroundCacher { get; set; }
+
 
         [InitWithDependency]
-        private void Init(IBackgroundCacher backgroundCacher)
+        private void Init(ISoundPooler soundPooler)
         {
+            OnPointerEnter += () =>
+            {
+                soundPooler.Play("menuhit");
+            };
+            OnPointerExit += () =>
+            {
+
+            };
+            OnPointerClick += () =>
+            {
+                soundPooler.Play("menuclick");
+
+                if(Active && Mapset != null)
+                    MapSelection.SelectMapset(Mapset);
+            };
+
             container = CreateChild<UguiObject>("container", 0);
             {
                 container.Anchor = Anchors.CenterStretch;
@@ -76,6 +104,9 @@ namespace PBGame.UI.Components.Songs
                     highlight.Size = new Vector2(1920f, 144f);
                     highlight.SpriteName = "glow-128";
                     highlight.Alpha = UnfocusedHighlightAlpha;
+
+                    if(highlight is IRaycastable raycastable)
+                        raycastable.IsRaycastTarget = false;
 
                     highlight.AddEffect(new AdditiveShaderEffect());
                 }
@@ -159,7 +190,7 @@ namespace PBGame.UI.Components.Songs
                 }
             }
 
-            backgroundAgent = new CacherAgent<IMap, IMapBackground>(backgroundCacher)
+            backgroundAgent = new CacherAgent<IMap, IMapBackground>(BackgroundCacher)
             {
                 UseDelayedRemove = true,
                 RemoveDelay = 2f
@@ -194,7 +225,7 @@ namespace PBGame.UI.Components.Songs
             LoadBackground();
 
             // Set mapset focus.
-            SetFocus(mapset != null && MapSelection.Mapset == mapset);
+            SetFocus(MapSelection.Mapset != null && this.Mapset == MapSelection.Mapset);
         }
 
         /// <summary>
@@ -206,6 +237,7 @@ namespace PBGame.UI.Components.Songs
             GameConfiguration.PreferUnicode.OnValueChanged += OnPreferUnicode;
 
             OnMapsetChanged(MapSelection.Mapset);
+            OnPreferUnicode(GameConfiguration.PreferUnicode.Value, false);
         }
 
         /// <summary>
@@ -237,8 +269,15 @@ namespace PBGame.UI.Components.Songs
             thumbImage.Texture = null;
             thumbImage.Alpha = 0f;
 
+            // Background asset should be loaded after a certain delay.
             if (Mapset != null)
-                backgroundAgent.Request(Mapset.Maps[0]);
+            {
+                isBackgroundWait = true;
+                if(BackgroundCacher.IsCached(Mapset.Maps[0]))
+                    bgWaitTime = 0f;
+                else
+                    bgWaitTime = BackgroundLoadWait;
+            }
         }
 
         /// <summary>
@@ -247,7 +286,7 @@ namespace PBGame.UI.Components.Songs
         private void StartAnimation()
         {
             aniTime = 0f;
-            enabled = true;
+            isAnimating = true;
             Update();
         }
 
@@ -314,6 +353,21 @@ namespace PBGame.UI.Components.Songs
 
         private void Update()
         {
+            // Load background.
+            if (isBackgroundWait)
+            {
+                bgWaitTime -= Time.deltaTime;
+                if (bgWaitTime <= 0f)
+                {
+                    bgWaitTime = BackgroundLoadWait;
+                    isBackgroundWait = false;
+
+                    backgroundAgent.Request(Mapset.Maps[0]);
+                }
+            }
+
+            if(!isAnimating) return;
+
             // Advance
             aniTime += Time.deltaTime * AnimationSpeed;
 
@@ -321,7 +375,7 @@ namespace PBGame.UI.Components.Songs
             if (aniTime >= 1f)
             {
                 aniTime = 1f;
-                enabled = false;
+                isAnimating = false;
             }
 
             // Determine target transition values.
