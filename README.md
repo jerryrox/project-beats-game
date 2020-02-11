@@ -71,6 +71,7 @@ Slowly making progress 🧩
 
 ## Bugs
 - Fix an issue where the song won't change to the next song in home screen occasionally.
+- Fix an issue where SongListItem doesn't load thumb images smoothly.
 
 ## Improvements
 - Map background image transition on change.
