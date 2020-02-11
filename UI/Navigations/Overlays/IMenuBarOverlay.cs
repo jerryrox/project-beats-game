@@ -22,6 +22,11 @@ namespace PBGame.UI.Navigations.Overlays
         IMenuButton ProfileButton { get; }
 
         /// <summary>
+        /// Returns the music player button.
+        /// </summary>
+        IMusicButton MusicButton { get; }
+
+        /// <summary>
         /// Returns the settings menu button.
         /// </summary>
         IMenuButton SettingsMenuButton { get; }

@@ -30,6 +30,8 @@ namespace PBGame.UI.Navigations.Overlays
 
         public IMenuButton ProfileButton { get; private set; }
 
+        public IMusicButton MusicButton { get; private set; }
+
         public IMenuButton SettingsMenuButton { get; private set; }
 
         public IMenuButton NotificationMenuButton { get; private set; }
@@ -77,7 +79,16 @@ namespace PBGame.UI.Navigations.Overlays
                     ProfileButton.X = 80f;
                     ProfileButton.Width = 220f;
                 }
-                SettingsMenuButton = container.CreateChild<SettingsMenuButton>("settings-menu", 3);
+                MusicButton = container.CreateChild<MusicButton>("music", 3);
+                {
+                    MusicButton.Anchor = Anchors.RightStretch;
+                    MusicButton.Pivot = Pivots.Right;
+                    MusicButton.OffsetTop = 0f;
+                    MusicButton.OffsetBottom = 0f;
+                    MusicButton.X = -160f;
+                    MusicButton.Width = 80f;
+                }
+                SettingsMenuButton = container.CreateChild<SettingsMenuButton>("settings-menu", 4);
                 {
                     SettingsMenuButton.Anchor = Anchors.RightStretch;
                     SettingsMenuButton.Pivot = Pivots.Right;
@@ -86,7 +97,7 @@ namespace PBGame.UI.Navigations.Overlays
                     SettingsMenuButton.X = -80f;
                     SettingsMenuButton.Width = 80f;
                 }
-                NotificationMenuButton = container.CreateChild<NotificationMenuButton>("notification-menu", 4);
+                NotificationMenuButton = container.CreateChild<NotificationMenuButton>("notification-menu", 5);
                 {
                     NotificationMenuButton.Anchor = Anchors.RightStretch;
                     NotificationMenuButton.Pivot = Pivots.Right;
@@ -119,9 +130,9 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void BindEvents()
         {
-            ScreenNavigator.OnShowView += ChangeBackgroundColor;
+            ScreenNavigator.OnShowView += OnScreenChange;
 
-            ChangeBackgroundColor(ScreenNavigator.CurrentScreen);
+            OnScreenChange(ScreenNavigator.CurrentScreen);
         }
 
         /// <summary>
@@ -129,14 +140,16 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void UnbindEvents()
         {
-            ScreenNavigator.OnShowView -= ChangeBackgroundColor;
+            ScreenNavigator.OnShowView -= OnScreenChange;
         }
 
         /// <summary>
-        /// Adjusts background sprite color based on the current screen.
+        /// Event called when current screen has changed.
         /// </summary>
-        private void ChangeBackgroundColor(INavigationView screen)
+        private void OnScreenChange(INavigationView screen)
         {
+            MusicButton.Active = screen is HomeScreen;
+
             if (backgroundColors.TryGetValue(screen.GetType(), out Color color))
                 BackgroundSprite.Color = color;
         }

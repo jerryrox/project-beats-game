@@ -54,13 +54,15 @@ namespace PBGame
                 // TODO: Loop the music when not in game screen.
                 // if(!(screenNavigator.CurrentScreen is GameScreen))
                 {
+                    // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
                     // Check whether menu bar exists and try letting the music menu handle music switching.
                     var menuBar = overlayNavigator.Get<MenuBarOverlay>();
-                    // if ()
+                    if (menuBar.MusicButton.Active)
                     {
+                        menuBar.MusicButton.SetNextMusic();
                     }
-                    // TODO: Else if homescreen, select a random music.
-                    if (screenNavigator.CurrentScreen is HomeScreen)
+                    // Else if homescreen, select a random music.
+                    else if (screenNavigator.CurrentScreen is HomeScreen)
                     {
                         mapSelection.SelectMapset(mapManager.AllMapsets.GetRandom());
                     }
