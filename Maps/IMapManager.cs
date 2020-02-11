@@ -25,6 +25,11 @@ namespace PBGame.Maps
         /// </summary>
         IMapsetList DisplayedMapsets { get; }
 
+        /// <summary>
+        /// Returns the search term last applied to maps.
+        /// </summary>
+        string LastSearch { get; }
+
 
         /// <summary>
         /// Clears loaded maps from memory and reloads from disk.

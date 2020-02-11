@@ -28,6 +28,8 @@ namespace PBGame.Maps
 
         public IMapsetList DisplayedMapsets => displayedMapsets;
 
+        public string LastSearch => lastSearch;
+
 
         public MapManager(IMapsetStore store)
         {
