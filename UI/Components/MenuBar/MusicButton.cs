@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Audio;
 using PBFramework.UI;
@@ -13,10 +14,9 @@ namespace PBGame.UI.Components.MenuBar
 {
     public class MusicButton : IconMenuButton, IMusicButton {
 
-        protected override string IconName => "icon-music";
-
-
         public IMusicPlaylist MusicPlaylist { get; private set; }
+
+        protected override string IconName => "icon-music";
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
@@ -26,17 +26,19 @@ namespace PBGame.UI.Components.MenuBar
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IOverlayNavigator overlayNavigator)
         {
             OnToggleOn += () =>
             {
-                // TODO: Show music overlay. (Pass this interface for next/prev music control.
-                // TODO: Toggle off when music overlay is hidden.
+                var overlay = overlayNavigator.Show<MusicMenuOverlay>();
+                overlay.MusicButton = this;
+                // Toggle off when music overlay is hidden.
+                overlay.OnClose += () => SetToggle(false);
             };
 
             OnToggleOff += () =>
             {
-                // TODO: Hide music overlay.
+                overlayNavigator.Hide<MusicMenuOverlay>();
             };
 
             OnEnableInited();
@@ -66,6 +68,13 @@ namespace PBGame.UI.Components.MenuBar
         public void SetPrevMusic()
         {
             MapSelection.SelectMapset(MusicPlaylist.GetPrevious());
+        }
+
+        public void SetRandomMusic()
+        {
+            var mapset = MapManager.AllMapsets.GetRandom();
+            MapSelection.SelectMapset(mapset);
+            MusicPlaylist.Focus(mapset);
         }
     }
 }

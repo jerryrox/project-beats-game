@@ -22,6 +22,7 @@ namespace PBGame.UI.Navigations
         public const int SongsScreen = 10;
 
         public const int MenuBarOverlay = 100;
+        public const int MusicMenuOverlay = 103;
 
         public const int DialogOverlay = 200;
     }

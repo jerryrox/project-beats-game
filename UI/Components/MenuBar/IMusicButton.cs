@@ -19,5 +19,10 @@ namespace PBGame.UI.Components.MenuBar
         /// Sets current music to prev in the list.
         /// </summary>
         void SetPrevMusic();
+
+        /// <summary>
+        /// Sets current music to random mapset in the list.
+        /// </summary>
+        void SetRandomMusic();
     }
 }
