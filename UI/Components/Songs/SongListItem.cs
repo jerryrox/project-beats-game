@@ -211,6 +211,7 @@ namespace PBGame.UI.Components.Songs
         {
             base.OnDisable();
 
+            SetMapset(null);
             UnbindEvents();
         }
 
