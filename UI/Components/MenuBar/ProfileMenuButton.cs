@@ -21,7 +21,9 @@ namespace PBGame.UI.Components.MenuBar
         private ILabel nicknameLabel;
         private ILabel levelLabel;
 
+        private bool hasOverlay = false;
         private CacherAgent<Texture2D> cacherAgent;
+
 
 
         /// <summary>
@@ -45,11 +47,18 @@ namespace PBGame.UI.Components.MenuBar
             OnToggleOn += () =>
             {
                 var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
-                overlay.OnClose += () => SetToggle(false);
+                overlay.OnClose += () =>
+                {
+                    hasOverlay = false;
+                    SetToggle(false);
+                };
+                hasOverlay = true;
             };
             OnToggleOff += () =>
             {
-                OverlayNavigator.Hide<ProfileMenuOverlay>();
+                if (hasOverlay)
+                    OverlayNavigator.Hide<ProfileMenuOverlay>();
+                hasOverlay = false;
             };
 
             cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);

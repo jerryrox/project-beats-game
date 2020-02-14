@@ -14,6 +14,9 @@ namespace PBGame.UI.Components.MenuBar
 {
     public class MusicButton : IconMenuButton, IMusicButton {
 
+        private bool hasOverlay = false;
+
+
         public IMusicPlaylist MusicPlaylist { get; private set; }
 
         protected override string IconName => "icon-music";
@@ -32,13 +35,19 @@ namespace PBGame.UI.Components.MenuBar
             {
                 var overlay = overlayNavigator.Show<MusicMenuOverlay>();
                 overlay.MusicButton = this;
-                // Toggle off when music overlay is hidden.
-                overlay.OnClose += () => SetToggle(false);
+                overlay.OnClose += () =>
+                {
+                    hasOverlay = false;
+                    SetToggle(false);
+                };
+                hasOverlay = true;
             };
 
             OnToggleOff += () =>
             {
-                overlayNavigator.Hide<MusicMenuOverlay>();
+                if (hasOverlay)
+                    overlayNavigator.Hide<MusicMenuOverlay>();
+                hasOverlay = false;
             };
 
             OnEnableInited();

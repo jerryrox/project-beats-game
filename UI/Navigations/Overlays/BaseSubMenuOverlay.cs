@@ -49,7 +49,7 @@ namespace PBGame.UI.Navigations.Overlays
 
                     closeTrigger.OnPointerDown += () =>
                     {
-                        CloseOverlay();
+                        OverlayNavigator.Hide(this);
                     };
                 }
 
@@ -69,10 +69,11 @@ namespace PBGame.UI.Navigations.Overlays
             }
         }
 
-        protected override void OnDisable()
+        protected override void OnPreHide()
         {
-            base.OnDisable();
+            base.OnPreHide();
 
+            OnClose?.Invoke();
             OnClose = null;
         }
 
@@ -84,15 +85,6 @@ namespace PBGame.UI.Navigations.Overlays
         protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
         {
             return AnimePreset.GetSubMenuOverlayHide(this);
-        }
-
-        /// <summary>
-        /// Closes the overlay with event invocation.
-        /// </summary>
-        protected virtual void CloseOverlay()
-        {
-            OnClose?.Invoke();
-            OverlayNavigator.Hide(this);
         }
     }
 }

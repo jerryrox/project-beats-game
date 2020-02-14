@@ -130,7 +130,6 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnMapsetListChange(List<IMapset> mapsets)
         {
-            Debug.Log("On mapset list changed");
             // Refresh the list.
             this.mapsets = mapsets;
             TotalItems = mapsets.Count;
