@@ -5,6 +5,7 @@ using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
+using PBGame.Animations;
 using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -20,8 +21,6 @@ using IMusicButton = PBGame.UI.Components.MenuBar.IMusicButton;
 namespace PBGame.UI.Navigations.Overlays
 {
     public class MusicMenuOverlay : BaseSubMenuOverlay, IMusicMenuOverlay {
-
-        private const float ContainerPosY = -16f;
 
         private new ISprite mask;
         private ISprite glow;
@@ -56,7 +55,7 @@ namespace PBGame.UI.Navigations.Overlays
             container.Anchor = Anchors.TopRight;
             container.Pivot = Pivots.TopRight;
             container.X = -16f;
-            container.Y = ContainerPosY;
+            container.Y = -16f;
             container.Width = 400f;
             container.Height = 140f;
 
@@ -211,22 +210,12 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {
-            var anime = base.CreateShowAnime(dependencies);
-            anime.AnimateFloat(y => container.Y = y)
-                .AddTime(0f, ContainerPosY * 3f, EaseType.QuadEaseOut)
-                .AddTime(0.35f, ContainerPosY)
-                .Build();
-            return anime;
+            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayPopupShow(this, () => container);
         }
 
         protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
         {
-            var anime = base.CreateHideAnime(dependencies);
-            anime.AnimateFloat(y => container.Y = y)
-                .AddTime(0f, ContainerPosY, EaseType.QuadEaseIn)
-                .AddTime(0.35f, ContainerPosY * 3f)
-                .Build();
-            return anime;
+            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayPopupHide(this, () => container);
         }
 
         /// <summary>

@@ -115,7 +115,8 @@ namespace PBGame.UI.Components.ProfileMenu
         private void OnUserChange(IOnlineUser user, IOnlineUser _ = null)
         {
             RemoveImage();
-            imageAgent.Request(user.AvatarImage);
+            if (!string.IsNullOrEmpty(user.AvatarImage))
+                imageAgent.Request(user.AvatarImage);
         }
     }
 }

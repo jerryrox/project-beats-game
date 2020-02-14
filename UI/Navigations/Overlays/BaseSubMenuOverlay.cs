@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Animations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Utils;
@@ -24,6 +25,9 @@ namespace PBGame.UI.Navigations.Overlays
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IAnimePreset AnimePreset { get; set; }
 
 
         [InitWithDependency]
@@ -74,22 +78,12 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {
-            var anime = new Anime();
-            anime.AnimateFloat(alpha => Alpha = alpha)
-                .AddTime(0f, 0f, EaseType.QuadEaseOut)
-                .AddTime(0.35f, 1f)
-                .Build();
-            return anime;
+            return AnimePreset.GetSubMenuOverlayShow(this);
         }
 
         protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
         {
-            var anime = new Anime();
-            anime.AnimateFloat(alpha => Alpha = alpha)
-                .AddTime(0f, 1f, EaseType.QuadEaseOut)
-                .AddTime(0.35f, 0f)
-                .Build();
-            return anime;
+            return AnimePreset.GetSubMenuOverlayHide(this);
         }
 
         /// <summary>

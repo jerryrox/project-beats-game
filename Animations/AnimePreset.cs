@@ -1,5 +1,7 @@
+using System;
 using PBFramework.UI.Navigations;
 using PBFramework.Utils;
+using PBFramework.Graphics;
 using PBFramework.Animations;
 using UnityEngine;
 
@@ -52,6 +54,58 @@ namespace PBGame.Animations
             anime.AnimateFloat((alpha) => overlay.Alpha = alpha)
                 .AddTime(0f, 1f, EaseType.QuadEaseOut)
                 .AddTime(0.35f, 0f)
+                .Build();
+            return anime;
+        }
+
+        public IAnime GetSubMenuOverlayShow(INavigationView overlay)
+        {
+            var anime = new Anime();
+            anime.AnimateFloat(alpha => overlay.Alpha = alpha)
+                .AddTime(0f, 0f, EaseType.CubicEaseOut)
+                .AddTime(0.25f, 1f)
+                .Build();
+            return anime;
+        }
+
+        public IAnime GetSubMenuOverlayHide(INavigationView overlay)
+        {
+            var anime = new Anime();
+            anime.AnimateFloat(alpha => overlay.Alpha = alpha)
+                .AddTime(0f, 1f, EaseType.CubicEaseOut)
+                .AddTime(0.25f, 0f)
+                .Build();
+            return anime;
+        }
+
+        public IAnime GetSubMenuOverlayPopupShow(INavigationView overlay, Func<IGraphicObject> getContainer)
+        {
+            IGraphicObject container = null;
+            var anime = GetSubMenuOverlayShow(overlay);
+            anime.AnimateFloat(y =>
+            {
+                if(container == null)
+                    container = getContainer();
+                container.Y = y;
+            })
+                .AddTime(0f, -36f, EaseType.CubicEaseOut)
+                .AddTime(anime.Duration, -16f)
+                .Build();
+            return anime;
+        }
+
+        public IAnime GetSubMenuOverlayPopupHide(INavigationView overlay, Func<IGraphicObject> getContainer)
+        {
+            IGraphicObject container = null;
+            var anime = GetSubMenuOverlayHide(overlay);
+            anime.AnimateFloat(y =>
+            {
+                if(container == null)
+                    container = getContainer();
+                container.Y = y;
+            })
+                .AddTime(0f, -16f, EaseType.CubicEaseOut)
+                .AddTime(anime.Duration, -36f)
                 .Build();
             return anime;
         }

@@ -1,8 +1,8 @@
-using PBFramework.Graphics;
+using PBFramework.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public interface IStatHolder : IGraphicObject
+    public interface IStatHolder : ISprite
     {
 
     }

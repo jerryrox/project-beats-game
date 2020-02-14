@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class StatHolder : UguiObject, IStatHolder {
+    public class StatHolder : UguiSprite, IStatHolder {
 
         private IStatDisplay levelDisplay;
         private IStatDisplay accuracyDisplay;
@@ -19,6 +19,8 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init()
         {
+            Color = new Color(1f, 1f, 1f, 0.125f);
+
             levelDisplay = CreateChild<StatDisplay>("level", 0);
             {
                 levelDisplay.X = -64f;

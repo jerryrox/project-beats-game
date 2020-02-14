@@ -73,6 +73,7 @@ namespace PBGame.UI.Components.MenuBar
                 {
                     imageTexture.Anchor = Anchors.Fill;
                     imageTexture.RawSize = Vector2.zero;
+                    imageTexture.Position = Vector2.zero;
                     imageTexture.Active = false;
                 }
             }

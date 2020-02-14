@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.ProfileMenu;
+using PBGame.Animations;
+using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -44,6 +46,16 @@ namespace PBGame.UI.Navigations.Overlays
                 .AddTime(0f, () => content.GlowSprite.Color)
                 .AddTime(0.25f, Color.black)
                 .Build();
+        }
+
+        protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
+        {
+            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayPopupShow(this, () => container);
+        }
+
+        protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
+        {
+            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayPopupHide(this, () => container);
         }
     }
 }
