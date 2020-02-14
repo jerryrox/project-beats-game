@@ -13,6 +13,8 @@ namespace PBGame.UI.Navigations.Overlays
         
         private UguiObject container;
 
+        private BaseMenuButton[] menuButtons;
+
         // TODO: Register more entries for more screen types.
         /// <summary>
         /// Table of colors mapped to screen types for automatic color adjustment.
@@ -108,6 +110,9 @@ namespace PBGame.UI.Navigations.Overlays
                 }
             }
 
+            menuButtons = GetComponentsInChildren<BaseMenuButton>(true);
+            HookMenuButtonFocus();
+
             OnEnableInited();
         }
 
@@ -123,6 +128,30 @@ namespace PBGame.UI.Navigations.Overlays
             base.OnDisable();
 
             UnbindEvents();
+        }
+
+        /// <summary>
+        /// Listens to all menu buttons' focus events to automatically unfocus other menu buttons.
+        /// </summary>
+        private void HookMenuButtonFocus()
+        {
+            for (int i = 0; i < menuButtons.Length; i++)
+            {
+                var menu = menuButtons[i];
+                menu.OnToggleOn += () => UnfocusAllMenu(menu);
+            }
+        }
+
+        /// <summary>
+        /// Unfocuses all menu buttons except the specified button, if specified.
+        /// </summary>
+        private void UnfocusAllMenu(BaseMenuButton exception)
+        {
+            for (int i = 0; i < menuButtons.Length; i++)
+            {
+                if(menuButtons[i] != exception)
+                    menuButtons[i].SetToggle(false);
+            }
         }
 
         /// <summary>
