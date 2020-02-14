@@ -8,9 +8,14 @@ namespace PBGame.Networking.API
 		int Id { get; }
 
 		/// <summary>
-		/// The username provided by user.
+		/// Whether this user is a logged in user.
 		/// </summary>
-		string Username { get; }
+		bool IsOnline { get; }
+
+        /// <summary>
+        /// The username provided by user.
+        /// </summary>
+        string Username { get; }
 
 		/// <summary>
 		/// Returns the url of the user's avatar.

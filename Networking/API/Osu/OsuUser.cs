@@ -4,7 +4,9 @@ namespace PBGame.Networking.API.Osu
     
 		public int Id { get; set; }
 
-		public string Username { get; set; }
+        public bool IsOnline => true;
+
+        public string Username { get; set; }
 
 		public string AvatarImage { get; set; }
 

@@ -4,6 +4,8 @@ namespace PBGame.Networking.API
 
         public int Id => 0;
 
+        public bool IsOnline => false;
+
         public string Username => "Offline user";
 
         public string AvatarImage => "";
