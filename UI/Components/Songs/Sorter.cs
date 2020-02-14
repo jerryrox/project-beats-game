@@ -83,7 +83,8 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnSortChange(MapsetSorts sort)
         {
-            GameConfiguration.MapsetSort.Value = sort;
+            if(GameConfiguration.MapsetSort.Value != sort)
+                GameConfiguration.MapsetSort.Value = sort;
         }
     }
 }

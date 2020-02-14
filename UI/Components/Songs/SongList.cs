@@ -4,6 +4,7 @@ using PBGame.Graphics;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
+using PBFramework.Threading;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -45,6 +46,15 @@ namespace PBGame.UI.Components.Songs
                 .Build();
 
             OnEnableInited();
+
+            // Recalibrate after a frame due to a limitation where a rect transform's size doesn't update immediately when using anchors.
+            var timer = new SynchronizedTimer()
+            {
+                WaitFrameOnStart = true,
+                Limit = 0f
+            };
+            timer.OnFinished += delegate { Recalibrate(); };
+            timer.Start();
         }
 
         protected override void OnEnableInited()
@@ -120,6 +130,7 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnMapsetListChange(List<IMapset> mapsets)
         {
+            Debug.Log("On mapset list changed");
             // Refresh the list.
             this.mapsets = mapsets;
             TotalItems = mapsets.Count;

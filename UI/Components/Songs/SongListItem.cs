@@ -369,7 +369,8 @@ namespace PBGame.UI.Components.Songs
                     bgWaitTime = BackgroundLoadWait;
                     isBackgroundWait = false;
 
-                    backgroundAgent.Request(Mapset.Maps[0]);
+                    if(Mapset != null)
+                        backgroundAgent.Request(Mapset.Maps[0]);
                 }
             }
 

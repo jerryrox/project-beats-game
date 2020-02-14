@@ -52,7 +52,7 @@ namespace PBGame.UI.Components.Songs
         {
             base.OnEnableInited();
 
-            Text = MapManager.LastSearch;
+            OnSearchBarSubmitted(Text = MapManager.LastSearch);
         }
 
         /// <summary>
@@ -60,7 +60,8 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void SetSearch(string value)
         {
-            MapManager.Search(value);
+            if (MapManager.LastSearch != value)
+                MapManager.Search(value);
 
             // If only a single result, select it.
             if(MapManager.DisplayedMapsets.Count == 1)
