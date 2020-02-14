@@ -12,6 +12,7 @@ Slowly making progress 🧩
 
 ## To-Dos
 - Implement user data management. (user data should be managed per-online user.)
+- Implement play record management for storing scores and replays.
 ### PBGame
 - BaseGame
 - ProjectBeatsGame
