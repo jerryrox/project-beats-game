@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -8,7 +9,6 @@ using PBGame.Graphics;
 using PBGame.Animations;
 using PBGame.Configurations;
 using PBFramework.UI;
-using PBFramework.Utils;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -24,7 +24,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         private new ISprite mask;
         private ISprite glow;
-        private ITexture thumb;
+        private IMapImageDisplay imageDisplay;
         private ISprite gradient;
         private ILabel title;
         private ILabel artist;
@@ -67,11 +67,10 @@ namespace PBGame.UI.Navigations.Overlays
                 mask.SpriteName = "box";
                 mask.Color = Color.black;
 
-                thumb = mask.CreateChild<UguiTexture>("thumb", 0);
+                imageDisplay = mask.CreateChild<MapImageDisplay>("imageDisplay", 0);
                 {
-                    thumb.Anchor = Anchors.Fill;
-                    thumb.RawSize = Vector2.zero;
-                    thumb.Active = false;
+                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.RawSize = Vector2.zero;
                 }
                 gradient = mask.CreateChild<UguiSprite>("gradient", 1);
                 {
@@ -285,9 +284,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnBackgroundChange(IMapBackground background)
         {
-            thumb.Texture = background.Image;
-            thumb.Active = background.Image != null;
-            thumb.FillTexture();
+            imageDisplay.SetBackground(background);
         }
 
         /// <summary>
