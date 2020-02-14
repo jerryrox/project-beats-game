@@ -29,13 +29,9 @@ namespace PBGame.Configurations
         /// </summary>
 		ProxyBindable<string> Password { get; }
         /// <summary>
-        /// Whether the login username should be stored.
+        /// Whether the login credentials should be stored.
         /// </summary>
-		ProxyBindable<bool> SaveUsername { get; }
-        /// <summary>
-        /// Whether the login password should be stored.
-        /// </summary>
-		ProxyBindable<bool> SavePassword { get; }
+		ProxyBindable<bool> SaveCredentials { get; }
 
         /// <summary>
         /// Whether unicode texts should be preferred over english/romaji text.

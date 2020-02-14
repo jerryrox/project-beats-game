@@ -25,9 +25,7 @@ namespace PBGame.Configurations
 
         public ProxyBindable<string> Password { get; private set; }
 
-        public ProxyBindable<bool> SaveUsername { get; private set; }
-
-        public ProxyBindable<bool> SavePassword { get; private set; }
+        public ProxyBindable<bool> SaveCredentials { get; private set; }
 
 
         public ProxyBindable<bool> PreferUnicode { get; private set; }
@@ -70,8 +68,7 @@ namespace PBGame.Configurations
 
             Username = InitStringBindable(nameof(Username), "");
             Password = InitStringBindable(nameof(Password), "");
-            SaveUsername = InitBoolBindable(nameof(SaveUsername), false);
-            SavePassword = InitBoolBindable(nameof(SavePassword), false);
+            SaveCredentials = InitBoolBindable(nameof(SaveCredentials), false);
 
             PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false);
 
