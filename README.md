@@ -11,9 +11,7 @@ Slowly making progress 🧩
 - Newtonsoft.Json (Tested with net45 version)
 
 ## To-Dos
-- (MenubarOverlay) Make sub menu overlay transitions quicker.
 - Implement user data management. (user data should be managed per-online user.)
-- Make songs listview centering smooth.
 ### PBGame
 - BaseGame
 - ProjectBeatsGame
