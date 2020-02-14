@@ -10,6 +10,8 @@ namespace PBGame.Networking.API
 
         public abstract string BaseUrl { get; }
 
+        public abstract ApiProviders ApiType { get; }
+
         public BindableBool IsOnline { get; private set; } = new BindableBool(false);
 
         public Bindable<IOnlineUser> User { get; protected set; }

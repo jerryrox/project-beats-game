@@ -11,6 +11,11 @@ namespace PBGame.Networking.API
         string BaseUrl { get; }
 
         /// <summary>
+        /// Returns the provider type of this api.
+        /// </summary>
+        ApiProviders ApiType { get; }
+
+        /// <summary>
         /// Returns whether the user is currently logged into the API server.
         /// </summary>
         BindableBool IsOnline { get; }
