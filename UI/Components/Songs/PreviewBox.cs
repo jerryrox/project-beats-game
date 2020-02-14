@@ -23,13 +23,12 @@ namespace PBGame.UI.Components.Songs
     public class PreviewBox : UguiTrigger, IPreviewBox {
 
         private ISprite mask;
-        private ITexture thumb;
+        private IMapImageDisplay imageDisplay;
+        private ISprite imageGradient;
         private IProgressBar progressBar;
         private ILabel titleLabel;
         private ILabel artistLabel;
         private ISprite glow;
-
-        private UIGradient thumbGradient;
 
         private IAnime hoverAni;
         private IAnime outAni;
@@ -82,14 +81,18 @@ namespace PBGame.UI.Components.Songs
                 mask.AddEffect(new MaskEffect());
                 mask.AddEffect(new FlipEffect()).Component.horizontal = true;
 
-                thumb = mask.CreateChild<UguiTexture>("thumb", 0);
+                imageDisplay = mask.CreateChild<MapImageDisplay>("imageDisplay", 0);
                 {
-                    thumb.Anchor = Anchors.Fill;
-                    thumb.RawSize = Vector2.zero;
+                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.RawSize = Vector2.zero;
 
-                    thumbGradient = thumb.AddEffect(new GradientEffect()).Component;
-                    thumbGradient.color1 = Color.black;
-                    thumbGradient.offset = -0.5f;
+                    imageGradient = imageDisplay.CreateChild<UguiSprite>("gradient", 100);
+                    {
+                        imageGradient.Anchor = Anchors.Fill;
+                        imageGradient.RawSize = Vector2.zero;
+                        imageGradient.SpriteName = "gradation-left";
+                        imageGradient.Color = new Color(0f, 0f, 0f, 0.5f);
+                    }
                 }
                 progressBar = mask.CreateChild<UguiProgressBar>("progress", 1);
                 {
@@ -154,9 +157,9 @@ namespace PBGame.UI.Components.Songs
                 .AddTime(0f, () => glow.Color)
                 .AddTime(0.25f, () => MapSelection.Background.Highlight)
                 .Build();
-            hoverAni.AnimateFloat(offset => thumbGradient.offset = offset)
-                .AddTime(0f, () => thumbGradient.offset)
-                .AddTime(0.25f, -1)
+            hoverAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
+                .AddTime(0f, () => imageGradient.Alpha)
+                .AddTime(0.25f, 0f)
                 .Build();
 
             outAni = new Anime();
@@ -164,9 +167,9 @@ namespace PBGame.UI.Components.Songs
                 .AddTime(0f, () => glow.Color)
                 .AddTime(0.25f, Color.black)
                 .Build();
-            outAni.AnimateFloat(offset => thumbGradient.offset = offset)
-                .AddTime(0f, () => thumbGradient.offset)
-                .AddTime(0.25f, -0.5f)
+            outAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
+                .AddTime(0f, () => imageGradient.Alpha)
+                .AddTime(0.25f, 0.5f)
                 .Build();
 
             OnEnableInited();
@@ -214,8 +217,7 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnBackgroundChange(IMapBackground background)
         {
-            thumb.Active = background.Image != null;
-            thumb.Texture = background.Image;
+            imageDisplay.SetBackground(background);
 
             if (isFirstBackground)
             {
@@ -225,12 +227,8 @@ namespace PBGame.UI.Components.Songs
                     WaitFrameOnStart = true,
                     Limit = 0f
                 };
-                timer.OnFinished += delegate { thumb.FillTexture(); };
+                timer.OnFinished += delegate { imageDisplay.FillTexture(); };
                 timer.Start();
-            }
-            else
-            {
-                thumb.FillTexture();
             }
         }
 

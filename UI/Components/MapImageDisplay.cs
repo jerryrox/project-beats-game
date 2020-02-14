@@ -87,6 +87,8 @@ namespace PBGame.UI.Components
             transitionAni.PlayFromStart();
         }
 
+        public void FillTexture() => CurTexture.FillTexture();
+
         /// <summary>
         /// Sets the texture specified texture reference to the current display.
         /// </summary>

@@ -12,5 +12,10 @@ namespace PBGame.UI.Components
         /// Sets the background to display.
         /// </summary>
         void SetBackground(IMapBackground background);
+
+        /// <summary>
+        /// Dispatches FillTexture call to the current texture.
+        /// </summary>
+        void FillTexture();
     }
 }

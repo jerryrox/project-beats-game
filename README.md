@@ -14,7 +14,7 @@ Slowly making progress 🧩
 - Implement user data management. (user data should be managed per-online user.)
 - Implement play record management for storing scores and replays.
 - Initially sort the mapsets on load.
-- Map background image transition on change.
+- Map background image transition on change. (Apply on other areas where necessary)
 - Fix issue where the song won't change to the next song in home screen occasionally.
 - Fix issue where metronome doesn't update when changing song mid-way.
 
