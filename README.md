@@ -15,7 +15,10 @@ Slowly making progress 🧩
 - Implement play record management for storing scores and replays.
 - Initially sort the mapsets on load.
 - Map background image transition on change.
-- Fix an issue where the song won't change to the next song in home screen occasionally.
+- Fix issue where the song won't change to the next song in home screen occasionally.
+- Fix issue where metronome doesn't update when changing song mid-way.
+
+- Support for interactive unit testing for UI.
 
 ### PBGame
 - BaseGame
@@ -55,16 +58,9 @@ Slowly making progress 🧩
 - Implement health display using progress bar element.
 #### Stores
 - MapAssetStore
-#### UI/Navigations
-#### UI/Navigations/Overlays
-- BackgroundOverlay
-- MenuOverlay
-- HomeMenuOverlay
 #### UI/Navigations/Overlays/Networking
 #### UI/Navigations/Screens
 - (SplashScreen) Think of the UI design.
-- (HomeScreen) Receive button event from logo display and show home menu overlay when pressed.
-- SongsScreen
 - PlayScreen
 - ResultScreen
 #### UI/Navigations/Screens/Networking

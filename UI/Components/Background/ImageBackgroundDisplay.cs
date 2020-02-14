@@ -11,24 +11,23 @@ namespace PBGame.UI.Components.Background
 {
     public class ImageBackgroundDisplay : BaseBackgroundDisplay, IBackgroundDisplay {
 
-        private UguiTexture texture;
+        private IMapImageDisplay mapImage;
 
 
         public override Color Color
         {
-            get => texture.Color;
-            set => texture.Color = value;
+            get => mapImage.Color;
+            set => mapImage.Color = value;
         }
 
 
         [InitWithDependency]
         private void Init()
         {
-            texture = CreateChild<UguiTexture>("texture");
+            mapImage = CreateChild<MapImageDisplay>("bg");
             {
-                texture.Anchor = Anchors.Fill;
-                texture.RawSize = Vector2.zero;
-                texture.Active = false;
+                mapImage.Anchor = Anchors.Fill;
+                mapImage.RawSize = Vector2.zero;
             }
         }
 
@@ -36,16 +35,7 @@ namespace PBGame.UI.Components.Background
         {
             base.MountBackground(background);
 
-            texture.Texture = background.Image;
-            if (background.Image == null)
-            {
-                texture.Active = false;
-            }
-            else
-            {
-                texture.Active = true;
-                texture.FillTexture();
-            }
+            mapImage.SetBackground(background);
         }
     }
 }
