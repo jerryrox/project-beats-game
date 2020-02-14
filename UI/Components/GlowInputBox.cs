@@ -1,8 +1,10 @@
 using System;
 using PBGame.Graphics;
+using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -22,15 +24,23 @@ namespace PBGame.UI.Components
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            Background.Anchor = Anchors.BottomStretch;
-            Background.Y = 0f;
-            Background.OffsetLeft = -12f;
-            Background.OffsetRight = -12f;
-            Background.Height = 20f;
-            Background.Color = colorPreset.PrimaryFocus;
-            Background.Alpha = 0.25f;
-            Background.SpriteName = "glow-bar";
-            Background.ImageType = Image.Type.Sliced;
+            // Since the existing backgrond sprite IS on the root input box itself, we should override this.
+            backgroundSprite.SpriteName = "null";
+            backgroundSprite = CreateChild<UguiSprite>("bg", 0);
+            {
+                backgroundSprite.Anchor = Anchors.Fill;
+                backgroundSprite.RawSize = Vector2.zero;
+            }
+
+            backgroundSprite.Anchor = Anchors.BottomStretch;
+            backgroundSprite.Y = 0f;
+            backgroundSprite.OffsetLeft = -12f;
+            backgroundSprite.OffsetRight = -12f;
+            backgroundSprite.Height = 20f;
+            backgroundSprite.Color = colorPreset.PrimaryFocus;
+            backgroundSprite.Alpha = 0.25f;
+            backgroundSprite.SpriteName = "glow-bar";
+            backgroundSprite.ImageType = Image.Type.Sliced;
 
             ValueLabel.OffsetLeft = PlaceholderLabel.OffsetLeft = 4f;
             ValueLabel.OffsetRight = PlaceholderLabel.OffsetRight = 4f;

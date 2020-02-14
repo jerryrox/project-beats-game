@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Assets.Caching;
 using PBGame.Networking.API;
 using PBFramework.UI;
+using PBFramework.UI.Navigations;
 using PBFramework.Allocation.Caching;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -33,10 +35,23 @@ namespace PBGame.UI.Components.MenuBar
         [ReceivesDependency]
         private IWebImageCacher WebImageCacher { get; set; }
 
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
 
         [InitWithDependency]
         private void Init(IApiManager apiManager)
         {
+            OnToggleOn += () =>
+            {
+                var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
+                overlay.OnClose += () => SetToggle(false);
+            };
+            OnToggleOff += () =>
+            {
+                OverlayNavigator.Hide<ProfileMenuOverlay>();
+            };
+
             cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);
             cacherAgent.OnFinished += OnAvatarLoaded;
 
@@ -54,7 +69,7 @@ namespace PBGame.UI.Components.MenuBar
                 imageBackground.Size = new Vector2(48f, 48f);
                 imageBackground.Color = new Color(0f, 0f, 0f, 0.125f);
 
-                imageTexture = CreateChild<UguiTexture>("image", 5);
+                imageTexture = imageBackground.CreateChild<UguiTexture>("image", 5);
                 {
                     imageTexture.Anchor = Anchors.Fill;
                     imageTexture.RawSize = Vector2.zero;

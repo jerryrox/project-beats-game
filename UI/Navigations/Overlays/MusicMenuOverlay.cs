@@ -57,7 +57,7 @@ namespace PBGame.UI.Navigations.Overlays
             container.Pivot = Pivots.TopRight;
             container.X = -16f;
             container.Y = ContainerPosY;
-            container.Width = 440f;
+            container.Width = 400f;
             container.Height = 140f;
 
             mask = container.CreateChild<UguiSprite>("mask", 0);
