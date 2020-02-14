@@ -116,6 +116,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             if (GameConfiguration.SaveCredentials.Value)
             {
+                remember.Value = true;
                 username.Text = GameConfiguration.Username.Value;
                 password.Text = GameConfiguration.Password.Value;
             }

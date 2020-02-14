@@ -13,6 +13,10 @@ Slowly making progress 🧩
 ## To-Dos
 - Implement user data management. (user data should be managed per-online user.)
 - Implement play record management for storing scores and replays.
+- Initially sort the mapsets on load.
+- Map background image transition on change.
+- Fix an issue where the song won't change to the next song in home screen occasionally.
+
 ### PBGame
 - BaseGame
 - ProjectBeatsGame
@@ -67,10 +71,3 @@ Slowly making progress 🧩
 - DownloaderScreen
 #### Others
 - Utilize MapPlaylist object in music player on menu overlay.
-
-## Bugs
-- Fix an issue where the song won't change to the next song in home screen occasionally.
-- Fix an issue where SongListItem doesn't load thumb images smoothly.
-
-## Improvements
-- Map background image transition on change.
