@@ -74,11 +74,12 @@ namespace PBGame
 
         public virtual void GracefulQuit()
         {
-
+            ForceQuit();
         }
 
         public virtual void ForceQuit()
         {
+            Application.Quit();
         }
 
         /// <summary>

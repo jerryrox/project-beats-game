@@ -24,6 +24,24 @@ namespace PBGame
             screenNavigator.Show<SplashScreen>();
         }
 
+        public override void GracefulQuit()
+        {
+            // TODO: Show fading animation through quit overlay.
+            {
+                base.GracefulQuit();
+            }
+        }
+
+        public override void ForceQuit()
+        {
+            // Store configurations first
+            gameConfiguration.Save();
+            mapConfiguration.Save();
+            mapsetConfiguration.Save();
+
+            base.ForceQuit();
+        }
+
         /// <summary>
         /// Triggers actions on certain system events.
         /// </summary>
