@@ -11,6 +11,7 @@ Slowly making progress 🧩
 - Newtonsoft.Json (Tested with net45 version)
 
 ## To-Dos
+- Implement visualizer module.
 - Implement user data management. (user data should be managed per-online user.)
 - Implement play record management for storing scores and replays.
 - Initially sort the mapsets on load.

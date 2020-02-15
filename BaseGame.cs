@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PBGame.IO.Decoding.Osu;
 using PBGame.Maps;
+using PBGame.Data.Users;
 using PBGame.Audio;
 using PBGame.Skins;
 using PBGame.Stores;
@@ -53,6 +54,8 @@ namespace PBGame
 
         protected DownloadStore downloadStore;
         protected ApiManager apiManager;
+
+        protected IUserManager userManager;
 
         protected IRootMain rootMain;
         protected IRoot3D root3D;
@@ -117,6 +120,8 @@ namespace PBGame
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
+
+            Dependencies.CacheAs<IUserManager>(userManager = new UserManager(Dependencies));
 
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));
