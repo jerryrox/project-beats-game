@@ -26,5 +26,10 @@ namespace PBGame.Data.Users
         /// Returns the statistics for specified game mode.
         /// </summary>
         IUserStatistics GetStatistics(GameModes gameMode);
+
+        /// <summary>
+        /// Saves the user to the data store.
+        /// </summary>
+        void Save();
     }
 }

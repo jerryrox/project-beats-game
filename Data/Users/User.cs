@@ -34,6 +34,10 @@ namespace PBGame.Data.Users
             }
         }
 
+        [JsonIgnore]
+        [ReceivesDependency]
+        private IUserManager UserManager { get; set; }
+
 
         public User() {}
 
@@ -73,5 +77,7 @@ namespace PBGame.Data.Users
         }
 
         public IUserStatistics GetStatistics(GameModes gameMode) => statistics[gameMode];
+
+        public void Save() => UserManager.SaveUser(this);
     }
 }

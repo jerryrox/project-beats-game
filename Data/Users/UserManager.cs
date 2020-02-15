@@ -71,6 +71,16 @@ namespace PBGame.Data.Users
             });
         }
 
+        public void SaveUser(IUser user)
+        {
+            if(user == null) return;
+            if (!(user is User u))
+                throw new ArgumentException($"user must be a type of {nameof(User)}");
+
+            // Save to store.
+            userStore.SaveUser(u);
+        }
+
         public void RemoveUser()
         {
             currentUser.Value = null;

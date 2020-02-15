@@ -90,6 +90,8 @@ namespace PBGame.Data.Users
             PlayCount++;
             PlayTime += record.Time;
             TotalHits += record.HitCount;
+
+            User.Save();
         }
 
         public void RecordPlay(IRecord newRecord, IRecord bestRecord)
@@ -116,6 +118,8 @@ namespace PBGame.Data.Users
             PlayTime += newRecord.Time;
             TotalHits += newRecord.HitCount;
             MaxCombo = Mathf.Max(MaxCombo, newRecord.MaxCombo);
+
+            User.Save();
         }
 
         /// <summary>

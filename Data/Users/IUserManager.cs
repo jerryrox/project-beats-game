@@ -23,6 +23,11 @@ namespace PBGame.Data.Users
         Task SetUser(string username, IReturnableProgress<IUser> progress);
 
         /// <summary>
+        /// Saves the specified user to store.
+        /// </summary>
+        void SaveUser(IUser user);
+
+        /// <summary>
         /// Removes current user.
         /// </summary>
         void RemoveUser();

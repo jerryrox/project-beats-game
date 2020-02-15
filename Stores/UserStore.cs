@@ -26,6 +26,11 @@ namespace PBGame.Stores
             }
         }
 
+        public void SaveUser(User user)
+        {
+            Database.Edit().Write(user).Commit();
+        }
+
         protected override IDatabase<User> CreateDatabase()
         {
             return new Database<User>(GameDirectory.Users);
