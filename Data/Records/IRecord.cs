@@ -55,6 +55,11 @@ namespace PBGame.Data.Records
         IReadOnlyList<JudgementRecord> Judgements { get; }
 
         /// <summary>
+        /// Returns the number of hit judgements made.
+        /// </summary>
+        int HitCount { get; }
+
+        /// <summary>
         /// Returns the number of seconds spent on this record.
         /// </summary>
         int Time { get; }

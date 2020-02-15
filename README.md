@@ -13,6 +13,7 @@ Slowly making progress 🧩
 ## To-Dos
 - Implement visualizer module.
 - Initially sort the mapsets on load.
+- Store play record to record manager and apply to user statistics.
 - Load user manager & record manager during initialize screen.
 - Map background image transition on change. (Apply on other areas where necessary)
 - Fix issue where the song won't change to the next song in home screen occasionally.

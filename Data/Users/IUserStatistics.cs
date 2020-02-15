@@ -1,3 +1,4 @@
+using PBGame.Data.Records;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
@@ -87,16 +88,14 @@ namespace PBGame.Data.Users
         /// </summary>
         int GetRankCount(RankTypes type);
 
-        // TODO: Take in 1 record
         /// <summary>
         /// Records an incompleted play to the statistics.
         /// </summary>
-        void RecordIncompletePlay();
+        void RecordIncompletePlay(IRecord record);
 
-        // TODO: Take in 2 records, current and previous best.
         /// <summary>
         /// Records a complete play to the statistics.
         /// </summary>
-        void RecordPlay();
+        void RecordPlay(IRecord newRecord, IRecord bestRecord);
     }
 }

@@ -12,6 +12,13 @@ namespace PBGame.Data.Users
     public class UserStatistics : IUserStatistics {
 
         /// <summary>
+        /// Number of plays recorded which affects accuracy.
+        /// </summary>
+        [JsonProperty]
+        private int playsForAccuracy;
+
+
+        /// <summary>
         /// The user instance which owns this statistical info.
         /// </summary>
         [JsonIgnore]
@@ -76,14 +83,58 @@ namespace PBGame.Data.Users
 
         public int GetRankCount(RankTypes type) => RankCounts[type];
 
-        public void RecordIncompletePlay()
+        public void RecordIncompletePlay(IRecord record)
         {
-            // TODO:
+            AddTotalScore(record.Score);
+            
+            PlayCount++;
+            PlayTime += record.Time;
+            TotalHits += record.HitCount;
         }
 
-        public void RecordPlay()
+        public void RecordPlay(IRecord newRecord, IRecord bestRecord)
         {
-            // TODO:
+            AddTotalScore(newRecord.Score);
+
+            // If a fresh record
+            if(bestRecord == null)
+            {
+                RankedScore += newRecord.Score;
+                Accuracy = (Accuracy * playsForAccuracy + newRecord.Accuracy) / (playsForAccuracy + 1);
+
+                playsForAccuracy++;
+            }
+            // If new best record
+            else if (newRecord.Score > bestRecord.Score)
+            {
+                RankedScore = RankedScore - bestRecord.Score + newRecord.Score;
+                Accuracy = (Accuracy * playsForAccuracy - bestRecord.Accuracy + newRecord.Accuracy) / playsForAccuracy;
+            }
+
+            CompletedPlay++;
+            PlayCount++;
+            PlayTime += newRecord.Time;
+            TotalHits += newRecord.HitCount;
+            MaxCombo = Mathf.Max(MaxCombo, newRecord.MaxCombo);
+        }
+
+        /// <summary>
+        /// Adds the specified amount of score to the total score.
+        /// </summary>
+        private void AddTotalScore(int score)
+        {
+            TotalScore += score;
+
+            EvaluateLevel();
+        }
+
+        /// <summary>
+        /// Evaluates current level.
+        /// </summary>
+        private void EvaluateLevel()
+        {
+            while (CurExp >= MaxExp)
+                Level++;
         }
     }
 }

@@ -40,6 +40,9 @@ namespace PBGame.Data.Records
         [JsonIgnore]
         public IReadOnlyList<JudgementRecord> Judgements => judgements.AsReadOnly();
 
+        [JsonIgnore]
+        public int HitCount => judgements.Where(j => j.IsHit).Count();
+
         public int Time { get; set; }
 
         public float AverageOffset { get; set; }
