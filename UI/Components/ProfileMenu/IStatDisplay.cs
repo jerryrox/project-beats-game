@@ -13,5 +13,10 @@ namespace PBGame.UI.Components.ProfileMenu
         /// Text on the display label.
         /// </summary>
         string LabelText { get; set; }
+
+        /// <summary>
+        /// Text on the center of the display.
+        /// </summary>
+        string CenterText { get; set; }
     }
 }

@@ -13,6 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
+    // TODO: Support for logging in using other API providers.
     public class ProfileMenuButton : BaseMenuButton {
 
         private ISprite background;

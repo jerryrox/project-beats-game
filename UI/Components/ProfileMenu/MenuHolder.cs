@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
+    // TODO: Support for logging in using other API providers.
     public class MenuHolder : UguiObject, IMenuHolder {
 
         private IMenuButton detailButton;

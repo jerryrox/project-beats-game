@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Data.Users;
+using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -14,6 +16,11 @@ namespace PBGame.UI.Components.ProfileMenu
         private IStatDisplay accuracyDisplay;
 
         // TODO: Integrate with user data.
+        [ReceivesDependency]
+        private IUserManager UserManager { get; set; }
+
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
 
 
         [InitWithDependency]
@@ -37,6 +44,32 @@ namespace PBGame.UI.Components.ProfileMenu
                 accuracyDisplay.Progress = 0;
                 accuracyDisplay.LabelText = "Accuracy";
             }
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            SetupDisplays();
+        }
+
+        private void SetupDisplays()
+        {
+            var gameMode = GameConfiguration.RulesetMode.Value;
+            var user = UserManager.CurrentUser.Value;
+            if(user == null)
+                return;
+
+            var stats = user.GetStatistics(gameMode);
+
+            levelDisplay.Progress = stats.ExpProgress;
+            levelDisplay.CenterText = stats.Level.ToString();
+
+            accuracyDisplay.Progress = stats.Accuracy;
+            var roundedAcc = ((int)(stats.Accuracy * 1000f)) / 1000f;
+            accuracyDisplay.CenterText = roundedAcc.ToString("P1");
         }
     }
 }

@@ -14,6 +14,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
+    // TODO: Support for logging in using other API providers.
     public class ContentHolder : UguiObject, IContentHolder {
 
         private const float LoggedInHeight = 480f;

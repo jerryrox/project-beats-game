@@ -32,6 +32,12 @@ namespace PBGame.UI.Components.ProfileMenu
             set => label.Text = value;
         }
 
+        public string CenterText
+        {
+            get => centerLabel.Text;
+            set => centerLabel.Text = value;
+        }
+
 
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)

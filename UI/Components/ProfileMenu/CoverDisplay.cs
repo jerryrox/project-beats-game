@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
+    // TODO: Support for logging in using other API providers.
     public class CoverDisplay : UguiObject, ICoverDisplay
     {
         private ITexture image;
