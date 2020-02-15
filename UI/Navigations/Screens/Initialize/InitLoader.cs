@@ -9,6 +9,8 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Navigations.Screens.Initialize
 {
+    // TODO: Load user manager
+    // TODO: Load record manager
     public class InitLoader : IInitLoader {
 
         public event Action<string> OnStatusChange;

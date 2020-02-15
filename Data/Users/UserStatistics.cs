@@ -1,13 +1,21 @@
 using System.Collections.Generic;
+using PBGame.Data.Records;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
+using PBFramework.Dependencies;
 using Newtonsoft.Json;
 using UnityEngine;
 
 namespace PBGame.Data.Users
 {
     public class UserStatistics : IUserStatistics {
+
+        /// <summary>
+        /// The user instance which owns this statistical info.
+        /// </summary>
+        [JsonIgnore]
+        public User User { get; set; }
 
         public GameModes GameMode { get; set; }
 
@@ -44,10 +52,9 @@ namespace PBGame.Data.Users
         [JsonProperty]
         private Dictionary<RankTypes, int> RankCounts { get; set; }
 
-        // TODO: Receive record manager.
-        // [JsonIgnore]
-        // [ReceivesDependency]
-        // private 
+        [JsonIgnore]
+        [ReceivesDependency]
+        private IRecordManager RecordManager { get; set; }
 
 
 
@@ -62,7 +69,8 @@ namespace PBGame.Data.Users
 
         public int GetPlayCount(IMap map)
         {
-            // TODO: Implement using record manager.
+            if(RecordManager != null && User != null)
+                return RecordManager.GetPlayCount(map, User);
             return 0;
         }
 
@@ -70,10 +78,12 @@ namespace PBGame.Data.Users
 
         public void RecordIncompletePlay()
         {
+            // TODO:
         }
 
         public void RecordPlay()
         {
+            // TODO:
         }
     }
 }

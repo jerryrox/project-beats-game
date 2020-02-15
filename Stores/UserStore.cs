@@ -12,7 +12,9 @@ namespace PBGame.Stores
 
         public IUser LoadUser(string username)
         {
-            using (var result = Database.Query().Where(data => data["Username"].ToString().Equals(username, StringComparison.OrdinalIgnoreCase)).GetResult())
+            using (var result = Database.Query()
+                .Where(data => data["Username"].ToString().Equals(username, StringComparison.Ordinal))
+                .GetResult())
             {
                 var user = result.FirstOrDefault();
                 // If no match, create and return a new user.

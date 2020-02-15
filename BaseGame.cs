@@ -6,6 +6,7 @@ using UnityEngine;
 using PBGame.IO.Decoding.Osu;
 using PBGame.Maps;
 using PBGame.Data.Users;
+using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Skins;
 using PBGame.Stores;
@@ -56,6 +57,7 @@ namespace PBGame
         protected ApiManager apiManager;
 
         protected IUserManager userManager;
+        protected IRecordManager recordManager;
 
         protected IRootMain rootMain;
         protected IRoot3D root3D;

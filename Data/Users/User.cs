@@ -10,6 +10,13 @@ using Newtonsoft.Json;
 namespace PBGame.Data.Users
 {
     public class User : DatabaseEntity, IUser {
+
+        /// <summary>
+        /// Table of statistic information for each game mode.
+        /// </summary>
+        [JsonProperty]
+        private Dictionary<GameModes, UserStatistics> statistics { get; set; }
+
     
         [Indexed]
         public string Username { get; set; }
@@ -22,16 +29,10 @@ namespace PBGame.Data.Users
             get
             {
                 // Return the stats with the highest play time.
-                var stats = Statistics.Values.OrderByDescending(s => s.PlayTime).FirstOrDefault();
+                var stats = statistics.Values.OrderByDescending(s => s.PlayTime).FirstOrDefault();
                 return stats;
             }
         }
-
-        /// <summary>
-        /// Table of statistic information for each game mode.
-        /// </summary>
-        [JsonProperty]
-        private Dictionary<GameModes, IUserStatistics> Statistics { get; set; }
 
 
         public User() {}
@@ -41,7 +42,11 @@ namespace PBGame.Data.Users
         /// </summary>
         public User(string username)
         {
-            Statistics = new Dictionary<GameModes, IUserStatistics>();
+            InitializeAsNew();
+
+            Username = username;
+            JoinedDate = DateTime.Now;
+            statistics = new Dictionary<GameModes, UserStatistics>();
         }
 
         [InitWithDependency]
@@ -50,9 +55,9 @@ namespace PBGame.Data.Users
             // Create user statistics for missing game modes using mode manager.
             foreach (var mode in modeManager.AllServices())
             {
-                if (!Statistics.ContainsKey(mode.GameMode))
+                if (!statistics.ContainsKey(mode.GameMode))
                 {
-                    Statistics[mode.GameMode] = new UserStatistics()
+                    statistics[mode.GameMode] = new UserStatistics()
                     {
                         GameMode = mode.GameMode
                     };
@@ -60,10 +65,13 @@ namespace PBGame.Data.Users
             }
 
             // Inject dependencies to all user statistics.
-            foreach(var s in Statistics.Values)
+            foreach (var s in statistics.Values)
+            {
+                s.User = this;
                 dependency.Inject(s);
+            }
         }
 
-        public IUserStatistics GetStatistics(GameModes gameMode) => Statistics[gameMode];
+        public IUserStatistics GetStatistics(GameModes gameMode) => statistics[gameMode];
     }
 }

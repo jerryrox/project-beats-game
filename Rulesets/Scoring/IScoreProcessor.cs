@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using PBGame.Data.Records;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Data.Bindables;
@@ -28,6 +30,16 @@ namespace PBGame.Rulesets.Scoring
         /// </summary>
         event Func<IScoreProcessor, bool> OnFailConfirmation;
 
+
+        /// <summary>
+        /// Returns the map which the score has been processed for.
+        /// </summary>
+        IMap Map { get; }
+
+        /// <summary>
+        /// Returns the list of all judgements currently made.
+        /// </summary>
+        List<JudgementResult> Judgements { get; }
 
         /// <summary>
         /// Returns the bindable combo value.
@@ -75,11 +87,6 @@ namespace PBGame.Rulesets.Scoring
         int JudgeCount { get; }
 
 
-        /// <summary>
-        /// Extracts the scores into the specified record object.
-        /// </summary>
-        void RetrieveScores(ScoreRecord record);
-        
         /// <summary>
         /// Apply any changes to the score processing from specified map.
         /// </summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PBGame.Data.Records;
 using PBGame.Rulesets.Judgements;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
@@ -62,6 +63,10 @@ namespace PBGame.Rulesets.Scoring
         protected double maxRawScore;
 
 
+        public IMap Map { get; private set; }
+
+        public List<JudgementResult> Judgements => results;
+
         public BindableInt Combo { get; private set; } = new BindableInt(0);
 
         public BindableInt HighestCombo { get; private set; } = new BindableInt(0);
@@ -97,25 +102,6 @@ namespace PBGame.Rulesets.Scoring
             curRawScore = 0;
             maxRawScore = 0;
         }
-
-		public virtual void RetrieveScores(ScoreRecord record)
-		{
-			record.HighestCombo = HighestCombo.Value;
-			record.Score = Score.Value;
-			record.Accuracy = Accuracy.Value;
-			record.Rank = Ranking.Value;
-
-			for(int i=0; i<results.Count; i++)
-			{
-				var result = results[i];
-				record.Judgements.Add(new JudgementRecord() {
-					Result = result.HitResult,
-					HitOffset = result.HitOffset,
-					Combo = result.ComboAtJudgement,
-					IsHit = result.IsHit
-				});
-			}
-		}
 
         public virtual void ApplyMap(IMap map)
         {

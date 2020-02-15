@@ -21,7 +21,7 @@ namespace PBGame.Rulesets.Judgements
 		public int Combo { get; set; }
 
 		/// <summary>
-		/// Whether the result was a perfect hit.
+		/// Whether the result was not a miss.
 		/// </summary>
 		public bool IsHit { get; set; }
 	}

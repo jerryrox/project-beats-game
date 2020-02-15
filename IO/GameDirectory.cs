@@ -1,4 +1,5 @@
 using System.IO;
+using PBFramework;
 using UnityEngine;
 
 namespace PBGame.IO
@@ -33,6 +34,16 @@ namespace PBGame.IO
         /// </summary>
         public static readonly DirectoryInfo Users;
 
+        /// <summary>
+        /// Play record data directory.
+        /// </summary>
+        public static readonly DirectoryInfo Records;
+
+        /// <summary>
+        /// Replay data directory.
+        /// </summary>
+        public static readonly DirectoryInfo Replays;
+
 
         static GameDirectory()
         {
@@ -41,12 +52,16 @@ namespace PBGame.IO
             Skins = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "skins"));
             Downloads = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "downloads"));
             Users = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "users"));
+            Records = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "records"));
+            Replays = Records.GetSubdirectory("replays");
 
             Maps.Create();
             Configs.Create();
             Skins.Create();
             Downloads.Create();
             Users.Create();
+            Records.Create();
+            Replays.Create();
         }
     }
 }

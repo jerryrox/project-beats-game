@@ -12,14 +12,17 @@ Slowly making progress 🧩
 
 ## To-Dos
 - Implement visualizer module.
-- Implement user data management. (user data should be managed per-online user.)
-- Implement play record management for storing scores and replays.
 - Initially sort the mapsets on load.
+- Load user manager & record manager during initialize screen.
 - Map background image transition on change. (Apply on other areas where necessary)
 - Fix issue where the song won't change to the next song in home screen occasionally.
 - Fix issue where metronome doesn't update when changing song mid-way.
 
 - Support for interactive unit testing for UI.
+
+### In-progress
+- Implement user data management. (user data should be managed per-online user.)
+- Implement play record management for storing scores and replays.
 
 ### PBGame
 - BaseGame
