@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using PBFramework.Dependencies;
 
@@ -25,5 +26,7 @@ namespace PBGame.Rulesets
         }
 
         public IEnumerable<IModeService> AllServices() => services.Values;
+
+        public IEnumerable<IModeService> PlayableServices() => services.Values.Where(s => s.IsPlayable);
     }
 }

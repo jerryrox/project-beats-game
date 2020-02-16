@@ -69,7 +69,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             accuracyDisplay.Progress = stats.Accuracy;
             var roundedAcc = ((int)(stats.Accuracy * 1000f)) / 1000f;
-            accuracyDisplay.CenterText = roundedAcc.ToString("P1");
+            accuracyDisplay.CenterText = roundedAcc.ToString("N1");
         }
     }
 }

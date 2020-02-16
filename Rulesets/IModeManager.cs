@@ -14,5 +14,10 @@ namespace PBGame.Rulesets
         /// Returns all available mode servicer instances.
         /// </summary>
         IEnumerable<IModeService> AllServices();
+
+        /// <summary>
+        /// Returns all available mode services ready for play.
+        /// </summary>
+        IEnumerable<IModeService> PlayableServices();
     }
 }

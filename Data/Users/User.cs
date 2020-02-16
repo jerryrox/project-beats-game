@@ -65,7 +65,7 @@ namespace PBGame.Data.Users
         private void Init(IModeManager modeManager, IDependencyContainer dependency)
         {
             // Create user statistics for missing game modes using mode manager.
-            foreach (var mode in modeManager.AllServices())
+            foreach (var mode in modeManager.PlayableServices())
             {
                 if (!statistics.ContainsKey(mode.GameMode))
                 {
@@ -84,7 +84,12 @@ namespace PBGame.Data.Users
             }
         }
 
-        public IUserStatistics GetStatistics(GameModes gameMode) => statistics[gameMode];
+        public IUserStatistics GetStatistics(GameModes gameMode)
+        {
+            if(statistics.TryGetValue(gameMode, out UserStatistics value))
+                return value;
+            return PrimaryStats;
+        }
 
         public void Save() => UserManager.SaveUser(this);
     }

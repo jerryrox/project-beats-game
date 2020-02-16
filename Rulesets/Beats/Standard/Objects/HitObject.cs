@@ -21,7 +21,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		/// <summary>
 		/// Amount of time to fall before reaching a perfect timing for hit.
 		/// </summary>
-		public double FallTime { get; set; } = 1800;
+		public float FallTime { get; set; } = 1800;
 
 		/// <summary>
 		/// Returns the radius of the object.
@@ -43,7 +43,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 
 			// Angle 50: 1800, 1200, 600);
 			// Angle 55: 2400, 1800, 900);
-			FallTime = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
+			FallTime = (float)MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
 
 			Scale = (float)MapDifficulty.GetDifficultyValue(difficulty.CircleSize, 1, 0.85, 0.7);
 		}

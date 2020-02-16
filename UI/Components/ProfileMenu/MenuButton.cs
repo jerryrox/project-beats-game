@@ -67,6 +67,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 label.Alignment = TextAnchor.MiddleCenter;
                 label.WrapText = true;
                 label.FontSize = 17;
+                label.Alpha = 0.35f;
             }
 
             hoverAni = new Anime();

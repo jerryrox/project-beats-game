@@ -62,7 +62,7 @@ namespace PBGame.Configurations
 
         public GameConfiguration()
         {
-            RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModes.OsuStandard);
+            RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModes.BeatsStandard);
             MapsetSort = InitEnumBindable(nameof(MapsetSort), MapsetSorts.Title);
             MapDetailTab = InitEnumBindable(nameof(MapDetailTab), MapDetailTabs.Details);
 

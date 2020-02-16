@@ -75,7 +75,7 @@ namespace PBGame.Rulesets.Maps
                 return;
 
             this.playableMaps = new Dictionary<GameModes, IMap>();
-            foreach (var service in modeManager.AllServices())
+            foreach (var service in modeManager.PlayableServices())
             {
                 var playableMap = CreatePlayable(service);
                 if(playableMap != null)

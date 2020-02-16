@@ -20,6 +20,11 @@ namespace PBGame.Rulesets
         /// </summary>
         GameModes GameMode { get; }
 
+        /// <summary>
+        /// Returns whether this game mode is available for play.
+        /// </summary>
+        bool IsPlayable { get; }
+
 
         /// <summary>
         /// Creates a new map converter instance for this game mode.

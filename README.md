@@ -17,13 +17,19 @@ Slowly making progress 🧩
 - Store play record to record manager and apply to user statistics.
 - Map background image transition on change. (Apply on other areas where necessary)
 - Refactor code to support logging in using other API providers than just Osu.
+- Change all unnecessary double-typed values to float.
 - Fix issue where the song won't change to the next song in home screen occasionally.
 - Fix issue where metronome doesn't update when changing song mid-way.
 
 - Support for interactive unit testing for UI.
 
 ### In-progress
-- Load user manager & record manager during initialize screen.
+- Implement osu standard hit objects
+- Implement osu standard judgements
+- Implement osu standard map
+- Implement osu standard difficulty
+- Implement osu standard scoring
+- Implement mode service for osu standard.
 
 ### PBGame
 - BaseGame

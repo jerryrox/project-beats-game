@@ -23,6 +23,8 @@ namespace PBGame.Rulesets
 
         public abstract GameModes GameMode { get; }
 
+        public virtual bool IsPlayable => true;
+
 
         protected ModeService(IDependencyContainer dependencyContainer)
 		{
