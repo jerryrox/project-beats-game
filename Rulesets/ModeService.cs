@@ -35,8 +35,6 @@ namespace PBGame.Rulesets
 
 		public abstract IDifficultyCalculator CreateDifficultyCalculator(IMap map);
 
-		public abstract IPerformanceCalculator CreatePerformanceCalculator(IMap map);
-
 		public abstract HitTiming CreateTiming();
 
 		public IGameSession GetSession(IGraphicObject container)

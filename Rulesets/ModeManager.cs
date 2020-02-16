@@ -13,8 +13,7 @@ namespace PBGame.Rulesets
             // TODO: Register more game mode services
             services = new Dictionary<GameModes, IModeService>()
             {
-                // TODO: Hurry and implement osu standard mode service
-                { GameModes.OsuStandard, null },
+                { GameModes.OsuStandard, new Osu.Standard.ModeService(dependencies) },
                 { GameModes.BeatsStandard, new Beats.Standard.ModeService(dependencies) },
             };
         }

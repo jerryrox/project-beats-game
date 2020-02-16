@@ -37,11 +37,6 @@ namespace PBGame.Rulesets
         IDifficultyCalculator CreateDifficultyCalculator(IMap map);
 
         /// <summary>
-        /// Creates a new map performance calculator instance of this game mode.
-        /// </summary>
-        IPerformanceCalculator CreatePerformanceCalculator(IMap map);
-
-        /// <summary>
         /// Creates a new hit object timing information of this game mode.
         /// </summary>
         HitTiming CreateTiming();

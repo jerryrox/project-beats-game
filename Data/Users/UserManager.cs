@@ -57,28 +57,20 @@ namespace PBGame.Data.Users
             progress?.Report(0f);
             return Task.Run(() =>
             {
-                try
-                {
-                    var user = userStore.LoadUser(onlineUser) as User;
+                var user = userStore.LoadUser(onlineUser) as User;
 
-                    UnityThreadService.DispatchUnattended(() =>
+                UnityThreadService.DispatchUnattended(() =>
+                {
+                    dependencies.Inject(user);
+                    currentUser.Value = user;
+
+                    if (progress != null)
                     {
-                        dependencies.Inject(user);
-                        UnityEngine.Debug.Log($"User set: {user.Username}");
-                        currentUser.Value = user;
-
-                        if (progress != null)
-                        {
-                            progress.Report(1f);
-                            progress.InvokeFinished(user);
-                        }
-                        return null;
-                    });
-                }
-                catch (Exception e)
-                {
-                    UnityEngine.Debug.LogError($"Error whie setting user: {e.ToString()}");
-                }
+                        progress.Report(1f);
+                        progress.InvokeFinished(user);
+                    }
+                    return null;
+                });
             });
         }
 

@@ -24,9 +24,6 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IMap map) => new DifficultyCalculator(map);
 
-        // TODO: Return a proper performance calculator when implemented.
-        public override Rulesets.Difficulty.IPerformanceCalculator CreatePerformanceCalculator(IMap map) => null;// new PerformanceCalculator();
-
         public override Rulesets.Judgements.HitTiming CreateTiming() => new HitTiming();
 
         protected override IGameSession CreateSession(IGraphicObject container) => new GameSession(container);

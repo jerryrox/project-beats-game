@@ -209,7 +209,6 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnUserChange(IUser user, IUser _ = null)
         {
-            Debug.Log($"On user changed. is null? {user == null}");
             SwitchView(user != null);
         }
     }
