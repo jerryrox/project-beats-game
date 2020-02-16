@@ -12,6 +12,7 @@ Slowly making progress 🧩
 
 ## To-Dos
 - Implement visualizer module.
+- Implement quick message displayer overlay.
 - Initially sort the mapsets on load.
 - Store play record to record manager and apply to user statistics.
 - Map background image transition on change. (Apply on other areas where necessary)

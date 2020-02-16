@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBGame.Networking;
+using PBGame.Data.Users;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -34,13 +34,9 @@ namespace PBGame.UI.Components.ProfileMenu
 
         public ISprite GlowSprite => glow;
 
-        /// <summary>
-        /// Returns the osu api provider from manager.
-        /// </summary>
-        private IApi OsuApi => ApiManager.GetApi(ApiProviders.Osu);
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IUserManager UserManager { get; set; }
 
 
         [InitWithDependency]
@@ -150,9 +146,9 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void BindEvents()
         {
-            OsuApi.User.OnValueChanged += OnUserChange;
+            UserManager.CurrentUser.OnValueChanged += OnUserChange;
 
-            SwitchView(OsuApi.User.Value.IsOnline, false);
+            SwitchView(UserManager.CurrentUser.Value != null, false);
         }
         
         /// <summary>
@@ -160,7 +156,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void UnbindEvents()
         {
-            OsuApi.User.OnValueChanged -= OnUserChange;
+            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
         }
 
         private void SwitchView(bool isLoggedIn, bool animate = true)
@@ -211,9 +207,10 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Event called on online user change.
         /// </summary>
-        private void OnUserChange(IOnlineUser user, IOnlineUser _ = null)
+        private void OnUserChange(IUser user, IUser _ = null)
         {
-            SwitchView(user.IsOnline);
+            Debug.Log($"On user changed. is null? {user == null}");
+            SwitchView(user != null);
         }
     }
 }

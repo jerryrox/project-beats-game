@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using PBGame.Networking.API;
 using PBFramework.Data.Bindables;
 using PBFramework.Threading;
 
@@ -18,9 +19,9 @@ namespace PBGame.Data.Users
         Task Reload(IEventProgress progress);
 
         /// <summary>
-        /// Switches current user to the user of specified username.
+        /// Switches current user to the user of specified online user.
         /// </summary>
-        Task SetUser(string username, IReturnableProgress<IUser> progress);
+        Task SetUser(IOnlineUser onlineUser, IReturnableProgress<IUser> progress);
 
         /// <summary>
         /// Saves the specified user to store.

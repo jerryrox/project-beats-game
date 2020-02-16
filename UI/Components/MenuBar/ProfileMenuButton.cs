@@ -1,7 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Data.Users;
 using PBGame.Assets.Caching;
 using PBGame.Networking.API;
 using PBFramework.UI;
@@ -13,7 +12,6 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    // TODO: Support for logging in using other API providers.
     public class ProfileMenuButton : BaseMenuButton {
 
         private ISprite background;
@@ -26,11 +24,8 @@ namespace PBGame.UI.Components.MenuBar
         private CacherAgent<Texture2D> cacherAgent;
 
 
-
-        /// <summary>
-        /// Returns the osu api instance.
-        /// </summary>
-        private IApi OsuApi => ApiManager.GetApi(ApiProviders.Osu);
+        [ReceivesDependency]
+        private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
         private IApiManager ApiManager { get; set; }
@@ -116,14 +111,14 @@ namespace PBGame.UI.Components.MenuBar
         protected override void OnEnableInited()
         {
             // Listen to online user change event.
-            OsuApi.User.OnValueChanged += OnUserChange;
-            OnUserChange(OsuApi.User.Value, null);
+            UserManager.CurrentUser.OnValueChanged += OnUserChange;
+            OnUserChange(UserManager.CurrentUser.Value);
         }
 
         protected override void OnDisable()
         {
             // Withdraw from online user change event.
-            OsuApi.User.OnValueChanged -= OnUserChange;
+            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
         }
 
         /// <summary>
@@ -138,22 +133,22 @@ namespace PBGame.UI.Components.MenuBar
         /// <summary>
         /// Event called when the online user has changed.
         /// </summary>
-        private void OnUserChange(IOnlineUser newUser, IOnlineUser oldUser)
+        private void OnUserChange(IUser newUser, IUser _ = null)
         {
             imageTexture.Active = false;
 
             // Set infos
-            nicknameLabel.Text = newUser.Username;
+            if(newUser != null)
+                nicknameLabel.Text = newUser.Username;
+            else
+                nicknameLabel.Text = ApiManager.OfflineUser.Username;
 
             // Unload profie image using web image cacher.
             cacherAgent.Remove();
 
-            if (OsuApi.IsOnline.Value)
-            {
-                // Load profile image using web image cacher.
-                if(newUser.AvatarImage.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                    cacherAgent.Request(newUser.AvatarImage);
-            }
+            // Load profile image using web image cacher.
+            if (newUser != null && !string.IsNullOrEmpty(newUser.OnlineUser.AvatarImage))
+                cacherAgent.Request(newUser.OnlineUser.AvatarImage);
         }
     }
 }

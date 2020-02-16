@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Rulesets;
+using PBGame.Networking.API;
 using PBFramework.DB.Entities;
 using PBFramework.Dependencies;
 using Newtonsoft.Json;
@@ -17,9 +18,15 @@ namespace PBGame.Data.Users
         [JsonProperty]
         private Dictionary<GameModes, UserStatistics> statistics { get; set; }
 
-    
+
+        [JsonIgnore]
+        public IOnlineUser OnlineUser { get; set; }
+
         [Indexed]
-        public string Username { get; set; }
+        public string OnlineId { get; set; }
+
+        [JsonIgnore]
+        public string Username => OnlineUser.Username;
 
         public DateTime JoinedDate { get; set; }
 
@@ -44,11 +51,12 @@ namespace PBGame.Data.Users
         /// <summary>
         /// Constructor for a new user data.
         /// </summary>
-        public User(string username)
+        public User(IOnlineUser onlineUser)
         {
             InitializeAsNew();
 
-            Username = username;
+            OnlineUser = onlineUser;
+            OnlineId = onlineUser.Id;
             JoinedDate = DateTime.Now;
             statistics = new Dictionary<GameModes, UserStatistics>();
         }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using PBGame.IO;
 using PBGame.Data.Users;
+using PBGame.Networking.API;
 using PBFramework.DB;
 using PBFramework.Stores;
 
@@ -10,19 +11,24 @@ namespace PBGame.Stores
     public class UserStore : DatabaseBackedStore<User>, IUserStore {
 
 
-        public IUser LoadUser(string username)
+        public IUser LoadUser(IOnlineUser onlineUser)
         {
+            var id = onlineUser.Id;
+
             using (var result = Database.Query()
-                .Where(data => data["Username"].ToString().Equals(username, StringComparison.Ordinal))
+                .Where(data => data["OnlineId"].ToString().Equals(id, StringComparison.Ordinal))
                 .GetResult())
             {
                 var user = result.FirstOrDefault();
                 // If no match, create and return a new user.
                 if (user == null)
-                    return CreateUser(username);
+                    return CreateUser(onlineUser);
                 // Else, return the result.
                 else
+                {
+                    user.OnlineUser = onlineUser;
                     return user;
+                }
             }
         }
 
@@ -39,9 +45,9 @@ namespace PBGame.Stores
         /// <summary>
         /// Creates a new user data.
         /// </summary>
-        private User CreateUser(string username)
+        private User CreateUser(IOnlineUser onlineUser)
         {
-            return new User(username);
+            return new User(onlineUser);
         }
     }
 }

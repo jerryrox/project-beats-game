@@ -1,5 +1,6 @@
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Data.Users;
 using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBFramework.UI;
@@ -10,7 +11,6 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    // TODO: Support for logging in using other API providers.
     public class MenuHolder : UguiObject, IMenuHolder {
 
         private IMenuButton detailButton;
@@ -19,13 +19,8 @@ namespace PBGame.UI.Components.ProfileMenu
         private ILabel accountLabel;
 
 
-        /// <summary>
-        /// Returns the osu api from the manager.
-        /// </summary>
-        private IApi OsuApi => ApiManager.GetApi(ApiProviders.Osu);
-
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
@@ -62,7 +57,8 @@ namespace PBGame.UI.Components.ProfileMenu
                 visitButton.OnPointerClick += () =>
                 {
                     // Open browser to the user homepage.
-                    Application.OpenURL(OsuApi.User.Value.ProfilePage);
+                    if(UserManager.CurrentUser.Value != null)
+                        Application.OpenURL(UserManager.CurrentUser.Value.OnlineUser.ProfilePage);
                 };
             }
             logoutButton = CreateChild<MenuButton>("logout", 2);
@@ -96,7 +92,11 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            accountLabel.Text = $"Logged in using {OsuApi.ApiType}";
+            var user = UserManager.CurrentUser.Value;
+            if(user != null && user.OnlineUser.Api != null)
+                accountLabel.Text = $"Logged in using {user.OnlineUser.Api.ApiType}";
+            else
+                accountLabel.Text = $"You are currently offline.";
         }
 
         /// <summary>
@@ -106,7 +106,15 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             var dialog = OverlayNavigator.Show<DialogOverlay>();
             dialog.SetMessage("Would you like to log out?");
-            dialog.AddConfirmCancel(() => OsuApi.Logout());
+            dialog.AddConfirmCancel(() =>
+            {
+                var user = UserManager.CurrentUser.Value;
+                if(user != null && user.OnlineUser.Api != null)
+                    user.OnlineUser.Api.Logout();
+                    
+                UserManager.SaveUser(user);
+                UserManager.RemoveUser();
+            });
         }
     }
 }

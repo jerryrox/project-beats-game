@@ -1,12 +1,14 @@
 namespace PBGame.Networking.API.Osu
 {
     public class OsuUser : IOnlineUser {
-    
-		public int Id { get; set; }
 
-        public bool IsOnline => true;
+		public IApi Api { get; set; }
 
-        public string Username { get; set; }
+        public string Id { get; set; }
+
+		public bool IsOnline => true;
+
+		public string Username { get; set; }
 
 		public string AvatarImage { get; set; }
 

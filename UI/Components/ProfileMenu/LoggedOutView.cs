@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Data.Users;
 using PBGame.Assets.Fonts;
 using PBGame.Graphics;
 using PBGame.Configurations;
@@ -10,6 +11,7 @@ using PBGame.Networking.API.Osu.Responses;
 using PBFramework.UI;
 using PBFramework.Utils;
 using PBFramework.Graphics;
+using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +44,9 @@ namespace PBGame.UI.Components.ProfileMenu
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
+
+        [ReceivesDependency]
+        private IUserManager UserManager { get; set; }
 
 
         [InitWithDependency]
@@ -144,15 +149,58 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnLoginResponse(LoginResponse response)
         {
-            loader.Hide();
-
             if (!response.IsSuccess)
             {
+                loader.Hide();
+
                 GameConfiguration.Username.Value = "";
                 GameConfiguration.Password.Value = "";
 
                 username.ShowInvalid();
                 password.ShowInvalid();
+
+                // TODO: Display quick message "response.ErrorMessage"
+                return;
+            }
+
+            // Wait for online user load.
+            if(OsuApi.User.Value.IsOnline)
+                LoadUserData(OsuApi.User.Value);
+            else
+            {
+                OsuApi.User.OnValueChanged += LoadUserData;
+            }
+        }
+
+        /// <summary>
+        /// Starts loading the user data in accordance to the currently logged-in online user.
+        /// </summary>
+        private void LoadUserData(IOnlineUser onlineUser, IOnlineUser _ = null)
+        {
+            OsuApi.User.OnValueChanged -= LoadUserData;
+
+            if (onlineUser.IsOnline)
+            {
+                var progress = new ReturnableProgress<IUser>();
+                progress.OnFinished += OnUserDataLoaded;
+                UserManager.SetUser(onlineUser, progress);
+            }
+            else
+            {
+                // TODO: Display quick message "User is not logged in!"
+                loader.Hide();
+            }
+        }
+
+        /// <summary>
+        /// Event called on user data load end.
+        /// </summary>
+        private void OnUserDataLoaded(IUser user)
+        {
+            if (user == null)
+            {
+                // TODO: Display quick message "Failed to load user data."
+                OsuApi.Logout();
                 return;
             }
 

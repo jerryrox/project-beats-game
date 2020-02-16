@@ -1,11 +1,22 @@
 ﻿using System;
 using PBGame.Rulesets;
+using PBGame.Networking.API;
 using PBFramework.DB.Entities;
 
 namespace PBGame.Data.Users
 {
     public interface IUser : IDatabaseEntity {
     
+        /// <summary>
+        /// Returns the online user which represents this user.
+        /// </summary>
+        IOnlineUser OnlineUser { get; }
+
+        /// <summary>
+        /// Returns the ID of the user in online context.
+        /// </summary>
+        string OnlineId { get; }
+
         /// <summary>
         /// Returns the displayed name of the user.
         /// </summary>

@@ -10,6 +10,9 @@ namespace PBGame.Networking.API
         private Dictionary<ApiProviders, IApi> apis;
 
 
+        public IOnlineUser OfflineUser { get; private set; } = new OfflineUser();
+
+
         public ApiManager()
         {
             apis = new Dictionary<ApiProviders, IApi>()

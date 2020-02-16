@@ -1,11 +1,16 @@
 namespace PBGame.Networking.API
 {
     public interface IOnlineUser {
-        
+
+        /// <summary>
+        /// Returns the api provider this user has been created from.
+        /// </summary>
+        IApi Api { get; }
+		
 		/// <summary>
 		/// Returns the identifier of the user in the server.
 		/// </summary>
-		int Id { get; }
+		string Id { get; }
 
 		/// <summary>
 		/// Whether this user is a logged in user.

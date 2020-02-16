@@ -36,7 +36,8 @@ namespace PBGame.Networking.API.Osu.Responses
                     {
                         var onlineUser = new OsuUser()
                         {
-                            Id = user["id"].Value<int>(),
+                            Api = api,
+                            Id = user["id"].ToString(),
                             Username = user["username"].ToString(),
                             AvatarImage = user["avatar_url"].ToString(),
                             CoverImage = user["cover_url"].ToString(),

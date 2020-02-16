@@ -1,5 +1,7 @@
 using System;
 using PBGame.Maps;
+using PBGame.Data.Users;
+using PBGame.Data.Records;
 using PBGame.Skins;
 using PBGame.Audio;
 using PBGame.Configurations;
@@ -9,8 +11,6 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Navigations.Screens.Initialize
 {
-    // TODO: Load user manager
-    // TODO: Load record manager
     public class InitLoader : IInitLoader {
 
         public event Action<string> OnStatusChange;
@@ -41,6 +41,12 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 
         [ReceivesDependency]
         private IMapsetConfiguration MapsetConfiguration { get; set; }
+
+        [ReceivesDependency]
+        private IUserManager UserManager { get; set; }
+
+        [ReceivesDependency]
+        private IRecordManager RecordManager { get; set; }
 
 
         public InitLoader(IDependencyContainer dependencies)
@@ -111,14 +117,40 @@ namespace PBGame.UI.Navigations.Screens.Initialize
             if (promise == null)
             {
                 SetProgress(1f);
-                FinalizeLoad();
+                LoadUserData();
             }
             else
             {
                 promise.OnProgress += SetProgress;
-                promise.OnFinished += FinalizeLoad;
+                promise.OnFinished += LoadUserData;
                 promise.Start();
             }
+        }
+
+        /// <summary>
+        /// Starts loading the user data.
+        /// </summary>
+        private void LoadUserData()
+        {
+            SetState("Loading user data");
+
+            IEventProgress progress = new EventProgress();
+            progress.OnProgress += SetProgress;
+            progress.OnFinished += LoadRecordData;
+            UserManager.Reload(progress);
+        }
+
+        /// <summary>
+        /// Starts loading the record data.
+        /// </summary>
+        private void LoadRecordData()
+        {
+            SetState("Loading record data");
+
+            IEventProgress progress = new EventProgress();
+            progress.OnProgress += SetProgress;
+            progress.OnFinished += FinalizeLoad;
+            RecordManager.Reload(progress);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Data.Users;
 using PBGame.Assets.Caching;
 using PBGame.Networking.API;
 using PBFramework.UI;
@@ -12,7 +13,6 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    // TODO: Support for logging in using other API providers.
     public class ProfileImage : UguiObject, IProfileImage {
 
         private ISprite glow;
@@ -22,13 +22,8 @@ namespace PBGame.UI.Components.ProfileMenu
         private CacherAgent<Texture2D> imageAgent;
 
 
-        /// <summary>
-        /// Returns the osu api from manager.
-        /// </summary>
-        private IApi OsuApi => ApiManager.GetApi(ApiProviders.Osu);
-
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
         private IWebImageCacher WebImageCacher { get; set; }
@@ -88,9 +83,9 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void BindEvents()
         {
-            OsuApi.User.OnValueChanged += OnUserChange;
+            UserManager.CurrentUser.OnValueChanged += OnUserChange;
 
-            OnUserChange(OsuApi.User.Value);
+            OnUserChange(UserManager.CurrentUser.Value);
         }
         
         /// <summary>
@@ -98,7 +93,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void UnbindEvents()
         {
-            OsuApi.User.OnValueChanged -= OnUserChange;
+            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
         }
 
         /// <summary>
@@ -113,11 +108,11 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Event called when the online user has changed.
         /// </summary>
-        private void OnUserChange(IOnlineUser user, IOnlineUser _ = null)
+        private void OnUserChange(IUser user, IUser _ = null)
         {
             RemoveImage();
-            if (!string.IsNullOrEmpty(user.AvatarImage))
-                imageAgent.Request(user.AvatarImage);
+            if (user != null && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
+                imageAgent.Request(user.OnlineUser.AvatarImage);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Data.Users;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -16,13 +17,8 @@ namespace PBGame.UI.Components.ProfileMenu
         private ILabel nickname;
 
 
-        /// <summary>
-        /// Returns the osu api from manager.
-        /// </summary>
-        private IApi OsuApi => ApiManager.GetApi(ApiProviders.Osu);
-
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IUserManager UserManager { get; set; }
 
 
         [InitWithDependency]
@@ -51,7 +47,11 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            nickname.Text = OsuApi.User.Value.Username;
+            var user = UserManager.CurrentUser.Value;
+            if(user != null)
+                nickname.Text = user.Username;
+            else
+                nickname.Text = "";
         }
     }
 }

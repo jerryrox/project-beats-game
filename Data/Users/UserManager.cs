@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Stores;
+using PBGame.Networking.API;
 using PBFramework.Data.Bindables;
 using PBFramework.Services;
 using PBFramework.Threading;
@@ -49,25 +50,35 @@ namespace PBGame.Data.Users
             });
         }
 
-        public Task SetUser(string username, IReturnableProgress<IUser> progress)
+        public Task SetUser(IOnlineUser onlineUser, IReturnableProgress<IUser> progress)
         {
+            if(onlineUser == null) throw new ArgumentNullException(nameof(onlineUser));
+
             progress?.Report(0f);
             return Task.Run(() =>
             {
-                var user = userStore.LoadUser(username);
-
-                UnityThreadService.DispatchUnattended(() =>
+                try
                 {
-                    dependencies.Inject(user);
-                    currentUser.Value = user;
+                    var user = userStore.LoadUser(onlineUser) as User;
 
-                    if (progress != null)
+                    UnityThreadService.DispatchUnattended(() =>
                     {
-                        progress.Report(1f);
-                        progress.InvokeFinished(user);
-                    }
-                    return null;
-                });
+                        dependencies.Inject(user);
+                        UnityEngine.Debug.Log($"User set: {user.Username}");
+                        currentUser.Value = user;
+
+                        if (progress != null)
+                        {
+                            progress.Report(1f);
+                            progress.InvokeFinished(user);
+                        }
+                        return null;
+                    });
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogError($"Error whie setting user: {e.ToString()}");
+                }
             });
         }
 
