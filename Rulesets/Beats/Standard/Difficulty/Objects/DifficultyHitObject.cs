@@ -17,7 +17,7 @@ namespace PBGame.Rulesets.Beats.Standard.Difficulty.Objects
 		public int DraggingCount { get; private set; }
 
 
-		public DifficultyHitObject(HitObject obj, HitObject prevObject, int draggingCount, double clockRate) :
+		public DifficultyHitObject(HitObject obj, HitObject prevObject, int draggingCount, float clockRate) :
 			base(obj, prevObject, clockRate)
 		{
 			BaseObject = obj;

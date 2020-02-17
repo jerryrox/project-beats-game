@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using PBGame.Rulesets.Maps.Timing;
-using PBFramework.Utils;
+using UnityEngine;
 
 namespace PBGame.Rulesets.Maps.ControlPoints
 {
@@ -13,23 +12,23 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 		/// <summary>
 		/// The default length of a beat (1 second).
 		/// </summary>
-		public const double DefaultBeatLength = 1000;
+		public const float DefaultBeatLength = 1000;
 
 		/// <summary>
 		/// The time signature within this point.
 		/// </summary>
 		public TimeSignatures TimeSignature = TimeSignatures.Quadruple;
 
-		private double beatLength = DefaultBeatLength;
+		private float beatLength = DefaultBeatLength;
 
 
 		/// <summary>
 		/// Length of a beat in milliseconds.
 		/// </summary>
-		public double BeatLength
+		public float BeatLength
 		{
 			get { return beatLength; }
-			set { beatLength = MathUtils.Clamp(value, 6, 60000); }
+			set { beatLength = Mathf.Clamp(value, 6, 60000); }
 		}
 
 

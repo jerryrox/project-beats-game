@@ -8,12 +8,12 @@
 		/// <summary>
 		/// Returns the ending time of the hit object.
 		/// </summary>
-		double EndTime { get; }
+		float EndTime { get; }
 
 		/// <summary>
 		/// Returns the duration of the hit object.
 		/// </summary>
-		double Duration { get; }
+		float Duration { get; }
 	}
 }
 

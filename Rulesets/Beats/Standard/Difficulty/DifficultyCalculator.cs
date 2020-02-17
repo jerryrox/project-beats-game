@@ -10,22 +10,22 @@ namespace PBGame.Rulesets.Beats.Standard.Difficulty
 {
     public class DifficultyCalculator : Rulesets.Difficulty.DifficultyCalculator {
 
-		private const double StrainAdjustment = 0.075;
+		private const float StrainAdjustment = 0.075f;
 
 		/// <summary>
 		/// Amount of time to additionally wait before dragger is no longer considered being held.
 		/// </summary>
-		private const double DraggerRemovalDelay = 100; // 150 BPM
+		private const float DraggerRemovalDelay = 100; // 150 BPM
 
 
 		public DifficultyCalculator(IMap map) : base(map) {}
 
-        protected override Rulesets.Difficulty.DifficultyInfo CreateDifficultyInfo(IMap map, Skill[] skills, double clockRate)
+        protected override Rulesets.Difficulty.DifficultyInfo CreateDifficultyInfo(IMap map, Skill[] skills, float clockRate)
         {
             if(!map.HitObjects.Any())
                 return new DifficultyInfo();
 
-			double speedStrain = skills[0].GetDifficultyScale() * StrainAdjustment;
+			float speedStrain = skills[0].GetDifficultyScale() * StrainAdjustment;
 
             return new DifficultyInfo() {
                 Scale = speedStrain,
@@ -33,7 +33,7 @@ namespace PBGame.Rulesets.Beats.Standard.Difficulty
             };
         }
 
-		protected override IEnumerable<Rulesets.Difficulty.Objects.DifficultyHitObject> CreateHitObjects(IMap beatmap, double clockRate)
+		protected override IEnumerable<Rulesets.Difficulty.Objects.DifficultyHitObject> CreateHitObjects(IMap beatmap, float clockRate)
         {
 			var map = beatmap as Maps.Map;
 			if(map != null)

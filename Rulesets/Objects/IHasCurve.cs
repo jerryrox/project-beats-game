@@ -18,7 +18,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the position on the path at specified time progress.
 		/// </summary>
-		public static Vector2 GetPosition(this IHasCurve context, double progress)
+		public static Vector2 GetPosition(this IHasCurve context, float progress)
 		{
 			return context.Path.GetPosition(context.GetProgress(progress));
 		}
@@ -26,9 +26,9 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the path progress from specified time progress which interpolates between start and end time.
 		/// </summary>
-		public static double GetProgress(this IHasCurve context, double progress)
+		public static float GetProgress(this IHasCurve context, float progress)
 		{
-			double p = progress * context.SpanCount() % 1;
+			float p = progress * context.SpanCount() % 1;
 			// If is a repeat and is reversing back, invert progress towards end to start.
 			if(context.GetSpan(progress) % 2 == 1)
 				return 1 - p;
@@ -38,7 +38,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the path span index at specified path progress.
 		/// </summary>
-		public static int GetSpan(this IHasCurve context, double progress)
+		public static int GetSpan(this IHasCurve context, float progress)
 		{
 			return (int)(progress * context.SpanCount());
 		}

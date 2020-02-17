@@ -17,9 +17,9 @@ Slowly making progress 🧩
 - Store play record to record manager and apply to user statistics.
 - Map background image transition on change. (Apply on other areas where necessary)
 - Refactor code to support logging in using other API providers than just Osu.
-- Change all unnecessary double-typed values to float.
 - Fix issue where the song won't change to the next song in home screen occasionally.
 - Fix issue where metronome doesn't update when changing song mid-way.
+- Find out how to retrieve a map's description.
 
 - Support for interactive unit testing for UI.
 

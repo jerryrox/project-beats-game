@@ -21,7 +21,7 @@ namespace PBGame.Rulesets.Difficulty
         /// <summary>
         /// The length of a single strain section.
         /// </summary>
-        protected virtual double SectionLength => 400;
+        protected virtual float SectionLength => 400;
 
 
         protected DifficultyCalculator(IMap map)
@@ -34,12 +34,12 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// Creates difficulty info object.
 		/// </summary>
-		protected abstract DifficultyInfo CreateDifficultyInfo(IMap beatmap, Skill[] skills, double clockRate);
+		protected abstract DifficultyInfo CreateDifficultyInfo(IMap beatmap, Skill[] skills, float clockRate);
 
         /// <summary>
         /// Creates hit objects to be used for difficulty calculation.
         /// </summary>
-		protected abstract IEnumerable<DifficultyHitObject> CreateHitObjects(IMap map, double clockRate);
+		protected abstract IEnumerable<DifficultyHitObject> CreateHitObjects(IMap map, float clockRate);
 
         /// <summary>
         /// Creates the skills required for current game mode.
@@ -49,7 +49,7 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// Calculates difficulty of the map and outputs difficulty information.
 		/// </summary>
-		private DifficultyInfo CalculateInternal(double clockRate)
+		private DifficultyInfo CalculateInternal(float clockRate)
 		{
 			var skills = CreateSkills();
 			if(map.HitObjects.Any())
@@ -57,7 +57,7 @@ namespace PBGame.Rulesets.Difficulty
 				var convertedObjects = CreateHitObjects(map, clockRate);
 				// The actual amount of time that has been past when playing on given clockrate.
 				var realSectionLength = SectionLength * clockRate;
-				var nextSectionTime = Math.Ceiling(convertedObjects.First().BaseObject.StartTime / realSectionLength) * realSectionLength;
+				var nextSectionTime = Mathf.Ceil(convertedObjects.First().BaseObject.StartTime / realSectionLength) * realSectionLength;
 
 				foreach(var obj in convertedObjects)
 				{

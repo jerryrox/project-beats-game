@@ -10,9 +10,9 @@ namespace PBGame.IO.Decoding.Osu.Standard.Objects
 	/// </summary>
 	public class ParsedSpinner : HitObject, IHasEndTime, IHasPosition, IHasCombo {
 		
-		public double EndTime { get; set; }
+		public float EndTime { get; set; }
 
-		public double Duration { get { return EndTime - StartTime; } }
+		public float Duration { get { return EndTime - StartTime; } }
 
 		public Vector2 Position { get; set; }
 

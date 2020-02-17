@@ -15,7 +15,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Distance of the slider set in the osu file.
 		/// </summary>
-		public double? ExpectedDistance;
+		public float? ExpectedDistance;
 
 		/// <summary>
 		/// Type of the path to be used by the slider.
@@ -30,7 +30,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Progressive lengths of the path at certain path points.
 		/// </summary>
-		private List<double> cumulativeLength;
+		private List<float> cumulativeLength;
 
 		/// <summary>
 		/// Whether the path was initialized.
@@ -48,7 +48,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the total distance of the path.
 		/// </summary>
-		public double Distance
+		public float Distance
 		{
 			get
 			{
@@ -57,7 +57,7 @@ namespace PBGame.Rulesets.Objects
 		}
 
 
-		public SliderPath(PathTypes type, Vector2[] points, double? expectedDistance = null)
+		public SliderPath(PathTypes type, Vector2[] points, float? expectedDistance = null)
 		{
 			this.points = points;
 			PathType = type;
@@ -69,10 +69,10 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Fills the specified list with the slider path values within the given progress.
 		/// </summary>
-		public void GetPath(List<Vector2> path, double startProgress, double endProgress)
+		public void GetPath(List<Vector2> path, float startProgress, float endProgress)
 		{
-			double startDist = ProgressToDistance(startProgress);
-			double endDist = ProgressToDistance(endProgress);
+			float startDist = ProgressToDistance(startProgress);
+			float endDist = ProgressToDistance(endProgress);
 
 			path.Clear();
 
@@ -91,9 +91,9 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the position on the path at specified progress.
 		/// </summary>
-		public Vector2 GetPosition(double progress)
+		public Vector2 GetPosition(float progress)
 		{
-			double dist = ProgressToDistance(progress);
+			float dist = ProgressToDistance(progress);
 			return InterpolateVertices(IndexOfDistance(dist), dist);
 		}
 
@@ -109,7 +109,7 @@ namespace PBGame.Rulesets.Objects
 
 			points = points ?? new Vector2[0];
 			calculatedPath = new List<Vector2>();
-			cumulativeLength = new List<double>();
+			cumulativeLength = new List<float>();
 
 			CalculatePath();
 			CalculateCumulativeLength();
@@ -149,7 +149,7 @@ namespace PBGame.Rulesets.Objects
 		/// </summary>
 		void CalculateCumulativeLength()
 		{
-			double length = 0;
+			float length = 0;
 
 			cumulativeLength.Clear();
 			cumulativeLength.Add(0);
@@ -157,7 +157,7 @@ namespace PBGame.Rulesets.Objects
 			for(int i=0; i<calculatedPath.Count-1; i++)
 			{
 				Vector2 difference = calculatedPath[i+1] - calculatedPath[i];
-				double d = difference.magnitude;
+				float d = difference.magnitude;
 
 				// If the path is longer than expected, shorten the path.
 				if(ExpectedDistance.HasValue && ExpectedDistance - length < d)
@@ -178,7 +178,7 @@ namespace PBGame.Rulesets.Objects
 			if(ExpectedDistance.HasValue && length < ExpectedDistance && calculatedPath.Count > 1)
 			{
 				var difference = calculatedPath[calculatedPath.Count - 1] - calculatedPath[calculatedPath.Count - 2];
-				double d = difference.magnitude;
+				float d = difference.magnitude;
 
 				// If somehow equal position, just return.
 				if(d <= 0)
@@ -217,7 +217,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the index relative to cumulative length list for specified distance.
 		/// </summary>
-		int IndexOfDistance(double distance)
+		int IndexOfDistance(float distance)
 		{
 			int i = cumulativeLength.BinarySearch(distance);
 			if(i < 0)
@@ -228,15 +228,15 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Converts progress value from 0~1 to actual distance of the path.
 		/// </summary>
-		double ProgressToDistance(double progress)
+		float ProgressToDistance(float progress)
 		{
-			return MathUtils.Clamp(progress, 0, 1) * Distance;
+			return Mathf.Clamp01(progress) * Distance;
 		}
 
 		/// <summary>
 		/// Returns the position on the slider path at specified index and distance.
 		/// </summary>
-		Vector2 InterpolateVertices(int i, double d)
+		Vector2 InterpolateVertices(int i, float d)
 		{
 			if(calculatedPath.Count == 0)
 				return Vector2.zero;
@@ -247,8 +247,8 @@ namespace PBGame.Rulesets.Objects
 
 			Vector2 prevPoint = calculatedPath[i - 1];
 			Vector2 curPoint = calculatedPath[i];
-			double prevDistance = cumulativeLength[i - 1];
-			double curDistance = cumulativeLength[i];
+			float prevDistance = cumulativeLength[i - 1];
+			float curDistance = cumulativeLength[i];
 
 			// Prevent division by zero exception
 			if(MathUtils.AlmostEquals(prevDistance, curDistance))

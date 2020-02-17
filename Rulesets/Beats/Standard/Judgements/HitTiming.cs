@@ -13,15 +13,15 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 		/// <summary>
 		/// The base hit timing values table.
 		/// </summary>
-		private static Dictionary<HitResults, Tuple<double, double, double>> timingRanges = new Dictionary<HitResults, Tuple<double, double, double>>() {
-			{ HitResults.Good, new Tuple<double, double, double>(160, 100, 40) },
-			{ HitResults.Ok, new Tuple<double, double, double>(280, 200, 120) },
-			{ HitResults.Bad, new Tuple<double, double, double>(400, 300, 200) },
-			{ HitResults.Miss, new Tuple<double, double, double>(400, 400, 400) }
+		private static Dictionary<HitResults, Tuple<float, float, float>> timingRanges = new Dictionary<HitResults, Tuple<float, float, float>>() {
+			{ HitResults.Good, new Tuple<float, float, float>(160, 100, 40) },
+			{ HitResults.Ok, new Tuple<float, float, float>(280, 200, 120) },
+			{ HitResults.Bad, new Tuple<float, float, float>(400, 300, 200) },
+			{ HitResults.Miss, new Tuple<float, float, float>(400, 400, 400) }
 		};
 
 
-		public override void SetDifficulty (double difficulty)
+		public override void SetDifficulty (float difficulty)
 		{
 			Good = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Good]);
 			Ok = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Ok]);

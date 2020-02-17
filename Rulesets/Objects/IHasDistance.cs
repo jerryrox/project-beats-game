@@ -8,7 +8,7 @@
 		/// <summary>
 		/// Returns the positional length of the hit object.
 		/// </summary>
-		double Distance { get; }
+		float Distance { get; }
 	}
 }
 

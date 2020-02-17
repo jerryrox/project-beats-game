@@ -250,10 +250,10 @@ namespace PBGame.IO.Decoding.Osu
 				difficulty.ApproachRate = ParseUtils.ParseFloat(data.Value);
 				break;
 			case "SliderMultiplier":
-				difficulty.SliderMultiplier = ParseUtils.ParseDouble(data.Value);
+				difficulty.SliderMultiplier = ParseUtils.ParseFloat(data.Value);
 				break;
 			case "SliderTickRate":
-				difficulty.SliderTickRate = ParseUtils.ParseDouble(data.Value);
+				difficulty.SliderTickRate = ParseUtils.ParseFloat(data.Value);
 				break;
 			}
 		}
@@ -275,8 +275,8 @@ namespace PBGame.IO.Decoding.Osu
 				map.Detail.Metadata.BackgroundFile = PathUtils.StandardPath(fileName);
 				break;
 			case EventTypes.Break:
-				double start = ParseUtils.ParseDouble(splits[1]) + offset;
-				double end = Math.Max(start, ParseUtils.ParseDouble(splits[2]) + offset);
+				float start = ParseUtils.ParseFloat(splits[1]) + offset;
+				float end = Math.Max(start, ParseUtils.ParseFloat(splits[2]) + offset);
 
 				if(!BreakPoint.CanBeValid(start, end))
 					return;
@@ -298,9 +298,9 @@ namespace PBGame.IO.Decoding.Osu
 			{
 				string[] splits = line.Split(',');
 
-				double time = ParseUtils.ParseDouble(splits[0].Trim()) + offset;
-				double beatLength = ParseUtils.ParseDouble(splits[1].Trim());
-				double speedMultiplier = beatLength < 0 ? 100 / -beatLength : 1;
+				float time = ParseUtils.ParseFloat(splits[0].Trim()) + offset;
+				float beatLength = ParseUtils.ParseFloat(splits[1].Trim());
+				float speedMultiplier = beatLength < 0 ? 100 / -beatLength : 1;
 
 				TimeSignatures timeSignature = TimeSignatures.Quadruple;
 				if(splits.Length >= 3)

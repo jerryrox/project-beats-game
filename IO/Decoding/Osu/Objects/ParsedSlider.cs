@@ -20,17 +20,17 @@ namespace PBGame.IO.Decoding.Osu.Objects
 
 		public SliderPath Path { get; set; }
 
-		public double Distance { get { return Path.Distance; } }
+		public float Distance { get { return Path.Distance; } }
 
 		public List<List<SoundInfo>> NodeSamples { get; set; }
 
 		public int RepeatCount { get; set; }
 
-		public double EndTime { get { return StartTime + this.SpanCount() * Distance / Speed; } }
+		public float EndTime { get { return StartTime + this.SpanCount() * Distance / Speed; } }
 
-		public double Duration { get { return EndTime - StartTime; } }
+		public float Duration { get { return EndTime - StartTime; } }
 
-		public double Speed { get; set; }
+		public float Speed { get; set; }
 
 
 		protected override void ApplyMapPropertiesSelf (ControlPointGroup controlPoints, MapDifficulty difficulty)
@@ -40,7 +40,7 @@ namespace PBGame.IO.Decoding.Osu.Objects
 			TimingControlPoint timingPoint = controlPoints.TimingPointAt(StartTime);
 			DifficultyControlPoint difficultyPoint = controlPoints.DifficultyPointAt(StartTime);
 
-			double distance = BaseDistance * difficultyPoint.SpeedMultiplier * difficulty.SliderMultiplier;
+			float distance = BaseDistance * difficultyPoint.SpeedMultiplier * difficulty.SliderMultiplier;
 			Speed = distance / timingPoint.BeatLength;
 		}
 	}

@@ -30,21 +30,21 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 
         public List<List<SoundInfo>> NodeSamples { get; set; } = new List<List<SoundInfo>>();
 
-        public double Distance => 0;
+        public float Distance => 0;
 
-        public double EndTime { get; set; }
+        public float EndTime { get; set; }
 
-		public double Duration => EndTime - StartTime;
+		public float Duration => EndTime - StartTime;
 
 		/// <summary>
 		/// Interval which a dragger tick on the path body should be generated at.
 		/// </summary>
-		public double TickInterval { get; set; }
+		public float TickInterval { get; set; }
 
 		/// <summary>
 		/// Returns the ending position x of the dragger.
 		/// </summary>
-		public double EndX { get { return EndCircle.X; } }
+		public float EndX { get { return EndCircle.X; } }
 
 
 		protected override void ApplyMapPropertiesSelf (ControlPointGroup controlPoints, MapDifficulty difficulty)
@@ -72,7 +72,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 			});
 
 			// Create ticks
-			for(double t=StartTime+TickInterval; t<EndTime-ControlPointOffset; t+=TickInterval)
+			for(float t=StartTime+TickInterval; t<EndTime-ControlPointOffset; t+=TickInterval)
 			{
 				// Create sample for tick.
 				var tickSampleList = new List<SoundInfo>();
@@ -84,7 +84,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 				}
 
 				// Create tick object.
-				double progress = (t-StartTime) / Duration;
+				float progress = (t-StartTime) / Duration;
 				AddNestedObject(new DraggerTick() {
 					StartTime = t,
 					Samples = tickSampleList,

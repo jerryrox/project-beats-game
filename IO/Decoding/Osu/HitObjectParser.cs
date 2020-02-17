@@ -17,7 +17,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Offset to apply on hit objects (format version < 5 have +24 greater offset).
 		/// </summary>
-		protected double offset;
+		protected float offset;
 
 		/// <summary>
 		/// Version of the beatmap format.
@@ -30,7 +30,7 @@ namespace PBGame.IO.Decoding.Osu
 		protected bool isFirstObject;
 
 
-		public HitObjectParser(double offset, int formatVersion)
+		public HitObjectParser(float offset, int formatVersion)
 		{
 			isFirstObject = true;
 			this.offset = offset;
@@ -44,7 +44,7 @@ namespace PBGame.IO.Decoding.Osu
 				string[] splits = text.Split(',');
 
 				Vector2 pos = new Vector2(ParseUtils.ParseFloat(splits[0]), ParseUtils.ParseFloat(splits[1]));
-				double startTime = ParseUtils.ParseDouble(splits[2]) + offset;
+				float startTime = ParseUtils.ParseFloat(splits[2]) + offset;
 				HitObjectTypes type = (HitObjectTypes)ParseUtils.ParseInt(splits[3]);
 
 				int comboOffset = (int)(type & HitObjectTypes.ComboOffset) >> 4;
@@ -69,7 +69,7 @@ namespace PBGame.IO.Decoding.Osu
 				else if((type & HitObjectTypes.Slider) != 0)
 				{
 					PathTypes pathType = PathTypes.Catmull;
-					double length = 0;
+					float length = 0;
 					string[] pointSplits = splits[5].Split('|');
 
 					// Find the number of valid slider node points.
@@ -124,7 +124,7 @@ namespace PBGame.IO.Decoding.Osu
 					repeatCount = Math.Max(0, repeatCount - 1);
 
 					if(splits.Length > 7)
-						length = Math.Max(0, ParseUtils.ParseDouble(splits[7]));
+						length = Math.Max(0, ParseUtils.ParseFloat(splits[7]));
 
 					if(splits.Length > 10)
 						ParseCustomSample(splits[10], customSample);
@@ -178,20 +178,20 @@ namespace PBGame.IO.Decoding.Osu
 				}
 				else if((type & HitObjectTypes.Spinner) != 0)
 				{
-					double endTime = Math.Max(startTime, ParseUtils.ParseDouble(splits[5]) + offset);
+					float endTime = Math.Max(startTime, ParseUtils.ParseFloat(splits[5]) + offset);
 					result = CreateSpinner(pos, isNewCombo, comboOffset, endTime);
 					if(splits.Length > 6)
 						ParseCustomSample(splits[6], customSample);
 				}
 				else if((type & HitObjectTypes.Hold) != 0)
 				{
-					double endTime = Math.Max(startTime, ParseUtils.ParseDouble(splits[2] + offset));
+					float endTime = Math.Max(startTime, ParseUtils.ParseFloat(splits[2] + offset));
 
 					// I can understand all others except this, because Hold type only exists for Mania mode.
 					if(splits.Length > 5 && !string.IsNullOrEmpty(splits[5]))
 					{
 						string[] sampleSplits = splits[5].Split(':');
-						endTime = Math.Max(startTime, ParseUtils.ParseDouble(sampleSplits[0]));
+						endTime = Math.Max(startTime, ParseUtils.ParseFloat(sampleSplits[0]));
 						ParseCustomSample(string.Join(":", sampleSplits.Skip(1).ToArray()), customSample);
 					}
 
@@ -230,17 +230,17 @@ namespace PBGame.IO.Decoding.Osu
 		/// Creates a new parsed slider object.
 		/// </summary>
 		protected abstract HitObject CreateSlider(Vector2 pos, bool isNewCombo, int comboOffset, Vector2[] controlPoints,
-			double length, PathTypes pathType, int repeatCount, List<List<SoundInfo>> nodeSamples);
+			float length, PathTypes pathType, int repeatCount, List<List<SoundInfo>> nodeSamples);
 
 		/// <summary>
 		/// Creates a new parsed spinner object.
 		/// </summary>
-		protected abstract HitObject CreateSpinner(Vector2 pos, bool isNewCombo, int comboOffset, double endTime);
+		protected abstract HitObject CreateSpinner(Vector2 pos, bool isNewCombo, int comboOffset, float endTime);
 
 		/// <summary>
 		/// Creates a new parsed hold object.
 		/// </summary>
-		protected abstract HitObject CreateHold(Vector2 pos, bool isNewCombo, int comboOffset, double endTime);
+		protected abstract HitObject CreateHold(Vector2 pos, bool isNewCombo, int comboOffset, float endTime);
 
 		/// <summary>
 		/// Whether specified control points are labelled PerfectCurve path type but it's actually linear in terms of coordinates.

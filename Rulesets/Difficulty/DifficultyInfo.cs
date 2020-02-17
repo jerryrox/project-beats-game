@@ -10,6 +10,6 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// The actual difficulty value of the beatmap.
 		/// </summary>
-		public double Scale { get; set; }
+		public float Scale { get; set; }
 	}
 }

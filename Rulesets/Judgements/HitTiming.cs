@@ -6,7 +6,7 @@ using PBFramework.Debugging;
 
 namespace PBGame.Rulesets.Judgements
 {
-    using TimingTuple = Tuple<double, double, double>;
+    using TimingTuple = Tuple<float, float, float>;
 
     /// <summary>
     /// Contains information about hit timing values.
@@ -15,7 +15,7 @@ namespace PBGame.Rulesets.Judgements
 
         protected static IReadOnlyDictionary<HitResults, TimingTuple> DefaultRanges = new Dictionary<HitResults, TimingTuple>()
         {
-            { HitResults.Perfect, new TimingTuple(44.8, 38.8, 27.8) },
+            { HitResults.Perfect, new TimingTuple(44.8f, 38.8f, 27.8f) },
 			{ HitResults.Great, new TimingTuple(128, 98, 68) },
 			{ HitResults.Good, new TimingTuple(194, 164, 134) },
 			{ HitResults.Ok, new TimingTuple(254, 224, 194) },
@@ -26,38 +26,38 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Time value for a perfect hit result.
 		/// </summary>
-		public double Perfect { get; protected set; }
+		public float Perfect { get; protected set; }
 
 		/// <summary>
 		/// Time value for a great hit result.
 		/// </summary>
-		public double Great { get; protected set; }
+		public float Great { get; protected set; }
 
 		/// <summary>
 		/// Time value for a good hit result.
 		/// </summary>
-		public double Good { get; protected set; }
+		public float Good { get; protected set; }
 
 		/// <summary>
 		/// Time value for a ok hit result.
 		/// </summary>
-		public double Ok { get; protected set; }
+		public float Ok { get; protected set; }
 
 		/// <summary>
 		/// Time value for a bad hit result.
 		/// </summary>
-		public double Bad { get; protected set; }
+		public float Bad { get; protected set; }
 
 		/// <summary>
 		/// Time value for a miss hit result.
 		/// </summary>
-		public double Miss { get; protected set; }
+		public float Miss { get; protected set; }
 
 
         /// <summary>
         /// Sets the difficulty value to calculate the timing values.
         /// </summary>
-        public virtual void SetDifficulty(double difficulty)
+        public virtual void SetDifficulty(float difficulty)
         {
 			Perfect = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Perfect]);
 			Great = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Great]);
@@ -70,7 +70,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns the timing value for the lowest possible successful hit.
 		/// </summary>
-		public double LowestSuccessTiming() => GetHalfTiming(LowestSuccessfulHitResult());
+		public float LowestSuccessTiming() => GetHalfTiming(LowestSuccessfulHitResult());
 
 		/// <summary>
 		/// Returns whether specified hit result is supported.
@@ -83,7 +83,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns the hit result type for specified hit offset.
 		/// </summary>
-		public HitResults GetHitResult(double offset)
+		public HitResults GetHitResult(float offset)
 		{
 			if(offset < 0)
 				offset = -offset;
@@ -99,7 +99,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns the halved value of the timing value for specified result.
 		/// </summary>
-		public double GetHalfTiming(HitResults type)
+		public float GetHalfTiming(HitResults type)
 		{
 			switch(type)
 			{
@@ -117,7 +117,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns whether a hit object can be hit after specified offset, resulting in a non-miss result.
 		/// </summary>
-		public bool CanBeHit(double offset) => offset <= GetHalfTiming(LowestSuccessfulHitResult());
+		public bool CanBeHit(float offset) => offset <= GetHalfTiming(LowestSuccessfulHitResult());
 
 		/// <summary>
 		/// Returns the types of hit results which are supported by this hit timing in current game mode.

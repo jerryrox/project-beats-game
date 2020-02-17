@@ -53,6 +53,22 @@ namespace PBGame.Rulesets.Maps
 
         public DifficultyInfo Difficulty { get; private set; } = null;
 
+        public int ObjectCount => HitObjects.Count;
+
+        public int Duration
+        {
+            get
+            {
+                if(HitObjects.Count < 2)
+                    return 0;
+                var firstObject = HitObjects[0];
+                var lastObject = HitObjects[HitObjects.Count - 1];
+                if(lastObject is IHasEndTime endTime)
+                    return (int)(endTime.EndTime - firstObject.StartTime);
+                return (int)(lastObject.StartTime = firstObject.StartTime);
+            }
+        }
+
         public double BreakDuration => BreakPoints.Sum(p => p.Duration);
 
         public bool IsPlayable { get; private set; } = false;

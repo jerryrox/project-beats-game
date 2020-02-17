@@ -43,9 +43,9 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 
 			// Angle 50: 1800, 1200, 600);
 			// Angle 55: 2400, 1800, 900);
-			FallTime = (float)MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
+			FallTime = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
 
-			Scale = (float)MapDifficulty.GetDifficultyValue(difficulty.CircleSize, 1, 0.85, 0.7);
+			Scale = MapDifficulty.GetDifficultyValue(difficulty.CircleSize, 1, 0.85f, 0.7f);
 		}
 
 		protected override Rulesets.Judgements.HitTiming CreateHitTiming() { return new HitTiming(); }

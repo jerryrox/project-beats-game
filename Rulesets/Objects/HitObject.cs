@@ -8,14 +8,13 @@ using PBGame.Rulesets.Judgements;
 
 namespace PBGame.Rulesets.Objects
 {
-    // TODO: Implement
     public class HitObject {
     
 		/// <summary>
 		/// Offset applied when querying control point using the object's time.
 		/// This is to prevent potential precision errors that may occur when comparing time values.
 		/// </summary>
-		public const double ControlPointOffset = 1;
+		public const float ControlPointOffset = 1;
 
 		private List<SoundInfo> samples;
 
@@ -25,7 +24,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// The starting time of this hit object.
 		/// </summary>
-		public double StartTime { get; set; }
+		public float StartTime { get; set; }
 
 		/// <summary>
 		/// The sample control point which this hit object is grouped in.

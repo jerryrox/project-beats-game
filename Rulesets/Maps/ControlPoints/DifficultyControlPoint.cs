@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using PBFramework.Utils;
 
 namespace PBGame.Rulesets.Maps.ControlPoints
 {
@@ -9,16 +8,16 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 	/// </summary>
 	public class DifficultyControlPoint : ControlPoint, IComparable<DifficultyControlPoint> {
 
-		private double speedMultiplier = 1;
+		private float speedMultiplier = 1;
 
 
 		/// <summary>
 		/// Speed multiplier of certain hit objects within this point.
 		/// </summary>
-		public double SpeedMultiplier
+		public float SpeedMultiplier
 		{
 			get { return speedMultiplier; }
-			set { speedMultiplier = MathUtils.Clamp(value, 0.1, 10); }
+			set { speedMultiplier = Mathf.Clamp(value, 0.1f, 10); }
 		}
 
 

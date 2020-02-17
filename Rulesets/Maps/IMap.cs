@@ -46,9 +46,19 @@ namespace PBGame.Rulesets.Maps
 		DifficultyInfo Difficulty { get; }
 
 		/// <summary>
-		/// Returns the total duration of breaks.
+		/// Returns the number of hit objects.
 		/// </summary>
-		double BreakDuration { get; }
+		int ObjectCount { get; }
+
+        /// <summary>
+        /// Duration of the map in milliseconds.
+        /// </summary>
+        int Duration { get; }
+
+        /// <summary>
+        /// Returns the total duration of breaks.
+        /// </summary>
+        double BreakDuration { get; }
 
 		/// <summary>
 		/// Returns whether this map is playable.

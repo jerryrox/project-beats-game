@@ -20,33 +20,33 @@ namespace PBGame.Rulesets.Difficulty.Skills
 		/// <summary>
 		/// List of all peak strain factors recorded per strain section.
 		/// </summary>
-		private SortedList<double> strainPeaks = new SortedList<double>(2);
+		private SortedList<float> strainPeaks = new SortedList<float>(2);
 
 		/// <summary>
 		/// Current amount of strain on hold.
 		/// </summary>
-		private double currentStrain;
+		private float currentStrain;
 
 		/// <summary>
 		/// Current highest strain peak during this section.
 		/// </summary>
-		private double currentStrainPeak;
+		private float currentStrainPeak;
 
 
 		/// <summary>
 		/// The amount of scoring this skill holds in comparison to other skills within the same game mode.
 		/// </summary>
-		protected abstract double StrainScore { get; }
+		protected abstract float StrainScore { get; }
 
 		/// <summary>
 		/// The amount of decay applied on current strain every strain section, per second.
 		/// </summary>
-		protected abstract double StrainDecay { get; }
+		protected abstract float StrainDecay { get; }
 
 		/// <summary>
 		/// The amount of decay applied on weight factor for every next highest strain.
 		/// </summary>
-		protected virtual double WeightDecay { get { return 0.9; } }
+		protected virtual float WeightDecay { get { return 0.9f; } }
 
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace PBGame.Rulesets.Difficulty.Skills
 		/// <summary>
 		/// Starts a new section at specified time.
 		/// </summary>
-		public void StartNewSection(double time)
+		public void StartNewSection(float time)
 		{
 			// Since strain is carried over from last section, the new strain peak is not reset to 0.
 			if(previousObjects.Count > 0)
@@ -84,10 +84,10 @@ namespace PBGame.Rulesets.Difficulty.Skills
 		/// <summary>
 		/// Returns the calculated difficulty scale.
 		/// </summary>
-		public double GetDifficultyScale()
+		public float GetDifficultyScale()
 		{
-			double difficulty = 0;
-			double curWeight = 1;
+			float difficulty = 0;
+			float curWeight = 1;
 
 			for(int i=strainPeaks.Count-1; i>=0; i--)
 			{
@@ -100,11 +100,11 @@ namespace PBGame.Rulesets.Difficulty.Skills
 		/// <summary>
 		/// Calculates the actual strain value of specified object.
 		/// </summary>
-		protected abstract double CalculateStrain(DifficultyHitObject obj);
+		protected abstract float CalculateStrain(DifficultyHitObject obj);
 
 		/// <summary>
 		/// Returns the amount of decay applied to the current strain value for specified time difference in milliseconds.
 		/// </summary>
-		private double GetStrainDecay(double time) { return Math.Pow(StrainDecay, time / 1000); }
+		private float GetStrainDecay(float time) { return Mathf.Pow(StrainDecay, time / 1000); }
 	}
 }
