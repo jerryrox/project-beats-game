@@ -1,6 +1,6 @@
-using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
+using PBGame.Rulesets.Maps;
 using PBGame.Networking.API.Osu;
 
 namespace PBGame.Networking.API
@@ -22,5 +22,7 @@ namespace PBGame.Networking.API
         }
 
         public IApi GetApi(ApiProviders provider) => apis[provider];
+
+        public IApi GetRelevantApi(IMap map) => apis.Values.FirstOrDefault(api => api.IsRelevantMap(map));
     }
 }

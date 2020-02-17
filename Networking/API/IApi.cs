@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using PBGame.Rulesets;
+using PBGame.Rulesets.Maps;
 using PBFramework.Data.Bindables;
 using PBFramework.Networking;
 
@@ -45,5 +48,20 @@ namespace PBGame.Networking.API
         /// Logs out from current online session.
         /// </summary>
         void Logout();
+
+        /// <summary>
+        /// Returns all game modes which is linked to the provider of this api.
+        /// </summary>
+        IEnumerable<GameModes> GetGameModes();
+
+        /// <summary>
+        /// Returns whether the specified game mode is relevant to this api's provider.
+        /// </summary>
+        bool IsRelevantMode(GameModes gameMode);
+
+        /// <summary>
+        /// Returns whether the specified map is relevant to this api's provider.
+        /// </summary>
+        bool IsRelevantMap(IMap map);
     }
 }

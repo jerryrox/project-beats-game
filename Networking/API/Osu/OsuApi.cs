@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using PBGame.Rulesets;
+
 namespace PBGame.Networking.API.Osu
 {
     public class OsuApi : BaseApi {
@@ -7,9 +10,9 @@ namespace PBGame.Networking.API.Osu
         public override API.ApiProviders ApiType => API.ApiProviders.Osu;
 
 
-        public OsuApi()
+        public override IEnumerable<GameModes> GetGameModes()
         {
-    
+            yield return GameModes.OsuStandard;
         }
     }
 }

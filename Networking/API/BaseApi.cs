@@ -1,3 +1,7 @@
+using System.Linq;
+using System.Collections.Generic;
+using PBGame.Rulesets;
+using PBGame.Rulesets.Maps;
 using PBFramework.Data.Bindables;
 using PBFramework.Networking;
 
@@ -67,5 +71,11 @@ namespace PBGame.Networking.API
         {
             User.Value = offlineUser;
         }
+
+        public abstract IEnumerable<GameModes> GetGameModes();
+
+        public bool IsRelevantMode(GameModes gameMode) => GetGameModes().Any(m => m == gameMode);
+
+        public bool IsRelevantMap(IMap map) => map == null ? false : IsRelevantMode(map.Detail.GameMode);
     }
 }
