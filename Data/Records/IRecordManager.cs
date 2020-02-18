@@ -16,12 +16,12 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns all records for the specified map.
         /// </summary>
-        Task GetRecords(IMap map, IReturnableProgress<IEnumerable<IRecord>> progress);
+        Task GetRecords(IPlayableMap map, IReturnableProgress<IEnumerable<IRecord>> progress);
 
         /// <summary>
         /// Returns the number of records for the specified map and user.
         /// </summary>
-        int GetPlayCount(IMap map, IUser user);
+        int GetPlayCount(IPlayableMap map, IUser user);
 
         /// <summary>
         /// Returns whether there is a replay data for specified record.

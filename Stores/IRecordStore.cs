@@ -11,11 +11,11 @@ namespace PBGame.Stores
         /// <summary>
         /// Returns all records for the specified map.
         /// </summary>
-        IEnumerable<IRecord> GetRecords(IMap map);
+        IEnumerable<IRecord> GetRecords(IPlayableMap map);
 
         /// <summary>
         /// Returns the number of records made for the specified map and the user.
         /// </summary>
-        int GetPlayCount(IMap map, IUser user);
+        int GetPlayCount(IPlayableMap map, IUser user);
     }
 }

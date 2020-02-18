@@ -3,7 +3,8 @@ using PBGame.Rulesets.Beats.Standard.Objects;
 
 namespace PBGame.Rulesets.Beats.Standard.Maps
 {
-    public class Map : Map<HitObject> {
-    
+    public class Map : PlayableMap<HitObject> {
+
+        public Map(IOriginalMap map) : base(map) {}
     }
 }

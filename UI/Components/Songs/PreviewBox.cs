@@ -235,7 +235,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Event called when the selected map changes to the specifiedm map.
         /// </summary>
-        private void OnMapChange(IMap map) => SetLabels(map, GameConfiguration.PreferUnicode.Value);
+        private void OnMapChange(IPlayableMap map) => SetLabels(map, GameConfiguration.PreferUnicode.Value);
 
         /// <summary>
         /// Event called when the game configuration for prefer unicode has changed.
@@ -245,7 +245,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Sets label values.
         /// </summary>
-        private void SetLabels(IMap map, bool preferUnicode)
+        private void SetLabels(IPlayableMap map, bool preferUnicode)
         {
             if (map == null)
             {

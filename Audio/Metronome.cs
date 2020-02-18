@@ -14,7 +14,7 @@ namespace PBGame.Audio
 
         private IMusicController musicController;
 
-        private IMap map;
+        private IPlayableMap map;
 		private TimingControlPoint curTimingPoint;
 		private TimingControlPoint nextTimingPoint;
         private int timingPointIndex;

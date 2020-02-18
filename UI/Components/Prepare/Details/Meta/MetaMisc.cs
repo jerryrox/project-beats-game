@@ -79,7 +79,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// <summary>
         /// Event called on map change.
         /// </summary>
-        private void OnMapChange(IMap map)
+        private void OnMapChange(IPlayableMap map)
         {
             if (map == null)
             {

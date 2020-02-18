@@ -81,7 +81,7 @@ namespace PBGame.Data.Users
         /// <summary>
         /// Returns the number of plays done for the specified map.
         /// </summary>
-        int GetPlayCount(IMap map);
+        int GetPlayCount(IPlayableMap map);
 
         /// <summary>
         /// Returns the number of ranks achieved for specified rank type.

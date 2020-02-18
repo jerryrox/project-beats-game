@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using PBGame.Rulesets.Maps.Timing;
 using PBGame.Rulesets.Maps.ControlPoints;
 using PBGame.Rulesets.Objects;
-using PBGame.Rulesets.Difficulty;
 using PBFramework.Data.Queries;
 
 namespace PBGame.Rulesets.Maps
@@ -14,15 +13,15 @@ namespace PBGame.Rulesets.Maps
 		/// </summary>
 		MapDetail Detail { get; }
 
-		/// <summary>
-		/// Returns the control points collection holder.
-		/// </summary>
-		ControlPointGroup ControlPoints { get; }
+        /// <summary>
+        /// Returns the metadata of the map.
+        /// </summary>
+        MapMetadata Metadata { get; }
 
-		/// <summary>
-		/// Returns the actual playable game mode of this map.
-		/// </summary>
-		GameModes PlayableMode { get; }
+        /// <summary>
+        /// Returns the control points collection holder.
+        /// </summary>
+        ControlPointGroup ControlPoints { get; }
 
 		/// <summary>
 		/// Returns the list of break points in the map.
@@ -33,22 +32,6 @@ namespace PBGame.Rulesets.Maps
 		/// Returns the list of hit objects in the map.
 		/// </summary>
 		IEnumerable<HitObject> HitObjects { get; }
-
-		/// <summary>
-		/// Returns the metadata of the map.
-		/// </summary>
-		MapMetadata Metadata { get; }
-
-		/// <summary>
-		/// Returns the difficulty information of this map.
-		/// Is non-null only if this map is a playable version.
-		/// </summary>
-		DifficultyInfo Difficulty { get; }
-
-		/// <summary>
-		/// Returns the original map which this playable map (or maybe not) is derived from.
-		/// </summary>
-		IMap OriginalMap { get; }
 
         /// <summary>
         /// Returns the number of hit objects.
@@ -61,30 +44,13 @@ namespace PBGame.Rulesets.Maps
         int Duration { get; }
 
         /// <summary>
-        /// Returns the total duration of breaks.
+        /// Returns the total duration of breaks in milliseconds.
         /// </summary>
-        double BreakDuration { get; }
+        float BreakDuration { get; }
 
 		/// <summary>
-		/// Returns whether this map is playable.
+		/// Returns whether this map is a playable map.
 		/// </summary>
 		bool IsPlayable { get; }
-
-
-		/// <summary>
-		/// Creates playable variants of this maps for modes included in specified manager.
-		/// </summary>
-		void CreatePlayable(IModeManager modeManager);
-
-		/// <summary>
-		/// Returns the playable map variant for specified game mode.
-		/// If specified mode is not supported, it will return the variant of the game mode the map was created for.
-		/// </summary>
-        IMap GetPlayable(GameModes gamemode);
-
-        /// <summary>
-        /// Returns the shallow clone of this map.
-        /// </summary>
-        IMap Clone();
     }
 }

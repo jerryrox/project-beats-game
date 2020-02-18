@@ -47,7 +47,7 @@ namespace PBGame.Data.Records
             });
         }
 
-        public Task GetRecords(IMap map, IReturnableProgress<IEnumerable<IRecord>> progress)
+        public Task GetRecords(IPlayableMap map, IReturnableProgress<IEnumerable<IRecord>> progress)
         {
             progress?.Report(0f);
             return Task.Run(() =>
@@ -65,7 +65,7 @@ namespace PBGame.Data.Records
             });
         }
 
-        public int GetPlayCount(IMap map, IUser user) => recordStore.GetPlayCount(map, user);
+        public int GetPlayCount(IPlayableMap map, IUser user) => recordStore.GetPlayCount(map, user);
 
         // TODO: Implement when replay store is implemented.
         public bool HasReplay(IRecord record) => false;

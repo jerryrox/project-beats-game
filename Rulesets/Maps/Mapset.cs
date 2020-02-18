@@ -27,7 +27,7 @@ namespace PBGame.Rulesets.Maps
         }
 
         [JsonIgnore]
-        public List<IMap> Maps { get; set; } = new List<IMap>();
+        public List<IOriginalMap> Maps { get; set; } = new List<IOriginalMap>();
 
         [JsonIgnore]
         public FileInfo StoryboardFile { get; set; }

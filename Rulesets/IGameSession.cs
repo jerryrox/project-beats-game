@@ -32,7 +32,7 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns the current map in play.
         /// </summary>
-        IMap CurrentMap { get; }
+        IPlayableMap CurrentMap { get; }
 
         /// <summary>
         /// Returns the score processor of current game session.
@@ -48,7 +48,7 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Sets the map to play.
         /// </summary>
-        void SetMap(IMap map);
+        void SetMap(IPlayableMap map);
 
         /// <summary>
         /// Initializes the session for a new game.

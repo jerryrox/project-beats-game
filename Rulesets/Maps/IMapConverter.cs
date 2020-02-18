@@ -8,7 +8,7 @@ namespace PBGame.Rulesets.Maps
 		/// <summary>
 		/// Returns the map in conversion.
 		/// </summary>
-		IMap Map { get; }
+		IOriginalMap Map { get; }
 
 		/// <summary>
 		/// Returns whether current map can be converted.
@@ -24,7 +24,7 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// Converts current map and returns a new map representing it.
         /// </summary>
-        IMap Convert();
+        IPlayableMap Convert();
 	}
 }
 

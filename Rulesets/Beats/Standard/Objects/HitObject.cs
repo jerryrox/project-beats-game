@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Maps.ControlPoints;
 using PBGame.Rulesets.Beats.Standard.Judgements;

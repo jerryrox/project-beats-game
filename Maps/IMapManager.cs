@@ -54,7 +54,7 @@ namespace PBGame.Maps
         /// <summary>
         /// Deletes the specified map from the current mapset.
         /// </summary>
-        void DeleteMap(IMap map);
+        void DeleteMap(IOriginalMap map);
 
         /// <summary>
         /// Deletes the specified mapset.

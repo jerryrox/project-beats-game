@@ -29,17 +29,17 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Creates a new map converter instance for this game mode.
         /// </summary>
-        IMapConverter CreateConverter(IMap map);
+        IMapConverter CreateConverter(IOriginalMap map);
 
         /// <summary>
         /// Creates a new map pre/post processor instance for this game mode.
         /// </summary>
-        IMapProcessor CreateProcessor(IMap map);
+        IMapProcessor CreateProcessor(IPlayableMap map);
 
         /// <summary>
         /// Creates a new map difficulty calculator instance for this game mode.
         /// </summary>
-        IDifficultyCalculator CreateDifficultyCalculator(IMap map);
+        IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map);
 
         /// <summary>
         /// Creates a new hit object timing information of this game mode.

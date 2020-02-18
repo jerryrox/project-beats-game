@@ -18,9 +18,9 @@ namespace PBGame.Rulesets.Beats.Standard.Difficulty
 		private const float DraggerRemovalDelay = 100; // 150 BPM
 
 
-		public DifficultyCalculator(IMap map) : base(map) {}
+		public DifficultyCalculator(IPlayableMap map) : base(map) {}
 
-        protected override Rulesets.Difficulty.DifficultyInfo CreateDifficultyInfo(IMap map, Skill[] skills, float clockRate)
+        protected override Rulesets.Difficulty.DifficultyInfo CreateDifficultyInfo(IPlayableMap map, Skill[] skills, float clockRate)
         {
             if(!map.HitObjects.Any())
                 return new DifficultyInfo();
@@ -33,7 +33,7 @@ namespace PBGame.Rulesets.Beats.Standard.Difficulty
             };
         }
 
-		protected override IEnumerable<Rulesets.Difficulty.Objects.DifficultyHitObject> CreateHitObjects(IMap beatmap, float clockRate)
+		protected override IEnumerable<Rulesets.Difficulty.Objects.DifficultyHitObject> CreateHitObjects(IPlayableMap beatmap, float clockRate)
         {
 			var map = beatmap as Maps.Map;
 			if(map != null)

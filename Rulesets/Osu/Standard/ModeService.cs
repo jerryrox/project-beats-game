@@ -23,12 +23,12 @@ namespace PBGame.Rulesets.Osu.Standard
         }
 
         // TODO:
-        public override Rulesets.Maps.IMapConverter CreateConverter(IMap map) => null;
+        public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => null;
 
-        public override Rulesets.Maps.IMapProcessor CreateProcessor(IMap map) => new Standard.Maps.MapProcessor(map);
+        public override Rulesets.Maps.IMapProcessor CreateProcessor(IPlayableMap map) => new Standard.Maps.MapProcessor(map);
 
         // TODO:
-        public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IMap map) => null;
+        public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map) => null;
 
         // TODO:
         public override Rulesets.Judgements.HitTiming CreateTiming() => null;

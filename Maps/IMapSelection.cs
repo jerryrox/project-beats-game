@@ -14,7 +14,7 @@ namespace PBGame.Maps
         /// <summary>
         /// Event called when the selected mapset has changed.
         /// </summary>
-        event Action<IMap> OnMapChange;
+        event Action<IPlayableMap> OnMapChange;
 
         /// <summary>
         /// Event called when the music for current map has been loaded.
@@ -45,7 +45,7 @@ namespace PBGame.Maps
         /// <summary>
         /// Returns the map currently selected.
         /// </summary>
-        IMap Map { get; }
+        IPlayableMap Map { get; }
 
         /// <summary>
         /// Returns the selected map's music clip.
@@ -68,11 +68,11 @@ namespace PBGame.Maps
         /// Selects the specified mapset and map.
         /// If map is null, a default map will be selected.
         /// </summary>
-        void SelectMapset(IMapset mapset, IMap map = null);
+        void SelectMapset(IMapset mapset, IPlayableMap map = null);
 
         /// <summary>
         /// Selects the specified map and if required, changes the selected mapset.
         /// </summary>
-        void SelectMap(IMap map);
+        void SelectMap(IPlayableMap map);
     }
 }

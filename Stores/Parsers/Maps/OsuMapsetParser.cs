@@ -31,11 +31,11 @@ namespace PBGame.Stores.Parsers.Maps
 					using(var stream = file.OpenText())
 					{
 						// Get decoder.
-						var decoder = Decoders.GetDecoder<Map>(stream);
+						var decoder = Decoders.GetDecoder<OriginalMap>(stream);
 						if(decoder != null)
 						{
-							// Decode file into beatmap.
-							Map map = decoder.Decode(stream);
+                            // Decode file into beatmap.
+                            OriginalMap map = decoder.Decode(stream);
 							if(map != null)
 							{
 								// Store file info.

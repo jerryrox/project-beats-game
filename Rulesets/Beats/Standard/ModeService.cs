@@ -18,11 +18,11 @@ namespace PBGame.Rulesets.Beats.Standard
         {
         }
 
-        public override Rulesets.Maps.IMapConverter CreateConverter(IMap map) => new MapConverter(map);
+        public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => new MapConverter(map);
 
-        public override Rulesets.Maps.IMapProcessor CreateProcessor(IMap map) => new Standard.Maps.MapProcessor(map);
+        public override Rulesets.Maps.IMapProcessor CreateProcessor(IPlayableMap map) => new Standard.Maps.MapProcessor(map);
 
-        public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IMap map) => new DifficultyCalculator(map);
+        public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map) => new DifficultyCalculator(map);
 
         public override Rulesets.Judgements.HitTiming CreateTiming() => new HitTiming();
 

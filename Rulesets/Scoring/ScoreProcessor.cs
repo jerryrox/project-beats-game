@@ -63,7 +63,7 @@ namespace PBGame.Rulesets.Scoring
         protected double maxRawScore;
 
 
-        public IMap Map { get; private set; }
+        public IPlayableMap Map { get; private set; }
 
         public List<JudgementResult> Judgements => results;
 
@@ -103,7 +103,7 @@ namespace PBGame.Rulesets.Scoring
             maxRawScore = 0;
         }
 
-        public virtual void ApplyMap(IMap map)
+        public virtual void ApplyMap(IPlayableMap map)
         {
 			// Get difficulty multiplier.
 			difficultyMultiplier = map.Difficulty.Scale;

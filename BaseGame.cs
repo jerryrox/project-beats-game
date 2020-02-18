@@ -140,7 +140,7 @@ namespace PBGame
         protected virtual void PostInitialize()
         {
             // Register decoders.
-            Decoders.AddDecoder<Map>(
+            Decoders.AddDecoder<OriginalMap>(
                 "osu file format v",
                 (header) => new OsuBeatmapDecoder(ParseUtils.ParseInt(header.Split('v').Last(), OsuBeatmapDecoder.LatestVersion))
             );

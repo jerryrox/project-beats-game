@@ -9,7 +9,7 @@ namespace PBGame.Rulesets.Maps
 	public abstract class MapConverter<T> : IMapConverter
         where T : HitObject
     {
-		public IMap Map { get; private set; }
+		public IOriginalMap Map { get; private set; }
 
 		public bool IsConvertible => RequiredTypes.All(t => Map.HitObjects.Any(t.IsInstanceOfType));
 
@@ -22,34 +22,27 @@ namespace PBGame.Rulesets.Maps
 
 
 
-		protected MapConverter(IMap map)
+		protected MapConverter(IOriginalMap map)
 		{
             this.Map = map;
         }
 
-        public IMap Convert() => Convert(Map);
+        public IPlayableMap Convert() => Convert(Map);
 
 		/// <summary>
 		/// Converts the specified beatmap in to a game-specific variant version of beatmap.
 		/// </summary>
-		protected IMap Convert(IMap original)
+		protected IPlayableMap Convert(IOriginalMap original)
 		{
-			var newBeatmap = CreateMap();
-
-			newBeatmap.PlayableMode = TargetMode;
-			newBeatmap.Detail = original.Detail;
-			newBeatmap.ControlPoints = original.ControlPoints;
+			var newBeatmap = CreateMap(original);
 			newBeatmap.HitObjects = ConvertHitObjects(original.HitObjects);
-			newBeatmap.BreakPoints = original.BreakPoints;
-			newBeatmap.ComboColors = original.ComboColors;
-
 			return newBeatmap;
 		}
 
         /// <summary>
         /// Creates a new beatmap for current game mode.
         /// </summary>
-        protected virtual Map<T> CreateMap() => new Map<T>();
+        protected virtual PlayableMap<T> CreateMap(IOriginalMap map) => new PlayableMap<T>(Map);
 
         /// <summary>
         /// Converts specified hit object in to game-specific variant of the object.

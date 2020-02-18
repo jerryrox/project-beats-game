@@ -13,7 +13,7 @@ namespace PBGame.IO.Decoding.Osu
 	/// <summary>
 	/// Decoder for osu standard beatmaps.
 	/// </summary>
-	public class OsuBeatmapDecoder : OsuDecoder<Map> {
+	public class OsuBeatmapDecoder : OsuDecoder<OriginalMap> {
 
 		/// <summary>
 		/// The latest osu beatmap format version.
@@ -28,7 +28,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// The beatmap currently being decoded into.
 		/// </summary>
-		private Map map;
+		private OriginalMap map;
 
 		/// <summary>
 		/// The default sample type defined in metadata.
@@ -56,13 +56,13 @@ namespace PBGame.IO.Decoding.Osu
 		/// </summary>
 		public static void RegisterDecoder()
 		{
-			Decoders.AddDecoder<Map>(
+			Decoders.AddDecoder<OriginalMap>(
 				"osu file format v",
 				(header) => new OsuBeatmapDecoder(ParseUtils.ParseInt(header.Split('v').Last(), LatestVersion))
 			);
 		}
 
-		public override void Decode (StreamReader stream, Map result)
+		public override void Decode (StreamReader stream, OriginalMap result)
 		{
 			this.map = result;
 			this.map.Detail.FormatVersion = formatVersion;
@@ -89,7 +89,7 @@ namespace PBGame.IO.Decoding.Osu
 				line.StartsWith(" ", StringComparison.Ordinal) || line.StartsWith("_", StringComparison.Ordinal);
 		}
 
-		protected override void DecodeLine (Map result, Sections section, string line)
+		protected override void DecodeLine (OriginalMap result, Sections section, string line)
 		{
 			var l = TrimLine(line);
 

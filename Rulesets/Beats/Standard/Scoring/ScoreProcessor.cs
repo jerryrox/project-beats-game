@@ -17,7 +17,7 @@ namespace PBGame.Rulesets.Beats.Standard.Scoring
         {
         }
 
-        public override void ApplyMap(IMap map)
+        public override void ApplyMap(IPlayableMap map)
         {
             base.ApplyMap(map);
 

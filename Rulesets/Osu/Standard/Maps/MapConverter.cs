@@ -15,9 +15,9 @@ namespace PBGame.Rulesets.Osu.Standard.Maps
         protected override IEnumerable<Type> RequiredTypes { get { yield return typeof(IHasPosition); } }
 
 
-        public MapConverter(Rulesets.Maps.IMap map) : base(map) {}
+        public MapConverter(Rulesets.Maps.IOriginalMap map) : base(map) {}
 
-        protected override Rulesets.Maps.Map<HitObject> CreateMap() => null;//new Map();
+        protected override Rulesets.Maps.PlayableMap<HitObject> CreateMap(Rulesets.Maps.IOriginalMap map) => null;//new Map();
 
         protected override IEnumerable<HitObject> ConvertHitObjects(BaseHitObject hitObject)
         {

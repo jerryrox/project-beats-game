@@ -112,7 +112,7 @@ namespace PBGame.Maps
 
         public void Sort(MapsetSorts sort) => displayedMapsets.Sort(sort);
 
-        public void DeleteMap(IMap map)
+        public void DeleteMap(IOriginalMap map)
         {
             // TODO:
         }

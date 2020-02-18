@@ -15,7 +15,7 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// Map converted for the mode which difficulty is calculated for.
 		/// </summary>
-		private IMap map;
+		private IPlayableMap map;
 
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace PBGame.Rulesets.Difficulty
         protected virtual float SectionLength => 400;
 
 
-        protected DifficultyCalculator(IMap map)
+        protected DifficultyCalculator(IPlayableMap map)
 		{
             this.map = map;
 		}
@@ -34,12 +34,12 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// Creates difficulty info object.
 		/// </summary>
-		protected abstract DifficultyInfo CreateDifficultyInfo(IMap beatmap, Skill[] skills, float clockRate);
+		protected abstract DifficultyInfo CreateDifficultyInfo(IPlayableMap beatmap, Skill[] skills, float clockRate);
 
         /// <summary>
         /// Creates hit objects to be used for difficulty calculation.
         /// </summary>
-		protected abstract IEnumerable<DifficultyHitObject> CreateHitObjects(IMap map, float clockRate);
+		protected abstract IEnumerable<DifficultyHitObject> CreateHitObjects(IPlayableMap map, float clockRate);
 
         /// <summary>
         /// Creates the skills required for current game mode.

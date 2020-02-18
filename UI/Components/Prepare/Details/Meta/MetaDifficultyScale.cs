@@ -55,7 +55,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         public void Setup(string label, float value, float maxValue)
         {
             this.label.Text = label;
-            valueLabel.Text = value.ToString("P2");
+            valueLabel.Text = value.ToString("N2");
             progress.Value = value / maxValue;
         }
     }

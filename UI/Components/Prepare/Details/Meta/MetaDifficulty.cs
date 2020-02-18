@@ -95,7 +95,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// <summary>
         /// Displays difficulty info scales.
         /// </summary>
-        private void SetupDifficulty(IMap map, DifficultyInfo difficulty)
+        private void SetupDifficulty(IPlayableMap map, DifficultyInfo difficulty)
         {
             var detail = map.Detail.Difficulty;
 
@@ -113,6 +113,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
             // Display overall scale
             difficultyScale.Setup("Diff. scale", difficulty.Scale, 10f);
+            difficultyScale.Active = true;
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             if(cell != null)
                 return cell;
 
-            cell = CreateChild<MetaDifficultyScale>($"cell{scales.Count}", scales.Count);
+            cell = grid.CreateChild<MetaDifficultyScale>($"cell{scales.Count}", scales.Count + 1);
             cell.Tint = ColorPreset.SecondaryFocus;
             scales.Add(cell);
             return cell;
@@ -142,7 +143,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// <summary>
         /// Event called on map selection change.
         /// </summary>
-        private void OnMapChange(IMap map)
+        private void OnMapChange(IPlayableMap map)
         {
             if (map == null)
             {

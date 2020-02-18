@@ -31,11 +31,11 @@ namespace PBGame.Rulesets
 			this.dependencyContainer = dependencyContainer;
 		}
 
-		public abstract IMapConverter CreateConverter(IMap map);
+		public abstract IMapConverter CreateConverter(IOriginalMap map);
 
-		public abstract IMapProcessor CreateProcessor(IMap map);
+		public abstract IMapProcessor CreateProcessor(IPlayableMap map);
 
-		public abstract IDifficultyCalculator CreateDifficultyCalculator(IMap map);
+		public abstract IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map);
 
 		public abstract HitTiming CreateTiming();
 

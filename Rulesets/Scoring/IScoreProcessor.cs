@@ -34,7 +34,7 @@ namespace PBGame.Rulesets.Scoring
         /// <summary>
         /// Returns the map which the score has been processed for.
         /// </summary>
-        IMap Map { get; }
+        IPlayableMap Map { get; }
 
         /// <summary>
         /// Returns the list of all judgements currently made.
@@ -90,7 +90,7 @@ namespace PBGame.Rulesets.Scoring
         /// <summary>
         /// Apply any changes to the score processing from specified map.
         /// </summary>
-        void ApplyMap(IMap map);
+        void ApplyMap(IPlayableMap map);
 
         /// <summary>
         /// Processes the specified judgement for scoring.

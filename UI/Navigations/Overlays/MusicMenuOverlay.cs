@@ -290,7 +290,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called when the selected map has changed.
         /// </summary>
-        private void OnMapChange(IMap map) => SetLabelText();
+        private void OnMapChange(IPlayableMap map) => SetLabelText();
 
         /// <summary>
         /// Event called when the unicode preference option has changed.

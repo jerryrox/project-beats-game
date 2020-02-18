@@ -65,7 +65,7 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Constructor for a new record.
         /// </summary>
-        public Record(IMap map, IUser user, IScoreProcessor scoreProcessor, int playTime)
+        public Record(IPlayableMap map, IUser user, IScoreProcessor scoreProcessor, int playTime)
         {
             if(map == null) throw new ArgumentNullException(nameof(map));
 

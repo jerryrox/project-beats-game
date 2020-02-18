@@ -80,7 +80,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// <summary>
         /// Event called on map selection change.
         /// </summary>
-        private void OnMapChange(IMap map)
+        private void OnMapChange(IPlayableMap map)
         {
             if (map == null)
             {
@@ -89,7 +89,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             else
             {
-                int duration = map.Duration;
+                int duration = map.Duration / 1000;
                 int minutes = duration / 60;
                 int seconds = duration % 60;
                 timeInfo.LabelText = $"{minutes}:{seconds.ToString("00")}";

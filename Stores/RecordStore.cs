@@ -13,7 +13,7 @@ namespace PBGame.Stores
     public class RecordStore : DatabaseBackedStore<Record>, IRecordStore {
 
 
-        public IEnumerable<IRecord> GetRecords(IMap map)
+        public IEnumerable<IRecord> GetRecords(IPlayableMap map)
         {
             using (var results = Database.Query()
                 .FilterMap(map)
@@ -24,7 +24,7 @@ namespace PBGame.Stores
             }
         }
 
-        public int GetPlayCount(IMap map, IUser user)
+        public int GetPlayCount(IPlayableMap map, IUser user)
         {
             using (var results = Database.Query()
                 .FilterMap(map)
@@ -46,7 +46,7 @@ namespace PBGame.Stores
         /// <summary>
         /// Selects records for the specified map.
         /// </summary>
-        public static IDatabaseQuery<Record> FilterMap(this IDatabaseQuery<Record> context, IMap map)
+        public static IDatabaseQuery<Record> FilterMap(this IDatabaseQuery<Record> context, IPlayableMap map)
         {
             var mapHash = map.Detail.Hash;
             var gameMode = map.PlayableMode.ToString();

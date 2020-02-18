@@ -20,7 +20,7 @@ namespace PBGame.Rulesets
         private IGraphicObject containerObject;
 
 
-        public IMap CurrentMap { get; protected set; }
+        public IPlayableMap CurrentMap { get; protected set; }
 
         public IScoreProcessor ScoreProcessor { get; private set; }
 
@@ -54,7 +54,7 @@ namespace PBGame.Rulesets
             }
         }
 
-        public void SetMap(IMap map)
+        public void SetMap(IPlayableMap map)
         {
             CurrentMap = map;
         }

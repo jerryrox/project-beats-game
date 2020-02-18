@@ -21,7 +21,7 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// List of maps included in the set.
         /// </summary>
-        List<IMap> Maps { get; set; }
+        List<IOriginalMap> Maps { get; set; }
 
         /// <summary>
         /// The storyboard file within the mapset, if exists.

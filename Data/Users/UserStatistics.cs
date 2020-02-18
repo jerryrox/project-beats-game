@@ -74,7 +74,7 @@ namespace PBGame.Data.Users
             return 26931190827L + 99999999999L * (level - 100);
         }
 
-        public int GetPlayCount(IMap map)
+        public int GetPlayCount(IPlayableMap map)
         {
             if(RecordManager != null && User != null)
                 return RecordManager.GetPlayCount(map, User);

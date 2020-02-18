@@ -12,7 +12,7 @@ namespace PBGame.Maps
 
         public event Action<IMapset> OnMapsetChange;
 
-        public event Action<IMap> OnMapChange;
+        public event Action<IPlayableMap> OnMapChange;
 
         public event Action<IMusicAudio> OnMusicLoaded;
 
@@ -34,7 +34,7 @@ namespace PBGame.Maps
 
         public IMapset Mapset { get; private set; }
 
-        public IMap Map { get; private set; }
+        public IPlayableMap Map { get; private set; }
 
         public IMusicAudio Music { get; private set; }
 
@@ -100,7 +100,7 @@ namespace PBGame.Maps
             };
         }
 
-        public void SelectMapset(IMapset mapset, IMap map = null)
+        public void SelectMapset(IMapset mapset, IPlayableMap map = null)
         {
             if (mapset == null)
             {
@@ -125,7 +125,7 @@ namespace PBGame.Maps
             SelectMap(map);
         }
 
-        public void SelectMap(IMap map)
+        public void SelectMap(IPlayableMap map)
         {
             if (map == null)
             {

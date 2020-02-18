@@ -8,7 +8,7 @@ namespace PBGame.Rulesets.Maps
 		/// <summary>
 		/// Returns the map being processed.
 		/// </summary>
-		IMap Map { get; }
+		IPlayableMap Map { get; }
 
 
 		/// <summary>

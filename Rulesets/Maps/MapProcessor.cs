@@ -6,10 +6,10 @@ namespace PBGame.Rulesets.Maps
 {
 	public class MapProcessor : IMapProcessor {
 		
-		public IMap Map { get; set; }
+		public IPlayableMap Map { get; set; }
 
 
-		public MapProcessor(IMap map)
+		public MapProcessor(IPlayableMap map)
 		{
             this.Map = map;
         }
@@ -26,7 +26,7 @@ namespace PBGame.Rulesets.Maps
 		/// <summary>
 		/// Applies sample points to the hitobjects.
 		/// </summary>
-		private void ApplySamplePoint(IMap map)
+		private void ApplySamplePoint(IPlayableMap map)
 		{
 			Action<HitObject> applyPoint = (hitObj) => {
 				var samplePoint = hitObj.SamplePoint;
