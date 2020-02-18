@@ -19,6 +19,8 @@ namespace PBGame.Rulesets.Maps
         /// </summary>
         private Dictionary<GameModes, IMap> playableMaps;
 
+        private IMap originalMap;
+
 
         public MapDetail Detail { get; set; } = new MapDetail()
         {
@@ -52,6 +54,8 @@ namespace PBGame.Rulesets.Maps
         public MapMetadata Metadata => Detail == null ? null : (Detail.Metadata ?? (Detail.Mapset == null ? null : Detail.Mapset.Metadata));
 
         public DifficultyInfo Difficulty { get; private set; } = null;
+
+        public IMap OriginalMap => originalMap == null ? this : originalMap;
 
         public int ObjectCount => HitObjects.Count;
 
@@ -94,8 +98,11 @@ namespace PBGame.Rulesets.Maps
             foreach (var service in modeManager.PlayableServices())
             {
                 var playableMap = CreatePlayable(service);
-                if(playableMap != null)
+                if (playableMap != null)
+                {
+                    Debug.Log($"Added playable map for mode: {service.GameMode}");
                     this.playableMaps[service.GameMode] = playableMap;
+                }
             }
         }
 
@@ -110,7 +117,11 @@ namespace PBGame.Rulesets.Maps
             // Prioritize the queried game mode. Else, fallback.
             if (this.playableMaps.TryGetValue(gameMode, out IMap map))
                 return map;
-            return this.playableMaps[Detail.GameMode];
+            // Make sure the original game mode is available for play.
+            if(this.playableMaps.TryGetValue(Detail.GameMode, out map))
+                return map;
+            // Else, just return the first playable map.
+            return this.playableMaps.Count > 0 ? this.playableMaps[0] : null;
         }
 
         public Map<T> Clone() => (Map<T>)MemberwiseClone();
@@ -162,6 +173,7 @@ namespace PBGame.Rulesets.Maps
 
             // Finished
             convertedMap.PlayableMode = service.GameMode;
+            convertedMap.originalMap = this;
             convertedMap.IsPlayable = true;
             return convertedMap;
         }

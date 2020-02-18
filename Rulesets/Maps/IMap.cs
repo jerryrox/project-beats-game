@@ -46,9 +46,14 @@ namespace PBGame.Rulesets.Maps
 		DifficultyInfo Difficulty { get; }
 
 		/// <summary>
-		/// Returns the number of hit objects.
+		/// Returns the original map which this playable map (or maybe not) is derived from.
 		/// </summary>
-		int ObjectCount { get; }
+		IMap OriginalMap { get; }
+
+        /// <summary>
+        /// Returns the number of hit objects.
+        /// </summary>
+        int ObjectCount { get; }
 
         /// <summary>
         /// Duration of the map in milliseconds.
@@ -73,7 +78,7 @@ namespace PBGame.Rulesets.Maps
 
 		/// <summary>
 		/// Returns the playable map variant for specified game mode.
-		/// If specified mode is not supported, it will returns the variant of the game mode the map was created for.
+		/// If specified mode is not supported, it will return the variant of the game mode the map was created for.
 		/// </summary>
         IMap GetPlayable(GameModes gamemode);
 

@@ -42,6 +42,12 @@ namespace PBGame.Maps
         void AddRange(IEnumerable<IMapset> mapsets);
 
         /// <summary>
+        /// Adds the specified mapset to the list if not already contained.
+        /// Otherwise, the existing mapset will be replaced by the given one.
+        /// </summary>
+        void AddOrReplace(IMapset mapset);
+
+        /// <summary>
         /// Clears the mapsets list.
         /// </summary>
         void Clear();

@@ -64,6 +64,31 @@ namespace PBGame.Stores
             }
         }
 
+        public Task<Mapset> Load(Guid id, ISimpleProgress progress)
+        {
+            return Task.Run(() => {
+                progress?.Report(0f);
+
+                // Initialize
+                InitModules(false);
+
+                // Find entry with matching id.
+                string stringId = id.ToString();
+                Mapset mapset = null;
+                using (var result = Database.Query()
+                    .Where(d => d["Id"].ToString().Equals(stringId, StringComparison.Ordinal))
+                    .GetResult())
+                {
+                    Mapset rawMapset = result.FirstOrDefault();
+                    if(rawMapset != null)
+                        mapset = LoadData(rawMapset);
+                }
+
+                progress?.Report(1f);
+                return mapset;
+            });
+        }
+
         protected override IDatabase<Mapset> CreateDatabase() => new Database<Mapset>(GameDirectory.Maps.GetSubdirectory("data"));
 
         protected override IDirectoryStorage CreateStorage() => new DirectoryStorage(GameDirectory.Maps.GetSubdirectory("files"));

@@ -1,3 +1,4 @@
+using System;
 using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.UI.Navigations.Screens.Songs;
@@ -7,6 +8,12 @@ namespace PBGame.Configurations
 {
     public interface IGameConfiguration : IConfiguration
     {
+        /// <summary>
+        /// Event called on configuration load.
+        /// </summary>
+        event Action<IGameConfiguration> OnLoad;
+
+
         /// <summary>
         /// The last selected ruleset mode.
         /// </summary>

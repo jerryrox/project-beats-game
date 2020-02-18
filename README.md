@@ -20,6 +20,7 @@ Slowly making progress 🧩
 - Fix issue where the song won't change to the next song in home screen occasionally.
 - Fix issue where metronome doesn't update when changing song mid-way.
 - Find out how to retrieve a map's description.
+- Tidy up object relationship between an "original map" and "playable maps".
 
 - Support for interactive unit testing for UI.
 

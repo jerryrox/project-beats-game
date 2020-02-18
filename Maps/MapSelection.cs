@@ -1,6 +1,8 @@
 using System;
 using PBGame.Assets.Caching;
+using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
+using PBGame.Configurations;
 using PBFramework.Audio;
 using PBFramework.Allocation.Caching;
 
@@ -27,6 +29,8 @@ namespace PBGame.Maps
 
         private IMapBackground emptyBackground;
 
+        private GameModes currentMode;
+
 
         public IMapset Mapset { get; private set; }
 
@@ -39,17 +43,21 @@ namespace PBGame.Maps
         public bool HasSelection => Mapset != null && Map != null;
 
 
-        public MapSelection(IMusicCacher musicCacher, IBackgroundCacher backgroundCacher)
+        public MapSelection(IMusicCacher musicCacher,
+            IBackgroundCacher backgroundCacher,
+            IGameConfiguration gameConfiguration)
         {
             if(musicCacher == null) throw new ArgumentNullException(nameof(musicCacher));
             if(backgroundCacher == null) throw new ArgumentNullException(nameof(backgroundCacher));
-            
+            if(gameConfiguration == null) throw new ArgumentNullException(nameof(gameConfiguration));
+
             this.musicCacher = musicCacher;
             this.backgroundCacher = backgroundCacher;
 
             // Initial background.
             Background = emptyBackground = new MapBackground(null);
 
+            // Setup music loader
             musicAgent = new CacherAgent<IMap, IMusicAudio>(musicCacher)
             {
                 UseDelayedRemove = true,
@@ -61,6 +69,7 @@ namespace PBGame.Maps
                 OnMusicLoaded?.Invoke(music);
             };
 
+            // Setup background loader
             backgroundAgent = new CacherAgent<IMap, IMapBackground>(backgroundCacher)
             {
                 UseDelayedRemove = true,
@@ -70,6 +79,24 @@ namespace PBGame.Maps
             {
                 this.Background = background;
                 OnBackgroundLoaded?.Invoke(background);
+            };
+
+            // Listen to game mode change event from config.
+            gameConfiguration.OnLoad += delegate
+            {
+                // Retrieve initial game mode saved in config.
+                currentMode = gameConfiguration.RulesetMode.Value;
+            };
+            gameConfiguration.RulesetMode.OnValueChanged += (newMode, oldMode) =>
+            {
+                // Only if change of mode
+                if (oldMode != newMode)
+                {
+                    currentMode = newMode;
+                    // Automatically change to variant playable for this new mode.
+                    if(Map != null)
+                        SelectMap(Map.OriginalMap.GetPlayable(newMode));
+                }
             };
         }
 
@@ -85,7 +112,7 @@ namespace PBGame.Maps
             }
 
             // Apply default map.
-            if (map == null) map = mapset.Maps[0];
+            if (map == null) map = mapset.Maps[0].GetPlayable(currentMode);
 
             // Set mapset only if different.
             if (mapset != this.Mapset)
@@ -107,6 +134,10 @@ namespace PBGame.Maps
                 OnMapChange?.Invoke(null);
                 return;
             }
+
+            // Only playable maps should be selected.
+            if (!map.IsPlayable)
+                throw new ArgumentException("Only playable maps can be selected!");
 
             // Set map only if different.
             if (map != this.Map)

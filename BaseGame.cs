@@ -116,7 +116,7 @@ namespace PBGame
             Dependencies.CacheAs<ISoundPooler>(soundPooler = new SoundPooler(skinManager.DefaultSkin));
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
-            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher));
+            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 

@@ -37,6 +37,11 @@ namespace PBGame.Maps
         Task Reload(IEventProgress progress);
 
         /// <summary>
+        /// Loads only a single mapset from disk.
+        /// </summary>
+        Task Load(Guid id, IReturnableProgress<IMapset> progress);
+
+        /// <summary>
         /// Filters out mapsets that does not fulfil the specified filter.
         /// </summary>
         void Search(string filter);

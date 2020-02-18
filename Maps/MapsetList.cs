@@ -63,6 +63,22 @@ namespace PBGame.Maps
                 InvokeChange();
         }
 
+        public void AddOrReplace(IMapset mapset)
+        {
+            // Try replace first
+            for (int i = 0; i < mapsets.Count; i++)
+            {
+                if (mapsets[i].Id == mapset.Id)
+                {
+                    mapsets[i] = mapset;
+                    return;
+                }
+            }
+
+            // Else, add
+            Add(mapset);
+        }
+
         public void Clear()
         {
             mapsets.Clear();

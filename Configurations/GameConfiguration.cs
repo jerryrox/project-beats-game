@@ -11,6 +11,10 @@ namespace PBGame.Configurations
 {
     public class GameConfiguration : IGameConfiguration {
 
+        public event Action<IGameConfiguration> OnLoad;
+
+        private const string ConfigName = "game-configuration";
+
         private PrefStorage storage;
 
 
@@ -91,13 +95,24 @@ namespace PBGame.Configurations
 
         public void Load()
         {
-            storage = new PrefStorage("game-configuration");
+            storage = new PrefStorage(ConfigName);
+            OnLoad?.Invoke(this);
         }
 
         public void Save()
         {
             storage.Save();
         }
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("PBGame/ClearGameConfiguration")]
+        private static void ClearGameConfiguration()
+        {
+            UnityEngine.PlayerPrefs.DeleteKey(ConfigName);
+            UnityEngine.PlayerPrefs.Save();
+            UnityEngine.Debug.Log("Deleted game configuration.");
+        }
+#endif
 
         /// <summary>
         /// Instantiates a new proxy bindable, assuming an enum for type T.

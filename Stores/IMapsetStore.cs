@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
@@ -12,5 +13,11 @@ namespace PBGame.Stores
         /// Returns all loaded mapsets.
         /// </summary>
         IEnumerable<Mapset> Mapsets { get; }
+
+
+        /// <summary>
+        /// Loads the mapset of specified id.
+        /// </summary>
+        Task<Mapset> Load(Guid id, ISimpleProgress progress);
     }
 }

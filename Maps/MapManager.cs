@@ -38,22 +38,25 @@ namespace PBGame.Maps
             this.store = store;
         }
 
-        public async Task<bool> Import(FileInfo file)
+        public Task<bool> Import(FileInfo file)
         {
-            var returnableProgress = new ReturnableProgress<Mapset>();
-            // Start importing the file
-            Mapset mapset = await store.Import(file, progress: returnableProgress);
-            // Dispatch mapset imported event on main thread.
-            if (mapset != null)
+            return Task.Run(async () =>
             {
-                UnityThreadService.Dispatch(() =>
+                var returnableProgress = new ReturnableProgress<Mapset>();
+                // Start importing the file
+                Mapset mapset = await store.Import(file, progress: returnableProgress);
+                // Dispatch mapset imported event on main thread.
+                if (mapset != null)
                 {
-                    OnImportMapset?.Invoke(mapset);
-                    return null;
-                });
-                return true;
-            }
-            return false;
+                    UnityThreadService.Dispatch(() =>
+                    {
+                        OnImportMapset?.Invoke(mapset);
+                        return null;
+                    });
+                    return true;
+                }
+                return false;
+            });
         }
 
         public Task Reload(IEventProgress progress)
@@ -76,6 +79,25 @@ namespace PBGame.Maps
                     Search(lastSearch);
                     // Finished
                     progress.InvokeFinished();
+                    return null;
+                });
+            });
+        }
+
+        public Task Load(Guid id, IReturnableProgress<IMapset> progress)
+        {
+            return Task.Run(async() =>
+            {
+                IMapset mapset = await store.Load(id, progress);
+
+                UnityThreadService.DispatchUnattended(() =>
+                {
+                    // If already loaded within all mapsets, replace it.
+                    allMapsets.AddOrReplace(mapset);
+                    displayedMapsets.AddOrReplace(mapset);
+
+                    // Finished.
+                    progress.InvokeFinished(mapset);
                     return null;
                 });
             });

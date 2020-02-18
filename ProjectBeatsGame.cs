@@ -10,6 +10,12 @@ namespace PBGame
 {
     public class ProjectBeatsGame : BaseGame {
 
+        /// <summary>
+        /// Returns whether the initial splash view should be shown automatically.
+        /// </summary>
+        public virtual bool ShouldShowFirstView => true;
+
+
         protected override void PostInitialize()
         {
             base.PostInitialize();
@@ -22,7 +28,8 @@ namespace PBGame
             HookConfigurations();
 
             // Display splash view.
-            screenNavigator.Show<SplashScreen>();
+            if(ShouldShowFirstView)
+                screenNavigator.Show<SplashScreen>();
         }
 
         public override void GracefulQuit()
@@ -48,19 +55,21 @@ namespace PBGame
         /// </summary>
         private void HookEngine()
         {
+            // TODO: These don't really help at early development yet. Come back when game is ready for play.
+
             // Start listening to any exceptions that occurs during game.
-            AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
-            {
-                var exception = e.ExceptionObject as Exception;
-                Debug.LogError($"Unhandled exception: {exception.ToString()}");
-            };
-            Application.logMessageReceived += (condition, stackTrace, type) =>
-            {
-                if (type == LogType.Exception)
-                {
-                    Debug.LogError($"Unhandled exception at: {stackTrace}");
-                }
-            };
+            // AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
+            // {
+            //     var exception = e.ExceptionObject as Exception;
+            //     Debug.LogError($"Unhandled exception: {exception.ToString()}");
+            // };
+            // Application.logMessageReceived += (condition, stackTrace, type) =>
+            // {
+            //     if (type == LogType.Exception)
+            //     {
+            //         Debug.LogError($"Unhandled exception at: {stackTrace}");
+            //     }
+            // };
         }
 
         /// <summary>
