@@ -15,6 +15,8 @@ namespace PBGame.UI.Components.Prepare
 {
     public class VersionButton : ButtonTrigger, IVersionButton {
 
+        private const float BaseFocusAlpha = 0.6f;
+
         private CanvasGroup canvasGroup;
         private IGraphicObject holder;
         private ISprite glow;
@@ -106,13 +108,13 @@ namespace PBGame.UI.Components.Prepare
 
             focusAni = new Anime();
             focusAni.AnimateFloat(SetFocusAlpha)
-                .AddTime(0f, () => canvasGroup.alpha)
+                .AddTime(0f, GetFocusAlphaT)
                 .AddTime(0.25f, 1f)
                 .Build();
 
             unfocusAni = new Anime();
             unfocusAni.AnimateFloat(SetFocusAlpha)
-                .AddTime(0f, () => canvasGroup.alpha)
+                .AddTime(0f, GetFocusAlphaT)
                 .AddTime(0.25f, 0)
                 .Build();
 
@@ -223,10 +225,13 @@ namespace PBGame.UI.Components.Prepare
         /// <summary>
         /// Applies alpha value to widgets.
         /// </summary>
-        private void SetFocusAlpha(float amount)
-        {
-            canvasGroup.alpha = amount * 0.4f + 0.6f;
-        }
+        private void SetFocusAlpha(float amount) { canvasGroup.alpha = Mathf.Lerp(BaseFocusAlpha, 1f, amount); }
+
+        /// <summary>
+        /// Returns the interpolant value "t" for current canvas group's alpha.
+        /// </summary>
+        /// <returns></returns>
+        private float GetFocusAlphaT() { return Mathf.InverseLerp(BaseFocusAlpha, 1f, canvasGroup.alpha); }
 
         /// <summary>
         /// Event called on map selection change.
