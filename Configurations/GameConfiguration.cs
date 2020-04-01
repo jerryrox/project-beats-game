@@ -17,50 +17,45 @@ namespace PBGame.Configurations
 
         private PrefStorage storage;
 
-
+        // ============================================================
+        // Internal settings
+        // ============================================================
         public ProxyBindable<GameModes> RulesetMode { get; private set; }
-
         public ProxyBindable<MapsetSorts> MapsetSort { get; private set; }
         public ProxyBindable<RankDisplayTypes> RankDisplay { get; private set; }
-
-
         public ProxyBindable<string> Username { get; private set; }
-
         public ProxyBindable<string> Password { get; private set; }
-
         public ProxyBindable<bool> SaveCredentials { get; private set; }
 
-
+        // ============================================================
+        // General settings
+        // ============================================================
         public ProxyBindable<bool> PreferUnicode { get; private set; }
 
-
-        public ProxyBindable<float> MasterVolume { get; private set; }
-
-        public ProxyBindable<float> MusicVolume { get; private set; }
-
-        public ProxyBindable<float> HitsoundVolume { get; private set; }
-
-        public ProxyBindable<float> EffectVolume { get; private set; }
-
-        public ProxyBindable<int> GlobalOffset { get; private set; }
-
-        public ProxyBindable<bool> UseBeatmapHitsounds { get; private set; }
-
-
+        // ============================================================
+        // Performance settings
+        // ============================================================
         public ProxyBindable<bool> ShowFps { get; private set; }
-
-        public ProxyBindable<bool> ShowStoryboard { get; private set; }
-
-        public ProxyBindable<bool> ShowVideo { get; private set; }
-
-        public ProxyBindable<bool> UseBeatmapSkins { get; private set; }
-
         public ProxyBindable<bool> UseBlurShader { get; private set; }
-
         public ProxyBindable<float> ResolutionQuality { get; private set; }
 
-
+        // ============================================================
+        // Gameplay settings
+        // ============================================================
+        public ProxyBindable<bool> ShowStoryboard { get; private set; }
+        public ProxyBindable<bool> ShowVideo { get; private set; }
+        public ProxyBindable<bool> UseBeatmapSkins { get; private set; }
         public ProxyBindable<float> BackgroundDim { get; private set; }
+
+        // ============================================================
+        // Sound settings
+        // ============================================================
+        public ProxyBindable<float> MasterVolume { get; private set; }
+        public ProxyBindable<float> MusicVolume { get; private set; }
+        public ProxyBindable<float> HitsoundVolume { get; private set; }
+        public ProxyBindable<float> EffectVolume { get; private set; }
+        public ProxyBindable<int> GlobalOffset { get; private set; }
+        public ProxyBindable<bool> UseBeatmapHitsounds { get; private set; }
 
 
         public GameConfiguration()
@@ -68,12 +63,20 @@ namespace PBGame.Configurations
             RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModes.BeatsStandard);
             MapsetSort = InitEnumBindable(nameof(MapsetSort), MapsetSorts.Title);
             RankDisplay = InitEnumBindable(nameof(RankDisplay), RankDisplayTypes.Local);
-
             Username = InitStringBindable(nameof(Username), "");
             Password = InitStringBindable(nameof(Password), "");
             SaveCredentials = InitBoolBindable(nameof(SaveCredentials), false);
 
             PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false);
+
+            ShowFps = InitBoolBindable(nameof(ShowFps), false);
+            UseBlurShader = InitBoolBindable(nameof(UseBlurShader), false);
+            ResolutionQuality = InitFloatBindable(nameof(ResolutionQuality), 1f);
+
+            ShowStoryboard = InitBoolBindable(nameof(ShowStoryboard), false);
+            ShowVideo = InitBoolBindable(nameof(ShowVideo), false);
+            UseBeatmapSkins = InitBoolBindable(nameof(UseBeatmapSkins), false);
+            BackgroundDim = InitFloatBindable(nameof(BackgroundDim), 0.5f);
 
             MasterVolume = InitFloatBindable(nameof(MasterVolume), 1f);
             MusicVolume = InitFloatBindable(nameof(MusicVolume), 1f);
@@ -81,15 +84,6 @@ namespace PBGame.Configurations
             EffectVolume = InitFloatBindable(nameof(EffectVolume), 1f);
             GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0);
             UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true);
-
-            ShowFps = InitBoolBindable(nameof(ShowFps), false);
-            ShowStoryboard = InitBoolBindable(nameof(ShowStoryboard), false);
-            ShowVideo = InitBoolBindable(nameof(ShowVideo), false);
-            UseBeatmapSkins = InitBoolBindable(nameof(UseBeatmapSkins), false);
-            UseBlurShader = InitBoolBindable(nameof(UseBlurShader), false);
-            ResolutionQuality = InitFloatBindable(nameof(ResolutionQuality), 1f);
-            
-            BackgroundDim = InitFloatBindable(nameof(BackgroundDim), 0.5f);
         }
 
         public void Load()
