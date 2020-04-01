@@ -86,12 +86,11 @@ namespace PBGame.Configurations
         /// Whether to use the beatmap's skin elements if available.
         /// </summary>
 		ProxyBindable<bool> UseBeatmapSkins { get; }
-
         /// <summary>
         /// The global setting for background darkness, if not overridden by map configuration.
         /// </summary>
 		ProxyBindable<float> BackgroundDim { get; }
-        
+
         // ============================================================
         // Sound settings
         // ============================================================
