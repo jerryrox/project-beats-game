@@ -138,14 +138,21 @@ namespace PBGame.Maps
             // Set map only if different.
             if (map != this.Map)
             {
+                IPlayableMap prevMap = this.Map;
                 this.Map = map;
                 OnMapChange?.Invoke(map);
 
-                // Switch or fresh-load the background and music.
-                UnloadMusic();
-                LoadMusic();
-                UnloadBackground();
-                LoadBackground();
+                // Change background / audio assets when necessary.
+                if (prevMap == null || !prevMap.Detail.IsSameBackground(map.Detail))
+                {
+                    UnloadBackground();
+                    LoadBackground();
+                }
+                if (prevMap == null || !prevMap.Detail.IsSameAudio(map.Detail))
+                {
+                    UnloadMusic();
+                    LoadMusic();
+                }
             }
         }
 
