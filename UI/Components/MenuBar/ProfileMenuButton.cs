@@ -105,6 +105,9 @@ namespace PBGame.UI.Components.MenuBar
                 levelLabel.WrapText = true;
             }
 
+            // No need for icon.
+            iconSprite.Destroy();
+
             OnEnableInited();
         }
 

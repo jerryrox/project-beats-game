@@ -10,12 +10,9 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MusicMenu
 {
-    public class ControlButton : UguiTrigger, IControlButton {
+    public class ControlButton : ButtonTrigger, IControlButton {
 
         private ISprite icon;
-
-        private IAnime hoverAni;
-        private IAnime outAni;
 
 
         public string IconName
@@ -30,27 +27,12 @@ namespace PBGame.UI.Components.MusicMenu
             set => icon.Size = new Vector2(value, value);
         }
 
+        protected override bool IsClickToTrigger => false;
+
 
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            OnPointerEnter += () =>
-            {
-                soundPooler.Play("menuhit");
-
-                outAni.Stop();
-                hoverAni.PlayFromStart();
-            };
-            OnPointerExit += () =>
-            {
-                hoverAni.Stop();
-                outAni.PlayFromStart();
-            };
-            OnPointerDown += () =>
-            {
-                soundPooler.Play("menuclick");
-            };
-
             icon = CreateChild<UguiSprite>("icon", 0);
             {
                 icon.Alpha = 0.5f;;

@@ -16,15 +16,15 @@ namespace PBGame.UI.Components.Songs
         private ISprite bgSprite;
 
 
-        public IMenuButton BackButton { get; private set; }
+        public IBoxIconTrigger BackButton { get; private set; }
 
-        public IMenuButton RandomButton { get; private set; }
+        public IBoxIconTrigger RandomButton { get; private set; }
 
-        public IMenuButton PrevButton { get; private set; }
+        public IBoxIconTrigger PrevButton { get; private set; }
 
-        public IMenuButton NextButton { get; private set; }
+        public IBoxIconTrigger NextButton { get; private set; }
 
-        public IMenuButton PlayButton { get; private set; }
+        public IBoxIconTrigger PlayButton { get; private set; }
 
         public IPreviewBox PreviewBox { get; private set; }
 
@@ -38,7 +38,7 @@ namespace PBGame.UI.Components.Songs
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.125f);
             }
-            BackButton = CreateChild<MenuButton>("back", 0);
+            BackButton = CreateChild<BoxIconTrigger>("back", 0);
             {
                 BackButton.Anchor = Anchors.LeftStretch;
                 BackButton.Pivot = Pivots.Left;
@@ -53,7 +53,7 @@ namespace PBGame.UI.Components.Songs
                     screenNavigator.Show<HomeScreen>();
                 };
             }
-            RandomButton = CreateChild<MenuButton>("random", 1);
+            RandomButton = CreateChild<BoxIconTrigger>("random", 1);
             {
                 RandomButton.Anchor = Anchors.LeftStretch;
                 RandomButton.Pivot = Pivots.Left;
@@ -68,7 +68,7 @@ namespace PBGame.UI.Components.Songs
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetRandom());
                 };
             }
-            PrevButton = CreateChild<MenuButton>("prev", 2);
+            PrevButton = CreateChild<BoxIconTrigger>("prev", 2);
             {
                 PrevButton.Anchor = Anchors.LeftStretch;
                 PrevButton.Pivot = Pivots.Left;
@@ -83,7 +83,7 @@ namespace PBGame.UI.Components.Songs
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset));
                 };
             }
-            NextButton = CreateChild<MenuButton>("next", 3);
+            NextButton = CreateChild<BoxIconTrigger>("next", 3);
             {
                 NextButton.Anchor = Anchors.LeftStretch;
                 NextButton.Pivot = Pivots.Left;
@@ -98,7 +98,7 @@ namespace PBGame.UI.Components.Songs
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset));
                 };
             }
-            PlayButton = CreateChild<MenuButton>("play", 4);
+            PlayButton = CreateChild<BoxIconTrigger>("play", 4);
             {
                 PlayButton.Anchor = Anchors.RightStretch;
                 PlayButton.Pivot = Pivots.Right;
@@ -110,7 +110,7 @@ namespace PBGame.UI.Components.Songs
 
                 PlayButton.OnPointerDown += () =>
                 {
-                    // TODO: Show PrepareScreen
+                    screenNavigator.Show<PrepareScreen>();
                 };
             }
             PreviewBox = CreateChild<PreviewBox>("preview", 5);
@@ -124,7 +124,7 @@ namespace PBGame.UI.Components.Songs
 
                 PreviewBox.OnPointerDown += () =>
                 {
-                    // TODO: Show PrepareScreen                    
+                    screenNavigator.Show<PrepareScreen>();                 
                 };
             }
         }

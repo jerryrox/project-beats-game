@@ -3,14 +3,13 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public class SettingsMenuButton : IconMenuButton {
-
-        protected override string IconName => "icon-settings";
-
+    public class SettingsMenuButton : BaseMenuButton {
 
         [InitWithDependency]
         private void Init(IOverlayNavigator overlayNavigator)
         {
+            IconName = "icon-settings";
+
             OnToggleOn += () =>
             {
                 // TODO: Show settings overlay.

@@ -1,7 +1,7 @@
 using System;
 using PBGame.Maps;
+using PBGame.Data.Rankings;
 using PBGame.Rulesets;
-using PBGame.UI.Navigations.Screens.Songs;
 using PBFramework.Data.Bindables;
 
 namespace PBGame.Configurations
@@ -23,9 +23,9 @@ namespace PBGame.Configurations
         /// </summary>
         ProxyBindable<MapsetSorts> MapsetSort { get; }
         /// <summary>
-        /// The last selected tab for the map details section in SongsScreen.
+        /// The last selected type of rank retrieval source.
         /// </summary>
-        ProxyBindable<MapDetailTabs> MapDetailTab { get; }
+        ProxyBindable<RankDisplayTypes> RankDisplay { get; }
 
         /// <summary>
         /// Login and displayed username of the player for online access.

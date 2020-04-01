@@ -1,18 +1,17 @@
-using PBFramework.UI;
 using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public interface IMenuButton : ITrigger {
+    public interface IMenuButton : IButtonTrigger {
     
         /// <summary>
-        /// Base color of the button.
-        /// </summary>
-        Color Tint { get; set; }
-
-        /// <summary>
-        /// Text displayed on the menu button label.
+        /// Text displayed on the button label.
         /// </summary>
         string LabelText { get; set; }
+
+        /// <summary>
+        /// The color applied to the background box.
+        /// </summary>
+        Color Tint { get; set; }
     }
 }

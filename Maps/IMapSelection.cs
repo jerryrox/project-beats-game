@@ -74,5 +74,10 @@ namespace PBGame.Maps
         /// Selects the specified map and if required, changes the selected mapset.
         /// </summary>
         void SelectMap(IPlayableMap map);
+
+        /// <summary>
+        /// Selects the playable map automatically from the specified original map.
+        /// </summary>
+        void SelectMap(IOriginalMap map);
     }
 }

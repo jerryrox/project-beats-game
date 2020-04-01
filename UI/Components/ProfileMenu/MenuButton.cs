@@ -1,4 +1,3 @@
-using PBGame.Audio;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -7,24 +6,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class MenuButton : UguiTrigger, IMenuButton {
+    public class MenuButton : ButtonTrigger, IMenuButton {
 
-        private ISprite background;
-        private ILabel label;
+        protected ISprite bgSprite;
+        protected ILabel label;
 
-        private IAnime hoverAni;
-        private IAnime outAni;
-
-
-        public Color Tint
-        {
-            get => background.Color;
-            set
-            {
-                value.a = background.Alpha;
-                background.Color = value;
-            }
-        }
 
         public string LabelText
         {
@@ -32,32 +18,25 @@ namespace PBGame.UI.Components.ProfileMenu
             set => label.Text = value;
         }
 
+        public Color Tint
+        {
+            get => bgSprite.Color;
+            set
+            {
+                value.a = bgSprite.Alpha;
+                bgSprite.Color = value;
+            }
+        }
+
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
-            OnPointerEnter += () =>
+            bgSprite = CreateChild<UguiSprite>("background", 0);
             {
-                soundPooler.Play("menuhit");
-
-                outAni.Stop();
-                hoverAni.PlayFromStart();
-            };
-            OnPointerExit += () =>
-            {
-                hoverAni.Stop();
-                outAni.PlayFromStart();
-            };
-            OnPointerClick += () =>
-            {
-                soundPooler.Play("menuclick");
-            };
-
-            background = CreateChild<UguiSprite>("background", 0);
-            {
-                background.Anchor = Anchors.Fill;
-                background.RawSize = Vector2.zero;
-                background.Alpha = 0.35f;
+                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.RawSize = Vector2.zero;
+                bgSprite.Alpha = 0.35f;
             }
             label = CreateChild<Label>("label", 1);
             {
@@ -71,13 +50,13 @@ namespace PBGame.UI.Components.ProfileMenu
             }
 
             hoverAni = new Anime();
-            hoverAni.AnimateFloat(alpha => label.Alpha = background.Alpha = alpha)
+            hoverAni.AnimateFloat(alpha => label.Alpha = bgSprite.Alpha = alpha)
                 .AddTime(0f, () => label.Alpha)
                 .AddTime(0.25f, 1f)
                 .Build();
 
             outAni = new Anime();
-            outAni.AnimateFloat(alpha => label.Alpha = background.Alpha = alpha)
+            outAni.AnimateFloat(alpha => label.Alpha = bgSprite.Alpha = alpha)
                 .AddTime(0f, () => label.Alpha)
                 .AddTime(0.25f, 0.35f)
                 .Build();

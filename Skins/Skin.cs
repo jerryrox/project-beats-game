@@ -2,6 +2,8 @@ using System.IO;
 using System.Collections;
 using PBGame.Stores;
 using PBFramework.DB.Entities;
+using PBFramework.Audio;
+using UnityEngine;
 using Newtonsoft.Json;
 
 namespace PBGame.Skins
@@ -33,5 +35,9 @@ namespace PBGame.Skins
             yield return Metadata.Name;
             yield return Metadata.Creator;
         }
+
+        public ISkinnable<IEffectAudio> GetAudio(string name) => AssetStore.GetAudio(name);
+
+        public ISkinnable<Texture2D> GetTexture(string name) => AssetStore.GetTexture(name);
     }
 }

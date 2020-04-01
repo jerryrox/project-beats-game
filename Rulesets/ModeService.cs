@@ -21,6 +21,8 @@ namespace PBGame.Rulesets
 		
         public abstract string Name { get; }
 
+		public abstract string IconName { get; }
+
         public abstract GameModes GameMode { get; }
 
         public virtual bool IsPlayable => true;

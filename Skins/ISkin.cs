@@ -1,5 +1,7 @@
 using PBGame.Stores;
+using PBFramework.Audio;
 using PBFramework.Stores;
+using UnityEngine;
 
 namespace PBGame.Skins
 {
@@ -19,5 +21,16 @@ namespace PBGame.Skins
         /// The skin to use for fallback when an element is missing.
         /// </summary>
         ISkin Fallback { get; set; }
+
+
+        /// <summary>
+        /// Returns the audio element from the asset store.
+        /// </summary>
+        ISkinnable<IEffectAudio> GetAudio(string name);
+
+        /// <summary>
+        /// Returns the texture element from the asset store.
+        /// </summary>
+        ISkinnable<Texture2D> GetTexture(string name);
     }
 }

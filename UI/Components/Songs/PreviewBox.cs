@@ -20,7 +20,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class PreviewBox : UguiTrigger, IPreviewBox {
+    public class PreviewBox : ButtonTrigger, IPreviewBox {
 
         private ISprite mask;
         private IMapImageDisplay imageDisplay;
@@ -30,15 +30,15 @@ namespace PBGame.UI.Components.Songs
         private ILabel artistLabel;
         private ISprite glow;
 
-        private IAnime hoverAni;
-        private IAnime outAni;
-
         /// <summary>
         /// Whether it is the first background assignment from map selection after init.
         /// Required to wait a frame if first load due to an issue where the texture thinks its size is not initialized yet.
         /// This caused the texture to fit images assuming a 100x100 size.
         /// </summary>
         private bool isFirstBackground = true;
+
+
+        protected override bool IsClickToTrigger => false;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -51,25 +51,8 @@ namespace PBGame.UI.Components.Songs
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
-            OnPointerEnter += () =>
-            {
-                soundPooler.Play("menuhit");
-
-                outAni.Stop();
-                hoverAni.PlayFromStart();
-            };
-            OnPointerExit += () =>
-            {
-                hoverAni.Stop();
-                outAni.PlayFromStart();
-            };
-            OnPointerDown += () =>
-            {
-                soundPooler.Play("menuclick");
-            };
-
             mask = CreateChild<UguiSprite>("mask", 0);
             {
                 mask.Anchor = Anchors.Fill;

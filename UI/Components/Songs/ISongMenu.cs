@@ -9,27 +9,27 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Returns the back button on the menu.
         /// </summary>
-        IMenuButton BackButton { get; }
+        IBoxIconTrigger BackButton { get; }
 
         /// <summary>
         /// Returns the random button on the menu.
         /// </summary>
-        IMenuButton RandomButton { get; }
+        IBoxIconTrigger RandomButton { get; }
 
         /// <summary>
         /// Returns the prev button on the menu.
         /// </summary>
-        IMenuButton PrevButton { get; }
+        IBoxIconTrigger PrevButton { get; }
 
         /// <summary>
         /// Returns the next button on the menu.
         /// </summary>
-        IMenuButton NextButton { get; }
+        IBoxIconTrigger NextButton { get; }
 
         /// <summary>
         /// Returns the play button on the menu.
         /// </summary>
-        IMenuButton PlayButton { get; }
+        IBoxIconTrigger PlayButton { get; }
 
         /// <summary>
         /// Returns the selection preview box on the menu.

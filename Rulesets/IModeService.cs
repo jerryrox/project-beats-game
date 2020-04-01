@@ -16,6 +16,11 @@ namespace PBGame.Rulesets
         string Name { get; }
 
         /// <summary>
+        /// Returns the sprite name of the icon which represents this mode.
+        /// </summary>
+        string IconName { get; }
+
+        /// <summary>
         /// Returns the type of the game mode.
         /// </summary>
         GameModes GameMode { get; }

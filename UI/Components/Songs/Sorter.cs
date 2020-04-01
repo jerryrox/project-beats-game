@@ -71,7 +71,7 @@ namespace PBGame.UI.Components.Songs
             // Apply on button.
             for (int i = 0; i < sortButtons.Count; i++)
             {
-                sortButtons[i].SetToggle(sortButtons[i].SortType == sort);
+                sortButtons[i].SetFocus(sortButtons[i].SortType == sort);
             }
 
             // Notify change

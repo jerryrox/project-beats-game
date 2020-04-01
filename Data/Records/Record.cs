@@ -17,6 +17,9 @@ namespace PBGame.Data.Records
         [JsonProperty]
         private List<JudgementRecord> judgements;
 
+        [JsonProperty]
+        private Dictionary<HitResults, int> hitResultCounts;
+
 
         [Indexed]
         public Guid UserId { get; set; }
@@ -39,6 +42,9 @@ namespace PBGame.Data.Records
 
         [JsonIgnore]
         public IReadOnlyList<JudgementRecord> Judgements => judgements.AsReadOnly();
+
+        [JsonIgnore]
+        public IReadOnlyDictionary<HitResults, int> HitResultCounts => hitResultCounts;
 
         [JsonIgnore]
         public int HitCount => judgements.Where(j => j.IsHit).Count();
@@ -105,6 +111,7 @@ namespace PBGame.Data.Records
         private void ExtractJudgements(List<JudgementResult> judgements)
         {
             this.judgements = new List<JudgementRecord>(judgements.Count);
+            this.hitResultCounts = new Dictionary<HitResults, int>();
 
             if (judgements != null)
             {
@@ -117,6 +124,11 @@ namespace PBGame.Data.Records
                         IsHit = j.IsHit,
                         Result = j.HitResult
                     });
+
+                    if(this.hitResultCounts.ContainsKey(j.HitResult))
+                        this.hitResultCounts[j.HitResult]++;
+                    else
+                        this.hitResultCounts[j.HitResult] = 1;
 
                     AverageOffset += (float)j.HitOffset;
                 }

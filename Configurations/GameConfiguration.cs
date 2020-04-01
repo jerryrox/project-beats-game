@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Maps;
+using PBGame.Data.Rankings;
 using PBGame.Rulesets;
-using PBGame.UI.Navigations.Screens.Songs;
 using PBFramework.Data.Bindables;
 using PBFramework.Storages;
 
@@ -21,8 +21,7 @@ namespace PBGame.Configurations
         public ProxyBindable<GameModes> RulesetMode { get; private set; }
 
         public ProxyBindable<MapsetSorts> MapsetSort { get; private set; }
-
-        public ProxyBindable<MapDetailTabs> MapDetailTab { get; private set; }
+        public ProxyBindable<RankDisplayTypes> RankDisplay { get; private set; }
 
 
         public ProxyBindable<string> Username { get; private set; }
@@ -68,7 +67,7 @@ namespace PBGame.Configurations
         {
             RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModes.BeatsStandard);
             MapsetSort = InitEnumBindable(nameof(MapsetSort), MapsetSorts.Title);
-            MapDetailTab = InitEnumBindable(nameof(MapDetailTab), MapDetailTabs.Details);
+            RankDisplay = InitEnumBindable(nameof(RankDisplay), RankDisplayTypes.Local);
 
             Username = InitStringBindable(nameof(Username), "");
             Password = InitStringBindable(nameof(Password), "");

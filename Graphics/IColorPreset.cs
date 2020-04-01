@@ -1,3 +1,4 @@
+using PBGame.Rulesets.Difficulty;
 using UnityEngine;
 
 namespace PBGame.Graphics
@@ -13,5 +14,11 @@ namespace PBGame.Graphics
         Color Negative { get; }
 
         Color Warning { get; }
+
+
+        /// <summary>
+        /// Returns the color resembling the specified difficulty categorization type.
+        /// </summary>
+        Color GetDifficultyColor(DifficultyTypes type);
     }
 }

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public class BaseMenuButton : UguiTrigger, IMenuButton {
+    public class BaseMenuButton : BoxIconTrigger, IMenuButton {
 
         public event Action OnToggleOn;
 
@@ -19,49 +19,21 @@ namespace PBGame.UI.Components.MenuBar
 
         private IAnime toggleOnAni;
         private IAnime toggleOffAni;
-        private IAnime hoverAni;
-        private IAnime outAni;
 
 
         public bool IsToggled { get; private set; } = false;
 
         public ISprite ToggleSprite { get; private set; }
 
-        public ISprite BlinkSprite { get; private set; }
-
 
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            OnPointerEnter += () =>
-            {
-                soundPooler.Play("menuhit");
-
-                outAni.Stop();
-                hoverAni.PlayFromStart();
-            };
-            OnPointerExit += () =>
-            {
-                hoverAni.Stop();
-                outAni.PlayFromStart();
-            };
-            OnPointerClick += () =>
-            {
-                soundPooler.Play("menuclick");
-                SetToggle(!IsToggled);
-            };
-
             ToggleSprite = CreateChild<UguiSprite>("toggle");
             {
                 ToggleSprite.Anchor = Anchors.Fill;
                 ToggleSprite.RawSize = Vector2.zero;
                 ToggleSprite.Alpha = 0f;
-            }
-            BlinkSprite = CreateChild<UguiSprite>("blink", 1);
-            {
-                BlinkSprite.Anchor = Anchors.Fill;
-                BlinkSprite.RawSize = Vector2.zero;
-                BlinkSprite.Alpha = 0f;
             }
 
             toggleOnAni = new Anime();
@@ -74,17 +46,6 @@ namespace PBGame.UI.Components.MenuBar
             toggleOffAni.AnimateFloat((alpha) => ToggleSprite.Alpha = alpha)
                 .AddTime(0f, () => ToggleSprite.Alpha)
                 .AddTime(0.5f, 0f)
-                .Build();
-
-            hoverAni = new Anime();
-            hoverAni.AnimateFloat((alpha) => BlinkSprite.Alpha = alpha)
-                .AddTime(0f, 0f, EaseType.QuadEaseOut)
-                .AddTime(0.25f, 0.25f)
-                .Build();
-            outAni = new Anime();
-            outAni.AnimateFloat((alpha) => BlinkSprite.Alpha = alpha)
-                .AddTime(0f, 0.25f, EaseType.QuadEaseIn)
-                .AddTime(0.25f, 0f)
                 .Build();
         }
 
@@ -106,6 +67,12 @@ namespace PBGame.UI.Components.MenuBar
                 toggleOnAni.Stop();
                 toggleOffAni.PlayFromStart();
             }
+        }
+
+        protected override void OnClickTriggered()
+        {
+            base.OnClickTriggered();
+            SetToggle(!IsToggled);
         }
     }
 }

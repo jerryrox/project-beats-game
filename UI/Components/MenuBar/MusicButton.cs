@@ -12,14 +12,12 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public class MusicButton : IconMenuButton, IMusicButton {
+    public class MusicButton : BaseMenuButton, IMusicButton {
 
         private bool hasOverlay = false;
 
 
         public IMusicPlaylist MusicPlaylist { get; private set; }
-
-        protected override string IconName => "icon-music";
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
@@ -31,6 +29,8 @@ namespace PBGame.UI.Components.MenuBar
         [InitWithDependency]
         private void Init(IOverlayNavigator overlayNavigator)
         {
+            IconName = "icon-music";
+
             OnToggleOn += () =>
             {
                 var overlay = overlayNavigator.Show<MusicMenuOverlay>();

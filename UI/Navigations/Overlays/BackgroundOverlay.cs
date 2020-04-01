@@ -15,11 +15,6 @@ namespace PBGame.UI.Navigations.Overlays
 
         private Color backgroundTint = Color.white;
 
-        /// <summary>
-        /// Table of background displays mapped for screen types for automatic background change.
-        /// </summary>
-        private Dictionary<Type, IBackgroundDisplay> screenBackgrounds;
-
 
         public IBackgroundDisplay EmptyBackground { get; private set; }
 
@@ -83,13 +78,6 @@ namespace PBGame.UI.Navigations.Overlays
                 GradientBackground.Active = false;
             }
 
-            // TODO: Register more entries for more screen types.
-            screenBackgrounds = new Dictionary<Type, IBackgroundDisplay>()
-            {
-                { typeof(HomeScreen), ImageBackground },
-                { typeof(SongsScreen), ImageBackground }
-            };
-
             OnEnableInited();
         }
 
@@ -123,11 +111,8 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void ChangeBgDisplay(INavigationView screen)
         {
-            // Try mounting the pre-defined background. Otherwise, display empty bg.
-            if (screenBackgrounds.TryGetValue(screen.GetType(), out IBackgroundDisplay display))
-                SetBackground(display);
-            else
-                SetBackground(EmptyBackground);
+            // TODO: Display different background if required.
+            SetBackground(ImageBackground);
         }
 
         /// <summary>

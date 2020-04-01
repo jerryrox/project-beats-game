@@ -3,14 +3,13 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public class NotificationMenuButton : IconMenuButton
+    public class NotificationMenuButton : BaseMenuButton
     {
-        protected override string IconName => "icon-notification";
-
-
         [InitWithDependency]
         private void Init(IOverlayNavigator overlayNavigator)
         {
+            IconName = "icon-notification";
+
             OnToggleOn += () =>
             {
                 // TODO: Show notification overlay.

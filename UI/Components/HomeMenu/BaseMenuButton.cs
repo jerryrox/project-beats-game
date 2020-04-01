@@ -8,11 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.HomeMenu
 {
-    public abstract class BaseMenuButton : UguiTrigger, IMenuButton {
-
-        private IAnime hoverAni;
-        private IAnime outAni;
-        private IAnime pulseAni;
+    public abstract class BaseMenuButton : ButtonTrigger, IMenuButton {
 
         private ISprite pulseSprite;
 
@@ -37,26 +33,6 @@ namespace PBGame.UI.Components.HomeMenu
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            OnPointerEnter += () =>
-            {
-                soundPooler.Play("menuhit");
-
-                outAni.Stop();
-                hoverAni.PlayFromStart();
-            };
-            OnPointerExit += () =>
-            {
-                hoverAni.Stop();
-                outAni.PlayFromStart();
-            };
-            OnPointerClick += () =>
-            {
-                soundPooler.Play("menuclick");
-
-                pulseAni.PlayFromStart();
-                InvokeExit();
-            };
-
             IconSprite = CreateChild<UguiSprite>("icon", 2);
             {
                 IconSprite.Size = new Vector2(64f, 64f);
@@ -98,12 +74,12 @@ namespace PBGame.UI.Components.HomeMenu
                 .AddTime(0.5f, 0f)
                 .Build();
 
-            pulseAni = new Anime();
-            pulseAni.AnimateFloat((alpha) => pulseSprite.Alpha = alpha)
+            triggerAni = new Anime();
+            triggerAni.AnimateFloat((alpha) => pulseSprite.Alpha = alpha)
                 .AddTime(0f, 0.5f, EaseType.QuartEaseIn)
                 .AddTime(1f, 0f)
                 .Build();
-            pulseAni.AnimateVector3((scale) => pulseSprite.Scale = scale)
+            triggerAni.AnimateVector3((scale) => pulseSprite.Scale = scale)
                 .AddTime(0f, Vector3.one, EaseType.QuartEaseOut)
                 .AddTime(1f, new Vector3(5f, 5f, 1f))
                 .Build();
@@ -113,9 +89,17 @@ namespace PBGame.UI.Components.HomeMenu
         {
             base.OnDisable();
 
-            pulseAni.Stop();
+            triggerAni.Stop();
             pulseSprite.Alpha = 0f;
             pulseSprite.Scale = Vector3.one;
+        }
+
+        protected override void OnClickTriggered()
+        {
+            base.OnClickTriggered();
+
+            triggerAni.PlayFromStart();
+            InvokeExit();
         }
     }
 }

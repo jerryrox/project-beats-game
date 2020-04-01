@@ -2,9 +2,9 @@ using System;
 using PBFramework.UI;
 using UnityEngine;
 
-namespace PBGame.UI.Components.Dialog
+namespace PBGame.UI.Components
 {
-    public interface ISelectionButton : ITrigger, IDisposable {
+    public interface ISelectionButton : IButtonTrigger, IDisposable {
     
         /// <summary>
         /// The text to be displayed on the label.

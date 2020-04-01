@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using PBGame.Data.Rankings;
+using PBFramework.UI;
 
-public class IRankingList : MonoBehaviour
+namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public interface IRankingList : IListView {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        /// <summary>
+        /// Displays the specified list of rank information.
+        /// </summary>
+        void Setup(IEnumerable<IRankInfo> ranks);
+
+        /// <summary>
+        /// Clears all cells from the list.
+        /// </summary>
+        void Clear();
     }
 }

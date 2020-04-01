@@ -1,18 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using PBGame.Data.Rankings;
+using PBFramework.UI;
 
-public class IRankingTabButton : MonoBehaviour
+namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public interface IRankingTabButton : IHighlightTrigger {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        /// <summary>
+        /// Type of rank data provision method.
+        /// </summary>
+        RankDisplayTypes RankDisplay { get; set; }
     }
 }

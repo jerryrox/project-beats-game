@@ -15,16 +15,19 @@ Slowly making progress 🧩
 - Implement quick message displayer overlay.
 - Initially sort the mapsets on load.
 - Store play record to record manager and apply to user statistics.
-- Map background image transition on change. (Apply on other areas where necessary)
-- Refactor code to support logging in using other API providers than just Osu.
 - Fix issue where the song won't change to the next song in home screen occasionally.
 - Fix issue where metronome doesn't update when changing song mid-way.
 - Find out how to retrieve a map's description.
-- Tidy up object relationship between an "original map" and "playable maps".
+- Sort mapsets' maps automatically on ruleset change.
+- (PrepareScreen) Implement custom show/hide animation.
+- (PrepareScreen) Add animation for MetaDifficultyInfoCell progress bar change.
+- (MenuBarOverlay) Add menu button for ruleset change.
+- Clamp label text on music menu overlay artist and title.
 
-- Support for interactive unit testing for UI.
+- Handle button triggers via OnPointerTrigger for all exiting buttons.
 
 ### In-progress
+- Support for interactive unit testing for UI. (Needs some tidying)
 - Implement osu standard hit objects
 - Implement osu standard judgements
 - Implement osu standard map

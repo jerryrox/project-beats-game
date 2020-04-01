@@ -2,7 +2,7 @@ using PBFramework.UI;
 
 namespace PBGame.UI.Components.MusicMenu
 {
-    public interface IControlButton : ITrigger {
+    public interface IControlButton : IButtonTrigger {
         
         /// <summary>
         /// The spritename of the button icon.

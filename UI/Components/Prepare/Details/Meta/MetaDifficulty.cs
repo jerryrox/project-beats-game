@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -122,8 +121,11 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         private IMetaDifficultyScale GetCell()
         {
             var cell = scales.FirstOrDefault(c => !c.Active);
-            if(cell != null)
+            if (cell != null)
+            {
+                cell.Active = true;
                 return cell;
+            }
 
             cell = grid.CreateChild<MetaDifficultyScale>($"cell{scales.Count}", scales.Count + 1);
             cell.Tint = ColorPreset.SecondaryFocus;
@@ -145,9 +147,9 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// </summary>
         private void OnMapChange(IPlayableMap map)
         {
+            ClearCells();
             if (map == null)
             {
-                ClearCells();
                 difficultyScale.Active = false;
             }
             else

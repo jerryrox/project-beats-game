@@ -135,10 +135,6 @@ namespace PBGame.Maps
                 return;
             }
 
-            // Only playable maps should be selected.
-            if (!map.IsPlayable)
-                throw new ArgumentException("Only playable maps can be selected!");
-
             // Set map only if different.
             if (map != this.Map)
             {
@@ -152,6 +148,8 @@ namespace PBGame.Maps
                 LoadBackground();
             }
         }
+
+        public void SelectMap(IOriginalMap map) => SelectMap(map.GetPlayable(currentMode));
 
         /// <summary>
         /// Loads the music asset for current map.

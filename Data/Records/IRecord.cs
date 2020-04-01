@@ -7,6 +7,7 @@ using PBFramework.DB.Entities;
 
 namespace PBGame.Data.Records
 {
+    // TODO: Store mods used.
     public interface IRecord : IDatabaseEntity {
 
         /// <summary>
@@ -53,6 +54,11 @@ namespace PBGame.Data.Records
         /// List of judgements made.
         /// </summary>
         IReadOnlyList<JudgementRecord> Judgements { get; }
+
+        /// <summary>
+        /// Returns the number of hiss recorded for each hit result types.
+        /// </summary>
+        IReadOnlyDictionary<HitResults, int> HitResultCounts { get; }
 
         /// <summary>
         /// Returns the number of hit judgements made.

@@ -3,7 +3,7 @@ using PBFramework.UI;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public interface IMenuButton : ITrigger {
+    public interface IMenuButton : IBoxIconTrigger {
 
         /// <summary>
         /// Event called when the menu has been toggled on.
@@ -25,11 +25,6 @@ namespace PBGame.UI.Components.MenuBar
         /// Returns the sprite used for menu toggle indication.
         /// </summary>
         ISprite ToggleSprite { get; }
-
-        /// <summary>
-        /// Returns the sprite used for short blinking after a press.
-        /// </summary>
-        ISprite BlinkSprite { get; }
 
 
         /// <summary>

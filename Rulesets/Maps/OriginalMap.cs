@@ -58,7 +58,6 @@ namespace PBGame.Rulesets.Maps
                 var playableMap = CreatePlayable(service);
                 if (playableMap != null)
                 {
-                    Debug.Log($"Added playable map for mode: {service.GameMode}");
                     this.playableMaps[service.GameMode] = playableMap;
                 }
             }

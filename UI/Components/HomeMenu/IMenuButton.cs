@@ -2,7 +2,7 @@ using PBFramework.UI;
 
 namespace PBGame.UI.Components.HomeMenu
 {
-    public interface IMenuButton : ITrigger {
+    public interface IMenuButton : IButtonTrigger {
     
         /// <summary>
         /// Returns the icon sprite.

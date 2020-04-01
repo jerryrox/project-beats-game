@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Audio;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -11,9 +7,9 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PBGame.UI.Components.Dialog
+namespace PBGame.UI.Components
 {
-    public class SelectionButton : UguiTrigger, ISelectionButton {
+    public class SelectionButton : ButtonTrigger, ISelectionButton {
 
         private const float BaseWidth = 720f;
         private const float HoverWidth = 880f;
@@ -21,9 +17,6 @@ namespace PBGame.UI.Components.Dialog
         private ISprite bgSprite;
         private ILabel label;
 
-        private IAnime hoverAni;
-        private IAnime outAni;
-        private IAnime clickAni;
         private Color backgroundColor;
 
 
@@ -41,35 +34,9 @@ namespace PBGame.UI.Components.Dialog
 
 
         [InitWithDependency]
-        private void Init(IRootMain root, ISoundPooler soundPooler)
+        private void Init(IRootMain root)
         {
             Size = new Vector2(BaseWidth, 56f);
-
-            OnPointerEnter += () =>
-            {
-                if(clickAni.IsPlaying)
-                    return;
-
-                soundPooler.Play("menuhit");
-                outAni.Stop();
-                hoverAni.PlayFromStart();
-            };
-            OnPointerExit += () =>
-            {
-                if(clickAni.IsPlaying)
-                    return;
-                    
-                hoverAni.Stop();
-                outAni.PlayFromStart();
-            };
-            OnPointerClick += () =>
-            {
-                if(clickAni.IsPlaying)
-                    return;
-
-                soundPooler.Play("menuclick");
-                clickAni.PlayFromStart();
-            };
 
             bgSprite = CreateChild<UguiSprite>("bg", 0);
             {
@@ -108,12 +75,12 @@ namespace PBGame.UI.Components.Dialog
                 .AddTime(0.25f, () => backgroundColor)
                 .Build();
 
-            clickAni = new Anime();
-            clickAni.AnimateFloat((x) => bgSprite.Width = x)
+            triggerAni = new Anime();
+            triggerAni.AnimateFloat((x) => bgSprite.Width = x)
                 .AddTime(0f, () => bgSprite.Width, EaseType.QuadEaseIn)
                 .AddTime(0.25f, resolution.x * 1.2f)
                 .Build();
-            clickAni.AnimateColor((color) => bgSprite.Color = color)
+            triggerAni.AnimateColor((color) => bgSprite.Color = color)
                 .AddTime(0f, () => bgSprite.Color, EaseType.QuadEaseIn)
                 .AddTime(0.05f, () => new Color(backgroundColor.r + 0.25f, backgroundColor.g + 0.25f, backgroundColor.b + 0.25f), EaseType.QuadEaseIn)
                 .AddTime(0.35f, () => backgroundColor)
@@ -126,10 +93,34 @@ namespace PBGame.UI.Components.Dialog
             hoverAni = null;
             outAni.Stop();
             outAni = null;
-            clickAni.Stop();
-            clickAni = null;
+            triggerAni.Stop();
+            triggerAni = null;
 
             Destroy();
+        }
+
+        protected override void OnPointerEntered()
+        {
+            if (triggerAni.IsPlaying)
+                return;
+
+            base.OnPointerEntered();
+        }
+
+        protected override void OnPointerExited()
+        {
+            if (triggerAni.IsPlaying)
+                return;
+
+            base.OnPointerExited();
+        }
+
+        protected override void OnClickTriggered()
+        {
+            if (triggerAni.IsPlaying)
+                return;
+
+            base.OnClickTriggered();
         }
     }
 }
