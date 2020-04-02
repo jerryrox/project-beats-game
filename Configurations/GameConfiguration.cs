@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using PBGame.Maps;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
+using PBGame.Graphics;
 using PBFramework.Data.Bindables;
 using PBFramework.Storages;
 
@@ -37,7 +38,7 @@ namespace PBGame.Configurations
         // ============================================================
         public ProxyBindable<bool> ShowFps { get; private set; }
         public ProxyBindable<bool> UseBlurShader { get; private set; }
-        public ProxyBindable<float> ResolutionQuality { get; private set; }
+        public ProxyBindable<ResolutionType> ResolutionQuality { get; private set; }
 
         // ============================================================
         // Gameplay settings
@@ -71,7 +72,7 @@ namespace PBGame.Configurations
 
             ShowFps = InitBoolBindable(nameof(ShowFps), false);
             UseBlurShader = InitBoolBindable(nameof(UseBlurShader), false);
-            ResolutionQuality = InitFloatBindable(nameof(ResolutionQuality), 1f);
+            ResolutionQuality = InitEnumBindable(nameof(ResolutionQuality), ResolutionType.Best);
 
             ShowStoryboard = InitBoolBindable(nameof(ShowStoryboard), false);
             ShowVideo = InitBoolBindable(nameof(ShowVideo), false);

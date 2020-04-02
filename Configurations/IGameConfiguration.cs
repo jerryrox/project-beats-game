@@ -2,6 +2,7 @@ using System;
 using PBGame.Maps;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
+using PBGame.Graphics;
 using PBFramework.Data.Bindables;
 
 namespace PBGame.Configurations
@@ -66,10 +67,9 @@ namespace PBGame.Configurations
         /// </summary>
 		ProxyBindable<bool> UseBlurShader { get; }
         /// <summary>
-        /// Percentage of the resolution quality.
-        /// 1 = 100%, 0.5 = 50%.
+        /// Type of resolution quality.
         /// </summary>
-		ProxyBindable<float> ResolutionQuality { get; }
+		ProxyBindable<ResolutionType> ResolutionQuality { get; }
 
         // ============================================================
         // Gameplay settings
