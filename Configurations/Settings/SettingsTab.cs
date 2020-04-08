@@ -9,6 +9,9 @@ namespace PBGame.Configurations.Settings
     /// </summary>
     public class SettingsTab {
 
+        private List<SettingsEntryBase> entries = new List<SettingsEntryBase>();
+
+
         /// <summary>
         /// The displayed name of the tab.
         /// </summary>
@@ -19,6 +22,11 @@ namespace PBGame.Configurations.Settings
         /// </summary>
         public string IconName { get; private set; }
 
+        /// <summary>
+        /// Returns the number of entries in the tab.
+        /// </summary>
+        public int EntryCount => entries.Count;
+
 
         public SettingsTab(string name, string iconName)
         {
@@ -26,6 +34,14 @@ namespace PBGame.Configurations.Settings
             this.IconName = iconName;
         }
 
+        /// <summary>
+        /// Adds the specified entry to the tab.
+        /// </summary>
+        public void AddEntry(SettingsEntryBase entry) => entries.Add(entry);
 
+        /// <summary>
+        /// Returns all entries in the tab.
+        /// </summary>
+        public IEnumerable<SettingsEntryBase> GetEntries() => entries;
     }
 }
