@@ -20,7 +20,8 @@ namespace PBGame.Configurations.Settings
 
         /// <summary>
         /// Adds the specified tab data.
+        /// Returns the specified tab instance.
         /// </summary>
-        void AddTabData(SettingsTab tabData);        
+        SettingsTab AddTabData(SettingsTab tabData);        
     }
 }

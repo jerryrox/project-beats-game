@@ -14,6 +14,10 @@ namespace PBGame.Configurations.Settings
 
         public IEnumerable<SettingsTab> GetTabs() => tabs;
 
-        public void AddTabData(SettingsTab tabData) => tabs.Add(tabData);
+        public SettingsTab AddTabData(SettingsTab tabData)
+        {
+            tabs.Add(tabData);
+            return tabData;
+        }
     }
 }
