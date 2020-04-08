@@ -7,6 +7,6 @@ namespace PBGame.Configurations.Settings
 {
     public class SettingsEntryBool : SettingsEntryBase<bool> {
 
-        public SettingsEntryBool(string name, BindableBool bindable) : base(name, bindable) {}
+        public SettingsEntryBool(string name, IBindable<bool> bindable) : base(name, bindable) {}
     }
 }

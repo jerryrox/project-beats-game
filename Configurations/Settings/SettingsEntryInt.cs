@@ -7,6 +7,6 @@ namespace PBGame.Configurations.Settings
 {
     public class SettingsEntryInt : SettingsEntryRange<int>
     {
-        public SettingsEntryInt(string name, BindableInt data) : base(name, data) { }
+        public SettingsEntryInt(string name, IBindableNumber<int> data) : base(name, data) { }
     }
 }

@@ -28,7 +28,7 @@ namespace PBGame.Configurations.Settings
         /// The bindable data to be serverd automatically at this class's level.
         /// May be null if data binding will be handled manually.
         /// </summary>
-        private Bindable<T> data;
+        private IBindable<T> data;
 
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace PBGame.Configurations.Settings
 
         protected SettingsEntryBase(string name) : base(name) { }
 
-        protected SettingsEntryBase(string name, Bindable<T> bindable) : base(name)
+        protected SettingsEntryBase(string name, IBindable<T> bindable) : base(name)
         {
             this.data = bindable;
         }

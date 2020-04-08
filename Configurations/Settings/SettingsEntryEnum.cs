@@ -18,7 +18,7 @@ namespace PBGame.Configurations.Settings
     public class SettingsEntryEnum<T> : SettingsEntryEnum
         where T : struct
     {
-        private Bindable<T> data;
+        private IBindable<T> data;
 
         private Dictionary<string, T> valueMap = new Dictionary<string, T>();
 
@@ -34,7 +34,7 @@ namespace PBGame.Configurations.Settings
         }
 
 
-        public SettingsEntryEnum(string name, Bindable<T> bindable) : base(name)
+        public SettingsEntryEnum(string name, IBindable<T> bindable) : base(name)
         {
             this.data = bindable;
             GenerateValueMap();

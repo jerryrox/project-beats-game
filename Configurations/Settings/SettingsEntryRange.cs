@@ -8,7 +8,7 @@ namespace PBGame.Configurations.Settings
     public abstract class SettingsEntryRange<T> : SettingsEntryBase<T>
         where T : struct
     {
-        protected BindableNumber<T> data;
+        protected IBindableNumber<T> data;
 
 
         public T MinValue => data.MinValue;
@@ -16,7 +16,7 @@ namespace PBGame.Configurations.Settings
         public T MaxValue => data.MaxValue;
 
 
-        protected SettingsEntryRange(string name, BindableNumber<T> data) : base(name, data)
+        protected SettingsEntryRange(string name, IBindableNumber<T> data) : base(name, data)
         {
             this.data = data;
         }
