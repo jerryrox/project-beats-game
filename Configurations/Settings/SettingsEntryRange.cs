@@ -16,7 +16,7 @@ namespace PBGame.Configurations.Settings
         public T MaxValue => data.MaxValue;
 
 
-        protected SettingsEntryRange(string name, BindableNumber<T> data) : base(name)
+        protected SettingsEntryRange(string name, BindableNumber<T> data) : base(name, data)
         {
             this.data = data;
         }
