@@ -3,6 +3,7 @@ using PBGame.Maps;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
 using PBGame.Graphics;
+using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
 
 namespace PBGame.Configurations
@@ -13,6 +14,11 @@ namespace PBGame.Configurations
         /// Event called on configuration load.
         /// </summary>
         event Action<IGameConfiguration> OnLoad;
+
+        /// <summary>
+        /// Returns the settings data based on game configurations.
+        /// </summary>
+        ISettingsData Settings { get; }
 
         // ============================================================
         // Internal settings
@@ -89,7 +95,7 @@ namespace PBGame.Configurations
         /// <summary>
         /// The global setting for background darkness, if not overridden by map configuration.
         /// </summary>
-		ProxyBindable<float> BackgroundDim { get; }
+		ProxyBindableFloat BackgroundDim { get; }
 
         // ============================================================
         // Sound settings
@@ -97,23 +103,23 @@ namespace PBGame.Configurations
         /// <summary>
         /// Overall volume of the game.
         /// </summary>
-		ProxyBindable<float> MasterVolume { get; }
+		ProxyBindableFloat MasterVolume { get; }
         /// <summary>
         /// Volume of the music.
         /// </summary>
-		ProxyBindable<float> MusicVolume { get; }
+		ProxyBindableFloat MusicVolume { get; }
         /// <summary>
         /// Volume of the hitsounds.
         /// </summary>
-        ProxyBindable<float> HitsoundVolume { get; }
+        ProxyBindableFloat HitsoundVolume { get; }
         /// <summary>
         /// Volume of the effect sounds.
         /// </summary>
-		ProxyBindable<float> EffectVolume { get; }
+		ProxyBindableFloat EffectVolume { get; }
         /// <summary>
         /// The global offset value in milliseconds.
         /// </summary>
-		ProxyBindable<int> GlobalOffset { get; }
+		ProxyBindableInt GlobalOffset { get; }
         /// <summary>
         /// Whether hitsounds from the beatmap should be used, if available.
         /// </summary>

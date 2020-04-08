@@ -5,6 +5,7 @@ using PBGame.Maps;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
 using PBGame.Graphics;
+using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
 using PBFramework.Storages;
 
@@ -17,6 +18,9 @@ namespace PBGame.Configurations
         private const string ConfigName = "game-configuration";
 
         private PrefStorage storage;
+
+
+        public ISettingsData Settings { get; private set; }
 
         // ============================================================
         // Internal settings
@@ -46,21 +50,23 @@ namespace PBGame.Configurations
         public ProxyBindable<bool> ShowStoryboard { get; private set; }
         public ProxyBindable<bool> ShowVideo { get; private set; }
         public ProxyBindable<bool> UseBeatmapSkins { get; private set; }
-        public ProxyBindable<float> BackgroundDim { get; private set; }
+        public ProxyBindableFloat BackgroundDim { get; private set; }
 
         // ============================================================
         // Sound settings
         // ============================================================
-        public ProxyBindable<float> MasterVolume { get; private set; }
-        public ProxyBindable<float> MusicVolume { get; private set; }
-        public ProxyBindable<float> HitsoundVolume { get; private set; }
-        public ProxyBindable<float> EffectVolume { get; private set; }
-        public ProxyBindable<int> GlobalOffset { get; private set; }
+        public ProxyBindableFloat MasterVolume { get; private set; }
+        public ProxyBindableFloat MusicVolume { get; private set; }
+        public ProxyBindableFloat HitsoundVolume { get; private set; }
+        public ProxyBindableFloat EffectVolume { get; private set; }
+        public ProxyBindableInt GlobalOffset { get; private set; }
         public ProxyBindable<bool> UseBeatmapHitsounds { get; private set; }
 
 
         public GameConfiguration()
         {
+            Settings = new SettingsData();
+
             RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModes.BeatsStandard);
             MapsetSort = InitEnumBindable(nameof(MapsetSort), MapsetSorts.Title);
             RankDisplay = InitEnumBindable(nameof(RankDisplay), RankDisplayTypes.Local);
@@ -68,23 +74,39 @@ namespace PBGame.Configurations
             Password = InitStringBindable(nameof(Password), "");
             SaveCredentials = InitBoolBindable(nameof(SaveCredentials), false);
 
-            PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false);
+            // General settings
+            SettingsTab generalTab = Settings.AddTabData(new SettingsTab("General", "icon-settings"));
+            {
+                generalTab.AddEntry(new SettingsEntryBool("Prefer unicode", PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false)));
+            }
 
-            ShowFps = InitBoolBindable(nameof(ShowFps), false);
-            UseBlurShader = InitBoolBindable(nameof(UseBlurShader), false);
-            ResolutionQuality = InitEnumBindable(nameof(ResolutionQuality), ResolutionType.Best);
+            // Performance settings
+            SettingsTab performanceTab = Settings.AddTabData(new SettingsTab("Performance", "icon-performance"));
+            {
+                performanceTab.AddEntry(new SettingsEntryBool("Show FPS", ShowFps = InitBoolBindable(nameof(ShowFps), false)));
+                performanceTab.AddEntry(new SettingsEntryBool("Use Blur", UseBlurShader = InitBoolBindable(nameof(UseBlurShader), false)));
+                performanceTab.AddEntry(new SettingsEntryEnum<ResolutionType>("Resolution Quality", ResolutionQuality = InitEnumBindable(nameof(ResolutionQuality), ResolutionType.Best)));
+            }
 
-            ShowStoryboard = InitBoolBindable(nameof(ShowStoryboard), false);
-            ShowVideo = InitBoolBindable(nameof(ShowVideo), false);
-            UseBeatmapSkins = InitBoolBindable(nameof(UseBeatmapSkins), false);
-            BackgroundDim = InitFloatBindable(nameof(BackgroundDim), 0.5f);
+            // Gameplay settings
+            SettingsTab gameplayTab = Settings.AddTabData(new SettingsTab("Gameplay", "icon-game"));
+            {
+                gameplayTab.AddEntry(new SettingsEntryBool("Use Storyboard", ShowStoryboard = InitBoolBindable(nameof(ShowStoryboard), false)));
+                gameplayTab.AddEntry(new SettingsEntryBool("Use Video", ShowVideo = InitBoolBindable(nameof(ShowVideo), false)));
+                gameplayTab.AddEntry(new SettingsEntryBool("Use Map Skins", UseBeatmapSkins = InitBoolBindable(nameof(UseBeatmapSkins), false)));
+                gameplayTab.AddEntry(new SettingsEntryFloat("Background Dim", BackgroundDim = InitFloatBindable(nameof(BackgroundDim), 0.5f)));
+            }
 
-            MasterVolume = InitFloatBindable(nameof(MasterVolume), 1f);
-            MusicVolume = InitFloatBindable(nameof(MusicVolume), 1f);
-            HitsoundVolume = InitFloatBindable(nameof(HitsoundVolume), 1f);
-            EffectVolume = InitFloatBindable(nameof(EffectVolume), 1f);
-            GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0);
-            UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true);
+            // Sound settings
+            SettingsTab soundTab = Settings.AddTabData(new SettingsTab("Sound", "icon-sound"));
+            {
+                soundTab.AddEntry(new SettingsEntryFloat("Master Volume", MasterVolume = InitFloatBindable(nameof(MasterVolume), 1f)));
+                soundTab.AddEntry(new SettingsEntryFloat("Music Volume", MusicVolume = InitFloatBindable(nameof(MusicVolume), 1f)));
+                soundTab.AddEntry(new SettingsEntryFloat("Hitsound Volume", HitsoundVolume = InitFloatBindable(nameof(HitsoundVolume), 1f)));
+                soundTab.AddEntry(new SettingsEntryFloat("Effect Volume", EffectVolume = InitFloatBindable(nameof(EffectVolume), 1f)));
+                soundTab.AddEntry(new SettingsEntryInt("Global Offset", GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0)));
+                soundTab.AddEntry(new SettingsEntryBool("Use Map Hitsounds", UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true)));
+            }
         }
 
         public void Load()
@@ -145,9 +167,9 @@ namespace PBGame.Configurations
         /// <summary>
         /// Instantiates a new proxy bindable, assuming a float for type T.
         /// </summary>
-        private ProxyBindable<float> InitFloatBindable(string propertyName, float defaultValue)
+        private ProxyBindableFloat InitFloatBindable(string propertyName, float defaultValue)
         {
-            return new ProxyBindable<float>(
+            return new ProxyBindableFloat(
                 () => storage.GetFloat(propertyName, defaultValue),
                 (value) => storage.SetFloat(propertyName, value)
             );
@@ -156,9 +178,9 @@ namespace PBGame.Configurations
         /// <summary>
         /// Instantiates a new proxy bindable, assuming a int for type T.
         /// </summary>
-        private ProxyBindable<int> InitIntBindable(string propertyName, int defaultValue)
+        private ProxyBindableInt InitIntBindable(string propertyName, int defaultValue)
         {
-            return new ProxyBindable<int>(
+            return new ProxyBindableInt(
                 () => storage.GetInt(propertyName, defaultValue),
                 (value) => storage.SetInt(propertyName, value)
             );
