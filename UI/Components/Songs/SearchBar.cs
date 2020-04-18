@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SearchBar : GlowInputBox, ISearchBar {
+    public class SearchBar : GlowInputBox, IInputBox {
 
         private const float SearchDelayTime = 1f;
 

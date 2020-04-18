@@ -8,21 +8,21 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Returns the search menu component.
         /// </summary>
-        ISearchMenu SearchMenu { get; }
+        SearchMenu SearchMenu { get; }
 
         /// <summary>
         /// Returns the song list component.
         /// </summary>
-        ISongList SongList { get; }
+        SongList SongList { get; }
 
         /// <summary>
         /// Returns the song menu component.
         /// </summary>
-        ISongMenu SongMenu { get; }
+        SongMenu SongMenu { get; }
 
         /// <summary>
         /// Returns the background component.
         /// </summary>
-        IBackground Background { get; }
+        Background Background { get; }
     }
 }

@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Returns the size of highlight sprite on the non-stretching side.
         /// </summary>
-        protected virtual float NonHighlightedSize => 2;
+        protected virtual float NonStretchingSize => 2;
 
         /// <summary>
         /// Returns the depth of the highlight sprite.
@@ -64,9 +64,9 @@ namespace PBGame.UI.Components.Common
                 highlightSprite.Anchor = HighlightSpriteAnchor;
                 highlightSprite.Pivot = HighlightSpritePivot;
                 if (IsHighlightSpriteVertical)
-                    highlightSprite.Size = new Vector2(NonHighlightedSize, 0f);
+                    highlightSprite.Size = new Vector2(NonStretchingSize, 0f);
                 else
-                    highlightSprite.Size = new Vector2(0f, NonHighlightedSize);
+                    highlightSprite.Size = new Vector2(0f, NonStretchingSize);
                 highlightSprite.Position = Vector2.zero;
                 highlightSprite.Color = colorPreset.PrimaryFocus;
                 highlightSprite.Alpha = 0f;
@@ -150,25 +150,25 @@ namespace PBGame.UI.Components.Common
                 case Anchors.TopStretch:
                     HighlightSpritePivot = Pivots.Top;
                     IsHighlightSpriteVertical = false;
-                    break;
+                    return;
 
                 case Anchors.Left:
                 case Anchors.LeftStretch:
                     HighlightSpritePivot = Pivots.Left;
                     IsHighlightSpriteVertical = true;
-                    break;
+                    return;
 
                 case Anchors.Right:
                 case Anchors.RightStretch:
                     HighlightSpritePivot = Pivots.Right;
                     IsHighlightSpriteVertical = true;
-                    break;
+                    return;
 
                 case Anchors.Bottom:
                 case Anchors.BottomStretch:
                     HighlightSpritePivot = Pivots.Bottom;
                     IsHighlightSpriteVertical = false;
-                    break;
+                    return;
             }
             throw new Exception("Unsupported highlight sprite anchor type: " + HighlightSpriteAnchor);
         }

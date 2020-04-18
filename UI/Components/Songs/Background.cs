@@ -12,7 +12,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class Background : UguiObject, IBackground {
+    public class Background : UguiObject {
 
         private ISprite blurSprite;
         private ISprite darkSprite;

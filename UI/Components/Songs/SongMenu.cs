@@ -11,22 +11,15 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SongMenu : UguiObject, ISongMenu {
+    public class SongMenu : UguiObject {
 
         private ISprite bgSprite;
-
-
-        public IBoxIconTrigger BackButton { get; private set; }
-
-        public IBoxIconTrigger RandomButton { get; private set; }
-
-        public IBoxIconTrigger PrevButton { get; private set; }
-
-        public IBoxIconTrigger NextButton { get; private set; }
-
-        public IBoxIconTrigger PlayButton { get; private set; }
-
-        public IPreviewBox PreviewBox { get; private set; }
+        private SongMenuButton backButton;
+        private SongMenuButton randomButton;
+        private SongMenuButton prevButton;
+        private SongMenuButton nextButton;
+        private SongMenuButton playButton;
+        private PreviewBox previewBox;
 
 
         [InitWithDependency]
@@ -38,91 +31,91 @@ namespace PBGame.UI.Components.Songs
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.125f);
             }
-            BackButton = CreateChild<BoxIconTrigger>("back", 0);
+            backButton = CreateChild<SongMenuButton>("back", 0);
             {
-                BackButton.Anchor = Anchors.LeftStretch;
-                BackButton.Pivot = Pivots.Left;
-                BackButton.Width = 100f;
-                BackButton.X = 0f;
-                BackButton.OffsetTop = 0f;
-                BackButton.OffsetBottom = 0f;
-                BackButton.IconName = "icon-arrow-left";
+                backButton.Anchor = Anchors.LeftStretch;
+                backButton.Pivot = Pivots.Left;
+                backButton.Width = 100f;
+                backButton.X = 0f;
+                backButton.OffsetTop = 0f;
+                backButton.OffsetBottom = 0f;
+                backButton.IconName = "icon-arrow-left";
 
-                BackButton.OnPointerDown += () =>
+                backButton.OnPointerDown += () =>
                 {
                     screenNavigator.Show<HomeScreen>();
                 };
             }
-            RandomButton = CreateChild<BoxIconTrigger>("random", 1);
+            randomButton = CreateChild<SongMenuButton>("random", 1);
             {
-                RandomButton.Anchor = Anchors.LeftStretch;
-                RandomButton.Pivot = Pivots.Left;
-                RandomButton.X = 670f;
-                RandomButton.Width = 80f;
-                RandomButton.OffsetTop = 0f;
-                RandomButton.OffsetBottom = 0f;
-                RandomButton.IconName = "icon-random";
+                randomButton.Anchor = Anchors.LeftStretch;
+                randomButton.Pivot = Pivots.Left;
+                randomButton.X = 670f;
+                randomButton.Width = 80f;
+                randomButton.OffsetTop = 0f;
+                randomButton.OffsetBottom = 0f;
+                randomButton.IconName = "icon-random";
 
-                RandomButton.OnPointerDown += () =>
+                randomButton.OnPointerDown += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetRandom());
                 };
             }
-            PrevButton = CreateChild<BoxIconTrigger>("prev", 2);
+            prevButton = CreateChild<SongMenuButton>("prev", 2);
             {
-                PrevButton.Anchor = Anchors.LeftStretch;
-                PrevButton.Pivot = Pivots.Left;
-                PrevButton.X = 750f;
-                PrevButton.Width = 80f;
-                PrevButton.OffsetTop = 0f;
-                PrevButton.OffsetBottom = 0f;
-                PrevButton.IconName = "icon-backward";
+                prevButton.Anchor = Anchors.LeftStretch;
+                prevButton.Pivot = Pivots.Left;
+                prevButton.X = 750f;
+                prevButton.Width = 80f;
+                prevButton.OffsetTop = 0f;
+                prevButton.OffsetBottom = 0f;
+                prevButton.IconName = "icon-backward";
 
-                PrevButton.OnPointerDown += () =>
+                prevButton.OnPointerDown += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset));
                 };
             }
-            NextButton = CreateChild<BoxIconTrigger>("next", 3);
+            nextButton = CreateChild<SongMenuButton>("next", 3);
             {
-                NextButton.Anchor = Anchors.LeftStretch;
-                NextButton.Pivot = Pivots.Left;
-                NextButton.X = 830f;
-                NextButton.Width = 80f;
-                NextButton.OffsetTop = 0f;
-                NextButton.OffsetBottom = 0f;
-                NextButton.IconName = "icon-forward";
+                nextButton.Anchor = Anchors.LeftStretch;
+                nextButton.Pivot = Pivots.Left;
+                nextButton.X = 830f;
+                nextButton.Width = 80f;
+                nextButton.OffsetTop = 0f;
+                nextButton.OffsetBottom = 0f;
+                nextButton.IconName = "icon-forward";
 
-                NextButton.OnPointerDown += () =>
+                nextButton.OnPointerDown += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset));
                 };
             }
-            PlayButton = CreateChild<BoxIconTrigger>("play", 4);
+            playButton = CreateChild<SongMenuButton>("play", 4);
             {
-                PlayButton.Anchor = Anchors.RightStretch;
-                PlayButton.Pivot = Pivots.Right;
-                PlayButton.X = 0f;
-                PlayButton.Width = 100f;
-                PlayButton.OffsetTop = 0f;
-                PlayButton.OffsetBottom = 0f;
-                PlayButton.IconName = "icon-play";
+                playButton.Anchor = Anchors.RightStretch;
+                playButton.Pivot = Pivots.Right;
+                playButton.X = 0f;
+                playButton.Width = 100f;
+                playButton.OffsetTop = 0f;
+                playButton.OffsetBottom = 0f;
+                playButton.IconName = "icon-play";
 
-                PlayButton.OnPointerDown += () =>
+                playButton.OnPointerDown += () =>
                 {
                     screenNavigator.Show<PrepareScreen>();
                 };
             }
-            PreviewBox = CreateChild<PreviewBox>("preview", 5);
+            previewBox = CreateChild<PreviewBox>("preview", 5);
             {
-                PreviewBox.Anchor = Anchors.LeftStretch;
-                PreviewBox.Pivot = Pivots.Left;
-                PreviewBox.X = 100f;
-                PreviewBox.Width = 560f;
-                PreviewBox.OffsetTop = -18f;
-                PreviewBox.OffsetBottom = 18f;
+                previewBox.Anchor = Anchors.LeftStretch;
+                previewBox.Pivot = Pivots.Left;
+                previewBox.X = 100f;
+                previewBox.Width = 560f;
+                previewBox.OffsetTop = -18f;
+                previewBox.OffsetBottom = 18f;
 
-                PreviewBox.OnPointerDown += () =>
+                previewBox.OnPointerDown += () =>
                 {
                     screenNavigator.Show<PrepareScreen>();                 
                 };

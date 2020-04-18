@@ -19,7 +19,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SongListItem : UguiTrigger, ISongListItem {
+    public class SongListItem : UguiTrigger, IListItem {
 
         private const float AnimationSpeed = 4f;
 
@@ -61,6 +61,9 @@ namespace PBGame.UI.Components.Songs
 
         public int ItemIndex { get; set; }
 
+        /// <summary>
+        /// Returns the mapset currently being represented by this item.
+        /// </summary>
         public IMapset Mapset { get; private set; }
 
         [ReceivesDependency]
@@ -215,6 +218,9 @@ namespace PBGame.UI.Components.Songs
             UnbindEvents();
         }
 
+        /// <summary>
+        /// Sets the mapset which the item should represent.
+        /// </summary>
         public void SetMapset(IMapset mapset)
         {
             this.Mapset = mapset;
