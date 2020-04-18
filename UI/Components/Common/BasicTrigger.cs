@@ -13,7 +13,7 @@ namespace PBGame.UI.Components.Common
     /// <summary>
     /// The basis of any triggers in PB.
     /// </summary>
-    public class BasicTrigger : UguiTrigger {
+    public class BasicTrigger : UguiTrigger, IHasIcon {
 
         /// <summary>
         /// Event called on button trigger event.
@@ -25,6 +25,21 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected IAnime triggerAni;
 
+        /// <summary>
+        /// Icon sprite on the trigger, if created.
+        /// </summary>
+        protected ISprite iconSprite;
+
+
+        public string IconName
+        {
+            get => iconSprite == null ? null : iconSprite.SpriteName;
+            set
+            {
+                if(iconSprite != null)
+                    iconSprite.SpriteName = value;
+            }
+        }
 
         /// <summary>
         /// Returns whether the button fires "click" event on pointer click.
@@ -55,6 +70,21 @@ namespace PBGame.UI.Components.Common
                 OnPointerClick += OnClickTriggered;
             else
                 OnPointerDown += OnClickTriggered;
+        }
+
+        /// <summary>
+        /// Creates a new icon sprite for the trigger and returns it.
+        /// </summary>
+        public ISprite CreateIconSprite(int depth = 5, string spriteName = null, float size = 36f, float alpha = 0.65f)
+        {
+            if(iconSprite != null)
+                return iconSprite;
+
+            iconSprite = CreateChild<UguiSprite>("icon", depth);
+            iconSprite.SpriteName = spriteName;
+            iconSprite.Size = new Vector2(size, size);
+            iconSprite.Alpha = alpha;
+            return iconSprite;
         }
 
         /// <summary>
