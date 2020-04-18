@@ -40,8 +40,8 @@ namespace PBGame.UI.Components.Songs
                 backButton.X = 0f;
                 backButton.OffsetTop = 0f;
                 backButton.OffsetBottom = 0f;
-                backButton.IconName = "icon-arrow-left";
-
+                
+                backButton.CreateIconSprite(spriteName: "icon-arrow-left");
                 backButton.UseDefaultHoverAni();
 
                 backButton.OnPointerDown += () =>
@@ -57,8 +57,8 @@ namespace PBGame.UI.Components.Songs
                 randomButton.Width = 80f;
                 randomButton.OffsetTop = 0f;
                 randomButton.OffsetBottom = 0f;
-                randomButton.IconName = "icon-random";
 
+                randomButton.CreateIconSprite(spriteName: "icon-random");
                 randomButton.UseDefaultHoverAni();
 
                 randomButton.OnPointerDown += () =>
@@ -74,8 +74,8 @@ namespace PBGame.UI.Components.Songs
                 prevButton.Width = 80f;
                 prevButton.OffsetTop = 0f;
                 prevButton.OffsetBottom = 0f;
-                prevButton.IconName = "icon-backward";
 
+                prevButton.CreateIconSprite(spriteName: "icon-backward");
                 prevButton.UseDefaultHoverAni();
 
                 prevButton.OnPointerDown += () =>
@@ -91,8 +91,8 @@ namespace PBGame.UI.Components.Songs
                 nextButton.Width = 80f;
                 nextButton.OffsetTop = 0f;
                 nextButton.OffsetBottom = 0f;
-                nextButton.IconName = "icon-forward";
 
+                nextButton.CreateIconSprite(spriteName: "icon-forward");
                 nextButton.UseDefaultHoverAni();
 
                 nextButton.OnPointerDown += () =>
@@ -108,8 +108,8 @@ namespace PBGame.UI.Components.Songs
                 playButton.Width = 100f;
                 playButton.OffsetTop = 0f;
                 playButton.OffsetBottom = 0f;
-                playButton.IconName = "icon-play";
 
+                playButton.CreateIconSprite(spriteName: "icon-play");
                 playButton.UseDefaultHoverAni();
 
                 playButton.OnPointerDown += () =>
@@ -125,8 +125,6 @@ namespace PBGame.UI.Components.Songs
                 previewBox.Width = 560f;
                 previewBox.OffsetTop = -18f;
                 previewBox.OffsetBottom = 18f;
-
-                previewBox.UseDefaultHoverAni();
 
                 previewBox.OnPointerDown += () =>
                 {

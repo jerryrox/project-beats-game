@@ -81,7 +81,9 @@ namespace PBGame.UI.Components.Common
                 return iconSprite;
 
             iconSprite = CreateChild<UguiSprite>("icon", depth);
-            iconSprite.SpriteName = spriteName;
+            iconSprite.Position = Vector2.zero;
+            if(!string.IsNullOrEmpty(spriteName))
+                iconSprite.SpriteName = spriteName;
             iconSprite.Size = new Vector2(size, size);
             iconSprite.Alpha = alpha;
             return iconSprite;
