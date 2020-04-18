@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace PBGame.UI
 {
+    /// <summary>
+    /// Default input box for PB: Game with default font assignment.
+    /// </summary>
     public class InputBox : UguiInputBox, IInputBox {
 
         [InitWithDependency]
