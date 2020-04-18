@@ -76,7 +76,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Creates default highlighting animation.
         /// </summary>
-        protected void UseDefaultHighlightAni()
+        public void UseDefaultHighlightAni()
         {
             // Create highlight animation
             highlightAni = new Anime();

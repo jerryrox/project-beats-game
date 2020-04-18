@@ -41,7 +41,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Creates default hover in/out animations.
         /// </summary>
-        protected virtual void UseDefaultHoverAni()
+        public virtual void UseDefaultHoverAni()
         {
             hoverInAni = new Anime();
             hoverInAni.AnimateFloat(a => hoverSprite.Alpha = a)

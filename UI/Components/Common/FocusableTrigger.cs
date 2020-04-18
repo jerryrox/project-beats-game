@@ -58,7 +58,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Creates default focus/unfocus animations.
         /// </summary>
-        protected void UseDefaultFocusAni()
+        public void UseDefaultFocusAni()
         {
             focusAni = new Anime();
             focusAni.AnimateFloat(a => focusSprite.Alpha = a)
