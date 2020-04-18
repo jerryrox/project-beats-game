@@ -170,7 +170,7 @@ namespace PBGame.Configurations
         private ProxyBindableFloat InitFloatBindable(string propertyName, float defaultValue)
         {
             return new ProxyBindableFloat(
-                () => storage.GetFloat(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetFloat(propertyName, defaultValue),
                 (value) => storage.SetFloat(propertyName, value)
             );
         }
@@ -181,7 +181,7 @@ namespace PBGame.Configurations
         private ProxyBindableInt InitIntBindable(string propertyName, int defaultValue)
         {
             return new ProxyBindableInt(
-                () => storage.GetInt(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetInt(propertyName, defaultValue),
                 (value) => storage.SetInt(propertyName, value)
             );
         }
