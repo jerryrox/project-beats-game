@@ -1,3 +1,4 @@
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
@@ -9,8 +10,8 @@ namespace PBGame.UI.Components.Prepare.Details
 {
     public class VersionDisplay : UguiSprite {
 
-        private IBoxIconTrigger backButton;
-        private IBoxIconTrigger nextButton;
+        private HoverableTrigger backButton;
+        private HoverableTrigger nextButton;
         private IVersionButton versionIcon;
         private ILabel nameLabel;
         private ILabel scaleLabel;
@@ -25,25 +26,25 @@ namespace PBGame.UI.Components.Prepare.Details
         {
             Alpha = 0.125f;
 
-            backButton = CreateChild<BoxIconTrigger>("back", 0);
+            backButton = CreateChild<HoverableTrigger>("back", 0);
             {
                 backButton.Anchor = Anchors.LeftStretch;
                 backButton.Pivot = Pivots.Left;
                 backButton.RawHeight = 0f;
                 backButton.Width = 80f;
                 backButton.X = 0f;
-                backButton.IconName = "icon-left";
+                backButton.CreateIconSprite(spriteName: "icon-left");
 
                 backButton.OnTriggered += () => SelectMap(-1);
             }
-            nextButton = CreateChild<BoxIconTrigger>("next", 1);
+            nextButton = CreateChild<HoverableTrigger>("next", 1);
             {
                 nextButton.Anchor = Anchors.RightStretch;
                 nextButton.Pivot = Pivots.Right;
                 nextButton.RawHeight = 0f;
                 nextButton.Width = 80f;
                 nextButton.X = 0f;
-                nextButton.IconName = "icon-right";
+                backButton.CreateIconSprite(spriteName: "icon-right");
 
                 nextButton.OnTriggered += () => SelectMap(1);
             }
