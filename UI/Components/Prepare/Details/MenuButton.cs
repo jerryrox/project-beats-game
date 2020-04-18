@@ -9,17 +9,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class MenuButton : HoverableTrigger, IHasLabel, IHasIcon {
+    public class MenuButton : HoverableTrigger, IHasLabel {
 
-        private ISprite iconSprite;
         private ILabel label;
 
-
-        public string IconName
-        {
-            get => iconSprite.SpriteName;
-            set => iconSprite.SpriteName = value;
-        }
 
         public string LabelText
         {
@@ -31,12 +24,7 @@ namespace PBGame.UI.Components.Prepare.Details
         [InitWithDependency]
         private void Init()
         {
-            iconSprite = CreateChild<UguiSprite>("icon", 0);
-            {
-                iconSprite.X = -36f;
-                iconSprite.Size = new Vector2(36f, 36f);
-                iconSprite.Alpha = 0.65f;
-            }
+            CreateIconSprite().X = -36f;
 
             label = CreateChild<Label>("label", 2);
             {

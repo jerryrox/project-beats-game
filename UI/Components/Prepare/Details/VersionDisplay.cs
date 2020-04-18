@@ -33,7 +33,9 @@ namespace PBGame.UI.Components.Prepare.Details
                 backButton.RawHeight = 0f;
                 backButton.Width = 80f;
                 backButton.X = 0f;
+
                 backButton.CreateIconSprite(spriteName: "icon-left");
+                backButton.UseDefaultHoverAni();
 
                 backButton.OnTriggered += () => SelectMap(-1);
             }
@@ -44,7 +46,9 @@ namespace PBGame.UI.Components.Prepare.Details
                 nextButton.RawHeight = 0f;
                 nextButton.Width = 80f;
                 nextButton.X = 0f;
-                backButton.CreateIconSprite(spriteName: "icon-right");
+                
+                nextButton.CreateIconSprite(spriteName: "icon-right");
+                nextButton.UseDefaultHoverAni();
 
                 nextButton.OnTriggered += () => SelectMap(1);
             }

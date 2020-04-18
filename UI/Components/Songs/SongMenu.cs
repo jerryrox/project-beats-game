@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBFramework.UI;
@@ -14,11 +15,11 @@ namespace PBGame.UI.Components.Songs
     public class SongMenu : UguiObject {
 
         private ISprite bgSprite;
-        private SongMenuButton backButton;
-        private SongMenuButton randomButton;
-        private SongMenuButton prevButton;
-        private SongMenuButton nextButton;
-        private SongMenuButton playButton;
+        private HoverableTrigger backButton;
+        private HoverableTrigger randomButton;
+        private HoverableTrigger prevButton;
+        private HoverableTrigger nextButton;
+        private HoverableTrigger playButton;
         private PreviewBox previewBox;
 
 
@@ -31,7 +32,7 @@ namespace PBGame.UI.Components.Songs
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.125f);
             }
-            backButton = CreateChild<SongMenuButton>("back", 0);
+            backButton = CreateChild<HoverableTrigger>("back", 0);
             {
                 backButton.Anchor = Anchors.LeftStretch;
                 backButton.Pivot = Pivots.Left;
@@ -41,12 +42,14 @@ namespace PBGame.UI.Components.Songs
                 backButton.OffsetBottom = 0f;
                 backButton.IconName = "icon-arrow-left";
 
+                backButton.UseDefaultHoverAni();
+
                 backButton.OnPointerDown += () =>
                 {
                     screenNavigator.Show<HomeScreen>();
                 };
             }
-            randomButton = CreateChild<SongMenuButton>("random", 1);
+            randomButton = CreateChild<HoverableTrigger>("random", 1);
             {
                 randomButton.Anchor = Anchors.LeftStretch;
                 randomButton.Pivot = Pivots.Left;
@@ -56,12 +59,14 @@ namespace PBGame.UI.Components.Songs
                 randomButton.OffsetBottom = 0f;
                 randomButton.IconName = "icon-random";
 
+                randomButton.UseDefaultHoverAni();
+
                 randomButton.OnPointerDown += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetRandom());
                 };
             }
-            prevButton = CreateChild<SongMenuButton>("prev", 2);
+            prevButton = CreateChild<HoverableTrigger>("prev", 2);
             {
                 prevButton.Anchor = Anchors.LeftStretch;
                 prevButton.Pivot = Pivots.Left;
@@ -71,12 +76,14 @@ namespace PBGame.UI.Components.Songs
                 prevButton.OffsetBottom = 0f;
                 prevButton.IconName = "icon-backward";
 
+                prevButton.UseDefaultHoverAni();
+
                 prevButton.OnPointerDown += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset));
                 };
             }
-            nextButton = CreateChild<SongMenuButton>("next", 3);
+            nextButton = CreateChild<HoverableTrigger>("next", 3);
             {
                 nextButton.Anchor = Anchors.LeftStretch;
                 nextButton.Pivot = Pivots.Left;
@@ -86,12 +93,14 @@ namespace PBGame.UI.Components.Songs
                 nextButton.OffsetBottom = 0f;
                 nextButton.IconName = "icon-forward";
 
+                nextButton.UseDefaultHoverAni();
+
                 nextButton.OnPointerDown += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset));
                 };
             }
-            playButton = CreateChild<SongMenuButton>("play", 4);
+            playButton = CreateChild<HoverableTrigger>("play", 4);
             {
                 playButton.Anchor = Anchors.RightStretch;
                 playButton.Pivot = Pivots.Right;
@@ -100,6 +109,8 @@ namespace PBGame.UI.Components.Songs
                 playButton.OffsetTop = 0f;
                 playButton.OffsetBottom = 0f;
                 playButton.IconName = "icon-play";
+
+                playButton.UseDefaultHoverAni();
 
                 playButton.OnPointerDown += () =>
                 {
@@ -114,6 +125,8 @@ namespace PBGame.UI.Components.Songs
                 previewBox.Width = 560f;
                 previewBox.OffsetTop = -18f;
                 previewBox.OffsetBottom = 18f;
+
+                previewBox.UseDefaultHoverAni();
 
                 previewBox.OnPointerDown += () =>
                 {
