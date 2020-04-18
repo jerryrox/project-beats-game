@@ -11,8 +11,8 @@ namespace PBGame.UI.Components.Prepare
 {
     public class DetailContainer : UguiSprite, IDetailContainer {
 
-        private IMenuHolder menuHolder;
-        private IVersionDisplay versionDisplay;
+        private MenuHolder menuHolder;
+        private VersionDisplay versionDisplay;
 
         private IScrollView contentScroll;
         private IMetaContainer metaContainer;

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class VersionDisplay : UguiSprite, IVersionDisplay {
+    public class VersionDisplay : UguiSprite {
 
         private IBoxIconTrigger backButton;
         private IBoxIconTrigger nextButton;

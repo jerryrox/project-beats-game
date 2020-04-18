@@ -11,13 +11,13 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class MenuHolder : UguiSprite, IMenuHolder {
+    public class MenuHolder : UguiSprite {
 
         private IGrid grid;
 
-        private IMenuButton backButton;
-        private IMenuButton infoButton;
-        private IMenuButton playButton;
+        private MenuButton backButton;
+        private MenuButton infoButton;
+        private MenuButton playButton;
 
 
         [ReceivesDependency]
