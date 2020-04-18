@@ -24,6 +24,8 @@ namespace PBGame.UI.Components.MenuBar
         private CacherAgent<Texture2D> cacherAgent;
 
 
+        protected override string IconName => "";
+
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
 
@@ -40,21 +42,24 @@ namespace PBGame.UI.Components.MenuBar
         [InitWithDependency]
         private void Init(IApiManager apiManager)
         {
-            OnToggleOn += () =>
+            OnFocused += (isFocused) =>
             {
-                var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
-                overlay.OnClose += () =>
+                if (isFocused)
                 {
+                    var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
+                    overlay.OnClose += () =>
+                    {
+                        hasOverlay = false;
+                        IsFocused = false;
+                    };
+                    hasOverlay = true;
+                }
+                else
+                {
+                    if (hasOverlay)
+                        OverlayNavigator.Hide<ProfileMenuOverlay>();
                     hasOverlay = false;
-                    SetToggle(false);
-                };
-                hasOverlay = true;
-            };
-            OnToggleOff += () =>
-            {
-                if (hasOverlay)
-                    OverlayNavigator.Hide<ProfileMenuOverlay>();
-                hasOverlay = false;
+                }
             };
 
             cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);

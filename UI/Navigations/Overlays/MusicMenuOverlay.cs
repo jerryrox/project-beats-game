@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components;
+using PBGame.UI.Components.MenuBar;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -15,8 +16,6 @@ using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
-
-using IMusicButton = PBGame.UI.Components.MenuBar.IMusicButton;
 
 namespace PBGame.UI.Navigations.Overlays
 {
@@ -35,7 +34,7 @@ namespace PBGame.UI.Navigations.Overlays
         private ITimeBar timeBar;
 
 
-        public IMusicButton MusicButton { get; set; }
+        public MusicButton MusicButton { get; set; }
 
         protected override int OverlayDepth => ViewDepths.MusicMenuOverlay;
 

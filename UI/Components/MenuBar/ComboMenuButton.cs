@@ -5,19 +5,23 @@ namespace PBGame.UI.Components.MenuBar
 {
     public class ComboMenuButton : BaseMenuButton {
 
+        protected override string IconName => "icon-menu";
+
+
         [InitWithDependency]
         private void Init(IOverlayNavigator overlayNavigator)
         {
-            IconName = "icon-menu";
-
-            OnToggleOn += () =>
+            OnFocused += (isFocused) =>
             {
-                // TODO: Display combo menu
-                // TODO: Toggle off the button on combo menu hidden event.
-            };
-            OnToggleOff += () =>
-            {
-                // TODO: Disable combo menu
+                if (isFocused)
+                {
+                    // TODO: Display combo menu
+                    // TODO: Toggle off the button on combo menu hidden event.
+                }
+                else
+                {
+                    // TODO: Disable combo menu
+                }
             };
         }
     }

@@ -26,17 +26,17 @@ namespace PBGame.UI.Navigations.Overlays
         };
 
 
-        public IBackgroundSprite BackgroundSprite { get; private set; }
+        public BackgroundSprite BackgroundSprite { get; private set; }
 
-        public IMenuButton ComboMenuButton { get; private set; }
+        public BaseMenuButton ComboMenuButton { get; private set; }
 
-        public IMenuButton ProfileButton { get; private set; }
+        public BaseMenuButton ProfileButton { get; private set; }
 
-        public IMusicButton MusicButton { get; private set; }
+        public MusicButton MusicButton { get; private set; }
 
-        public IMenuButton SettingsMenuButton { get; private set; }
+        public BaseMenuButton SettingsMenuButton { get; private set; }
 
-        public IMenuButton NotificationMenuButton { get; private set; }
+        public BaseMenuButton NotificationMenuButton { get; private set; }
 
         protected override int OverlayDepth => ViewDepths.MenuBarOverlay;
 
@@ -138,7 +138,11 @@ namespace PBGame.UI.Navigations.Overlays
             for (int i = 0; i < menuButtons.Length; i++)
             {
                 var menu = menuButtons[i];
-                menu.OnToggleOn += () => UnfocusAllMenu(menu);
+                menu.OnFocused += (isFocused) =>
+                {
+                    if (isFocused)
+                        UnfocusAllMenu(menu);
+                };
             }
         }
 
@@ -150,7 +154,7 @@ namespace PBGame.UI.Navigations.Overlays
             for (int i = 0; i < menuButtons.Length; i++)
             {
                 if(menuButtons[i] != exception)
-                    menuButtons[i].SetToggle(false);
+                    menuButtons[i].IsFocused = false;
             }
         }
 

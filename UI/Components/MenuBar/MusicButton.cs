@@ -3,21 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
-using PBGame.Audio;
-using PBFramework.UI;
 using PBFramework.UI.Navigations;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public class MusicButton : BaseMenuButton, IMusicButton {
+    public class MusicButton : BaseMenuButton {
 
         private bool hasOverlay = false;
 
 
+        /// <summary>
+        /// Returns the music playlist in use.
+        /// </summary>
         public IMusicPlaylist MusicPlaylist { get; private set; }
+
+        protected override string IconName => "icon-music";
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
@@ -29,25 +30,25 @@ namespace PBGame.UI.Components.MenuBar
         [InitWithDependency]
         private void Init(IOverlayNavigator overlayNavigator)
         {
-            IconName = "icon-music";
-
-            OnToggleOn += () =>
+            OnFocused += (isFocused) =>
             {
-                var overlay = overlayNavigator.Show<MusicMenuOverlay>();
-                overlay.MusicButton = this;
-                overlay.OnClose += () =>
+                if (isFocused)
                 {
+                    var overlay = overlayNavigator.Show<MusicMenuOverlay>();
+                    overlay.MusicButton = this;
+                    overlay.OnClose += () =>
+                    {
+                        hasOverlay = false;
+                        IsFocused = false;
+                    };
+                    hasOverlay = true;
+                }
+                else
+                {
+                    if (hasOverlay)
+                        overlayNavigator.Hide<MusicMenuOverlay>();
                     hasOverlay = false;
-                    SetToggle(false);
-                };
-                hasOverlay = true;
-            };
-
-            OnToggleOff += () =>
-            {
-                if (hasOverlay)
-                    overlayNavigator.Hide<MusicMenuOverlay>();
-                hasOverlay = false;
+                }
             };
 
             OnEnableInited();
