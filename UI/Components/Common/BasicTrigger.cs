@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Common
         protected ISprite iconSprite;
 
 
-        public string IconName
+        public virtual string IconName
         {
             get => iconSprite == null ? null : iconSprite.SpriteName;
             set
