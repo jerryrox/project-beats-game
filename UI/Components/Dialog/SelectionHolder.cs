@@ -13,7 +13,7 @@ namespace PBGame.UI.Components.Dialog
 
         private ISprite bgSprite;
 
-        private List<ISelectionButton> buttons = new List<ISelectionButton>();
+        private List<SelectionButton> buttons = new List<SelectionButton>();
 
 
         [InitWithDependency]
@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Dialog
 
         public void AddSelection(string label, Color color, Action callback)
         {
-            ISelectionButton button = CreateChild<SelectionButton>("selection", buttons.Count);
+            SelectionButton button = CreateChild<SelectionButton>("selection", buttons.Count);
             {
                 button.Anchor = Anchors.Top;
                 button.Pivot = Pivots.Top;
@@ -50,7 +50,7 @@ namespace PBGame.UI.Components.Dialog
 
         public void RemoveSelections()
         {
-            buttons.ForEach(b => b.Dispose());
+            buttons.ForEach(b => b.Destroy());
             buttons.Clear();
 
             Height = 0f;

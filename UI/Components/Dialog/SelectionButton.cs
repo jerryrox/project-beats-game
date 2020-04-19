@@ -1,3 +1,4 @@
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -7,14 +8,13 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PBGame.UI.Components
+namespace PBGame.UI.Components.Dialog
 {
-    public class SelectionButton : ButtonTrigger, ISelectionButton {
+    public class SelectionButton : HoverableTrigger, IHasLabel {
 
         private const float BaseWidth = 720f;
         private const float HoverWidth = 880f;
 
-        private ISprite bgSprite;
         private ILabel label;
 
         private Color backgroundColor;
@@ -26,10 +26,13 @@ namespace PBGame.UI.Components
             set => label.Text = value;
         }
 
+        /// <summary>
+        /// The color of the background sprite.
+        /// </summary>
         public Color BackgroundColor
         {
             get => backgroundColor;
-            set => bgSprite.Color = backgroundColor = value;
+            set => hoverSprite.Color = backgroundColor = value;
         }
 
 
@@ -38,13 +41,11 @@ namespace PBGame.UI.Components
         {
             Size = new Vector2(BaseWidth, 56f);
 
-            bgSprite = CreateChild<UguiSprite>("bg", 0);
-            {
-                bgSprite.Anchor = Anchors.Fill;
-                bgSprite.RawSize = Vector2.zero;
-                bgSprite.ImageType = Image.Type.Sliced;
-                bgSprite.SpriteName = "parallel-64";
-            }
+            hoverSprite.Anchor = Anchors.Fill;
+            hoverSprite.RawSize = Vector2.zero;
+            hoverSprite.ImageType = Image.Type.Sliced;
+            hoverSprite.SpriteName = "parallel-64";
+                
             label = CreateChild<Label>("label", 1);
             {
                 label.Anchor = Anchors.Fill;
@@ -55,48 +56,36 @@ namespace PBGame.UI.Components
 
             var resolution = root.Resolution;
 
-            hoverAni = new Anime();
-            hoverAni.AnimateFloat((x) => bgSprite.Width = x)
-                .AddTime(0f, () => bgSprite.Width, EaseType.QuadEaseIn)
+            hoverInAni = new Anime();
+            hoverInAni.AnimateFloat((x) => hoverSprite.Width = x)
+                .AddTime(0f, () => hoverSprite.Width, EaseType.QuadEaseIn)
                 .AddTime(0.25f, HoverWidth)
                 .Build();
-            hoverAni.AnimateColor((color) => bgSprite.Color = color)
-                .AddTime(0f, () => bgSprite.Color, EaseType.QuadEaseIn)
+            hoverInAni.AnimateColor((color) => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
                 .AddTime(0.25f, () => new Color(backgroundColor.r + 0.1f, backgroundColor.g + 0.1f, backgroundColor.b + 0.1f))
                 .Build();
 
-            outAni = new Anime();
-            outAni.AnimateFloat((x) => bgSprite.Width = x)
-                .AddTime(0f, () => bgSprite.Width, EaseType.QuadEaseIn)
+            hoverOutAni = new Anime();
+            hoverOutAni.AnimateFloat((x) => hoverSprite.Width = x)
+                .AddTime(0f, () => hoverSprite.Width, EaseType.QuadEaseIn)
                 .AddTime(0.25f, BaseWidth)
                 .Build();
-            outAni.AnimateColor((color) => bgSprite.Color = color)
-                .AddTime(0f, () => bgSprite.Color, EaseType.QuadEaseIn)
+            hoverOutAni.AnimateColor((color) => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
                 .AddTime(0.25f, () => backgroundColor)
                 .Build();
 
             triggerAni = new Anime();
-            triggerAni.AnimateFloat((x) => bgSprite.Width = x)
-                .AddTime(0f, () => bgSprite.Width, EaseType.QuadEaseIn)
+            triggerAni.AnimateFloat((x) => hoverSprite.Width = x)
+                .AddTime(0f, () => hoverSprite.Width, EaseType.QuadEaseIn)
                 .AddTime(0.25f, resolution.x * 1.2f)
                 .Build();
-            triggerAni.AnimateColor((color) => bgSprite.Color = color)
-                .AddTime(0f, () => bgSprite.Color, EaseType.QuadEaseIn)
+            triggerAni.AnimateColor((color) => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
                 .AddTime(0.05f, () => new Color(backgroundColor.r + 0.25f, backgroundColor.g + 0.25f, backgroundColor.b + 0.25f), EaseType.QuadEaseIn)
                 .AddTime(0.35f, () => backgroundColor)
                 .Build();
-        }
-
-        public void Dispose()
-        {
-            hoverAni.Stop();
-            hoverAni = null;
-            outAni.Stop();
-            outAni = null;
-            triggerAni.Stop();
-            triggerAni = null;
-
-            Destroy();
         }
 
         protected override void OnPointerEntered()
