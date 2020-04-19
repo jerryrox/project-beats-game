@@ -41,7 +41,7 @@ namespace PBGame.UI.Components.Dialog
                 button.Y = Height == 0f ? 0f : -Height - 2f;
                 
                 button.LabelText = label;
-                button.BackgroundColor = color;
+                button.Tint = color;
 
                 if(callback != null)
                     button.OnPointerClick += callback;

@@ -17,7 +17,7 @@ namespace PBGame.UI.Components.Common
         private const float HoveredInAlpha = 1f;
         private const float HoveredOutAlpha = 0.4f;
 
-        private ILabel label;
+        protected ILabel label;
 
 
         public string LabelText

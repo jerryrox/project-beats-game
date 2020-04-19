@@ -10,29 +10,18 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Dialog
 {
-    public class SelectionButton : HoverableTrigger, IHasLabel {
+    public class SelectionButton : BoxButton, IHasLabel, IHasTint {
 
         private const float BaseWidth = 720f;
         private const float HoverWidth = 880f;
 
-        private ILabel label;
-
-        private Color backgroundColor;
+        private Color tint;
 
 
-        public string LabelText
+        public Color Tint
         {
-            get => label.Text;
-            set => label.Text = value;
-        }
-
-        /// <summary>
-        /// The color of the background sprite.
-        /// </summary>
-        public Color BackgroundColor
-        {
-            get => backgroundColor;
-            set => hoverSprite.Color = backgroundColor = value;
+            get => tint;
+            set => hoverSprite.Color = tint = value;
         }
 
 
@@ -41,21 +30,28 @@ namespace PBGame.UI.Components.Dialog
         {
             Size = new Vector2(BaseWidth, 56f);
 
-            hoverSprite.Anchor = Anchors.Fill;
-            hoverSprite.RawSize = Vector2.zero;
             hoverSprite.ImageType = Image.Type.Sliced;
             hoverSprite.SpriteName = "parallel-64";
-                
-            label = CreateChild<Label>("label", 1);
-            {
-                label.Anchor = Anchors.Fill;
-                label.RawSize = Vector2.zero;
-                label.IsBold = true;
-                label.FontSize = 20;
-            }
+            hoverSprite.Alpha = 1f;
+
+            label.FontSize = 20;
+            label.Alpha = 1f;
 
             var resolution = root.Resolution;
+            triggerAni = new Anime();
+            triggerAni.AnimateFloat((x) => hoverSprite.Width = x)
+                .AddTime(0f, () => hoverSprite.Width, EaseType.QuadEaseIn)
+                .AddTime(0.25f, resolution.x * 1.2f)
+                .Build();
+            triggerAni.AnimateColor((color) => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
+                .AddTime(0.05f, () => new Color(tint.r + 0.25f, tint.g + 0.25f, tint.b + 0.25f), EaseType.QuadEaseIn)
+                .AddTime(0.35f, () => tint)
+                .Build();
+        }
 
+        public override void UseDefaultHoverAni()
+        {
             hoverInAni = new Anime();
             hoverInAni.AnimateFloat((x) => hoverSprite.Width = x)
                 .AddTime(0f, () => hoverSprite.Width, EaseType.QuadEaseIn)
@@ -63,7 +59,7 @@ namespace PBGame.UI.Components.Dialog
                 .Build();
             hoverInAni.AnimateColor((color) => hoverSprite.Color = color)
                 .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
-                .AddTime(0.25f, () => new Color(backgroundColor.r + 0.1f, backgroundColor.g + 0.1f, backgroundColor.b + 0.1f))
+                .AddTime(0.25f, () => new Color(tint.r + 0.1f, tint.g + 0.1f, tint.b + 0.1f))
                 .Build();
 
             hoverOutAni = new Anime();
@@ -73,18 +69,7 @@ namespace PBGame.UI.Components.Dialog
                 .Build();
             hoverOutAni.AnimateColor((color) => hoverSprite.Color = color)
                 .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
-                .AddTime(0.25f, () => backgroundColor)
-                .Build();
-
-            triggerAni = new Anime();
-            triggerAni.AnimateFloat((x) => hoverSprite.Width = x)
-                .AddTime(0f, () => hoverSprite.Width, EaseType.QuadEaseIn)
-                .AddTime(0.25f, resolution.x * 1.2f)
-                .Build();
-            triggerAni.AnimateColor((color) => hoverSprite.Color = color)
-                .AddTime(0f, () => hoverSprite.Color, EaseType.QuadEaseIn)
-                .AddTime(0.05f, () => new Color(backgroundColor.r + 0.25f, backgroundColor.g + 0.25f, backgroundColor.b + 0.25f), EaseType.QuadEaseIn)
-                .AddTime(0.35f, () => backgroundColor)
+                .AddTime(0.25f, () => tint)
                 .Build();
         }
 
