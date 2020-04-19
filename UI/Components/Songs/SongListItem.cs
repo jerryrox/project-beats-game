@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Assets.Caching;
@@ -19,7 +20,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SongListItem : UguiTrigger, ISongListItem {
+    public class SongListItem : BasicTrigger, IListItem {
 
         private const float AnimationSpeed = 4f;
 
@@ -61,7 +62,12 @@ namespace PBGame.UI.Components.Songs
 
         public int ItemIndex { get; set; }
 
+        /// <summary>
+        /// Returns the mapset currently being represented by this item.
+        /// </summary>
         public IMapset Mapset { get; private set; }
+
+        protected override bool IsClickToTrigger => true;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -76,18 +82,8 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            OnPointerEnter += () =>
+            OnTriggered += () =>
             {
-                soundPooler.Play("menuhit");
-            };
-            OnPointerExit += () =>
-            {
-
-            };
-            OnPointerClick += () =>
-            {
-                soundPooler.Play("menuclick");
-
                 if(Active && Mapset != null)
                     MapSelection.SelectMapset(Mapset);
             };
@@ -215,6 +211,9 @@ namespace PBGame.UI.Components.Songs
             UnbindEvents();
         }
 
+        /// <summary>
+        /// Sets the mapset which the item should represent.
+        /// </summary>
         public void SetMapset(IMapset mapset)
         {
             this.Mapset = mapset;

@@ -7,10 +7,16 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Initialize
 {
-    public class LoadDisplay : UguiObject, ILoadDisplay {
+    public class LoadDisplay : UguiObject {
 
+        /// <summary>
+        /// Returns the status displayer label.
+        /// </summary>
         public ILabel Status { get; private set; }
 
+        /// <summary>
+        /// Returns the progress displayer bar.
+        /// </summary>
         public IProgressBar Progress { get; private set; }
 
 
@@ -54,11 +60,17 @@ namespace PBGame.UI.Components.Initialize
             SetProgress(0f);
         }
 
+        /// <summary>
+        /// Sets the status to display.
+        /// </summary>
         public void SetStatus(string status)
         {
             Status.Text = status;
         }
 
+        /// <summary>
+        /// Sets the progress to display.
+        /// </summary>
         public void SetProgress(float progress)
         {
             Progress.Value = progress;

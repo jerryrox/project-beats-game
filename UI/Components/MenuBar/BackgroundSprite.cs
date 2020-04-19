@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
-    public class BackgroundSprite : UguiObject, IBackgroundSprite {
+    public class BackgroundSprite : UguiObject, IHasColor {
 
         /// <summary>
         /// The speed of color interpolation.
@@ -31,6 +31,9 @@ namespace PBGame.UI.Components.MenuBar
         private float animateTime = 1f;
 
 
+        /// <summary>
+        /// Returns the background sprite instance.
+        /// </summary>
         public ISprite Sprite { get; private set; }
 
         public Color Color

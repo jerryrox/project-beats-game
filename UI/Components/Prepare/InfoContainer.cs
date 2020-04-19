@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class InfoContainer : UguiObject, IInfoContainer {
+    public class InfoContainer : UguiObject {
 
-        private ISongMeta songMeta;
-        private IDetailContainer detailContainer;
+        private SongMeta songMeta;
+        private DetailContainer detailContainer;
 
 
         [InitWithDependency]

@@ -8,14 +8,20 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SearchMenu : UguiObject, ISearchMenu {
+    public class SearchMenu : UguiObject {
 
         private ISprite backgroundSprite;
 
 
-        public ISorter Sorter { get; private set; }
+        /// <summary>
+        /// Returns the mapset sorter object.
+        /// </summary>
+        public Sorter Sorter { get; private set; }
 
-        public ISearchBar SearchBar { get; private set; }
+        /// <summary>
+        /// Returns the search bar.
+        /// </summary>
+        public SearchBar SearchBar { get; private set; }
 
 
         [InitWithDependency]

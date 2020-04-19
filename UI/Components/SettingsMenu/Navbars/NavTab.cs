@@ -1,20 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBGame.Configurations.Settings;
 using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Components.SettingsMenu.Navbars
 {
-    public class NavTab : BoxIconTrigger {
+    public class NavTab : HighlightableTrigger {
 
-        private ISprite highlightSprite;
+        private ISprite iconSprite;
         private ISprite glowSprite;
-        private ISprite focusSprite;
 
         private SettingsTab tabData;
 
@@ -22,13 +18,10 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            iconSprite.Size = new Vector2(36f, 36f);
-
-            highlightSprite = CreateChild<UguiSprite>("highlight", 1);
+            iconSprite = CreateChild<UguiSprite>("icon", 10);
             {
-                highlightSprite.Anchor = Anchors.Fill;
-                highlightSprite.RawSize = Vector2.zero;
-                highlightSprite.Alpha = 0f;
+                iconSprite.Size = new Vector2(36f, 36f);
+                iconSprite.Alpha = 0.65f;
             }
             glowSprite = CreateChild<UguiSprite>("glow", 3);
             {
@@ -37,16 +30,19 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
                 glowSprite.SpriteName = "glow-128";
                 glowSprite.Alpha = 0;
             }
-            focusSprite = CreateChild<UguiSprite>("focus", 4);
-            {
-                focusSprite.Anchor = Anchors.RightStretch;
-                focusSprite.Pivot = Pivots.Right;
-                focusSprite.Width = 3f;
-                focusSprite.RawHeight = 0f;
-                focusSprite.Position = Vector3.zero;
-                focusSprite.Color = colorPreset.PrimaryFocus;
-                focusSprite.Alpha = 0.25f;
-            }
+
+            UseDefaultFocusAni();
+            UseDefaultHighlightAni();
+            UseDefaultHoverAni();
+
+            highlightAni.AnimateFloat(a => glowSprite.Alpha = a)
+                .AddTime(0f, () => glowSprite.Alpha)
+                .AddTime(0.25f, 1f)
+                .Build();
+            unhighlightAni.AnimateFloat(a => glowSprite.Alpha = a)
+                .AddTime(0f, () => glowSprite.Alpha)
+                .AddTime(0.25f, 0f)
+                .Build();
         }
 
         /// <summary>

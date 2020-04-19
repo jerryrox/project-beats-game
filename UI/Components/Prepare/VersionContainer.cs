@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class VersionContainer : UguiObject, IVersionContainer {
+    public class VersionContainer : UguiObject {
 
         private ISprite gradient;
         private IGraphicObject listContainer;
@@ -125,7 +125,7 @@ namespace PBGame.UI.Components.Prepare
         private void SetupVersionCell(IListItem item)
         {
             var maps = MapList;
-            var cell = item as IVersionButton;
+            var cell = item as VersionButton;
             var gameMode = GameConfiguration.RulesetMode.Value;
 
             cell.Setup(maps[cell.ItemIndex].GetPlayable(gameMode));

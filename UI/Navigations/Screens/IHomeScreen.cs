@@ -7,6 +7,6 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Returns the main logo on the screen.
         /// </summary>
-        ILogoDisplay LogoDisplay { get; }
+        LogoDisplay LogoDisplay { get; }
     }
 }

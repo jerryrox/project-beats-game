@@ -7,11 +7,11 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Returns the logo displayer on the screen.
         /// </summary>
-        ILogoDisplay LogoDisplay { get; }
+        LogoDisplay LogoDisplay { get; }
 
         /// <summary>
         /// Returns the load displayer on the screen.
         /// </summary>
-        ILoadDisplay LoadDisplay { get; }
+        LoadDisplay LoadDisplay { get; }
     }
 }

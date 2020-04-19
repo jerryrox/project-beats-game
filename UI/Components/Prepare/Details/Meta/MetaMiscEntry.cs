@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaMiscEntry : UguiObject, IMetaMiscEntry {
+    public class MetaMiscEntry : UguiObject, IHasLabel {
 
         private ILabel sectionLabel;
         private ILabel contentLabel;
@@ -20,6 +20,9 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             set => sectionLabel.Text = value;
         }
 
+        /// <summary>
+        /// Text displayed as content.
+        /// </summary>
         public string Content
         {
             get => contentLabel.Text;

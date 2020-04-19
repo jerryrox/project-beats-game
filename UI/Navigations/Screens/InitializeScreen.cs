@@ -15,9 +15,9 @@ namespace PBGame.UI.Navigations.Screens
         private IInitLoader initLoader;
 
 
-        public ILogoDisplay LogoDisplay { get; private set; }
+        public LogoDisplay LogoDisplay { get; private set; }
 
-        public ILoadDisplay LoadDisplay { get; private set; }
+        public LoadDisplay LoadDisplay { get; private set; }
 
         protected override int ScreenDepth => ViewDepths.InitializeScreen;
 

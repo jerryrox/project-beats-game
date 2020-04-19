@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
 using PBGame.Assets.Fonts;
 using PBGame.Graphics;
@@ -19,16 +20,16 @@ using UnityEngine.UI;
 namespace PBGame.UI.Components.ProfileMenu
 {
     // TODO: Support for logging in using other API providers.
-    public class LoggedOutView : UguiObject, ILoggedOutView
+    public class LoggedOutView : UguiObject, IHasAlpha
     {
         private CanvasGroup canvasGroup;
 
         private ISprite bg;
-        private ILoginInput username;
-        private ILoginInput password;
+        private LoginInput username;
+        private LoginInput password;
         private IToggle remember;
-        private IMenuButton loginButton;
-        private ILoader loader;
+        private BoxButton loginButton;
+        private Loader loader;
 
 
         public float Alpha
@@ -99,17 +100,16 @@ namespace PBGame.UI.Components.ProfileMenu
                     GameConfiguration.SaveCredentials.Value = remember.Value;
                 };
             }
-            loginButton = CreateChild<MenuButton>("login", 4);
+            loginButton = CreateChild<BoxButton>("login", 4);
             {
                 loginButton.Anchor = Anchors.TopStretch;
                 loginButton.OffsetLeft = loginButton.OffsetRight = 48f;
                 loginButton.Y = -162f;
                 loginButton.Height = 36f;
-
-                loginButton.Tint = colorPreset.Positive;
+                loginButton.Color = colorPreset.Positive;
                 loginButton.LabelText = "Login to osu!";
 
-                loginButton.OnPointerClick += () =>
+                loginButton.OnTriggered += () =>
                 {
                     DoLogin();
                 };

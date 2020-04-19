@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingCell : UguiSprite, IRankingCell {
+    public class RankingCell : UguiSprite, IListItem {
 
         private ILabel rank;
         private IGraphicObject scoreHolder;
@@ -30,6 +30,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
         public int ItemIndex { get; set; }
 
+        /// <summary>
+        /// Sets whether the cell order is the multiple of 2.
+        /// </summary>
         public bool IsEvenCell
         {
             set => Alpha = value ? 0.0625f : 0f;
@@ -98,7 +101,10 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
         }
 
-        public void AdjustToColumn(IRankingColumn rankingColumn)
+        /// <summary>
+        /// Adjusts widget positions based on the specified column display.
+        /// </summary>
+        public void AdjustToColumn(RankingColumn rankingColumn)
         {
             rank.X = rankingColumn.RankLabel.X;
             scoreHolder.X = rankingColumn.ScoreLabel.X;
@@ -115,6 +121,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
         }
 
+        /// <summary>
+        /// Sets ranking information to display.
+        /// </summary>
         public void SetRank(IRankInfo info)
         {
             var record = info.Record;

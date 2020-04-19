@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class Loader : UguiObject, ILoader {
+    public class Loader : UguiObject, IHasAlpha {
 
         private const float RotationSpeed = -150f;
 
@@ -76,6 +76,9 @@ namespace PBGame.UI.Components.ProfileMenu
                 hideAni.AddEvent(0.25f, () => pointerBlocker.IsRaycastTarget = false);
         }
 
+        /// <summary>
+        /// Shows the loader display.
+        /// </summary>
         public void Show()
         {
             if(pointerBlocker != null)
@@ -85,6 +88,9 @@ namespace PBGame.UI.Components.ProfileMenu
             showAni.PlayFromStart();
         }
 
+        /// <summary>
+        /// Hides the loader display.
+        /// </summary>
         public void Hide()
         {
             showAni.Stop();

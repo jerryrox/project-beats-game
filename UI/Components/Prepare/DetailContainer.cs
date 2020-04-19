@@ -9,14 +9,14 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class DetailContainer : UguiSprite, IDetailContainer {
+    public class DetailContainer : UguiSprite {
 
-        private IMenuHolder menuHolder;
-        private IVersionDisplay versionDisplay;
+        private MenuHolder menuHolder;
+        private VersionDisplay versionDisplay;
 
         private IScrollView contentScroll;
-        private IMetaContainer metaContainer;
-        private IRankingContainer rankingContainer;
+        private MetaContainer metaContainer;
+        private RankingContainer rankingContainer;
 
 
         [InitWithDependency]

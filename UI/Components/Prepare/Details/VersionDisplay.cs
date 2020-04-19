@@ -1,3 +1,4 @@
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
@@ -7,11 +8,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class VersionDisplay : UguiSprite, IVersionDisplay {
+    public class VersionDisplay : UguiSprite {
 
-        private IBoxIconTrigger backButton;
-        private IBoxIconTrigger nextButton;
-        private IVersionButton versionIcon;
+        private HoverableTrigger backButton;
+        private HoverableTrigger nextButton;
+        private VersionButton versionIcon;
         private ILabel nameLabel;
         private ILabel scaleLabel;
 
@@ -25,25 +26,29 @@ namespace PBGame.UI.Components.Prepare.Details
         {
             Alpha = 0.125f;
 
-            backButton = CreateChild<BoxIconTrigger>("back", 0);
+            backButton = CreateChild<HoverableTrigger>("back", 0);
             {
                 backButton.Anchor = Anchors.LeftStretch;
                 backButton.Pivot = Pivots.Left;
                 backButton.RawHeight = 0f;
                 backButton.Width = 80f;
                 backButton.X = 0f;
-                backButton.IconName = "icon-left";
+
+                backButton.CreateIconSprite(spriteName: "icon-left");
+                backButton.UseDefaultHoverAni();
 
                 backButton.OnTriggered += () => SelectMap(-1);
             }
-            nextButton = CreateChild<BoxIconTrigger>("next", 1);
+            nextButton = CreateChild<HoverableTrigger>("next", 1);
             {
                 nextButton.Anchor = Anchors.RightStretch;
                 nextButton.Pivot = Pivots.Right;
                 nextButton.RawHeight = 0f;
                 nextButton.Width = 80f;
                 nextButton.X = 0f;
-                nextButton.IconName = "icon-right";
+                
+                nextButton.CreateIconSprite(spriteName: "icon-right");
+                nextButton.UseDefaultHoverAni();
 
                 nextButton.OnTriggered += () => SelectMap(1);
             }

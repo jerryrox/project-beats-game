@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components;
+using PBGame.UI.Components.MenuBar;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -16,8 +17,6 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-using IMusicButton = PBGame.UI.Components.MenuBar.IMusicButton;
-
 namespace PBGame.UI.Navigations.Overlays
 {
     public class MusicMenuOverlay : BaseSubMenuOverlay, IMusicMenuOverlay {
@@ -28,14 +27,14 @@ namespace PBGame.UI.Navigations.Overlays
         private ISprite gradient;
         private ILabel title;
         private ILabel artist;
-        private IControlButton randomButton;
-        private IControlButton prevButton;
-        private IControlButton playButton;
-        private IControlButton nextButton;
-        private ITimeBar timeBar;
+        private ControlButton randomButton;
+        private ControlButton prevButton;
+        private ControlButton playButton;
+        private ControlButton nextButton;
+        private TimeBar timeBar;
 
 
-        public IMusicButton MusicButton { get; set; }
+        public MusicButton MusicButton { get; set; }
 
         protected override int OverlayDepth => ViewDepths.MusicMenuOverlay;
 
@@ -110,7 +109,7 @@ namespace PBGame.UI.Navigations.Overlays
                     randomButton.IconName = "icon-random";
                     randomButton.IconSize = 24f;
 
-                    randomButton.OnPointerDown += () =>
+                    randomButton.OnTriggered += () =>
                     {
                         MusicButton.SetRandomMusic();
                     };
@@ -124,7 +123,7 @@ namespace PBGame.UI.Navigations.Overlays
                     prevButton.IconName = "icon-backward";
                     prevButton.IconSize = 24f;
 
-                    prevButton.OnPointerDown += () =>
+                    prevButton.OnTriggered += () =>
                     {
                         MusicButton.SetPrevMusic();
                     };
@@ -137,7 +136,7 @@ namespace PBGame.UI.Navigations.Overlays
                     playButton.IconName = "icon-play";
                     playButton.IconSize = 32f;
 
-                    playButton.OnPointerDown += () =>
+                    playButton.OnTriggered += () =>
                     {
                         if(MusicController.IsPlaying)
                             MusicController.Pause();
@@ -154,7 +153,7 @@ namespace PBGame.UI.Navigations.Overlays
                     nextButton.IconName = "icon-forward";
                     nextButton.IconSize = 24f;
 
-                    nextButton.OnPointerDown += () =>
+                    nextButton.OnTriggered += () =>
                     {
                         MusicButton.SetNextMusic();
                     };

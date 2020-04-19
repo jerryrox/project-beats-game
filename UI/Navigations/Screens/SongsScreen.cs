@@ -11,13 +11,13 @@ namespace PBGame.UI.Navigations.Screens
 {
     public class SongsScreen : BaseScreen, ISongScreen {
 
-        public ISearchMenu SearchMenu { get; private set; }
+        public SearchMenu SearchMenu { get; private set; }
 
-        public ISongList SongList { get; private set; }
+        public SongList SongList { get; private set; }
 
-        public ISongMenu SongMenu { get; set; }
+        public SongMenu SongMenu { get; set; }
 
-        public IBackground Background { get; set; }
+        public Background Background { get; set; }
 
         protected override int ScreenDepth => ViewDepths.SongsScreen;
 

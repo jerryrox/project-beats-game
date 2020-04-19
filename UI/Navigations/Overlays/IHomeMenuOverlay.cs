@@ -27,21 +27,21 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Returns the quit menu button.
         /// </summary>
-        IMenuButton QuitButton { get; }
+        MenuButton QuitButton { get; }
 
         /// <summary>
         /// Returns the back menu button.
         /// </summary>
-        IMenuButton BackButton { get; }
+        MenuButton BackButton { get; }
 
         /// <summary>
         /// Returns the play menu button.
         /// </summary>
-        IMenuButton PlayButton { get; }
+        MenuButton PlayButton { get; }
 
         /// <summary>
         /// Returns the download menu button.
         /// </summary>
-        IMenuButton DownloadButton { get; }
+        MenuButton DownloadButton { get; }
     }
 }

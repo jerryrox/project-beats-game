@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SongList : UguiListView, ISongList {
+    public class SongList : UguiListView, IListView {
 
         private List<IMapset> mapsets;
 
@@ -113,7 +113,7 @@ namespace PBGame.UI.Components.Songs
             var mapset = mapsets[item.ItemIndex];
 
             // Cast the item into SongListItem and refresh it.
-            var songListItem = (ISongListItem)item;
+            var songListItem = (SongListItem)item;
             songListItem.SetMapset(mapset);
         }
 

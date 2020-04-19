@@ -11,11 +11,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingContainer : UguiSprite, IRankingContainer {
+    public class RankingContainer : UguiSprite {
 
-        private IRankingTabDisplay tabDisplay;
-        private IRankingColumn column;
-        private IRankingList rankingList;
+        private RankingTabDisplay tabDisplay;
+        private RankingColumn column;
+        private RankingList rankingList;
 
 
         [ReceivesDependency]
