@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Songs
                 backButton.CreateIconSprite(spriteName: "icon-arrow-left");
                 backButton.UseDefaultHoverAni();
 
-                backButton.OnPointerDown += () =>
+                backButton.OnTriggered += () =>
                 {
                     screenNavigator.Show<HomeScreen>();
                 };
@@ -61,7 +61,7 @@ namespace PBGame.UI.Components.Songs
                 randomButton.CreateIconSprite(spriteName: "icon-random");
                 randomButton.UseDefaultHoverAni();
 
-                randomButton.OnPointerDown += () =>
+                randomButton.OnTriggered += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetRandom());
                 };
@@ -78,7 +78,7 @@ namespace PBGame.UI.Components.Songs
                 prevButton.CreateIconSprite(spriteName: "icon-backward");
                 prevButton.UseDefaultHoverAni();
 
-                prevButton.OnPointerDown += () =>
+                prevButton.OnTriggered += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset));
                 };
@@ -95,7 +95,7 @@ namespace PBGame.UI.Components.Songs
                 nextButton.CreateIconSprite(spriteName: "icon-forward");
                 nextButton.UseDefaultHoverAni();
 
-                nextButton.OnPointerDown += () =>
+                nextButton.OnTriggered += () =>
                 {
                     mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset));
                 };
@@ -112,7 +112,7 @@ namespace PBGame.UI.Components.Songs
                 playButton.CreateIconSprite(spriteName: "icon-play");
                 playButton.UseDefaultHoverAni();
 
-                playButton.OnPointerDown += () =>
+                playButton.OnTriggered += () =>
                 {
                     screenNavigator.Show<PrepareScreen>();
                 };
@@ -126,7 +126,7 @@ namespace PBGame.UI.Components.Songs
                 previewBox.OffsetTop = -18f;
                 previewBox.OffsetBottom = 18f;
 
-                previewBox.OnPointerDown += () =>
+                previewBox.OnTriggered += () =>
                 {
                     screenNavigator.Show<PrepareScreen>();                 
                 };

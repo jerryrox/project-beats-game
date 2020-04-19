@@ -109,7 +109,7 @@ namespace PBGame.UI.Navigations.Overlays
                     randomButton.IconName = "icon-random";
                     randomButton.IconSize = 24f;
 
-                    randomButton.OnPointerDown += () =>
+                    randomButton.OnTriggered += () =>
                     {
                         MusicButton.SetRandomMusic();
                     };
@@ -123,7 +123,7 @@ namespace PBGame.UI.Navigations.Overlays
                     prevButton.IconName = "icon-backward";
                     prevButton.IconSize = 24f;
 
-                    prevButton.OnPointerDown += () =>
+                    prevButton.OnTriggered += () =>
                     {
                         MusicButton.SetPrevMusic();
                     };
@@ -136,7 +136,7 @@ namespace PBGame.UI.Navigations.Overlays
                     playButton.IconName = "icon-play";
                     playButton.IconSize = 32f;
 
-                    playButton.OnPointerDown += () =>
+                    playButton.OnTriggered += () =>
                     {
                         if(MusicController.IsPlaying)
                             MusicController.Pause();
@@ -153,7 +153,7 @@ namespace PBGame.UI.Navigations.Overlays
                     nextButton.IconName = "icon-forward";
                     nextButton.IconSize = 24f;
 
-                    nextButton.OnPointerDown += () =>
+                    nextButton.OnTriggered += () =>
                     {
                         MusicButton.SetNextMusic();
                     };

@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Dialog
                 button.Tint = color;
 
                 if(callback != null)
-                    button.OnPointerClick += callback;
+                    button.OnTriggered += callback;
             }
             buttons.Add(button);
 

@@ -109,7 +109,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 loginButton.Color = colorPreset.Positive;
                 loginButton.LabelText = "Login to osu!";
 
-                loginButton.OnPointerClick += () =>
+                loginButton.OnTriggered += () =>
                 {
                     DoLogin();
                 };

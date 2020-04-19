@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Assets.Caching;
@@ -19,7 +20,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SongListItem : UguiTrigger, IListItem {
+    public class SongListItem : BasicTrigger, IListItem {
 
         private const float AnimationSpeed = 4f;
 
@@ -66,6 +67,8 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         public IMapset Mapset { get; private set; }
 
+        protected override bool IsClickToTrigger => true;
+
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
@@ -79,18 +82,8 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            OnPointerEnter += () =>
+            OnTriggered += () =>
             {
-                soundPooler.Play("menuhit");
-            };
-            OnPointerExit += () =>
-            {
-
-            };
-            OnPointerClick += () =>
-            {
-                soundPooler.Play("menuclick");
-
                 if(Active && Mapset != null)
                     MapSelection.SelectMapset(Mapset);
             };

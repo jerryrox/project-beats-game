@@ -38,7 +38,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 detailButton.LabelText = "Detail";
                 detailButton.Color = colorPreset.Positive;
 
-                detailButton.OnPointerClick += () =>
+                detailButton.OnTriggered += () =>
                 {
                     // Hide this overlay
                     OverlayNavigator.Hide<ProfileMenuOverlay>();
@@ -54,7 +54,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 visitButton.LabelText = "Visit";
                 visitButton.Color = colorPreset.Warning;
 
-                visitButton.OnPointerClick += () =>
+                visitButton.OnTriggered += () =>
                 {
                     // Open browser to the user homepage.
                     if(UserManager.CurrentUser.Value != null)
@@ -70,7 +70,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 logoutButton.LabelText = "Log out";
                 logoutButton.Color = colorPreset.Negative;
 
-                logoutButton.OnPointerClick += () =>
+                logoutButton.OnTriggered += () =>
                 {
                     DoLogout();
                 };

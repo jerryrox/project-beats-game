@@ -57,7 +57,7 @@ namespace PBGame.UI.Components.Songs
                     button.SortType = sortType;
                     button.LabelText = sortType.ToString();
 
-                    button.OnPointerDown += () => SetSort(button.SortType);
+                    button.OnTriggered += () => SetSort(button.SortType);
                 }
                 sortButtons.Add(button);
             }
