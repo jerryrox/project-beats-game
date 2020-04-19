@@ -38,6 +38,13 @@ namespace PBGame.UI.Components.Common
             }
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            hoverInAni?.Stop();
+            hoverOutAni?.Stop();
+        }
+
         /// <summary>
         /// Creates default hover in/out animations.
         /// </summary>

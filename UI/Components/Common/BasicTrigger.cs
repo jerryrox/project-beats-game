@@ -72,6 +72,12 @@ namespace PBGame.UI.Components.Common
                 OnPointerDown += OnClickTriggered;
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            triggerAni?.Stop();
+        }
+
         /// <summary>
         /// Creates a new icon sprite for the trigger and returns it.
         /// </summary>

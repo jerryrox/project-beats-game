@@ -55,6 +55,13 @@ namespace PBGame.UI.Components.Common
             }
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            focusAni?.Stop();
+            unfocusAni?.Stop();
+        }
+
         /// <summary>
         /// Creates default focus/unfocus animations.
         /// </summary>

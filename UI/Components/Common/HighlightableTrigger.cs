@@ -73,6 +73,13 @@ namespace PBGame.UI.Components.Common
             }
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            highlightAni?.Stop();
+            unhighlightAni?.Stop();
+        }
+
         /// <summary>
         /// Creates default highlighting animation.
         /// </summary>
