@@ -16,7 +16,7 @@ namespace PBGame.UI.Navigations.Overlays
         private ISprite bgSprite;
         private ISprite blocker;
         private ILabel messageLabel;
-        private ISelectionHolder selectionHolder;
+        private SelectionHolder selectionHolder;
 
 
         protected override int OverlayDepth => ViewDepths.DialogOverlay;

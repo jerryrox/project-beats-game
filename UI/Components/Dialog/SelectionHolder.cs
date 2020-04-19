@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Dialog
 {
-    public class SelectionHolder : UguiObject, ISelectionHolder {
+    public class SelectionHolder : UguiObject {
 
         private ISprite bgSprite;
 
@@ -29,6 +29,9 @@ namespace PBGame.UI.Components.Dialog
             }
         }
 
+        /// <summary>
+        /// Adds a new selection button using specified values.
+        /// </summary>
         public void AddSelection(string label, Color color, Action callback)
         {
             SelectionButton button = CreateChild<SelectionButton>("selection", buttons.Count);
@@ -48,6 +51,9 @@ namespace PBGame.UI.Components.Dialog
             Height += Height == 0f ? button.Height : button.Height + 2f;
         }
 
+        /// <summary>
+        /// Clears all selection buttons.
+        /// </summary>
         public void RemoveSelections()
         {
             buttons.ForEach(b => b.Destroy());

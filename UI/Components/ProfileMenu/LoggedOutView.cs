@@ -20,16 +20,16 @@ using UnityEngine.UI;
 namespace PBGame.UI.Components.ProfileMenu
 {
     // TODO: Support for logging in using other API providers.
-    public class LoggedOutView : UguiObject, ILoggedOutView
+    public class LoggedOutView : UguiObject, IHasAlpha
     {
         private CanvasGroup canvasGroup;
 
         private ISprite bg;
-        private ILoginInput username;
-        private ILoginInput password;
+        private LoginInput username;
+        private LoginInput password;
         private IToggle remember;
         private BoxButton loginButton;
-        private ILoader loader;
+        private Loader loader;
 
 
         public float Alpha

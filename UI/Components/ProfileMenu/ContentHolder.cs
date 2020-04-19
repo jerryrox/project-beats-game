@@ -15,7 +15,7 @@ using UnityEngine.UI;
 namespace PBGame.UI.Components.ProfileMenu
 {
     // TODO: Support for logging in using other API providers.
-    public class ContentHolder : UguiObject, IContentHolder {
+    public class ContentHolder : UguiObject {
 
         private const float LoggedInHeight = 480f;
         private const float LoggedOutHeight = 204f;
@@ -24,14 +24,17 @@ namespace PBGame.UI.Components.ProfileMenu
         private ISprite background;
 
         private ISprite mask;
-        private ILoggedInView loggedInView;
-        private ILoggedOutView loggedOutView;
+        private LoggedInView loggedInView;
+        private LoggedOutView loggedOutView;
         private ISprite pointerBlocker;
 
         private IAnime loggedInAni;
         private IAnime loggedOutAni;
 
 
+        /// <summary>
+        /// Returns the glow sprite.
+        /// </summary>
         public ISprite GlowSprite => glow;
 
 

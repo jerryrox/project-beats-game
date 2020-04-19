@@ -6,20 +6,19 @@ using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class LoggedInView : UguiObject, ILoggedInView {
+    public class LoggedInView : UguiObject, IHasAlpha {
 
         private CanvasGroup canvasGroup;
 
-        private ICoverDisplay coverDisplay;
+        private CoverDisplay coverDisplay;
         private ISprite background;
         private ISprite shadow;
-        private IHeader header;
-        private IStatHolder statHolder;
-        private IMenuHolder menuHolder;
+        private Header header;
+        private StatHolder statHolder;
+        private MenuHolder menuHolder;
 
 
         public float Alpha

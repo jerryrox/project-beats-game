@@ -49,45 +49,5 @@ namespace PBGame.Animations
         /// Returns the general submenu overlay hide & container popup animation.
         /// </summary>
         IAnime GetSubMenuOverlayPopupHide(INavigationView overlay, Func<IGraphicObject> getContainer);
-
-        /// <summary>
-        /// Returns the default animation for initialize logo startup.
-        /// </summary>
-        IAnime GetInitLogoStartup(UI.Components.Initialize.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the default animation for initialize logo breathe.
-        /// </summary>
-        IAnime GetInitLogoBreathe(UI.Components.Initialize.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the default animation for initialize logo end.
-        /// </summary>
-        IAnime GetInitLogoEnd(UI.Components.Initialize.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the home screen logo pulsating animation.
-        /// </summary>
-        IAnime GetHomeLogoPulse(UI.Components.Home.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the home screen logo on-hover animation.
-        /// </summary>
-        IAnime GetHomeLogoHover(UI.Components.Home.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the home screen logo on-exit animation.
-        /// </summary>
-        IAnime GetHomeLogoExit(UI.Components.Home.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the home screen logo zoom in animation.
-        /// </summary>
-        IAnime GetHomeLogoZoomIn(UI.Components.Home.ILogoDisplay logoDisplay);
-
-        /// <summary>
-        /// Returns the home screen logo zoom out animation.
-        /// </summary>
-        IAnime GetHomeLogoZoomOut(UI.Components.Home.ILogoDisplay logoDisplay);
     }
 }

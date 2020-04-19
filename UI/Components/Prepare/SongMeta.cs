@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class SongMeta : UguiObject, ISongMeta {
+    public class SongMeta : UguiObject {
 
         private ISprite gradient;
         private ILabel title;

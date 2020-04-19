@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class LoginInput : InputBox, ILoginInput, IPointerClickHandler, IPointerDownHandler {
+    public class LoginInput : InputBox, IPointerClickHandler, IPointerDownHandler {
 
         public event Action OnFocus;
         public event Action OnUnfocus;
@@ -65,6 +65,9 @@ namespace PBGame.UI.Components.ProfileMenu
             }
         }
 
+        /// <summary>
+        /// Simulates invalid input value feedback to user.
+        /// </summary>
         public void ShowInvalid()
         {
             var col = ColorPreset.Negative;

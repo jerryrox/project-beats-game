@@ -13,13 +13,13 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDifficulty : UguiObject, IMetaDifficulty {
+    public class MetaDifficulty : UguiObject {
 
         private ILabel label;
         private IGrid grid;
-        private IMetaDifficultyInfo difficultyInfo;
-        private List<IMetaDifficultyScale> scales = new List<IMetaDifficultyScale>();
-        private IMetaDifficultyScale difficultyScale;
+        private MetaDifficultyInfo difficultyInfo;
+        private List<MetaDifficultyScale> scales = new List<MetaDifficultyScale>();
+        private MetaDifficultyScale difficultyScale;
 
 
         [ReceivesDependency]
@@ -118,7 +118,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// <summary>
         /// Returns the next available info cell, or creates a new one.
         /// </summary>
-        private IMetaDifficultyScale GetCell()
+        private MetaDifficultyScale GetCell()
         {
             var cell = scales.FirstOrDefault(c => !c.Active);
             if (cell != null)

@@ -13,7 +13,7 @@ using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingColumn : UguiSprite, IRankingColumn {
+    public class RankingColumn : UguiSprite {
 
         private const float JudgementLabelStartX = 380f;
         private const float JudgementLabelInterval = 70f;
@@ -21,18 +21,39 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         private List<ILabel> judgementLabels;
 
 
+        /// <summary>
+        /// Returns the rank # column label.
+        /// </summary>
         public ILabel RankLabel { get; private set; }
 
+        /// <summary>
+        /// Returns the score column label.
+        /// </summary>
         public ILabel ScoreLabel { get; private set; }
 
+        /// <summary>
+        /// Returns the accuracy column lable.
+        /// </summary>
         public ILabel AccuracyLabel { get; private set; }
 
+        /// <summary>
+        /// Returns the username column label.
+        /// </summary>
         public ILabel NameLabel { get; private set; }
 
+        /// <summary>
+        /// Returns the max combo column label.
+        /// </summary>
         public ILabel MaxComboLabel { get; private set; }
 
+        /// <summary>
+        /// Returns the list of judgemnt type column labels.
+        /// </summary>
         public IReadOnlyList<ILabel> JudgementLabels => judgementLabels;
 
+        /// <summary>
+        /// Returns the mod column label.
+        /// </summary>
         public ILabel ModLabel { get; private set; }
 
 
@@ -55,6 +76,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
         }
 
+        /// <summary>
+        /// Refreshes the types of columns displayed for judgemnt type hit count.
+        /// </summary>
         public void RefreshColumns(IModeService service)
         {
             // In case of a null service, just display all labels.

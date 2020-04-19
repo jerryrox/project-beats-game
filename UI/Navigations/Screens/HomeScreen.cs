@@ -9,7 +9,7 @@ namespace PBGame.UI.Navigations.Screens
 {
     public class HomeScreen : BaseScreen, IHomeScreen {
 
-        public ILogoDisplay LogoDisplay { get; private set; }
+        public LogoDisplay LogoDisplay { get; private set; }
 
         protected override int ScreenDepth => ViewDepths.HomeScreen;
 

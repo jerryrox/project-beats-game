@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class MenuHolder : UguiObject, IMenuHolder {
+    public class MenuHolder : UguiObject {
 
         private BoxButton detailButton;
         private BoxButton visitButton;

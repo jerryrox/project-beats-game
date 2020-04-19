@@ -13,7 +13,7 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class ProfileMenuOverlay : BaseSubMenuOverlay, IProfileMenuOverlay {
 
-        private IContentHolder content;
+        private ContentHolder content;
 
 
         protected override int OverlayDepth => ViewDepths.ProfileMenuOverlay;

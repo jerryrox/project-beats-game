@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class ProfileImage : UguiObject, IProfileImage {
+    public class ProfileImage : UguiObject {
 
         private ISprite glow;
         private ISprite mask;

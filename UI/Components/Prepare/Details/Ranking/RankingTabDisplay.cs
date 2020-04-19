@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingTabDisplay : UguiGrid, IRankingTabDisplay {
+    public class RankingTabDisplay : UguiGrid {
 
         private RankingTabButton globalTab;
         private RankingTabButton localTab;

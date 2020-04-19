@@ -31,7 +31,7 @@ namespace PBGame.UI.Navigations.Overlays
         private ControlButton prevButton;
         private ControlButton playButton;
         private ControlButton nextButton;
-        private ITimeBar timeBar;
+        private TimeBar timeBar;
 
 
         public MusicButton MusicButton { get; set; }

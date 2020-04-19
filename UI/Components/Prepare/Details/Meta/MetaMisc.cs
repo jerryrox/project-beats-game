@@ -10,10 +10,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaMisc : UguiSprite, IMetaMisc {
+    public class MetaMisc : UguiSprite {
 
-        private IMetaMiscEntry source;
-        private IMetaMiscEntry tags;
+        private MetaMiscEntry source;
+        private MetaMiscEntry tags;
 
 
         [ReceivesDependency]

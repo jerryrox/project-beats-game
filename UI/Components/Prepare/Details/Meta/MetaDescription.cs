@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDescription : UguiObject, IMetaDescription {
+    public class MetaDescription : UguiObject {
 
         private ILabel label;
         private IScrollView scrollView;

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class StatDisplay : UguiObject, IStatDisplay {
+    public class StatDisplay : UguiObject, IHasLabel {
 
         private ILabel label;
         private ISprite bg;
@@ -20,6 +20,9 @@ namespace PBGame.UI.Components.ProfileMenu
         private ILabel centerLabel;
 
 
+        /// <summary>
+        /// Progress displayed on the display.
+        /// </summary>
         public float Progress
         {
             get => fg.FillAmount;
@@ -32,6 +35,9 @@ namespace PBGame.UI.Components.ProfileMenu
             set => label.Text = value;
         }
 
+        /// <summary>
+        /// Text on the center of the display.
+        /// </summary>
         public string CenterText
         {
             get => centerLabel.Text;
