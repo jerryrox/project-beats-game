@@ -12,6 +12,11 @@ namespace PBGame.Configurations.Settings
         /// </summary>
         int TabCount { get; }
 
+        /// <summary>
+        /// Returns the settings tab data at specified index.
+        /// </summary>
+        SettingsTab this[int index] { get; }
+
 
         /// <summary>
         /// Returns all tabs in the settings.

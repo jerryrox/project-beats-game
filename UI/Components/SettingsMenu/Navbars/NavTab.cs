@@ -2,6 +2,7 @@ using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBGame.Configurations.Settings;
 using PBFramework.UI;
+using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -9,20 +10,24 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
 {
     public class NavTab : HighlightableTrigger {
 
-        private ISprite iconSprite;
         private ISprite glowSprite;
 
         private SettingsTab tabData;
 
 
+        /// <summary>
+        /// Returns the tab data represented by this object.
+        /// </summary>
+        public SettingsTab TabData => tabData;
+
+        protected override Anchors HighlightSpriteAnchor => Anchors.RightStretch;
+
+
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            iconSprite = CreateChild<UguiSprite>("icon", 10);
-            {
-                iconSprite.Size = new Vector2(36f, 36f);
-                iconSprite.Alpha = 0.65f;
-            }
+            CreateIconSprite(depth: 10);
+            
             glowSprite = CreateChild<UguiSprite>("glow", 3);
             {
                 glowSprite.Size = new Vector2(96f, 96f);
@@ -51,7 +56,7 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
         public void SetTabData(SettingsTab tabData)
         {
             this.tabData = tabData;
-            iconSprite.SpriteName = tabData.IconName;
+            IconName = tabData.IconName;
         }
     }
 }

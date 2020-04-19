@@ -11,6 +11,8 @@ namespace PBGame.Configurations.Settings
 
         public int TabCount => tabs.Count;
 
+        public SettingsTab this[int index] => tabs[index];
+
 
         public IEnumerable<SettingsTab> GetTabs() => tabs;
 
