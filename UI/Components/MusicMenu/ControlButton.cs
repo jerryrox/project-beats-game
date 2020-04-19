@@ -1,52 +1,40 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Audio;
-using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Components.MusicMenu
 {
-    public class ControlButton : ButtonTrigger, IControlButton {
+    public class ControlButton : HoverableTrigger {
 
-        private ISprite icon;
-
-
-        public string IconName
-        {
-            get => icon.SpriteName;
-            set => icon.SpriteName = value;
-        }
-
+        /// <summary>
+        /// The size of the icon.
+        /// </summary>
         public float IconSize
         {
-            get => icon.Width;
-            set => icon.Size = new Vector2(value, value);
+            get => iconSprite.Width;
+            set => iconSprite.Size = new Vector2(value, value);
         }
-
-        protected override bool IsClickToTrigger => false;
 
 
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            icon = CreateChild<UguiSprite>("icon", 0);
-            {
-                icon.Alpha = 0.5f;;
-            }
+            CreateIconSprite(depth: 0, alpha: 0.5f);
 
-            hoverAni = new Anime();
-            hoverAni.AnimateFloat(alpha => icon.Alpha = alpha)
-                .AddTime(0f, () => icon.Alpha)
+            // Remove useless sprite.
+            hoverSprite.Destroy();
+
+            hoverInAni = new Anime();
+            hoverInAni.AnimateFloat(alpha => iconSprite.Alpha = alpha)
+                .AddTime(0f, () => iconSprite.Alpha)
                 .AddTime(0.25f, 1f)
                 .Build();
 
-            outAni = new Anime();
-            outAni.AnimateFloat(alpha => icon.Alpha = alpha)
-                .AddTime(0f, () => icon.Alpha)
+            hoverOutAni = new Anime();
+            hoverOutAni.AnimateFloat(alpha => iconSprite.Alpha = alpha)
+                .AddTime(0f, () => iconSprite.Alpha)
                 .AddTime(0.25f, 0.5f)
                 .Build();
         }

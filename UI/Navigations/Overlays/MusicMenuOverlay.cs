@@ -27,10 +27,10 @@ namespace PBGame.UI.Navigations.Overlays
         private ISprite gradient;
         private ILabel title;
         private ILabel artist;
-        private IControlButton randomButton;
-        private IControlButton prevButton;
-        private IControlButton playButton;
-        private IControlButton nextButton;
+        private ControlButton randomButton;
+        private ControlButton prevButton;
+        private ControlButton playButton;
+        private ControlButton nextButton;
         private ITimeBar timeBar;
 
 

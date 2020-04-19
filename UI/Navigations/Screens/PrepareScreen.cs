@@ -11,7 +11,7 @@ namespace PBGame.UI.Navigations.Screens
         private const float InfoBriefY = 250f;
 
         private IInfoContainer infoContainer;
-        private IVersionContainer versionContainer;
+        private VersionContainer versionContainer;
 
         private bool isInfoDetailed = false;
         private IAnime infoDetailAni;

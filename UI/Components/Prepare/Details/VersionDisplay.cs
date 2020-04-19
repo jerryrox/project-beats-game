@@ -12,7 +12,7 @@ namespace PBGame.UI.Components.Prepare.Details
 
         private HoverableTrigger backButton;
         private HoverableTrigger nextButton;
-        private IVersionButton versionIcon;
+        private VersionButton versionIcon;
         private ILabel nameLabel;
         private ILabel scaleLabel;
 

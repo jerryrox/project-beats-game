@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
 using PBGame.Assets.Fonts;
 using PBGame.Graphics;
@@ -27,7 +28,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private ILoginInput username;
         private ILoginInput password;
         private IToggle remember;
-        private IMenuButton loginButton;
+        private BoxButton loginButton;
         private ILoader loader;
 
 
@@ -99,14 +100,13 @@ namespace PBGame.UI.Components.ProfileMenu
                     GameConfiguration.SaveCredentials.Value = remember.Value;
                 };
             }
-            loginButton = CreateChild<MenuButton>("login", 4);
+            loginButton = CreateChild<BoxButton>("login", 4);
             {
                 loginButton.Anchor = Anchors.TopStretch;
                 loginButton.OffsetLeft = loginButton.OffsetRight = 48f;
                 loginButton.Y = -162f;
                 loginButton.Height = 36f;
-
-                loginButton.Tint = colorPreset.Positive;
+                loginButton.Color = colorPreset.Positive;
                 loginButton.LabelText = "Login to osu!";
 
                 loginButton.OnPointerClick += () =>

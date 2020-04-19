@@ -24,13 +24,13 @@ namespace PBGame.UI.Navigations.Overlays
 
         public ISprite GradientSprite { get; private set; }
 
-        public IMenuButton QuitButton { get; private set; }
+        public MenuButton QuitButton { get; private set; }
 
-        public IMenuButton BackButton { get; private set; }
+        public MenuButton BackButton { get; private set; }
 
-        public IMenuButton PlayButton { get; private set; }
+        public MenuButton PlayButton { get; private set; }
 
-        public IMenuButton DownloadButton { get; private set; }
+        public MenuButton DownloadButton { get; private set; }
 
         protected override int OverlayDepth => ViewDepths.HomeMenuOverlay;
 
@@ -66,29 +66,41 @@ namespace PBGame.UI.Navigations.Overlays
                 gradientEffect = GradientSprite.AddEffect(new GradientEffect());
                 gradientEffect.Component.direction = UIGradient.Direction.Vertical;
             }
-            QuitButton = CreateChild<QuitMenuButton>("quit-button", 2);
+            QuitButton = CreateChild<MenuButton>("quit-button", 2);
             {
                 QuitButton.Anchor = Anchors.Bottom;
                 QuitButton.Y = 100;
                 QuitButton.Size = new Vector2(160f, 160f);
-                QuitButton.OnPointerClick += OnQuitButton;
+                QuitButton.LabelText = "Quit";
+                QuitButton.IconName = "icon-power";
+
+                QuitButton.OnTriggered += OnQuitButton;
             }
-            BackButton = CreateChild<BackMenuButton>("back-button", 2);
+            BackButton = CreateChild<MenuButton>("back-button", 2);
             {
                 BackButton.X = -160f;
                 BackButton.Size = new Vector2(160f, 160f);
-                BackButton.OnPointerClick += OnBackButton;
+                BackButton.LabelText = "Back";
+                BackButton.IconName = "icon-arrow-left";
+
+                BackButton.OnTriggered += OnBackButton;
             }
-            PlayButton = CreateChild<PlayMenuButton>("play-button", 2);
+            PlayButton = CreateChild<MenuButton>("play-button", 2);
             {
                 PlayButton.Size = new Vector2(160f, 160f);
-                PlayButton.OnPointerClick += OnPlayButton;
+                PlayButton.LabelText = "Play";
+                PlayButton.IconName = "icon-play";
+
+                PlayButton.OnTriggered += OnPlayButton;
             }
-            DownloadButton = CreateChild<DownloadMenuButton>("download-button", 2);
+            DownloadButton = CreateChild<MenuButton>("download-button", 2);
             {
                 DownloadButton.X = 160f;
                 DownloadButton.Size = new Vector2(160f, 160f);
-                DownloadButton.OnPointerClick += OnDownloadButton;
+                DownloadButton.LabelText = "Download";
+                DownloadButton.IconName = "icon-download";
+
+                DownloadButton.OnTriggered += OnDownloadButton;
             }
 
             OnEnableInited();
