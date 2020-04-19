@@ -10,8 +10,8 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
     public class RankingTabDisplay : UguiGrid, IRankingTabDisplay {
 
-        private IRankingTabButton globalTab;
-        private IRankingTabButton localTab;
+        private RankingTabButton globalTab;
+        private RankingTabButton localTab;
 
 
         [InitWithDependency]
