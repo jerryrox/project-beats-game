@@ -9,7 +9,10 @@ namespace PBGame.UI.Components.Common.Dropdown
     /// </summary>
     public class DropdownContext {
 
-        private Action<DropdownData> callback;
+        /// <summary>
+        /// Event called on dropdown data selection.
+        /// </summary>
+        public event Action<DropdownData> OnSelection;
 
 
         /// <summary>
@@ -23,18 +26,13 @@ namespace PBGame.UI.Components.Common.Dropdown
         public List<DropdownData> Datas { get; private set; } = new List<DropdownData>();
 
 
-        public DropdownContext(Action<DropdownData> callback)
-        {
-            this.callback = callback;
-        }
-
         /// <summary>
         /// Invokes selection of specified dropdown data.
         /// </summary>
         public void SelectData(DropdownData data)
         {
             Selection = data;
-            callback?.Invoke(data);
+            OnSelection?.Invoke(data);
         }
     }
 }
