@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.MenuBar
         /// </summary>
         public IMusicPlaylist MusicPlaylist { get; private set; }
 
-        protected override string IconName => "icon-music";
+        protected override string IconSpritename => "icon-music";
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }

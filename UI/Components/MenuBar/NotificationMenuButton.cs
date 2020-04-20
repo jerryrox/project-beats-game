@@ -5,7 +5,7 @@ namespace PBGame.UI.Components.MenuBar
 {
     public class NotificationMenuButton : BaseMenuButton
     {
-        protected override string IconName => "icon-notification";
+        protected override string IconSpritename => "icon-notification";
 
 
         [InitWithDependency]

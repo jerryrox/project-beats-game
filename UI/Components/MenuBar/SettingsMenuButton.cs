@@ -5,7 +5,7 @@ namespace PBGame.UI.Components.MenuBar
 {
     public class SettingsMenuButton : BaseMenuButton {
 
-        protected override string IconName => "icon-settings";
+        protected override string IconSpritename => "icon-settings";
 
 
         [InitWithDependency]

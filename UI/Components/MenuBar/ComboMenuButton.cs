@@ -5,7 +5,7 @@ namespace PBGame.UI.Components.MenuBar
 {
     public class ComboMenuButton : BaseMenuButton {
 
-        protected override string IconName => "icon-menu";
+        protected override string IconSpritename => "icon-menu";
 
 
         [InitWithDependency]

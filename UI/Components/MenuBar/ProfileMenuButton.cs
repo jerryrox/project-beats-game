@@ -24,7 +24,7 @@ namespace PBGame.UI.Components.MenuBar
         private CacherAgent<Texture2D> cacherAgent;
 
 
-        protected override string IconName => "";
+        protected override string IconSpritename => "";
 
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }

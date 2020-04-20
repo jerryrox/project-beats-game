@@ -11,25 +11,16 @@ namespace PBGame.UI.Components.MenuBar
 {
     public abstract class BaseMenuButton : FocusableTrigger {
 
-        protected ISprite iconSprite;
-
-
         /// <summary>
         /// Returns the spritename of the icon.
         /// </summary>
-        protected abstract string IconName { get; }
+        protected abstract string IconSpritename { get; }
 
 
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
-            iconSprite = CreateChild<UguiSprite>();
-            {
-                if(!string.IsNullOrEmpty(IconName))
-                    iconSprite.SpriteName = IconName;
-                iconSprite.Size = new Vector2(36f, 36f);
-                iconSprite.Alpha = 0.65f;
-            }
+            CreateIconSprite(spriteName: IconSpritename);
 
             UseDefaultHoverAni();
             UseDefaultFocusAni();
