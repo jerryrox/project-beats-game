@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private ISprite bg;
         private LoginInput username;
         private LoginInput password;
-        private IToggle remember;
+        private LabelledToggle remember;
         private BoxButton loginButton;
         private Loader loader;
 
@@ -78,26 +78,16 @@ namespace PBGame.UI.Components.ProfileMenu
                 password.InputType = InputField.InputType.Password;
                 password.Placeholder = "password";
             }
-            remember = CreateChild<UguiToggle>("remember", 3);
+            remember = CreateChild<LabelledToggle>("remember", 3);
             {
                 remember.Anchor = Anchors.Top;
-                remember.X = -64f;
-                remember.Y = -120f;
+                remember.Position = new Vector3(0f, -120f);
+                remember.Size = new Vector2(160f, 24f);
+                remember.LabelText = "Remember me";
 
-                remember.Background.Size = remember.Tick.Size = new Vector2(24f, 24f);
-                remember.Background.SpriteName = remember.Tick.SpriteName = "circle-32";
-                remember.Background.Color = Color.black;
-                remember.Tick.Color = colorPreset.PrimaryFocus;
-
-                remember.Label.X = 24f;
-                remember.Label.Width = 120f;
-                remember.Label.Font = fontManager.DefaultFont;
-                remember.Label.FontSize = 16;
-                remember.Label.Text = "Remember me";
-
-                remember.OnChange += (isToggled) =>
+                remember.OnFocused += (isFocused) =>
                 {
-                    GameConfiguration.SaveCredentials.Value = remember.Value;
+                    GameConfiguration.SaveCredentials.Value = isFocused;
                 };
             }
             loginButton = CreateChild<BoxButton>("login", 4);
@@ -122,7 +112,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             if (GameConfiguration.SaveCredentials.Value)
             {
-                remember.Value = true;
+                remember.IsFocused = true;
                 username.Text = GameConfiguration.Username.Value;
                 password.Text = GameConfiguration.Password.Value;
             }
@@ -204,7 +194,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 return;
             }
 
-            if (remember.Value)
+            if (remember.IsFocused)
             {
                 GameConfiguration.Username.Value = username.Text;
                 GameConfiguration.Password.Value = password.Text;
