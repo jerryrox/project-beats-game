@@ -40,11 +40,14 @@ namespace PBGame.UI.Components.Common
             set => iconHolder.Scale = new Vector3(value, value, 1f);
         }
 
-        public Color Tint
+        public virtual Color Tint
         {
             get => tint;
-            set =>
+            set
             {
+                outlineSprite.Tint = value;
+                focusSprite.Tint = value;
+                hoverSprite.Tint = value;
             }
         }
 
@@ -84,21 +87,21 @@ namespace PBGame.UI.Components.Common
                     outlineSprite.Offset = Offset.Zero;
                     outlineSprite.SpriteName = "outline-circle-16";
                     outlineSprite.ImageType = Image.Type.Sliced;
-                    outlineSprite.Color = colorPreset.PrimaryFocus;
+                    outlineSprite.Color = tint;
                 }
 
                 focusSprite.SetParent(iconHolder);
                 focusSprite.Offset = Offset.Zero;
                 focusSprite.SpriteName = "circle-16";
                 focusSprite.ImageType = Image.Type.Sliced;
-                focusSprite.Color = colorPreset.PrimaryFocus;
+                focusSprite.Color = tint;
                 focusSprite.Alpha = 0f;
 
                 hoverSprite.SetParent(iconHolder);
                 hoverSprite.Offset = new Offset(-13.5f);
                 hoverSprite.SpriteName = "glow-circle-16-x2";
                 hoverSprite.ImageType = Image.Type.Sliced;
-                hoverSprite.Color = colorPreset.PrimaryFocus;
+                hoverSprite.Color = tint;
                 hoverSprite.Alpha = 0f;
             }
 
