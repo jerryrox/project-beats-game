@@ -85,7 +85,7 @@ namespace PBGame.UI.Navigations.Overlays
                     title.Y = 92f;
                     title.Height = 30f;
                     title.IsBold = true;
-                    title.WrapText = false;
+                    title.WrapText = true;
                     title.FontSize = 18;
                 }
                 artist = mask.CreateChild<Label>("artist", 3);
@@ -94,7 +94,7 @@ namespace PBGame.UI.Navigations.Overlays
                     artist.SetOffsetHorizontal(16f);
                     artist.Y = 70f;
                     artist.Height = 30f;
-                    artist.WrapText = false;
+                    artist.WrapText = true;
                     artist.FontSize = 16;
                 }
                 randomButton = mask.CreateChild<ControlButton>("random", 4);
