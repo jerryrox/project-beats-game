@@ -42,10 +42,10 @@ namespace PBGame.UI.Components.Common
         }
 
         /// <summary>
-        /// Returns whether the button fires "click" event on pointer click.
+        /// Whether the button fires "click" event on pointer click.
         /// If false, it is triggered on pointer down.
         /// </summary>
-        protected virtual bool IsClickToTrigger => false;
+        public bool IsClickToTrigger { get; set; } = false;
 
         /// <summary>
         /// Returns the name of the sound to be played on pointer enter.
@@ -66,10 +66,8 @@ namespace PBGame.UI.Components.Common
         {
             OnPointerEnter += OnPointerEntered;
             OnPointerExit += OnPointerExited;
-            if (IsClickToTrigger)
-                OnPointerClick += OnClickTriggered;
-            else
-                OnPointerDown += OnClickTriggered;
+            OnPointerClick += OnPointerClicked;
+            OnPointerDown += OnPointerDowned;
         }
 
         protected override void OnDisable()
@@ -107,6 +105,24 @@ namespace PBGame.UI.Components.Common
         /// Event called on pointer exit event.
         /// </summary>
         protected virtual void OnPointerExited() {}
+
+        /// <summary>
+        /// Event called on pointer click event.
+        /// </summary>
+        protected virtual void OnPointerClicked()
+        {
+            if(IsClickToTrigger)
+                OnClickTriggered();
+        }
+
+        /// <summary>
+        /// Event called on pointer down event.
+        /// </summary>
+        protected virtual void OnPointerDowned()
+        {
+            if(!IsClickToTrigger)
+                OnClickTriggered();
+        }
 
         /// <summary>
         /// Event called on pointer down or click.

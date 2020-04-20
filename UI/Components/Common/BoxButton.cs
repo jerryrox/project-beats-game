@@ -52,6 +52,7 @@ namespace PBGame.UI.Components.Common
         [InitWithDependency]
         private void Init()
         {
+            IsClickToTrigger = true;
             hoverSprite.Alpha = HoveredOutAlpha;
 
             label = CreateChild<Label>("label", 1);

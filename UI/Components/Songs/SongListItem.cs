@@ -67,8 +67,6 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         public IMapset Mapset { get; private set; }
 
-        protected override bool IsClickToTrigger => true;
-
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
@@ -82,6 +80,8 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init(ISoundPooler soundPooler)
         {
+            IsClickToTrigger = true;
+
             OnTriggered += () =>
             {
                 if(Active && Mapset != null)
