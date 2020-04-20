@@ -12,7 +12,7 @@ namespace PBGame.UI.Components.Common
     /// <summary>
     /// HoverableTrigger which assumes a button with a colorable background and button label.
     /// </summary>
-    public class BoxButton : HoverableTrigger, IHasColor, IHasLabel {
+    public class BoxButton : HoverableTrigger, IHasColor, IHasTint, IHasLabel {
 
         private const float HoveredInAlpha = 1f;
         private const float HoveredOutAlpha = 0.4f;
@@ -34,6 +34,12 @@ namespace PBGame.UI.Components.Common
                 value.a = hoverSprite.Alpha;
                 hoverSprite.Color = value;
             }
+        }
+
+        public Color Tint
+        {
+            get => Color;
+            set => Color = value;
         }
 
         public float Alpha
