@@ -91,8 +91,7 @@ namespace PBGame.UI.Components.Songs
             container = CreateChild<UguiObject>("container", 0);
             {
                 container.Anchor = Anchors.CenterStretch;
-                container.OffsetTop = 5f;
-                container.OffsetBottom = 5f;
+                container.SetOffsetVertical(5f);
                 container.Width = UnfocusedWidth;
 
                 highlight = container.CreateChild<UguiSprite>("highlight", 0);
@@ -137,8 +136,7 @@ namespace PBGame.UI.Components.Songs
                     titleLabel.Pivot = Pivots.Top;
                     titleLabel.Y = -8f;
                     titleLabel.Height = 32f;
-                    titleLabel.OffsetLeft = 20f;
-                    titleLabel.OffsetRight = 20f;
+                    titleLabel.SetOffsetHorizontal(20f);
                     titleLabel.IsItalic = true;
                     titleLabel.IsBold = true;
                     titleLabel.WrapText = true;
@@ -156,8 +154,7 @@ namespace PBGame.UI.Components.Songs
                     artistLabel.Pivot = Pivots.Bottom;
                     artistLabel.Y = 8f;
                     artistLabel.Height = 24f;
-                    artistLabel.OffsetLeft = 20f;
-                    artistLabel.OffsetRight = 20f;
+                    artistLabel.SetOffsetHorizontal(20f);
                     artistLabel.WrapText = true;
                     artistLabel.Alignment = TextAnchor.MiddleLeft;
                     artistLabel.FontSize = 18;
@@ -173,8 +170,7 @@ namespace PBGame.UI.Components.Songs
                     creatorLabel.Pivot = Pivots.Bottom;
                     creatorLabel.Y = 8f;
                     creatorLabel.Height = 24f;
-                    creatorLabel.OffsetLeft = 20f;
-                    creatorLabel.OffsetRight = 20f;
+                    creatorLabel.SetOffsetHorizontal(20f);
                     creatorLabel.WrapText = true;
                     creatorLabel.Alignment = TextAnchor.MiddleRight;
                     creatorLabel.FontSize = 18;

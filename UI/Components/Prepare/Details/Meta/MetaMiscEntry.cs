@@ -46,9 +46,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             contentLabel = CreateChild<Label>("content", 1);
             {
                 contentLabel.Anchor = Anchors.Fill;
-                contentLabel.OffsetLeft = contentLabel.OffsetRight = 32f;
-                contentLabel.OffsetBottom = 0f;
-                contentLabel.OffsetTop = 62f;
+                contentLabel.Offset = new Offset(32f, 62f, 32f, 0f);
                 contentLabel.Alignment = TextAnchor.UpperLeft;
                 contentLabel.FontSize = 18;
                 contentLabel.WrapText = true;

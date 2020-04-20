@@ -43,8 +43,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             scrollView = CreateChild<UguiScrollView>("scrollview", 1);
             {
                 scrollView.Anchor = Anchors.Fill;
-                scrollView.OffsetLeft = scrollView.OffsetRight = scrollView.OffsetBottom = 32f;
-                scrollView.OffsetTop = 64f;
+                scrollView.Offset = new Offset(32f, 64f, 32f, 32f);
 
                 scrollView.Background.Alpha = 0f;
 

@@ -38,9 +38,8 @@ namespace PBGame.UI.Components.Songs
                 backButton.Pivot = Pivots.Left;
                 backButton.Width = 100f;
                 backButton.X = 0f;
-                backButton.OffsetTop = 0f;
-                backButton.OffsetBottom = 0f;
                 
+                backButton.SetOffsetVertical(0f);
                 backButton.CreateIconSprite(spriteName: "icon-arrow-left");
                 backButton.UseDefaultHoverAni();
 
@@ -55,8 +54,7 @@ namespace PBGame.UI.Components.Songs
                 randomButton.Pivot = Pivots.Left;
                 randomButton.X = 670f;
                 randomButton.Width = 80f;
-                randomButton.OffsetTop = 0f;
-                randomButton.OffsetBottom = 0f;
+                randomButton.SetOffsetVertical(0f);
 
                 randomButton.CreateIconSprite(spriteName: "icon-random");
                 randomButton.UseDefaultHoverAni();
@@ -72,8 +70,7 @@ namespace PBGame.UI.Components.Songs
                 prevButton.Pivot = Pivots.Left;
                 prevButton.X = 750f;
                 prevButton.Width = 80f;
-                prevButton.OffsetTop = 0f;
-                prevButton.OffsetBottom = 0f;
+                prevButton.SetOffsetVertical(0f);
 
                 prevButton.CreateIconSprite(spriteName: "icon-backward");
                 prevButton.UseDefaultHoverAni();
@@ -89,8 +86,7 @@ namespace PBGame.UI.Components.Songs
                 nextButton.Pivot = Pivots.Left;
                 nextButton.X = 830f;
                 nextButton.Width = 80f;
-                nextButton.OffsetTop = 0f;
-                nextButton.OffsetBottom = 0f;
+                nextButton.SetOffsetVertical(0f);
 
                 nextButton.CreateIconSprite(spriteName: "icon-forward");
                 nextButton.UseDefaultHoverAni();
@@ -106,8 +102,7 @@ namespace PBGame.UI.Components.Songs
                 playButton.Pivot = Pivots.Right;
                 playButton.X = 0f;
                 playButton.Width = 100f;
-                playButton.OffsetTop = 0f;
-                playButton.OffsetBottom = 0f;
+                playButton.SetOffsetVertical(0f);
 
                 playButton.CreateIconSprite(spriteName: "icon-play");
                 playButton.UseDefaultHoverAni();
@@ -123,8 +118,7 @@ namespace PBGame.UI.Components.Songs
                 previewBox.Pivot = Pivots.Left;
                 previewBox.X = 100f;
                 previewBox.Width = 560f;
-                previewBox.OffsetTop = -18f;
-                previewBox.OffsetBottom = 18f;
+                previewBox.SetOffsetVertical(-18f, 18f);
 
                 previewBox.OnTriggered += () =>
                 {

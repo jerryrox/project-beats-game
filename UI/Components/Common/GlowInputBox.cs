@@ -34,16 +34,15 @@ namespace PBGame.UI.Components
 
             backgroundSprite.Anchor = Anchors.BottomStretch;
             backgroundSprite.Y = 0f;
-            backgroundSprite.OffsetLeft = -12f;
-            backgroundSprite.OffsetRight = -12f;
+            backgroundSprite.SetOffsetHorizontal(-12f);
             backgroundSprite.Height = 20f;
             backgroundSprite.Color = colorPreset.PrimaryFocus;
             backgroundSprite.Alpha = 0.25f;
             backgroundSprite.SpriteName = "glow-bar";
             backgroundSprite.ImageType = Image.Type.Sliced;
 
-            ValueLabel.OffsetLeft = PlaceholderLabel.OffsetLeft = 4f;
-            ValueLabel.OffsetRight = PlaceholderLabel.OffsetRight = 4f;
+            valueLabel.SetOffsetHorizontal(4f);
+            PlaceholderLabel.SetOffsetHorizontal(4f);
             ValueLabel.FontSize = PlaceholderLabel.FontSize = 18;
             ValueLabel.WrapText = PlaceholderLabel.WrapText = true;
 

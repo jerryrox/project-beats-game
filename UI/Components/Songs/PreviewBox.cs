@@ -86,20 +86,18 @@ namespace PBGame.UI.Components.Songs
                 {
                     progressBar.Anchor = Anchors.BottomStretch;
                     progressBar.Pivot = Pivots.Bottom;
-                    progressBar.OffsetLeft = 22;
-                    progressBar.OffsetRight = 0f;
+                    progressBar.SetOffsetHorizontal(22f, 0f);
                     progressBar.Height = 6f;
                     progressBar.Y = 0f;
 
                     progressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
-                    progressBar.Foreground.OffsetTop = 2f;
+                    progressBar.Foreground.SetOffsetTop(2f);
                 }
                 titleLabel = mask.CreateChild<Label>("title", 2);
                 {
                     titleLabel.Anchor = Anchors.TopStretch;
                     titleLabel.Pivot = Pivots.Top;
-                    titleLabel.OffsetLeft = 20f;
-                    titleLabel.OffsetRight = 32f;
+                    titleLabel.SetOffsetHorizontal(20f, 32f);
                     titleLabel.Y = -8f;
                     titleLabel.Height = 30f;
                     titleLabel.IsBold = true;
@@ -116,8 +114,7 @@ namespace PBGame.UI.Components.Songs
                 {
                     artistLabel.Anchor = Anchors.BottomStretch;
                     artistLabel.Pivot = Pivots.Bottom;
-                    artistLabel.OffsetLeft = 32f;
-                    artistLabel.OffsetRight = 20f;
+                    artistLabel.SetOffsetHorizontal(32f, 20f);
                     artistLabel.Y = 8f;
                     artistLabel.Height = 30f;
                     artistLabel.Alignment = TextAnchor.LowerLeft;

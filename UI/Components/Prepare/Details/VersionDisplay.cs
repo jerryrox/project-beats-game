@@ -64,8 +64,7 @@ namespace PBGame.UI.Components.Prepare.Details
             nameLabel = CreateChild<Label>("title", 3);
             {
                 nameLabel.Anchor = Anchors.TopStretch;
-                nameLabel.OffsetLeft = 176f;
-                nameLabel.OffsetRight = 80f;
+                nameLabel.SetOffsetHorizontal(176f, 80f);
                 nameLabel.Y = -26f;
                 nameLabel.Height = 30f;
                 nameLabel.Alignment = TextAnchor.UpperLeft;
@@ -73,8 +72,7 @@ namespace PBGame.UI.Components.Prepare.Details
             scaleLabel = CreateChild<Label>("scale", 4);
             {
                 scaleLabel.Anchor = Anchors.BottomStretch;
-                scaleLabel.OffsetLeft = 176f;
-                scaleLabel.OffsetRight = 80f;
+                scaleLabel.SetOffsetHorizontal(176f, 80f);
                 scaleLabel.Y = 26f;
                 scaleLabel.Height = 30f;
                 scaleLabel.IsBold = true;

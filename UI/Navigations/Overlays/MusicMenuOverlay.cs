@@ -74,17 +74,14 @@ namespace PBGame.UI.Navigations.Overlays
                 gradient = mask.CreateChild<UguiSprite>("gradient", 1);
                 {
                     gradient.Anchor = Anchors.Fill;
-                    gradient.OffsetTop = -22f;
-                    gradient.OffsetLeft = 0f;
-                    gradient.OffsetRight = 0f;
-                    gradient.OffsetBottom = 0f;
+                    gradient.Offset = new Offset(0f, -22f, 0f, 0f);
                     gradient.SpriteName = "gradation-bottom";
                     gradient.Color = new Color(0f, 0f, 0f, 0.9f);
                 }
                 title = mask.CreateChild<Label>("title", 2);
                 {
                     title.Anchor = Anchors.BottomStretch;
-                    title.OffsetLeft = title.OffsetRight = 16f;
+                    title.SetOffsetHorizontal(16f);
                     title.Y = 92f;
                     title.Height = 30f;
                     title.IsBold = true;
@@ -94,7 +91,7 @@ namespace PBGame.UI.Navigations.Overlays
                 artist = mask.CreateChild<Label>("artist", 3);
                 {
                     artist.Anchor = Anchors.BottomStretch;
-                    artist.OffsetLeft = artist.OffsetRight = 16f;
+                    artist.SetOffsetHorizontal(16f);
                     artist.Y = 70f;
                     artist.Height = 30f;
                     artist.WrapText = false;
@@ -162,7 +159,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     timeBar.Anchor = Anchors.BottomStretch;
                     timeBar.Pivot = Pivots.Bottom;
-                    timeBar.OffsetLeft = timeBar.OffsetRight = 0f;
+                    timeBar.SetOffsetHorizontal(0f);
                     timeBar.Y = 0f;
                     timeBar.Height = 8f;
                 }

@@ -50,8 +50,7 @@ namespace PBGame.UI.Navigations.Overlays
                 float horizontalOffset = root.Resolution.x / 4;
 
                 messageLabel.Anchor = Anchors.MiddleStretch;
-                messageLabel.OffsetLeft = horizontalOffset;
-                messageLabel.OffsetRight = horizontalOffset;
+                messageLabel.SetOffsetHorizontal(horizontalOffset);
                 messageLabel.Alignment = TextAnchor.LowerCenter;
                 messageLabel.WrapText = true;
                 messageLabel.FontSize = 26;
@@ -62,8 +61,7 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 selectionHolder.Anchor = Anchors.MiddleStretch;
                 selectionHolder.Pivot = Pivots.Top;
-                selectionHolder.OffsetLeft = 0;
-                selectionHolder.OffsetRight = 0;
+                selectionHolder.SetOffsetHorizontal(0f);
                 selectionHolder.Y = 26f;
             }
             blocker = CreateChild<UguiSprite>("blocker", 4);

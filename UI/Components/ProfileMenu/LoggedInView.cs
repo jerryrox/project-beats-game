@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 coverDisplay.Anchor = Anchors.TopStretch;
                 coverDisplay.Pivot = Pivots.Top;
-                coverDisplay.OffsetLeft = coverDisplay.OffsetRight = 0f;
+                coverDisplay.SetOffsetHorizontal(0f);
                 coverDisplay.Y = 0f;
                 coverDisplay.Height = 106f;
             }
@@ -45,7 +45,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 background.Anchor = Anchors.BottomStretch;
                 background.Pivot = Pivots.Bottom;
-                background.OffsetLeft = background.OffsetRight = 0f;
+                background.SetOffsetHorizontal(0f);
                 background.Y = 0f;
                 background.Height = 374f;
                 background.Color = HexColor.Create("1D2126");
@@ -54,7 +54,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 {
                     shadow.Anchor = Anchors.TopStretch;
                     shadow.Pivot = Pivots.Bottom;
-                    shadow.OffsetLeft = shadow.OffsetRight = 0f;
+                    shadow.SetOffsetHorizontal(0f);
                     shadow.Y = 0f;
                     shadow.Height = 32f;
                     shadow.Color = new Color(0f, 0f, 0f, 0.5f);

@@ -64,7 +64,7 @@ namespace PBGame.UI.Components.ProfileMenu
             username = CreateChild<LoginInput>("username", 1);
             {
                 username.Anchor = Anchors.TopStretch;
-                username.OffsetLeft = username.OffsetRight = 32f;
+                username.SetOffsetHorizontal(32);
                 username.Y = -40f;
                 username.Height = 36f;
                 username.Placeholder = "username";
@@ -72,7 +72,7 @@ namespace PBGame.UI.Components.ProfileMenu
             password = CreateChild<LoginInput>("password", 2);
             {
                 password.Anchor = Anchors.TopStretch;
-                password.OffsetLeft = password.OffsetRight = 32f;
+                password.SetOffsetHorizontal(32f);
                 password.Y = -80f;
                 password.Height = 36f;
                 password.InputType = InputField.InputType.Password;
@@ -103,7 +103,7 @@ namespace PBGame.UI.Components.ProfileMenu
             loginButton = CreateChild<BoxButton>("login", 4);
             {
                 loginButton.Anchor = Anchors.TopStretch;
-                loginButton.OffsetLeft = loginButton.OffsetRight = 48f;
+                loginButton.SetOffsetHorizontal(48f);
                 loginButton.Y = -162f;
                 loginButton.Height = 36f;
                 loginButton.Color = colorPreset.Positive;

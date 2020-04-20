@@ -48,8 +48,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             rankingList = CreateChild<RankingList>("list", 2);
             {
                 rankingList.Anchor = Anchors.Fill;
-                rankingList.OffsetLeft = rankingList.OffsetRight = rankingList.OffsetBottom = 0;
-                rankingList.OffsetTop = 88f;
+                rankingList.Offset = new Offset(0f, 88f, 0f, 0f);
             }
 
             OnEnableInited();

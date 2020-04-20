@@ -39,8 +39,7 @@ namespace PBGame.UI.Components.Initialize
             Progress = CreateChild<UguiProgressBar>("progress", 1);
             {
                 Progress.Anchor = Anchors.MiddleStretch;
-                Progress.OffsetLeft = 0f;
-                Progress.OffsetRight = 0f;
+                Progress.SetOffsetHorizontal(0f);
                 Progress.Y = 2f;
                 Progress.Height = 10f;
 

@@ -75,7 +75,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 {
                     loggedInView.Anchor = Anchors.BottomStretch;
                     loggedInView.Pivot = Pivots.Bottom;
-                    loggedInView.OffsetLeft = loggedInView.OffsetRight = 0f;
+                    loggedInView.SetOffsetHorizontal(0f);
                     loggedInView.Y = 0f;
                     loggedInView.Height = LoggedInHeight;
                 }
@@ -83,7 +83,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 {
                     loggedOutView.Anchor = Anchors.BottomStretch;
                     loggedOutView.Pivot = Pivots.Bottom;
-                    loggedOutView.OffsetLeft = loggedOutView.OffsetRight = 0f;
+                    loggedOutView.SetOffsetHorizontal(0f);
                     loggedOutView.Y = 0f;
                     loggedOutView.Height = LoggedOutHeight;
                 }

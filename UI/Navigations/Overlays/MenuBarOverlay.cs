@@ -51,8 +51,7 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 container.Anchor = Anchors.TopStretch;
                 container.Pivot = Pivots.Top;
-                container.OffsetLeft = 0f;
-                container.OffsetRight = 0f;
+                container.SetOffsetHorizontal(0f);
                 container.Height = 64f;
                 container.Y = 0f;
 
@@ -60,15 +59,13 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     BackgroundSprite.Anchor = Anchors.Fill;
                     BackgroundSprite.RawSize = Vector2.zero;
-                    BackgroundSprite.OffsetTop = 0f;
-                    BackgroundSprite.OffsetBottom = 0f;
+                    BackgroundSprite.SetOffsetVertical(0f);
                 }
                 ComboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu", 1);
                 {
                     ComboMenuButton.Anchor = Anchors.LeftStretch;
                     ComboMenuButton.Pivot = Pivots.Left;
-                    ComboMenuButton.OffsetTop = 0;
-                    ComboMenuButton.OffsetBottom = 0;
+                    ComboMenuButton.SetOffsetVertical(0f);
                     ComboMenuButton.X = 0f;
                     ComboMenuButton.Width = 80f;
                 }
@@ -76,8 +73,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     ProfileButton.Anchor = Anchors.LeftStretch;
                     ProfileButton.Pivot = Pivots.Left;
-                    ProfileButton.OffsetTop = 0;
-                    ProfileButton.OffsetBottom = 0;
+                    ProfileButton.SetOffsetVertical(0f);
                     ProfileButton.X = 80f;
                     ProfileButton.Width = 220f;
                 }
@@ -85,8 +81,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     MusicButton.Anchor = Anchors.RightStretch;
                     MusicButton.Pivot = Pivots.Right;
-                    MusicButton.OffsetTop = 0f;
-                    MusicButton.OffsetBottom = 0f;
+                    MusicButton.SetOffsetVertical(0f);
                     MusicButton.X = -160f;
                     MusicButton.Width = 80f;
                 }
@@ -94,8 +89,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     SettingsMenuButton.Anchor = Anchors.RightStretch;
                     SettingsMenuButton.Pivot = Pivots.Right;
-                    SettingsMenuButton.OffsetTop = 0;
-                    SettingsMenuButton.OffsetBottom = 0;
+                    SettingsMenuButton.SetOffsetVertical(0f);
                     SettingsMenuButton.X = -80f;
                     SettingsMenuButton.Width = 80f;
                 }
@@ -103,8 +97,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     NotificationMenuButton.Anchor = Anchors.RightStretch;
                     NotificationMenuButton.Pivot = Pivots.Right;
-                    NotificationMenuButton.OffsetTop = 0;
-                    NotificationMenuButton.OffsetBottom = 0;
+                    NotificationMenuButton.SetOffsetVertical(0f);
                     NotificationMenuButton.X = 0f;
                     NotificationMenuButton.Width = 80f;
                 }

@@ -23,8 +23,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             description = CreateChild<MetaDescription>("description", 0);
             {
                 description.Anchor = Anchors.Fill;
-                description.OffsetLeft = description.OffsetTop = description.OffsetBottom = 0f;
-                description.OffsetRight = 620f;
+                description.Offset = new Offset(0f, 0f, 620f, 0f);
             }
             misc = CreateChild<MetaMisc>("misc", 1);
             {

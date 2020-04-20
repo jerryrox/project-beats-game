@@ -44,8 +44,7 @@ namespace PBGame.UI.Components.Prepare
             {
                 contentScroll.Anchor = Anchors.Fill;
                 contentScroll.RawWidth = -128f;
-                contentScroll.OffsetTop = 128f;
-                contentScroll.OffsetBottom = 0f;
+                contentScroll.SetOffsetVertical(128f, 0f);
 
                 contentScroll.Background.Alpha = 0f;
 

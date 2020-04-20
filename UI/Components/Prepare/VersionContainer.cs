@@ -58,7 +58,7 @@ namespace PBGame.UI.Components.Prepare
                 {
                     versionList.Anchor = Anchors.Fill;
                     versionList.RawSize = new Vector2(-64f, 0f);
-                    versionList.OffsetTop = versionList.OffsetBottom = 0f;
+                    versionList.SetOffsetVertical(0f);
 
                     versionList.Background.Alpha = 0f;
                     versionList.UseMask = false;

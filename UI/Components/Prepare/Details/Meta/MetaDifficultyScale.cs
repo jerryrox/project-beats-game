@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             {
                 progress.Anchor = Anchors.BottomStretch;
                 progress.Pivot = Pivots.Bottom;
-                progress.OffsetLeft = progress.OffsetRight = 0f;
+                progress.SetOffsetHorizontal(0f);
                 progress.Y = 0f;
                 progress.Height = 2f;
 

@@ -47,8 +47,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             grid = CreateChild<UguiGrid>("grid", 1);
             {
                 grid.Anchor = Anchors.Fill;
-                grid.OffsetLeft = grid.OffsetRight = grid.OffsetBottom = 32f;
-                grid.OffsetTop = 64f;
+                grid.Offset = new Offset(32f, 64f, 32f, 32f);
                 grid.Axis = GridLayoutGroup.Axis.Vertical;
                 grid.CellSize = new Vector2(236f, 36f);
 

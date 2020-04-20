@@ -32,15 +32,15 @@ namespace PBGame.UI.Components.Songs
             OnChanged += OnSearchBarChanged;
             OnSubmitted += OnSearchBarSubmitted;
 
-            ValueLabel.OffsetRight = PlaceholderLabel.OffsetRight = 40f;
+            ValueLabel.SetOffsetRight(40f);
+            PlaceholderLabel.SetOffsetRight(40);
 
             icon = CreateChild<UguiSprite>("icon", 5);
             {
                 icon.Anchor = Anchors.RightStretch;
                 icon.Pivot = Pivots.Right;
                 icon.X = -8f;
-                icon.OffsetTop = 8f;
-                icon.OffsetBottom = 8f;
+                icon.SetOffsetVertical(8f);
                 icon.Width = icon.Height;
                 icon.SpriteName = "icon-search";
             }

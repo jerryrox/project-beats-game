@@ -38,8 +38,7 @@ namespace PBGame.UI.Components.Songs
                 Sorter.Anchor = Anchors.LeftStretch;
                 Sorter.Pivot = Pivots.Left;
                 Sorter.X = 0f;
-                Sorter.OffsetTop = 0f;
-                Sorter.OffsetBottom = 0f;
+                Sorter.SetOffsetVertical(0f);
             }
             SearchBar = CreateChild<SearchBar>("search-bar", 2);
             {
@@ -47,8 +46,7 @@ namespace PBGame.UI.Components.Songs
                 SearchBar.Pivot = Pivots.Right;
                 SearchBar.X = -32f;
                 SearchBar.Width = 420f;
-                SearchBar.OffsetTop = 3f;
-                SearchBar.OffsetBottom = 15f;
+                SearchBar.SetOffsetVertical(3f, 15f);
             }
         }
     }
