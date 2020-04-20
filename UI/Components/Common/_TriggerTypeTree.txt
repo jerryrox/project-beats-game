@@ -33,6 +33,15 @@ BasicTrigger
                 LabelledToggle
                 - Toggles with added label.
             }
+
+            DropdownMenuItem
+            - Label
+            - Contained in dropdown menus.
         }
+
+        DropdownButton
+        - Down icon
+        - Label
+        - Opens dropdown on trigger
     }
 }

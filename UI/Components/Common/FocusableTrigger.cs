@@ -14,7 +14,6 @@ namespace PBGame.UI.Components.Common
     /// </summary>
     public class FocusableTrigger : HoverableTrigger
     {
-
         /// <summary>
         /// Event called on trigger state change.
         /// </summary>
