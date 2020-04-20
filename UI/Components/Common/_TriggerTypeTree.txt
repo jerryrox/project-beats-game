@@ -26,6 +26,13 @@ BasicTrigger
             - Default unhighlight animation.
             - highlightAni.
             - unhighlightAni.
+
+            BasicToggle
+            - Toggle with only the toggle icon.
+            {
+                LabelledToggle
+                - Toggles with added label.
+            }
         }
     }
 }
