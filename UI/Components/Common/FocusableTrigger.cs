@@ -42,6 +42,11 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected virtual int FocusSpriteDepth => 1;
 
+        /// <summary>
+        /// Returns whether SetFocus must only occur when the previous and new focus states are different.
+        /// </summary>
+        protected virtual bool ChangeFocusIfDifferent => true;
+
 
         [InitWithDependency]
         private void Init()
@@ -85,7 +90,7 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected void SetFocused(bool focused, bool animate)
         {
-            if (this.isFocused == focused)
+            if (ChangeFocusIfDifferent && this.isFocused == focused)
                 return;
 
             this.isFocused = focused;
@@ -115,13 +120,10 @@ namespace PBGame.UI.Components.Common
         {
             if (focusAni != null)
             {
-                if (focusAni != null)
-                {
-                    if (animate)
-                        focusAni.PlayFromStart();
-                    else
-                        focusAni.Seek(focusAni.Duration);
-                }
+                if (animate)
+                    focusAni.PlayFromStart();
+                else
+                    focusAni.Seek(focusAni.Duration);
             }
         }
 
