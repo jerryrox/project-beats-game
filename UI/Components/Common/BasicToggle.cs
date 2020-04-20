@@ -40,6 +40,11 @@ namespace PBGame.UI.Components.Common
             set => iconHolder.Scale = new Vector3(value, value, 1f);
         }
 
+        /// <summary>
+        /// Whether the toggle should be focused automatically on trigger.
+        /// </summary>
+        public bool AutoFocus { get; set; } = true;
+
         public virtual Color Tint
         {
             get => tint;
@@ -60,6 +65,12 @@ namespace PBGame.UI.Components.Common
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
+            OnTriggered += () =>
+            {
+                if(AutoFocus)
+                    IsFocused = !IsFocused;
+            };
+
             tint = colorPreset.PrimaryFocus;
 
             var touchArea = CreateChild<UguiSprite>("touch-area", -100);
