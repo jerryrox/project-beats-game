@@ -18,6 +18,8 @@ namespace PBGame.Graphics
 
         public Color Warning { get; private set; } = HexColor.Create("D19500");
 
+        public Color Passive { get; private set; } = HexColor.Create("1F77BC");
+
 
         public Color GetDifficultyColor(DifficultyTypes type)
         {
