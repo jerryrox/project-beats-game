@@ -125,8 +125,8 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             loader.Show();
 
-            username.SetFocus(false);
-            password.SetFocus(false);
+            username.IsFocused = false;
+            password.IsFocused = false;
 
             // Start request.
             var request = new LoginRequest(username.Text, password.Text);

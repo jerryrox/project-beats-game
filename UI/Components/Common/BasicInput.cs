@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components.Common
 {
-    public class BasicInput : UguiInputBox, IHasTint,
+    public class BasicInput : UguiInputBox, IHasTint, IHasIcon,
         IPointerClickHandler, IPointerDownHandler,
         IPointerEnterHandler, IPointerExitHandler
     {
@@ -25,6 +25,8 @@ namespace PBGame.UI.Components.Common
 
         protected ISprite hoverSprite;
         protected ISprite focusSprite;
+
+        protected ISprite iconSprite;
 
         protected IAnime hoverInAni;
         protected IAnime hoverOutAni;
@@ -42,6 +44,16 @@ namespace PBGame.UI.Components.Common
         {
             get => component.isFocused;
             set => SetFocus(value);
+        }
+
+        public string IconName
+        {
+            get => iconSprite?.SpriteName;
+            set
+            {
+                if(iconSprite != null)
+                    iconSprite.SpriteName = value;
+            }
         }
 
         public override Color Color
@@ -71,9 +83,16 @@ namespace PBGame.UI.Components.Common
             // Assign default font.
             valueLabel.Font = placeholderLabel.Font = fontManager.DefaultFont;
 
-            backgroundSprite.SpriteName = "circle-16";
-            backgroundSprite.ImageType = Image.Type.Sliced;
-            backgroundSprite.Color = new Color(0f, 0f, 0f, 0.5f);
+            // By default, background sprite component is the input itself so we need to separate that.
+            backgroundSprite.SpriteName = "null";
+            backgroundSprite = CreateChild<UguiSprite>("bg", -10);
+            {
+                backgroundSprite.Anchor = Anchors.Fill;
+                backgroundSprite.Offset = Offset.Zero;
+                backgroundSprite.SpriteName = "circle-16";
+                backgroundSprite.ImageType = Image.Type.Sliced;
+                backgroundSprite.Color = new Color(0f, 0f, 0f, 0.5f);
+            }
 
             placeholderLabel.Offset = valueLabel.Offset = new Offset(16f, 0f);
             placeholderLabel.Alignment = valueLabel.Alignment = TextAnchor.MiddleLeft;
@@ -134,6 +153,27 @@ namespace PBGame.UI.Components.Common
                 .AddTime(0f, () => focusSprite.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
+        }
+
+        /// <summary>
+        /// Creates a new icon sprite for the trigger and returns it.
+        /// </summary>
+        public ISprite CreateIconSprite(int depth = 5, string spriteName = null, float size = 24f, float alpha = 0.65f)
+        {
+            if (iconSprite != null)
+                return iconSprite;
+
+            iconSprite = CreateChild<UguiSprite>("icon", depth);
+            iconSprite.Anchor = Anchors.Right;
+            iconSprite.Position = new Vector2(-24f, 0f);
+            if (!string.IsNullOrEmpty(spriteName))
+                iconSprite.SpriteName = spriteName;
+            iconSprite.Size = new Vector2(size, size);
+            iconSprite.Alpha = alpha;
+
+            valueLabel.SetOffsetRight(48f);
+            placeholderLabel.SetOffsetRight(48f);
+            return iconSprite;
         }
 
         /// <summary>

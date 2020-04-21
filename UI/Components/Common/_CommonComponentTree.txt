@@ -45,3 +45,7 @@ BasicTrigger
         - Opens dropdown on trigger
     }
 }
+
+BasicInput
+- hoverSprite & animations.
+- focusSprite & animations.
