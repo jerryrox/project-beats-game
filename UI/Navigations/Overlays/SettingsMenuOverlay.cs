@@ -35,6 +35,12 @@ namespace PBGame.UI.Navigations.Overlays
             container.RawHeight = -32f;
             container.Width = 480f;
 
+            var bg = container.CreateChild<UguiSprite>("bg", -100);
+            {
+                bg.Anchor = Anchors.Fill;
+                bg.Offset = Offset.Zero;
+                bg.Color = new Color(0f, 0f, 0f, 0.5f);
+            }
             navBar = container.CreateChild<NavBar>("navBar", 1);
             {
                 navBar.Anchor = Anchors.RightStretch;
