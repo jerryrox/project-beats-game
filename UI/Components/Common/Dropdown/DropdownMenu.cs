@@ -25,6 +25,11 @@ namespace PBGame.UI.Components.Common.Dropdown
         private const float MoveAniAmount = -10f;
 
         /// <summary>
+        /// Amount of padding to apply when constraining menu position.
+        /// </summary>
+        private const float ConstraintPadding = 10f;
+
+        /// <summary>
         /// The size of each menu item.
         /// </summary>
         public static readonly Vector2 ItemSize = new Vector2(ContainerWidth, 40f);
@@ -44,6 +49,11 @@ namespace PBGame.UI.Components.Common.Dropdown
 
         private DropdownContext context;
 
+
+        /// <summary>
+        /// Returns the size of the menu items holder.
+        /// </summary>
+        public Vector2 HolderSize => holder.Size;
 
         /// <summary>
         /// Returns whether the show or hide animation is currently playing.
@@ -153,6 +163,18 @@ namespace PBGame.UI.Components.Common.Dropdown
         }
 
         /// <summary>
+        /// Positions the menu at the specified position as best possible within boundary.
+        /// </summary>
+        public void PositionMenu(Vector3 position, Space space)
+        {
+            // We must work in local position.
+            if (space == Space.World)
+                position = transform.InverseTransformPoint(position);
+            // Set processed position.
+            holder.Position = ConstrainMenuBounds(position);
+        }
+
+        /// <summary>
         /// Closes this dropdown menu.
         /// </summary>
         public void CloseMenu()
@@ -168,6 +190,38 @@ namespace PBGame.UI.Components.Common.Dropdown
             context = null;
 
             hideAni.PlayFromStart();
+        }
+
+        /// <summary>
+        /// Makes sure the menu does not go outside of the view boundary.
+        /// </summary>
+        private Vector2 ConstrainMenuBounds(Vector2 position)
+        {
+            // Get corners of the menu holder.
+            Vector2 topLeft = new Vector2(
+                position.x - ContainerWidth * 0.5f,
+                position.y + holder.Height * 0.5f
+            );
+            Vector2 bottomRight = new Vector2(
+                position.x + ContainerWidth * 0.5f,
+                position.y - holder.Height * 0.5f
+            );
+
+            // Get boundary of the menu position domain.
+            Vector2 topLeftBound = new Vector2(
+                -Width * 0.5f + ConstraintPadding,
+                Height * 0.5f - ConstraintPadding
+            );
+            Vector2 bottomRightBound = new Vector2(
+                Width * 0.5f - ConstraintPadding,
+                -Height * 0.5f + ConstraintPadding
+            );
+
+            position.x += Mathf.Max(topLeftBound.x - topLeft.x, 0f);
+            position.y -= Mathf.Max(topLeft.y - topLeftBound.y, 0f);
+            position.x -= Mathf.Max(bottomRight.x - bottomRightBound.x, 0f);
+            position.y += Mathf.Max(bottomRightBound.y - bottomRight.y, 0f);
+            return position;
         }
 
         /// <summary>

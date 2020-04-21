@@ -79,6 +79,7 @@ namespace PBGame.UI.Components.Common
                 label.Anchor = Anchors.Fill;
                 label.Offset = new Offset(16f, 0f, 40f, 0f);
                 label.Alignment = TextAnchor.MiddleLeft;
+                label.FontSize = 16;
             }
             CreateIconSprite(depth: 3, spriteName: "icon-down", size: 20f, alpha: 1f);
             {
@@ -115,6 +116,15 @@ namespace PBGame.UI.Components.Common
                 raycaster.ignoreReversedGraphics = true;
             }
             dropdownMenu.OpenMenu(Context);
+
+            // Make the menu appear on the left side of the screen.
+            Vector2 menuPosition = Position;
+            menuPosition.x += Width * 0.5f + DropdownMenu.ContainerWidth * 0.5f;
+            menuPosition.y += -dropdownMenu.HolderSize.y * 0.5f + DropdownMenu.ItemSize.y * 0.5f;
+            dropdownMenu.PositionMenu(
+                transform.TransformPoint(menuPosition),
+                Space.World
+            );
         }
 
         /// <summary>
