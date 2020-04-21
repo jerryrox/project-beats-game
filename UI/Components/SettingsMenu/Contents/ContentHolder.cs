@@ -13,6 +13,11 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
     public class ContentHolder : UguiScrollView {
 
         /// <summary>
+        /// Amount of padding to apply on scrolling to a specified tab on request.
+        /// </summary>
+        private const float ScrollPadding = 50f;
+
+        /// <summary>
         /// Event called when the group representing a tab is within focus of the view.
         /// </summary>
         public event Action<SettingsTab> OnTabFocus;
@@ -111,7 +116,7 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
             {
                 if (group.TabData == tabData)
                 {
-                    float padding = (containerHeight - maxScrollPos) * group.PositionProgress;
+                    float padding = (ScrollPadding) * group.PositionProgress;
                     ScrollTo(new Vector2(0f, Math.Min(maxScrollPos, group.PositionProgress * maxScrollPos + padding)));
                     return;
                 }
