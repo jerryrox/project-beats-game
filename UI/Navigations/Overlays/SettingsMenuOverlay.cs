@@ -42,11 +42,15 @@ namespace PBGame.UI.Navigations.Overlays
                 navBar.Width = 72f;
                 navBar.RawHeight = 0f;
                 navBar.Position = Vector2.zero;
+
+                navBar.OnTabFocused += (tabData) => contentHolder.MoveToTab(tabData);
             }
             contentHolder = container.CreateChild<ContentHolder>("content", 0);
             {
                 contentHolder.Anchor = Anchors.Fill;
                 contentHolder.Offset = new Offset(0f, 0f, 72f, 0f);
+
+                contentHolder.OnTabFocus += (tabData) => navBar.ShowFocusOnTab(tabData);
             }
             glow = container.CreateChild<UguiSprite>("glow", -1);
             {

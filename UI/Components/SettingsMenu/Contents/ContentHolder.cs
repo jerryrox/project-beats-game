@@ -12,10 +12,20 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 {
     public class ContentHolder : UguiScrollView {
 
+        /// <summary>
+        /// Event called when the group representing a tab is within focus of the view.
+        /// </summary>
+        public event Action<SettingsTab> OnTabFocus;
+
         private List<ContentGroup> groups = new List<ContentGroup>();
         private IScrollBar scrollBar;
 
         private ISettingsData settingsData;
+        private SettingsTab focusedTab;
+
+        private float scrollviewHeight;
+        private float containerHeight;
+        private float maxScrollPos;
 
 
         [InitWithDependency]
@@ -42,8 +52,14 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
             for (int i = 0; i < groups.Count; i++)
                 groups[i].Destroy();
-            groups = null;
+            groups.Clear();
+
             settingsData = null;
+            focusedTab = null;
+
+            scrollviewHeight = 0f;
+            containerHeight = 0f;
+            maxScrollPos = 0f;
         }
 
         /// <summary>
@@ -53,21 +69,82 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
         {
             this.settingsData = settingsData;
 
-            // Create content groups.
-            container.Height = 0f;
-            foreach (var tab in settingsData.GetTabs())
+            InvokeAfterFrames(1, () =>
             {
-                var group = container.CreateChild<ContentGroup>(tab.Name);
-                {
-                    group.Anchor = Anchors.TopStretch;
-                    group.Pivot = Pivots.Top;
-                    group.Y = -container.Height;
-                    group.SetOffsetHorizontal(0f);
-                }
-                group.SetTabData(tab);
-                groups.Add(group);
+                scrollviewHeight = Height;
 
-                container.Height += group.Height;
+                // Create content groups.
+                ResetPosition();
+                container.Height = containerHeight = 0f;
+                foreach (var tab in settingsData.GetTabs())
+                {
+                    var group = container.CreateChild<ContentGroup>(tab.Name);
+                    {
+                        group.Anchor = Anchors.TopStretch;
+                        group.Pivot = Pivots.Top;
+                        group.Y = -container.Height;
+                        group.SetOffsetHorizontal(0f);
+                    }
+                    group.SetTabData(tab);
+                    groups.Add(group);
+
+                    container.Height = (containerHeight += group.Height);
+                }
+
+                maxScrollPos = Math.Max(containerHeight - scrollviewHeight, 0f);
+
+                // Cache position progress of each group for tab focus feature.
+                if (maxScrollPos > 0f)
+                {
+                    foreach (var group in groups)
+                        group.PositionProgress = -group.Y / containerHeight;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Makes the scrollview view on the specified tab.
+        /// </summary>
+        public void MoveToTab(SettingsTab tabData)
+        {
+            foreach (var group in groups)
+            {
+                if (group.TabData == tabData)
+                {
+                    float padding = (containerHeight - maxScrollPos) * group.PositionProgress;
+                    ScrollTo(new Vector2(0f, Math.Min(maxScrollPos, group.PositionProgress * maxScrollPos + padding)));
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Marks the specified tab dat as focused.
+        /// </summary>
+        private void FocusOnTab(SettingsTab tabData)
+        {
+            if (focusedTab != tabData)
+            {
+                focusedTab = tabData;
+                OnTabFocus?.Invoke(tabData);
+            }
+        }
+
+        private void Update()
+        {
+            if (maxScrollPos == 0f)
+                return;
+
+            // Find focused tab.
+            float curProgress = container.Y / maxScrollPos;
+            for (int i = groups.Count - 1; i >= 0; i--)
+            {
+                var group = groups[i];
+                if (curProgress >= group.PositionProgress)
+                {
+                    FocusOnTab(group.TabData);
+                    return;
+                }
             }
         }
     }

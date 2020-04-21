@@ -28,6 +28,11 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
         /// </summary>
         public SettingsTab TabData => tabData;
 
+        /// <summary>
+        /// Value assigned from content holder used to cache the ratio of this object's position relative to the scrollview.
+        /// </summary>
+        public float PositionProgress { get; set; }
+
 
         [InitWithDependency]
         private void Init()
