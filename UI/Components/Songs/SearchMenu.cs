@@ -46,7 +46,7 @@ namespace PBGame.UI.Components.Songs
                 SearchBar.Pivot = Pivots.Right;
                 SearchBar.X = -32f;
                 SearchBar.Width = 420f;
-                SearchBar.SetOffsetVertical(3f, 15f);
+                SearchBar.SetOffsetVertical(0f);
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Graphics;
+using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -28,6 +29,10 @@ namespace PBGame.UI.Components.Songs
         {
             OnChanged += OnSearchBarChanged;
             OnSubmitted += OnSearchBarSubmitted;
+
+            backgroundSprite.Color = new Color(1f, 1f, 1f, 0.0625f);
+            backgroundSprite.Anchor = Anchors.Fill;
+            backgroundSprite.Offset = Offset.Zero;
 
             CreateIconSprite(spriteName: "icon-search");
 
