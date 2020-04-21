@@ -5,20 +5,15 @@ using PBGame.Rulesets.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Threading;
-using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components.Songs
 {
     public class SongList : UguiListView, IListView {
 
         private List<IMapset> mapsets;
-
-        private IAnime centeringAni;
-        private Vector2 centeringPos;
 
 
         [ReceivesDependency]
@@ -38,12 +33,6 @@ namespace PBGame.UI.Components.Songs
             Axis = GridLayoutGroup.Axis.Vertical;
 
             background.SpriteName = "null";
-
-            centeringAni = new Anime();
-            centeringAni.AnimateVector2(pos => ScrollTo(pos))
-                .AddTime(0f, () => container.Position)
-                .AddTime(0.5f, () => centeringPos)
-                .Build();
 
             OnEnableInited();
 
@@ -147,11 +136,8 @@ namespace PBGame.UI.Components.Songs
             var selectionIndex = mapsets.IndexOf(selection);
             if (selectionIndex >= 0)
             {
-                centeringAni.Stop();
-
                 // Smooth transition to selection position.
-                centeringPos = CalculateSelectionPos(selectionIndex);
-                centeringAni.Play();
+                ScrollTo(CalculateSelectionPos(selectionIndex));
             }
         }
 
