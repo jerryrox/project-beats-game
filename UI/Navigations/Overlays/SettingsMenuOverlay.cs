@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.SettingsMenu.Navbars;
+using PBGame.UI.Components.SettingsMenu.Contents;
 using PBGame.Animations;
 using PBGame.Configurations.Settings;
 using PBFramework.UI;
@@ -16,10 +17,13 @@ namespace PBGame.UI.Navigations.Overlays
     public class SettingsMenuOverlay : BaseSubMenuOverlay, ISettingsMenuOverlay {
 
         private NavBar navBar;
+        private ContentHolder contentHolder;
 
         private ISprite glow;
 
+
         protected override int OverlayDepth => ViewDepths.SettingsMenuOverlay;
+
 
         [InitWithDependency]
         private void Init()
@@ -38,6 +42,11 @@ namespace PBGame.UI.Navigations.Overlays
                 navBar.Width = 72f;
                 navBar.RawHeight = 0f;
                 navBar.Position = Vector2.zero;
+            }
+            contentHolder = container.CreateChild<ContentHolder>("content", 0);
+            {
+                contentHolder.Anchor = Anchors.Fill;
+                contentHolder.Offset = new Offset(0f, 0f, 72f, 0f);
             }
             glow = container.CreateChild<UguiSprite>("glow", -1);
             {
@@ -64,10 +73,10 @@ namespace PBGame.UI.Navigations.Overlays
             OnEnableInited();
         }
 
-        public void BuildSettings(ISettingsData data)
+        public void SetSettingsData(ISettingsData data)
         {
-            // TODO: Pass the settings daa to content displayer.
-            navBar.SetSettings(data);
+            navBar.SetSettingsData(data);
+            contentHolder.SetSettingsData(data);
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)

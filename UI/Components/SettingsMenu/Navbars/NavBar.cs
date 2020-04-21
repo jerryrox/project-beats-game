@@ -27,10 +27,20 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
             Alignment = TextAnchor.UpperLeft;
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            for (int i = 0; i < tabs.Count; i++)
+                tabs[i].Destroy();
+            tabs.Clear();
+            OnTabFocused = null;
+        }
+
         /// <summary>
         /// Sets the settings data to build nav tabs based on.
         /// </summary>
-        public void SetSettings(ISettingsData data)
+        public void SetSettingsData(ISettingsData data)
         {
             InvokeAfterFrames(1, () =>
             {

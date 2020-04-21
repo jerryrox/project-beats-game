@@ -9,6 +9,6 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Builds settings menu for the specified settings data.
         /// </summary>
-        void BuildSettings(ISettingsData data);
+        void SetSettingsData(ISettingsData data);
     }
 }

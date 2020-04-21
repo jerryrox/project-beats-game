@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
         private SettingsEntryString stringEntry;
 
 
-        protected override float EntryHeight => 78f;
+        protected override float EntryHeight => 74f;
 
 
         [InitWithDependency]
