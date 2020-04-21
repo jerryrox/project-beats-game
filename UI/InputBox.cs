@@ -12,7 +12,7 @@ namespace PBGame.UI
     /// <summary>
     /// Default input box for PB: Game with default font assignment.
     /// </summary>
-    public class InputBox : UguiInputBox, IInputBox {
+    public class InputBox : UguiInputBox {
 
         [InitWithDependency]
         private void Init(IFontManager fontManager)
