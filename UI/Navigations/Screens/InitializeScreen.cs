@@ -15,9 +15,9 @@ namespace PBGame.UI.Navigations.Screens
         private IInitLoader initLoader;
 
 
-        public ILogoDisplay LogoDisplay { get; private set; }
+        public LogoDisplay LogoDisplay { get; private set; }
 
-        public ILoadDisplay LoadDisplay { get; private set; }
+        public LoadDisplay LoadDisplay { get; private set; }
 
         protected override int ScreenDepth => ViewDepths.InitializeScreen;
 
@@ -46,8 +46,7 @@ namespace PBGame.UI.Navigations.Screens
             LoadDisplay = CreateChild<LoadDisplay>("load", 9);
             {
                 LoadDisplay.Anchor = Anchors.BottomStretch;
-                LoadDisplay.OffsetLeft = 0f;
-                LoadDisplay.OffsetRight = 0f;
+                LoadDisplay.SetOffsetHorizontal(0f);
                 LoadDisplay.Y = 0f;
             }
 

@@ -9,14 +9,14 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class DetailContainer : UguiSprite, IDetailContainer {
+    public class DetailContainer : UguiSprite {
 
-        private IMenuHolder menuHolder;
-        private IVersionDisplay versionDisplay;
+        private MenuHolder menuHolder;
+        private VersionDisplay versionDisplay;
 
         private IScrollView contentScroll;
-        private IMetaContainer metaContainer;
-        private IRankingContainer rankingContainer;
+        private MetaContainer metaContainer;
+        private RankingContainer rankingContainer;
 
 
         [InitWithDependency]
@@ -44,8 +44,7 @@ namespace PBGame.UI.Components.Prepare
             {
                 contentScroll.Anchor = Anchors.Fill;
                 contentScroll.RawWidth = -128f;
-                contentScroll.OffsetTop = 128f;
-                contentScroll.OffsetBottom = 0f;
+                contentScroll.SetOffsetVertical(128f, 0f);
 
                 contentScroll.Background.Alpha = 0f;
 

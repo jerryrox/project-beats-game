@@ -1,20 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Graphics;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SearchBar : GlowInputBox, ISearchBar {
+    public class SearchBar : GlowInput {
 
         private const float SearchDelayTime = 1f;
-
-        private ISprite icon;
 
         private float searchDelay = 0f;
 
@@ -32,18 +30,11 @@ namespace PBGame.UI.Components.Songs
             OnChanged += OnSearchBarChanged;
             OnSubmitted += OnSearchBarSubmitted;
 
-            ValueLabel.OffsetRight = PlaceholderLabel.OffsetRight = 40f;
+            backgroundSprite.Color = new Color(1f, 1f, 1f, 0.0625f);
+            backgroundSprite.Anchor = Anchors.Fill;
+            backgroundSprite.Offset = Offset.Zero;
 
-            icon = CreateChild<UguiSprite>("icon", 5);
-            {
-                icon.Anchor = Anchors.RightStretch;
-                icon.Pivot = Pivots.Right;
-                icon.X = -8f;
-                icon.OffsetTop = 8f;
-                icon.OffsetBottom = 8f;
-                icon.Width = icon.Height;
-                icon.SpriteName = "icon-search";
-            }
+            CreateIconSprite(spriteName: "icon-search");
 
             OnEnableInited();
         }

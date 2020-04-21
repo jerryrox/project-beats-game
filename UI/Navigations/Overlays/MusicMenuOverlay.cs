@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components;
+using PBGame.UI.Components.MenuBar;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -16,8 +17,6 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-using IMusicButton = PBGame.UI.Components.MenuBar.IMusicButton;
-
 namespace PBGame.UI.Navigations.Overlays
 {
     public class MusicMenuOverlay : BaseSubMenuOverlay, IMusicMenuOverlay {
@@ -28,14 +27,14 @@ namespace PBGame.UI.Navigations.Overlays
         private ISprite gradient;
         private ILabel title;
         private ILabel artist;
-        private IControlButton randomButton;
-        private IControlButton prevButton;
-        private IControlButton playButton;
-        private IControlButton nextButton;
-        private ITimeBar timeBar;
+        private ControlButton randomButton;
+        private ControlButton prevButton;
+        private ControlButton playButton;
+        private ControlButton nextButton;
+        private TimeBar timeBar;
 
 
-        public IMusicButton MusicButton { get; set; }
+        public MusicButton MusicButton { get; set; }
 
         protected override int OverlayDepth => ViewDepths.MusicMenuOverlay;
 
@@ -75,30 +74,27 @@ namespace PBGame.UI.Navigations.Overlays
                 gradient = mask.CreateChild<UguiSprite>("gradient", 1);
                 {
                     gradient.Anchor = Anchors.Fill;
-                    gradient.OffsetTop = -22f;
-                    gradient.OffsetLeft = 0f;
-                    gradient.OffsetRight = 0f;
-                    gradient.OffsetBottom = 0f;
+                    gradient.Offset = new Offset(0f, -22f, 0f, 0f);
                     gradient.SpriteName = "gradation-bottom";
                     gradient.Color = new Color(0f, 0f, 0f, 0.9f);
                 }
                 title = mask.CreateChild<Label>("title", 2);
                 {
                     title.Anchor = Anchors.BottomStretch;
-                    title.OffsetLeft = title.OffsetRight = 16f;
+                    title.SetOffsetHorizontal(16f);
                     title.Y = 92f;
                     title.Height = 30f;
                     title.IsBold = true;
-                    title.WrapText = false;
+                    title.WrapText = true;
                     title.FontSize = 18;
                 }
                 artist = mask.CreateChild<Label>("artist", 3);
                 {
                     artist.Anchor = Anchors.BottomStretch;
-                    artist.OffsetLeft = artist.OffsetRight = 16f;
+                    artist.SetOffsetHorizontal(16f);
                     artist.Y = 70f;
                     artist.Height = 30f;
-                    artist.WrapText = false;
+                    artist.WrapText = true;
                     artist.FontSize = 16;
                 }
                 randomButton = mask.CreateChild<ControlButton>("random", 4);
@@ -110,7 +106,7 @@ namespace PBGame.UI.Navigations.Overlays
                     randomButton.IconName = "icon-random";
                     randomButton.IconSize = 24f;
 
-                    randomButton.OnPointerDown += () =>
+                    randomButton.OnTriggered += () =>
                     {
                         MusicButton.SetRandomMusic();
                     };
@@ -124,7 +120,7 @@ namespace PBGame.UI.Navigations.Overlays
                     prevButton.IconName = "icon-backward";
                     prevButton.IconSize = 24f;
 
-                    prevButton.OnPointerDown += () =>
+                    prevButton.OnTriggered += () =>
                     {
                         MusicButton.SetPrevMusic();
                     };
@@ -137,7 +133,7 @@ namespace PBGame.UI.Navigations.Overlays
                     playButton.IconName = "icon-play";
                     playButton.IconSize = 32f;
 
-                    playButton.OnPointerDown += () =>
+                    playButton.OnTriggered += () =>
                     {
                         if(MusicController.IsPlaying)
                             MusicController.Pause();
@@ -154,7 +150,7 @@ namespace PBGame.UI.Navigations.Overlays
                     nextButton.IconName = "icon-forward";
                     nextButton.IconSize = 24f;
 
-                    nextButton.OnPointerDown += () =>
+                    nextButton.OnTriggered += () =>
                     {
                         MusicButton.SetNextMusic();
                     };
@@ -163,7 +159,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     timeBar.Anchor = Anchors.BottomStretch;
                     timeBar.Pivot = Pivots.Bottom;
-                    timeBar.OffsetLeft = timeBar.OffsetRight = 0f;
+                    timeBar.SetOffsetHorizontal(0f);
                     timeBar.Y = 0f;
                     timeBar.Height = 8f;
                 }

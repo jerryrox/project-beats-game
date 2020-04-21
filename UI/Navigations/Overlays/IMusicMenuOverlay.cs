@@ -8,6 +8,6 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// The music button which triggered this overlay.
         /// </summary>
-        IMusicButton MusicButton { get; set; }
+        MusicButton MusicButton { get; set; }
     }
 }

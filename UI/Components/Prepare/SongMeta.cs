@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class SongMeta : UguiObject, ISongMeta {
+    public class SongMeta : UguiObject {
 
         private ISprite gradient;
         private ILabel title;
@@ -53,8 +53,7 @@ namespace PBGame.UI.Components.Prepare
             {
                 artist.Anchor = Anchors.BottomStretch;
                 artist.Pivot = Pivots.BottomLeft;
-                artist.OffsetLeft = 42f;
-                artist.OffsetRight = 402f;
+                artist.SetOffsetHorizontal(42f, 402f);
                 artist.Y = 12f;
                 artist.Height = 34f;
                 artist.FontSize = 22;

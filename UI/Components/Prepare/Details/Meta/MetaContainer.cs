@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaContainer : UguiSprite, IMetaContainer {
+    public class MetaContainer : UguiSprite {
 
-        private IMetaDescription description;
-        private IMetaMisc misc;
-        private IMetaDifficulty difficulty;
+        private MetaDescription description;
+        private MetaMisc misc;
+        private MetaDifficulty difficulty;
 
 
         [InitWithDependency]
@@ -23,8 +23,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             description = CreateChild<MetaDescription>("description", 0);
             {
                 description.Anchor = Anchors.Fill;
-                description.OffsetLeft = description.OffsetTop = description.OffsetBottom = 0f;
-                description.OffsetRight = 620f;
+                description.Offset = new Offset(0f, 0f, 620f, 0f);
             }
             misc = CreateChild<MetaMisc>("misc", 1);
             {

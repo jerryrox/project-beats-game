@@ -15,6 +15,8 @@ namespace PBGame.Graphics
 
         Color Warning { get; }
 
+        Color Passive { get; }
+
 
         /// <summary>
         /// Returns the color resembling the specified difficulty categorization type.

@@ -8,14 +8,20 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SearchMenu : UguiObject, ISearchMenu {
+    public class SearchMenu : UguiObject {
 
         private ISprite backgroundSprite;
 
 
-        public ISorter Sorter { get; private set; }
+        /// <summary>
+        /// Returns the mapset sorter object.
+        /// </summary>
+        public Sorter Sorter { get; private set; }
 
-        public ISearchBar SearchBar { get; private set; }
+        /// <summary>
+        /// Returns the search bar.
+        /// </summary>
+        public SearchBar SearchBar { get; private set; }
 
 
         [InitWithDependency]
@@ -32,8 +38,7 @@ namespace PBGame.UI.Components.Songs
                 Sorter.Anchor = Anchors.LeftStretch;
                 Sorter.Pivot = Pivots.Left;
                 Sorter.X = 0f;
-                Sorter.OffsetTop = 0f;
-                Sorter.OffsetBottom = 0f;
+                Sorter.SetOffsetVertical(0f);
             }
             SearchBar = CreateChild<SearchBar>("search-bar", 2);
             {
@@ -41,8 +46,7 @@ namespace PBGame.UI.Components.Songs
                 SearchBar.Pivot = Pivots.Right;
                 SearchBar.X = -32f;
                 SearchBar.Width = 420f;
-                SearchBar.OffsetTop = 3f;
-                SearchBar.OffsetBottom = 15f;
+                SearchBar.SetOffsetVertical(0f);
             }
         }
     }

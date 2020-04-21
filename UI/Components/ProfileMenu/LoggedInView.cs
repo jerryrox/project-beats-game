@@ -6,20 +6,19 @@ using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class LoggedInView : UguiObject, ILoggedInView {
+    public class LoggedInView : UguiObject, IHasAlpha {
 
         private CanvasGroup canvasGroup;
 
-        private ICoverDisplay coverDisplay;
+        private CoverDisplay coverDisplay;
         private ISprite background;
         private ISprite shadow;
-        private IHeader header;
-        private IStatHolder statHolder;
-        private IMenuHolder menuHolder;
+        private Header header;
+        private StatHolder statHolder;
+        private MenuHolder menuHolder;
 
 
         public float Alpha
@@ -38,7 +37,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 coverDisplay.Anchor = Anchors.TopStretch;
                 coverDisplay.Pivot = Pivots.Top;
-                coverDisplay.OffsetLeft = coverDisplay.OffsetRight = 0f;
+                coverDisplay.SetOffsetHorizontal(0f);
                 coverDisplay.Y = 0f;
                 coverDisplay.Height = 106f;
             }
@@ -46,7 +45,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 background.Anchor = Anchors.BottomStretch;
                 background.Pivot = Pivots.Bottom;
-                background.OffsetLeft = background.OffsetRight = 0f;
+                background.SetOffsetHorizontal(0f);
                 background.Y = 0f;
                 background.Height = 374f;
                 background.Color = HexColor.Create("1D2126");
@@ -55,7 +54,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 {
                     shadow.Anchor = Anchors.TopStretch;
                     shadow.Pivot = Pivots.Bottom;
-                    shadow.OffsetLeft = shadow.OffsetRight = 0f;
+                    shadow.SetOffsetHorizontal(0f);
                     shadow.Y = 0f;
                     shadow.Height = 32f;
                     shadow.Color = new Color(0f, 0f, 0f, 0.5f);

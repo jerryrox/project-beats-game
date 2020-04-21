@@ -10,14 +10,14 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class Sorter : UguiObject, ISorter {
+    public class Sorter : UguiObject {
 
         private const float ButtonSize = 80f;
 
         private ILabel label;
 
         private IGrid grid;
-        private List<ISortButton> sortButtons = new List<ISortButton>();
+        private List<SortButton> sortButtons = new List<SortButton>();
 
 
         [ReceivesDependency]
@@ -32,8 +32,9 @@ namespace PBGame.UI.Components.Songs
                 label.Anchor = Anchors.LeftStretch;
                 label.Pivot = Pivots.Left;
                 label.X = 24;
-                label.OffsetTop = 0f;
-                label.OffsetBottom = 0f;
+                var offset = label.Offset;
+                offset.Vertical = 0f;
+                label.Offset = offset;
                 label.IsBold = true;
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.WrapText = false;
@@ -43,9 +44,8 @@ namespace PBGame.UI.Components.Songs
             {
                 grid.Anchor = Anchors.LeftStretch;
                 grid.Pivot = Pivots.Left;
-                grid.OffsetTop = 0f;
-                grid.OffsetBottom = 0f;
-                grid.X = 100f;
+                grid.SetOffsetVertical(0f);
+                grid.X = label.X * 2f + label.PreferredWidth;
                 grid.Width = ButtonSize * Enum.GetNames(typeof(MapsetSorts)).Length;
                 grid.CellSize = new Vector2(ButtonSize, 56f);
             }
@@ -57,7 +57,7 @@ namespace PBGame.UI.Components.Songs
                     button.SortType = sortType;
                     button.LabelText = sortType.ToString();
 
-                    button.OnPointerDown += () => SetSort(button.SortType);
+                    button.OnTriggered += () => SetSort(button.SortType);
                 }
                 sortButtons.Add(button);
             }
@@ -66,13 +66,14 @@ namespace PBGame.UI.Components.Songs
             SetSort(GameConfiguration.MapsetSort.Value);
         }
 
+        /// <summary>
+        /// Sets the sorting method of the mapsets.
+        /// </summary>
         public void SetSort(MapsetSorts sort)
         {
             // Apply on button.
             for (int i = 0; i < sortButtons.Count; i++)
-            {
-                sortButtons[i].SetFocus(sortButtons[i].SortType == sort);
-            }
+                sortButtons[i].IsFocused = sortButtons[i].SortType == sort;
 
             // Notify change
             OnSortChange(sort);

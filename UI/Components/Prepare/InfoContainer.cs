@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class InfoContainer : UguiObject, IInfoContainer {
+    public class InfoContainer : UguiObject {
 
-        private ISongMeta songMeta;
-        private IDetailContainer detailContainer;
+        private SongMeta songMeta;
+        private DetailContainer detailContainer;
 
 
         [InitWithDependency]
@@ -28,8 +28,8 @@ namespace PBGame.UI.Components.Prepare
             detailContainer = CreateChild<DetailContainer>("detail", 1);
             {
                 detailContainer.Anchor = Anchors.Fill;
-                detailContainer.RawWidth = detailContainer.OffsetBottom = 0f;
-                detailContainer.OffsetTop = 120f;
+                detailContainer.RawWidth = 0f;
+                detailContainer.SetOffsetVertical(120f, 0f);
             }
         }
     }

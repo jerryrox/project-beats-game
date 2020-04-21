@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDifficultyScale : UguiObject, IMetaDifficultyScale {
+    public class MetaDifficultyScale : UguiObject, IHasTint {
 
         private ILabel label;
         private ILabel valueLabel;
@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             {
                 progress.Anchor = Anchors.BottomStretch;
                 progress.Pivot = Pivots.Bottom;
-                progress.OffsetLeft = progress.OffsetRight = 0f;
+                progress.SetOffsetHorizontal(0f);
                 progress.Y = 0f;
                 progress.Height = 2f;
 
@@ -52,6 +52,9 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
         }
 
+        /// <summary>
+        /// Sets specified values for display.
+        /// </summary>
         public void Setup(string label, float value, float maxValue)
         {
             this.label.Text = label;

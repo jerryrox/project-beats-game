@@ -11,13 +11,13 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class MenuHolder : UguiSprite, IMenuHolder {
+    public class MenuHolder : UguiSprite {
 
         private IGrid grid;
 
-        private IMenuButton backButton;
-        private IMenuButton infoButton;
-        private IMenuButton playButton;
+        private MenuButton backButton;
+        private MenuButton infoButton;
+        private MenuButton playButton;
 
 
         [ReceivesDependency]
@@ -48,7 +48,7 @@ namespace PBGame.UI.Components.Prepare.Details
                     backButton.IconName = "icon-arrow-left";
                     backButton.LabelText = "Back";
 
-                    backButton.OnPointerDown += () =>
+                    backButton.OnTriggered += () =>
                     {
                         ScreenNavigator.Show<SongsScreen>();
                     };
@@ -58,7 +58,7 @@ namespace PBGame.UI.Components.Prepare.Details
                     infoButton.IconName = "icon-info";
                     infoButton.LabelText = "Details";
 
-                    infoButton.OnPointerDown += () =>
+                    infoButton.OnTriggered += () =>
                     {
                         // Toggle detail display via info container.
                         PrepareScreen.ToggleInfoDetail();
@@ -69,7 +69,7 @@ namespace PBGame.UI.Components.Prepare.Details
                     playButton.IconName = "icon-play";
                     playButton.LabelText = "Play";
 
-                    playButton.OnPointerDown += () =>
+                    playButton.OnTriggered += () =>
                     {
                         // TODO: Show GameLoadOverlay
                         ScreenNavigator.Hide<PrepareScreen>();

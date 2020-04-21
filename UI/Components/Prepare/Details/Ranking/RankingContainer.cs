@@ -11,11 +11,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingContainer : UguiSprite, IRankingContainer {
+    public class RankingContainer : UguiSprite {
 
-        private IRankingTabDisplay tabDisplay;
-        private IRankingColumn column;
-        private IRankingList rankingList;
+        private RankingTabDisplay tabDisplay;
+        private RankingColumn column;
+        private RankingList rankingList;
 
 
         [ReceivesDependency]
@@ -48,8 +48,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             rankingList = CreateChild<RankingList>("list", 2);
             {
                 rankingList.Anchor = Anchors.Fill;
-                rankingList.OffsetLeft = rankingList.OffsetRight = rankingList.OffsetBottom = 0;
-                rankingList.OffsetTop = 88f;
+                rankingList.Offset = new Offset(0f, 88f, 0f, 0f);
             }
 
             OnEnableInited();

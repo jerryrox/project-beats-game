@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
@@ -13,7 +14,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class VersionButton : ButtonTrigger, IVersionButton {
+    public class VersionButton : FocusableTrigger, IListItem {
 
         private const float BaseFocusAlpha = 0.6f;
 
@@ -28,12 +29,12 @@ namespace PBGame.UI.Components.Prepare
         private float curUnfocusAlpha;
         private IPlayableMap myMap;
 
-        private IAnime focusAni;
-        private IAnime unfocusAni;
-
 
         public int ItemIndex { get; set; }
 
+        /// <summary>
+        /// Whether the button can be interacted by the user.
+        /// </summary>
         public bool IsInteractible
         {
             get => isInteractible;
@@ -44,8 +45,6 @@ namespace PBGame.UI.Components.Prepare
                 SetFocus(ShouldBeFocused);
             }
         }
-
-        protected override bool IsClickToTrigger => false;
 
         /// <summary>
         /// Returns whether this button should be focused with the current state.
@@ -65,7 +64,7 @@ namespace PBGame.UI.Components.Prepare
         [InitWithDependency]
         private void Init()
         {
-            OnPointerDown += () =>
+            OnTriggered += () =>
             {
                 if (myMap != null)
                     MapSelection.SelectMap(myMap);
@@ -106,6 +105,10 @@ namespace PBGame.UI.Components.Prepare
                 }
             }
 
+            // Remove useless sprites.
+            hoverSprite.Destroy();
+            focusSprite.Destroy();
+
             focusAni = new Anime();
             focusAni.AnimateFloat(SetFocusAlpha)
                 .AddTime(0f, GetFocusAlphaT)
@@ -117,7 +120,6 @@ namespace PBGame.UI.Components.Prepare
                 .AddTime(0f, GetFocusAlphaT)
                 .AddTime(0.25f, 0)
                 .Build();
-
 
             RefreshGlowColor();
             OnEnableInited();

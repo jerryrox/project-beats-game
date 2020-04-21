@@ -1,4 +1,4 @@
-using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Data.Users;
 using PBGame.Graphics;
@@ -11,11 +11,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class MenuHolder : UguiObject, IMenuHolder {
+    public class MenuHolder : UguiObject {
 
-        private IMenuButton detailButton;
-        private IMenuButton visitButton;
-        private IMenuButton logoutButton;
+        private BoxButton detailButton;
+        private BoxButton visitButton;
+        private BoxButton logoutButton;
         private ILabel accountLabel;
 
 
@@ -29,48 +29,48 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init(IColorPreset colorPreset, IScreenNavigator screenNavigator)
         {
-            detailButton = CreateChild<MenuButton>("detail", 0);
+            detailButton = CreateChild<BoxButton>("detail", 0);
             {
                 detailButton.Anchor = Anchors.MiddleStretch;
                 detailButton.RawWidth = -96f;
                 detailButton.Y = 50f;
                 detailButton.Height = 36f;
                 detailButton.LabelText = "Detail";
-                detailButton.Tint = colorPreset.Positive;
+                detailButton.Color = colorPreset.Positive;
 
-                detailButton.OnPointerClick += () =>
+                detailButton.OnTriggered += () =>
                 {
                     // Hide this overlay
                     OverlayNavigator.Hide<ProfileMenuOverlay>();
                     // TODO: Show profile screen.
                 };
             }
-            visitButton = CreateChild<MenuButton>("visit", 1);
+            visitButton = CreateChild<BoxButton>("visit", 1);
             {
                 visitButton.Anchor = Anchors.MiddleStretch;
                 visitButton.RawWidth = -96f;
                 visitButton.Y = 10f;
                 visitButton.Height = 36f;
                 visitButton.LabelText = "Visit";
-                visitButton.Tint = colorPreset.Warning;
+                visitButton.Color = colorPreset.Warning;
 
-                visitButton.OnPointerClick += () =>
+                visitButton.OnTriggered += () =>
                 {
                     // Open browser to the user homepage.
                     if(UserManager.CurrentUser.Value != null)
                         Application.OpenURL(UserManager.CurrentUser.Value.OnlineUser.ProfilePage);
                 };
             }
-            logoutButton = CreateChild<MenuButton>("logout", 2);
+            logoutButton = CreateChild<BoxButton>("logout", 2);
             {
                 logoutButton.Anchor = Anchors.MiddleStretch;
                 logoutButton.RawWidth = -96f;
                 logoutButton.Y = -30f;
                 logoutButton.Height = 36f;
                 logoutButton.LabelText = "Log out";
-                logoutButton.Tint = colorPreset.Negative;
+                logoutButton.Color = colorPreset.Negative;
 
-                logoutButton.OnPointerClick += () =>
+                logoutButton.OnTriggered += () =>
                 {
                     DoLogout();
                 };

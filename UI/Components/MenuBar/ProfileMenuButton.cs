@@ -24,6 +24,8 @@ namespace PBGame.UI.Components.MenuBar
         private CacherAgent<Texture2D> cacherAgent;
 
 
+        protected override string IconSpritename => "";
+
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
 
@@ -40,21 +42,24 @@ namespace PBGame.UI.Components.MenuBar
         [InitWithDependency]
         private void Init(IApiManager apiManager)
         {
-            OnToggleOn += () =>
+            OnFocused += (isFocused) =>
             {
-                var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
-                overlay.OnClose += () =>
+                if (isFocused)
                 {
+                    var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
+                    overlay.OnClose += () =>
+                    {
+                        hasOverlay = false;
+                        IsFocused = false;
+                    };
+                    hasOverlay = true;
+                }
+                else
+                {
+                    if (hasOverlay)
+                        OverlayNavigator.Hide<ProfileMenuOverlay>();
                     hasOverlay = false;
-                    SetToggle(false);
-                };
-                hasOverlay = true;
-            };
-            OnToggleOff += () =>
-            {
-                if (hasOverlay)
-                    OverlayNavigator.Hide<ProfileMenuOverlay>();
-                hasOverlay = false;
+                }
             };
 
             cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);
@@ -86,10 +91,7 @@ namespace PBGame.UI.Components.MenuBar
             {
                 nicknameLabel.Anchor = Anchors.Fill;
                 nicknameLabel.Alignment = TextAnchor.MiddleLeft;
-                nicknameLabel.OffsetLeft = 66f;
-                nicknameLabel.OffsetRight = 10f;
-                nicknameLabel.OffsetTop = 8f;
-                nicknameLabel.OffsetBottom = 8f;
+                nicknameLabel.Offset = new Offset(66f, 8f, 10f, 8f);
                 nicknameLabel.WrapText = true;
 
             }
@@ -97,10 +99,7 @@ namespace PBGame.UI.Components.MenuBar
             {
                 levelLabel.Anchor = Anchors.Fill;
                 levelLabel.Alignment = TextAnchor.LowerRight;
-                levelLabel.OffsetLeft = 66f;
-                levelLabel.OffsetRight = 10f;
-                levelLabel.OffsetTop = 8f;
-                levelLabel.OffsetBottom = 8f;
+                levelLabel.Offset = new Offset(66f, 8f, 10f, 8f);
                 levelLabel.FontSize = 14;
                 levelLabel.WrapText = true;
             }

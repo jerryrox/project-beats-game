@@ -11,13 +11,13 @@ namespace PBGame.UI.Navigations.Screens
 {
     public class SongsScreen : BaseScreen, ISongScreen {
 
-        public ISearchMenu SearchMenu { get; private set; }
+        public SearchMenu SearchMenu { get; private set; }
 
-        public ISongList SongList { get; private set; }
+        public SongList SongList { get; private set; }
 
-        public ISongMenu SongMenu { get; set; }
+        public SongMenu SongMenu { get; set; }
 
-        public IBackground Background { get; set; }
+        public Background Background { get; set; }
 
         protected override int ScreenDepth => ViewDepths.SongsScreen;
 
@@ -33,17 +33,13 @@ namespace PBGame.UI.Navigations.Screens
             SongList = CreateChild<SongList>("song-list", 1);
             {
                 SongList.Anchor = Anchors.Fill;
-                SongList.OffsetTop = 120f;
-                SongList.OffsetBottom = 72f;
-                SongList.OffsetLeft = 0f;
-                SongList.OffsetRight = 0f;
+                SongList.Offset = new Offset(0f, 120f, 0f, 72f);
             }
             SongMenu = CreateChild<SongMenu>("song-menu", 2);
             {
                 SongMenu.Anchor = Anchors.BottomStretch;
                 SongMenu.Pivot = Pivots.Bottom;
-                SongMenu.OffsetLeft = 0f;
-                SongMenu.OffsetRight = 0f;
+                SongMenu.SetOffsetHorizontal(0f);
                 SongMenu.Y = 0f;
                 SongMenu.Height = 72f;
             }
@@ -51,8 +47,7 @@ namespace PBGame.UI.Navigations.Screens
             {
                 SearchMenu.Anchor = Anchors.TopStretch;
                 SearchMenu.Pivot = Pivots.Top;
-                SearchMenu.OffsetLeft = 0f;
-                SearchMenu.OffsetRight = 0f;
+                SearchMenu.SetOffsetHorizontal(0f);
                 SearchMenu.Y = -64f;
                 SearchMenu.Height = 56;
             }

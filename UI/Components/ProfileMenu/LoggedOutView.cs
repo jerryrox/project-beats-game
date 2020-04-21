@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
 using PBGame.Assets.Fonts;
 using PBGame.Graphics;
@@ -19,16 +20,16 @@ using UnityEngine.UI;
 namespace PBGame.UI.Components.ProfileMenu
 {
     // TODO: Support for logging in using other API providers.
-    public class LoggedOutView : UguiObject, ILoggedOutView
+    public class LoggedOutView : UguiObject, IHasAlpha
     {
         private CanvasGroup canvasGroup;
 
         private ISprite bg;
-        private ILoginInput username;
-        private ILoginInput password;
-        private IToggle remember;
-        private IMenuButton loginButton;
-        private ILoader loader;
+        private LoginInput username;
+        private LoginInput password;
+        private LabelledToggle remember;
+        private BoxButton loginButton;
+        private Loader loader;
 
 
         public float Alpha
@@ -63,7 +64,7 @@ namespace PBGame.UI.Components.ProfileMenu
             username = CreateChild<LoginInput>("username", 1);
             {
                 username.Anchor = Anchors.TopStretch;
-                username.OffsetLeft = username.OffsetRight = 32f;
+                username.SetOffsetHorizontal(32);
                 username.Y = -40f;
                 username.Height = 36f;
                 username.Placeholder = "username";
@@ -71,45 +72,34 @@ namespace PBGame.UI.Components.ProfileMenu
             password = CreateChild<LoginInput>("password", 2);
             {
                 password.Anchor = Anchors.TopStretch;
-                password.OffsetLeft = password.OffsetRight = 32f;
+                password.SetOffsetHorizontal(32f);
                 password.Y = -80f;
                 password.Height = 36f;
                 password.InputType = InputField.InputType.Password;
                 password.Placeholder = "password";
             }
-            remember = CreateChild<UguiToggle>("remember", 3);
+            remember = CreateChild<LabelledToggle>("remember", 3);
             {
                 remember.Anchor = Anchors.Top;
-                remember.X = -64f;
-                remember.Y = -120f;
+                remember.Position = new Vector3(0f, -120f);
+                remember.Size = new Vector2(160f, 24f);
+                remember.LabelText = "Remember me";
 
-                remember.Background.Size = remember.Tick.Size = new Vector2(24f, 24f);
-                remember.Background.SpriteName = remember.Tick.SpriteName = "circle-32";
-                remember.Background.Color = Color.black;
-                remember.Tick.Color = colorPreset.PrimaryFocus;
-
-                remember.Label.X = 24f;
-                remember.Label.Width = 120f;
-                remember.Label.Font = fontManager.DefaultFont;
-                remember.Label.FontSize = 16;
-                remember.Label.Text = "Remember me";
-
-                remember.OnChange += (isToggled) =>
+                remember.OnFocused += (isFocused) =>
                 {
-                    GameConfiguration.SaveCredentials.Value = remember.Value;
+                    GameConfiguration.SaveCredentials.Value = isFocused;
                 };
             }
-            loginButton = CreateChild<MenuButton>("login", 4);
+            loginButton = CreateChild<BoxButton>("login", 4);
             {
                 loginButton.Anchor = Anchors.TopStretch;
-                loginButton.OffsetLeft = loginButton.OffsetRight = 48f;
+                loginButton.SetOffsetHorizontal(48f);
                 loginButton.Y = -162f;
                 loginButton.Height = 36f;
-
-                loginButton.Tint = colorPreset.Positive;
+                loginButton.Color = colorPreset.Positive;
                 loginButton.LabelText = "Login to osu!";
 
-                loginButton.OnPointerClick += () =>
+                loginButton.OnTriggered += () =>
                 {
                     DoLogin();
                 };
@@ -122,7 +112,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             if (GameConfiguration.SaveCredentials.Value)
             {
-                remember.Value = true;
+                remember.IsFocused = true;
                 username.Text = GameConfiguration.Username.Value;
                 password.Text = GameConfiguration.Password.Value;
             }
@@ -135,8 +125,8 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             loader.Show();
 
-            username.SetFocus(false);
-            password.SetFocus(false);
+            username.IsFocused = false;
+            password.IsFocused = false;
 
             // Start request.
             var request = new LoginRequest(username.Text, password.Text);
@@ -204,7 +194,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 return;
             }
 
-            if (remember.Value)
+            if (remember.IsFocused)
             {
                 GameConfiguration.Username.Value = username.Text;
                 GameConfiguration.Password.Value = password.Text;

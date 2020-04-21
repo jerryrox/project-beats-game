@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
-using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
@@ -20,7 +20,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class PreviewBox : ButtonTrigger, IPreviewBox {
+    public class PreviewBox : HoverableTrigger {
 
         private ISprite mask;
         private IMapImageDisplay imageDisplay;
@@ -28,7 +28,6 @@ namespace PBGame.UI.Components.Songs
         private IProgressBar progressBar;
         private ILabel titleLabel;
         private ILabel artistLabel;
-        private ISprite glow;
 
         /// <summary>
         /// Whether it is the first background assignment from map selection after init.
@@ -37,8 +36,6 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private bool isFirstBackground = true;
 
-
-        protected override bool IsClickToTrigger => false;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -53,6 +50,14 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
+            hoverSprite.Depth = 1;
+            hoverSprite.Anchor = Anchors.Fill;
+            hoverSprite.RawSize = new Vector2(28f, 30f);
+            hoverSprite.Color = Color.black;
+            hoverSprite.SpriteName = "glow-parallel-64";
+            hoverSprite.ImageType = Image.Type.Sliced;
+            hoverSprite.AddEffect(new FlipEffect()).Component.horizontal = true;
+
             mask = CreateChild<UguiSprite>("mask", 0);
             {
                 mask.Anchor = Anchors.Fill;
@@ -81,20 +86,18 @@ namespace PBGame.UI.Components.Songs
                 {
                     progressBar.Anchor = Anchors.BottomStretch;
                     progressBar.Pivot = Pivots.Bottom;
-                    progressBar.OffsetLeft = 22;
-                    progressBar.OffsetRight = 0f;
+                    progressBar.SetOffsetHorizontal(22f, 0f);
                     progressBar.Height = 6f;
                     progressBar.Y = 0f;
 
                     progressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
-                    progressBar.Foreground.OffsetTop = 2f;
+                    progressBar.Foreground.SetOffsetTop(2f);
                 }
                 titleLabel = mask.CreateChild<Label>("title", 2);
                 {
                     titleLabel.Anchor = Anchors.TopStretch;
                     titleLabel.Pivot = Pivots.Top;
-                    titleLabel.OffsetLeft = 20f;
-                    titleLabel.OffsetRight = 32f;
+                    titleLabel.SetOffsetHorizontal(20f, 32f);
                     titleLabel.Y = -8f;
                     titleLabel.Height = 30f;
                     titleLabel.IsBold = true;
@@ -111,8 +114,7 @@ namespace PBGame.UI.Components.Songs
                 {
                     artistLabel.Anchor = Anchors.BottomStretch;
                     artistLabel.Pivot = Pivots.Bottom;
-                    artistLabel.OffsetLeft = 32f;
-                    artistLabel.OffsetRight = 20f;
+                    artistLabel.SetOffsetHorizontal(32f, 20f);
                     artistLabel.Y = 8f;
                     artistLabel.Height = 30f;
                     artistLabel.Alignment = TextAnchor.LowerLeft;
@@ -124,33 +126,23 @@ namespace PBGame.UI.Components.Songs
                     shadow.effectColor = new Color(0f, 0f, 0f, 0.5f);
                 }
             }
-            glow = CreateChild<UguiSprite>("glow", 1);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.RawSize = new Vector2(28f, 30f);
-                glow.Color = Color.black;
-                glow.SpriteName = "glow-parallel-64";
-                glow.ImageType = Image.Type.Sliced;
 
-                glow.AddEffect(new FlipEffect()).Component.horizontal = true;
-            }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
+            hoverInAni = new Anime();
+            hoverInAni.AnimateColor(color => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color)
                 .AddTime(0.25f, () => MapSelection.Background.Highlight)
                 .Build();
-            hoverAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
+            hoverInAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
                 .AddTime(0f, () => imageGradient.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
 
-            outAni = new Anime();
-            outAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
+            hoverOutAni = new Anime();
+            hoverOutAni.AnimateColor(color => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color)
                 .AddTime(0.25f, Color.black)
                 .Build();
-            outAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
+            hoverOutAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
                 .AddTime(0f, () => imageGradient.Alpha)
                 .AddTime(0.25f, 0.5f)
                 .Build();

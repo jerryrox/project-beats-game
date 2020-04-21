@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class MenuButton : BoxIconTrigger, IMenuButton {
+    public class MenuButton : HoverableTrigger, IHasLabel {
 
         private ILabel label;
 
@@ -23,8 +24,7 @@ namespace PBGame.UI.Components.Prepare.Details
         [InitWithDependency]
         private void Init()
         {
-            iconSprite.X = -36f;
-            iconSprite.Size = new Vector2(36f, 36f);
+            CreateIconSprite().X = -36f;
 
             label = CreateChild<Label>("label", 2);
             {
@@ -33,6 +33,8 @@ namespace PBGame.UI.Components.Prepare.Details
                 label.X = 0f;
                 label.Alignment = TextAnchor.MiddleLeft;
             }
+
+            UseDefaultHoverAni();
         }
     }
 }
