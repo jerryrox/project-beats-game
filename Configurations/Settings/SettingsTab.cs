@@ -27,6 +27,11 @@ namespace PBGame.Configurations.Settings
         /// </summary>
         public int EntryCount => entries.Count;
 
+        /// <summary>
+        /// Returns the entry data at specified index.
+        /// </summary>
+        public SettingsEntryBase this[int index] => entries[index];
+
 
         public SettingsTab(string name, string iconName)
         {
