@@ -22,11 +22,6 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
         protected override float EntryHeight => 64f;
 
-        /// <summary>
-        /// The string format mode to use to display the slider value.
-        /// </summary>
-        protected virtual string ValueFormat => "";
-
 
         [InitWithDependency]
         private void Init()
@@ -50,7 +45,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
                 slider.OnChange += (value) =>
                 {
-                    valueLabel.Text = value.ToString(ValueFormat);
+                    if(rangeEntry != null)
+                        valueLabel.Text = value.ToString(rangeEntry.Formatter);
                 };
             }
         }

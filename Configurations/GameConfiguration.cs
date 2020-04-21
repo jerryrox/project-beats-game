@@ -94,17 +94,32 @@ namespace PBGame.Configurations
                 gameplayTab.AddEntry(new SettingsEntryBool("Use Storyboard", ShowStoryboard = InitBoolBindable(nameof(ShowStoryboard), false)));
                 gameplayTab.AddEntry(new SettingsEntryBool("Use Video", ShowVideo = InitBoolBindable(nameof(ShowVideo), false)));
                 gameplayTab.AddEntry(new SettingsEntryBool("Use Map Skins", UseBeatmapSkins = InitBoolBindable(nameof(UseBeatmapSkins), false)));
-                gameplayTab.AddEntry(new SettingsEntryFloat("Background Dim", BackgroundDim = InitFloatBindable(nameof(BackgroundDim), 0.5f)));
+                gameplayTab.AddEntry(new SettingsEntryFloat("Background Dim", BackgroundDim = InitFloatBindable(nameof(BackgroundDim), 0.5f, 0f, 1f))
+                {
+                    Formatter = "P0"
+                });
             }
 
             // Sound settings
             SettingsTab soundTab = Settings.AddTabData(new SettingsTab("Sound", "icon-sound"));
             {
-                soundTab.AddEntry(new SettingsEntryFloat("Master Volume", MasterVolume = InitFloatBindable(nameof(MasterVolume), 1f)));
-                soundTab.AddEntry(new SettingsEntryFloat("Music Volume", MusicVolume = InitFloatBindable(nameof(MusicVolume), 1f)));
-                soundTab.AddEntry(new SettingsEntryFloat("Hitsound Volume", HitsoundVolume = InitFloatBindable(nameof(HitsoundVolume), 1f)));
-                soundTab.AddEntry(new SettingsEntryFloat("Effect Volume", EffectVolume = InitFloatBindable(nameof(EffectVolume), 1f)));
-                soundTab.AddEntry(new SettingsEntryInt("Global Offset", GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0)));
+                soundTab.AddEntry(new SettingsEntryFloat("Master Volume", MasterVolume = InitFloatBindable(nameof(MasterVolume), 1f, 0f, 1f))
+                {
+                    Formatter = "P0"
+                });
+                soundTab.AddEntry(new SettingsEntryFloat("Music Volume", MusicVolume = InitFloatBindable(nameof(MusicVolume), 1f, 0f, 1f))
+                {
+                    Formatter = "P0"
+                });
+                soundTab.AddEntry(new SettingsEntryFloat("Hitsound Volume", HitsoundVolume = InitFloatBindable(nameof(HitsoundVolume), 1f, 0f, 1f))
+                {
+                    Formatter = "P0"
+                });
+                soundTab.AddEntry(new SettingsEntryFloat("Effect Volume", EffectVolume = InitFloatBindable(nameof(EffectVolume), 1f, 0f, 1f))
+                {
+                    Formatter = "P0"
+                });
+                soundTab.AddEntry(new SettingsEntryInt("Global Offset", GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0, -100, 100)));
                 soundTab.AddEntry(new SettingsEntryBool("Use Map Hitsounds", UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true)));
             }
         }
@@ -167,22 +182,26 @@ namespace PBGame.Configurations
         /// <summary>
         /// Instantiates a new proxy bindable, assuming a float for type T.
         /// </summary>
-        private ProxyBindableFloat InitFloatBindable(string propertyName, float defaultValue)
+        private ProxyBindableFloat InitFloatBindable(string propertyName, float defaultValue, float minValue, float maxValue)
         {
             return new ProxyBindableFloat(
                 () => storage == null ? defaultValue : storage.GetFloat(propertyName, defaultValue),
-                (value) => storage.SetFloat(propertyName, value)
+                (value) => storage.SetFloat(propertyName, value),
+                minValue,
+                maxValue
             );
         }
 
         /// <summary>
         /// Instantiates a new proxy bindable, assuming a int for type T.
         /// </summary>
-        private ProxyBindableInt InitIntBindable(string propertyName, int defaultValue)
+        private ProxyBindableInt InitIntBindable(string propertyName, int defaultValue, int minValue, int maxValue)
         {
             return new ProxyBindableInt(
                 () => storage == null ? defaultValue : storage.GetInt(propertyName, defaultValue),
-                (value) => storage.SetInt(propertyName, value)
+                (value) => storage.SetInt(propertyName, value),
+                minValue,
+                maxValue
             );
         }
     }

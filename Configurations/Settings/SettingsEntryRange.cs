@@ -11,6 +11,11 @@ namespace PBGame.Configurations.Settings
         protected IBindableNumber<T> data;
 
 
+        /// <summary>
+        /// The formatting type used for ToString'ing the value.
+        /// </summary>
+        public string Formatter { get; set; } = "";
+
         public T MinValue => data.MinValue;
 
         public T MaxValue => data.MaxValue;
