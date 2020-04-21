@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -34,5 +35,10 @@ namespace PBGame.UI.Components.Common.Dropdown
             Selection = data;
             OnSelection?.Invoke(data);
         }
+
+        /// <summary>
+        /// Returns the data matching the specified predicate.
+        /// </summary>
+        public DropdownData FindData(Predicate<DropdownData> predicate) => Datas.Find(predicate);
     }
 }
