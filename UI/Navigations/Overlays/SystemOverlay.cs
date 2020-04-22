@@ -31,7 +31,7 @@ namespace PBGame.UI.Navigations.Overlays
                 FpsDisplayer.Position = new Vector3(-12f, 12);
                 FpsDisplayer.Size = new Vector2(170f, 30f);
 
-                GameConfiguration.ShowFps.BindAndTrigger((showFps, _) => FpsDisplayer.Active = showFps);
+                GameConfiguration.ShowFps.BindAndTrigger((showFps, _) => FpsDisplayer.ToggleDisplay(showFps));
             }
         }
     }

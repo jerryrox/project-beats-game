@@ -76,6 +76,8 @@ namespace PBGame.UI.Components.System
         private void Init()
         {
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
 
             tint = ColorPreset.Positive;
 
@@ -145,6 +147,17 @@ namespace PBGame.UI.Components.System
             curSamples = 0;
             SetFpsState(FpsStateType.Good, true);
             Refresh();
+        }
+
+        /// <summary>
+        /// Toggles displayer active state.
+        /// </summary>
+        public void ToggleDisplay(bool enable)
+        {
+            if (enable && !Active)
+                showAni.PlayFromStart();
+            else if(!enable && Active)
+                hideAni.PlayFromStart();
         }
 
         private void Update()
