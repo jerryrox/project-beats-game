@@ -94,8 +94,8 @@ namespace PBGame.Maps
                 {
                     // If already loaded within all mapsets, replace it.
                     allMapsets.AddOrReplace(mapset);
-                    displayedMapsets.AddOrReplace(mapset);
-
+                    // Search again.
+                    Search(lastSearch);
                     // Finished.
                     progress.InvokeFinished(mapset);
                     return null;

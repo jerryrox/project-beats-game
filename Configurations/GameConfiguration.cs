@@ -19,6 +19,11 @@ namespace PBGame.Configurations
 
         private PrefStorage storage;
 
+        /// <summary>
+        /// List of all settings stored as the bare minimum interface.
+        /// </summary>
+        private List<IBindable> allSettings = new List<IBindable>();
+
 
         public ISettingsData Settings { get; private set; }
 
@@ -122,6 +127,13 @@ namespace PBGame.Configurations
                 soundTab.AddEntry(new SettingsEntryInt("Global Offset", GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0, -100, 100)));
                 soundTab.AddEntry(new SettingsEntryBool("Use Map Hitsounds", UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true)));
             }
+
+            // Trigger change for all configurations on load.
+            OnLoad += delegate
+            {
+                foreach(var entry in allSettings)
+                    entry.Trigger();
+            };
         }
 
         public void Load()
@@ -151,10 +163,12 @@ namespace PBGame.Configurations
         private ProxyBindable<T> InitEnumBindable<T>(string propertyName, T defaultValue)
             where T : struct
         {
-            return new ProxyBindable<T>(
+            var bindable = new ProxyBindable<T>(
                 () => storage.GetEnum<T>(propertyName, defaultValue),
                 (value) => storage.SetEnum(propertyName, value)
             );
+            allSettings.Add(bindable);
+            return bindable;
         }
 
         /// <summary>
@@ -162,10 +176,12 @@ namespace PBGame.Configurations
         /// </summary>
         private ProxyBindable<string> InitStringBindable(string propertyName, string defaultValue)
         {
-            return new ProxyBindable<string>(
+            var bindable = new ProxyBindable<string>(
                 () => storage.GetString(propertyName, defaultValue),
                 (value) => storage.SetString(propertyName, value)
             );
+            allSettings.Add(bindable);
+            return bindable;
         }
 
         /// <summary>
@@ -173,10 +189,12 @@ namespace PBGame.Configurations
         /// </summary>
         private ProxyBindable<bool> InitBoolBindable(string propertyName, bool defaultValue)
         {
-            return new ProxyBindable<bool>(
+            var bindable = new ProxyBindable<bool>(
                 () => storage.GetBool(propertyName, defaultValue),
                 (value) => storage.SetBool(propertyName, value)
             );
+            allSettings.Add(bindable);
+            return bindable;
         }
 
         /// <summary>
@@ -184,12 +202,14 @@ namespace PBGame.Configurations
         /// </summary>
         private ProxyBindableFloat InitFloatBindable(string propertyName, float defaultValue, float minValue, float maxValue)
         {
-            return new ProxyBindableFloat(
+            var bindable = new ProxyBindableFloat(
                 () => storage == null ? defaultValue : storage.GetFloat(propertyName, defaultValue),
                 (value) => storage.SetFloat(propertyName, value),
                 minValue,
                 maxValue
             );
+            allSettings.Add(bindable);
+            return bindable;
         }
 
         /// <summary>
@@ -197,12 +217,14 @@ namespace PBGame.Configurations
         /// </summary>
         private ProxyBindableInt InitIntBindable(string propertyName, int defaultValue, int minValue, int maxValue)
         {
-            return new ProxyBindableInt(
+            var bindable = new ProxyBindableInt(
                 () => storage == null ? defaultValue : storage.GetInt(propertyName, defaultValue),
                 (value) => storage.SetInt(propertyName, value),
                 minValue,
                 maxValue
             );
+            allSettings.Add(bindable);
+            return bindable;
         }
     }
 }
