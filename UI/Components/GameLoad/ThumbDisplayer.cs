@@ -87,6 +87,7 @@ namespace PBGame.UI.Components.GameLoad
         private void OnBackgroundLoad(IMapBackground background)
         {
             imageDisplay.SetBackground(background);
+            glowSprite.Color = background.Highlight;
         }
     }
 }
