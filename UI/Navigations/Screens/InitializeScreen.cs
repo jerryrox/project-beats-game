@@ -79,6 +79,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLogoEnd()
         {
+            OverlayNavigator.Show<SystemOverlay>();
             OverlayNavigator.Show<BackgroundOverlay>();
             ScreenNavigator.Show<HomeScreen>();
         }
