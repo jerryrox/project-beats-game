@@ -29,6 +29,10 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Simulates invalid input value feedback to user.
         /// </summary>
-        public void ShowInvalid() => Tint = ColorPreset.Negative;
+        public void ShowInvalid()
+        {
+            SetFocusViewOnly(true);
+            Tint = ColorPreset.Negative;
+        }
     }
 }

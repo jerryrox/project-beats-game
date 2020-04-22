@@ -43,7 +43,7 @@ namespace PBGame.UI.Components.Common
         public bool IsFocused
         {
             get => component.isFocused;
-            set => SetFocus(value);
+            set => SetFocus(value, true);
         }
 
         public string IconName
@@ -78,7 +78,7 @@ namespace PBGame.UI.Components.Common
         {
             tint = colorPreset.PrimaryFocus;
 
-            component.onEndEdit.AddListener(value => SetFocus(false));
+            component.onEndEdit.AddListener(value => SetFocus(false, true));
 
             // Assign default font.
             valueLabel.Font = placeholderLabel.Font = fontManager.DefaultFont;
@@ -177,9 +177,14 @@ namespace PBGame.UI.Components.Common
         }
 
         /// <summary>
+        /// Assigns focus state of the input without dealing with input activation/deactivation.
+        /// </summary>
+        public void SetFocusViewOnly(bool isFocused) => SetFocus(isFocused, false);
+
+        /// <summary>
         /// Assigns focus state of the input.
         /// </summary>
-        protected void SetFocus(bool isFocused)
+        protected void SetFocus(bool isFocused, bool modifyInput)
         {
             focusAni?.Stop();
             unfocusAni?.Stop();
@@ -187,12 +192,14 @@ namespace PBGame.UI.Components.Common
             if (isFocused)
             {
                 focusAni?.PlayFromStart();
-                component.ActivateInputField();
+                if(modifyInput)
+                    component.ActivateInputField();
             }
             else
             {
                 unfocusAni?.PlayFromStart();
-                component.DeactivateInputField();
+                if(modifyInput)
+                    component.DeactivateInputField();
             }
 
             OnFocused?.Invoke(isFocused);
@@ -214,12 +221,12 @@ namespace PBGame.UI.Components.Common
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            SetFocus(true);
+            SetFocus(true, true);
         }
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            SetFocus(true);
+            SetFocus(true, true);
         }
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
