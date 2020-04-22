@@ -23,7 +23,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         private new ISprite mask;
         private ISprite glow;
-        private IMapImageDisplay imageDisplay;
+        private MapImageDisplay imageDisplay;
         private ISprite gradient;
         private ILabel title;
         private ILabel artist;

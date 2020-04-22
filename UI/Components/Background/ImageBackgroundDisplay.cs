@@ -11,7 +11,7 @@ namespace PBGame.UI.Components.Background
 {
     public class ImageBackgroundDisplay : BaseBackgroundDisplay, IBackgroundDisplay {
 
-        private IMapImageDisplay mapImage;
+        private MapImageDisplay mapImage;
 
 
         public override Color Color

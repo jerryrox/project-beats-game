@@ -23,7 +23,7 @@ namespace PBGame.UI.Components.Songs
     public class PreviewBox : HoverableTrigger {
 
         private ISprite mask;
-        private IMapImageDisplay imageDisplay;
+        private MapImageDisplay imageDisplay;
         private ISprite imageGradient;
         private IProgressBar progressBar;
         private ILabel titleLabel;

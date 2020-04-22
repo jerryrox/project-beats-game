@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components
 {
-    public class MapImageDisplay : UguiObject, IMapImageDisplay {
+    public class MapImageDisplay : UguiObject, IHasColor {
 
         private ITexture[] textures;
 
@@ -75,6 +75,9 @@ namespace PBGame.UI.Components
             });
         }
 
+        /// <summary>
+        /// Sets the background to display.
+        /// </summary>
         public void SetBackground(IMapBackground background)
         {
             // We should draw the image on the next texture.
@@ -87,6 +90,9 @@ namespace PBGame.UI.Components
             transitionAni.PlayFromStart();
         }
 
+        /// <summary>
+        /// Dispatches FillTexture call to the current texture.
+        /// </summary>
         public void FillTexture() => CurTexture.FillTexture();
 
         /// <summary>
