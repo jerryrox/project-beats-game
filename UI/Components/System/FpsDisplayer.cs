@@ -113,6 +113,7 @@ namespace PBGame.UI.Components.System
                 fpsLabel.WrapText = true;
                 fpsLabel.RawTransform.anchorMin = Vector2.zero;
                 fpsLabel.RawTransform.anchorMax = new Vector2(0.5f, 1f);
+                fpsLabel.Color = Color.black;
             }
             timeLabel = CreateChild<Label>("time", 4);
             {
@@ -120,6 +121,7 @@ namespace PBGame.UI.Components.System
                 timeLabel.WrapText = true;
                 timeLabel.RawTransform.anchorMin = new Vector2(0.5f, 0f);
                 timeLabel.RawTransform.anchorMax = Vector2.one;
+                timeLabel.Color = Color.black;
             }
 
             showAni = new Anime();
