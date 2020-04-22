@@ -18,6 +18,8 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
 
         private List<NavTab> tabs = new List<NavTab>();
 
+        private ISettingsData settingsData;
+
 
         [InitWithDependency]
         private void Init()
@@ -27,20 +29,22 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
             Alignment = TextAnchor.UpperLeft;
         }
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            for (int i = 0; i < tabs.Count; i++)
-                tabs[i].Destroy();
-            tabs.Clear();
-        }
-
         /// <summary>
         /// Sets the settings data to build nav tabs based on.
         /// </summary>
         public void SetSettingsData(ISettingsData data)
         {
+            if (data == null)
+            {
+                Cleanup();
+                return;
+            }
+            if(this.settingsData == data)
+                return;
+                
+            Cleanup();
+            this.settingsData = data;
+
             InvokeAfterFrames(1, () =>
             {
                 CellSize = new Vector2(Width, Height / data.TabCount);
@@ -66,6 +70,16 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
         {
             for (int i = 0; i < tabs.Count; i++)
                 tabs[i].IsFocused = tabs[i].TabData == tab;
+        }
+
+        /// <summary>
+        /// Removes previous states and child components for a new settings data.
+        /// </summary>
+        public void Cleanup()
+        {
+            for (int i = 0; i < tabs.Count; i++)
+                tabs[i].Destroy();
+            tabs.Clear();
         }
     }
 }

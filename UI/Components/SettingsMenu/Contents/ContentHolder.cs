@@ -51,27 +51,20 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
             VerticalScrollbar = scrollBar;
         }
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            for (int i = 0; i < groups.Count; i++)
-                groups[i].Destroy();
-            groups.Clear();
-
-            settingsData = null;
-            focusedTab = null;
-
-            scrollviewHeight = 0f;
-            containerHeight = 0f;
-            maxScrollPos = 0f;
-        }
-
         /// <summary>
         /// Sets the settings data to display content for.
         /// </summary>
         public void SetSettingsData(ISettingsData settingsData)
         {
+            if (settingsData == null)
+            {
+                Cleanup();
+                return;
+            }
+            else if (this.settingsData == settingsData)
+                return;
+
+            Cleanup();
             this.settingsData = settingsData;
 
             InvokeAfterFrames(1, () =>
@@ -121,6 +114,23 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
                     return;
                 }
             }
+        }
+
+        /// <summary>
+        /// Removes previous states and child components for a new settings data.
+        /// </summary>
+        public void Cleanup()
+        {
+            for (int i = 0; i < groups.Count; i++)
+                groups[i].Destroy();
+            groups.Clear();
+
+            settingsData = null;
+            focusedTab = null;
+
+            scrollviewHeight = 0f;
+            containerHeight = 0f;
+            maxScrollPos = 0f;
         }
 
         /// <summary>

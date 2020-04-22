@@ -14,7 +14,7 @@ namespace PBGame.Configurations.Settings
         /// <summary>
         /// The formatting type used for ToString'ing the value.
         /// </summary>
-        public string Formatter { get; set; } = "";
+        public string Formatter { get; set; } = "N0";
 
         public T MinValue => data.MinValue;
 
