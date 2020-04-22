@@ -28,5 +28,7 @@ namespace PBGame.UI.Navigations
         public const int SettingsMenuOverlay = 104;
 
         public const int DialogOverlay = 200;
+
+        public const int SystemOverlay = 1000;
     }
 }
