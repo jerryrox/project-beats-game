@@ -413,6 +413,10 @@ namespace PBGame.UI.Components.Songs
             container.Width = Mathf.Lerp(container.Width, containerWidth, aniTime);
             glow.Color = Color.Lerp(glow.Color, glowColor, aniTime);
             thumbImage.Color = Color.Lerp(thumbImage.Color, thumbColor, aniTime);
+
+            // Keep position at 0.
+            // TODO: This seems more of a hack. This should be handled in a better way in future.
+            X = 0f;
         }
     }
 }
