@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
@@ -71,7 +72,7 @@ namespace PBGame.UI.Components.Prepare.Details
                     {
                         // TODO: Show GameLoadOverlay
                         ScreenNavigator.Hide<PrepareScreen>();
-                        // OverlayNavigator.Show<GameLoadOverlay>();
+                        OverlayNavigator.Show<GameLoadOverlay>();
                     };
                 }
             }
