@@ -43,10 +43,10 @@ namespace PBGame.UI.Components.Common
                 iconSprite.Offset = Offset.Zero;
                 iconSprite.Color = colorPreset.PrimaryFocus;
                 iconSprite.SpriteName = "loader";
-            }
 
-            if (this is IRaycastable raycastable)
-                raycastable.IsRaycastTarget = false;
+                if (iconSprite is IRaycastable raycastable)
+                    raycastable.IsRaycastTarget = false;
+            }
         }
 
         private void Update()

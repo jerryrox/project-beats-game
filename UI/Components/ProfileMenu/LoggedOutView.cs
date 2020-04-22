@@ -139,10 +139,10 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnLoginResponse(LoginResponse response)
         {
+            loader.Hide();
+            
             if (!response.IsSuccess)
             {
-                loader.Hide();
-
                 GameConfiguration.Username.Value = "";
                 GameConfiguration.Password.Value = "";
 
