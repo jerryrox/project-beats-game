@@ -34,7 +34,6 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
             for (int i = 0; i < tabs.Count; i++)
                 tabs[i].Destroy();
             tabs.Clear();
-            OnTabFocused = null;
         }
 
         /// <summary>
