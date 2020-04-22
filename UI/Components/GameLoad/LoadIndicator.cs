@@ -1,23 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
-using PBFramework.UI;
 using PBFramework.Utils;
-using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Components.GameLoad
 {
-    public class LoadIndicator : UguiObject, IGameLoadComponent {
+    public class LoadIndicator : LoaderIcon, IGameLoadComponent {
 
         private const float RotationSpeed = 110f;
-
-        private CanvasGroup canvasGroup;
-        
-        private ISprite loadSprite;
 
         private IAnime showAni;
         private IAnime hideAni;
@@ -31,18 +26,8 @@ namespace PBGame.UI.Components.GameLoad
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            canvasGroup = RawObject.AddComponent<CanvasGroup>();
-
-            loadSprite = CreateChild<UguiSprite>("load", 0);
-            {
-                loadSprite.Anchor = Anchors.Fill;
-                loadSprite.Offset = Offset.Zero;
-                loadSprite.SpriteName = "loader";
-                loadSprite.Color = colorPreset.PrimaryFocus;
-            }
-
             showAni = new Anime();
-            showAni.AnimateFloat(a => canvasGroup.alpha = a)
+            showAni.AnimateFloat(a => this.Alpha = a)
                 .AddTime(1.5f, 0f, EaseType.QuadEaseOut)
                 .AddTime(1.75f, 1f)
                 .Build();
@@ -54,7 +39,7 @@ namespace PBGame.UI.Components.GameLoad
 
             hideAni = new Anime();
             hideAni.AddEvent(0f, () => showAni.Stop());
-            hideAni.AnimateFloat(a => canvasGroup.alpha = a)
+            hideAni.AnimateFloat(a => this.Alpha = a)
                 .AddTime(0f, 1f, EaseType.QuadEaseOut)
                 .AddTime(0.5f, 0f)
                 .Build();

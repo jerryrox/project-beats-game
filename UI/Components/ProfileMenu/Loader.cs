@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -18,7 +19,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private CanvasGroup canvasGroup;
 
         private ISprite dark;
-        private ISprite loader;
+        private LoaderIcon loader;
         private IRaycastable pointerBlocker;
 
         private IAnime showAni;
@@ -45,14 +46,9 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 pointerBlocker = dark as IRaycastable;
 
-                loader = dark.CreateChild<UguiSprite>("loader", 1);
+                loader = dark.CreateChild<LoaderIcon>("loader", 1);
                 {
                     loader.Size = new Vector2(72f, 72f);
-                    loader.SpriteName = "loader";
-                    loader.Color = colorPreset.PrimaryFocus;
-
-                    if(loader is IRaycastable raycastable)
-                        raycastable.IsRaycastTarget = false;
                 }
             }
 
