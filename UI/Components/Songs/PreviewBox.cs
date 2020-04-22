@@ -29,13 +29,6 @@ namespace PBGame.UI.Components.Songs
         private ILabel titleLabel;
         private ILabel artistLabel;
 
-        /// <summary>
-        /// Whether it is the first background assignment from map selection after init.
-        /// Required to wait a frame if first load due to an issue where the texture thinks its size is not initialized yet.
-        /// This caused the texture to fit images assuming a 100x100 size.
-        /// </summary>
-        private bool isFirstBackground = true;
-
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -193,18 +186,6 @@ namespace PBGame.UI.Components.Songs
         private void OnBackgroundChange(IMapBackground background)
         {
             imageDisplay.SetBackground(background);
-
-            if (isFirstBackground)
-            {
-                isFirstBackground = false;
-                var timer = new SynchronizedTimer()
-                {
-                    WaitFrameOnStart = true,
-                    Limit = 0f
-                };
-                timer.OnFinished += delegate { imageDisplay.FillTexture(); };
-                timer.Start();
-            }
         }
 
         /// <summary>

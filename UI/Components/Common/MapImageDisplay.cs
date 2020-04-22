@@ -106,7 +106,8 @@ namespace PBGame.UI.Components
             else
             {
                 CurTexture.Active = true;
-                CurTexture.FillTexture();
+                // Because it takes at least a frame for Unity to refresh its RectTransformation values, we must fill the texture after a frame.
+                InvokeAfterFrames(1, CurTexture.FillTexture);
             }
         }
 
