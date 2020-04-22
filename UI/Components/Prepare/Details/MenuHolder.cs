@@ -35,13 +35,11 @@ namespace PBGame.UI.Components.Prepare.Details
         {
             Color = new Color(1f, 1f, 1f, 0.25f);
 
-            var resolution = rootMain.Resolution;
-
             grid = CreateChild<UguiGrid>("grid", 0);
             {
                 grid.Anchor = Anchors.Fill;
                 grid.RawSize = Vector2.zero;
-                grid.CellSize = new Vector2(resolution.x / 3f, 56f);
+                InvokeAfterFrames(1, () => grid.CellSize = new Vector2(Width / 3f, 56f));
 
                 backButton = grid.CreateChild<MenuButton>("back", 0);
                 {
