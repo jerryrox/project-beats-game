@@ -13,7 +13,6 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
 
         /// <summary>
         /// Event called on settings tab button press.
-        /// Reset upon disable.
         /// </summary>
         public event Action<SettingsTab> OnTabFocused;
 
