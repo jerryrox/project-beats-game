@@ -88,6 +88,7 @@ namespace PBGame.UI.Components.Songs
             var item = container.CreateChild<SongListItem>("item");
             item.Anchor = Anchors.MiddleStretch;
             item.Size = CellSize;
+            item.SetOffsetHorizontal(0f);
             return item;
         }
 
