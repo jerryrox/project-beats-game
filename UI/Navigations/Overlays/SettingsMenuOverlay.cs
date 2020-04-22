@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using PBGame.UI.Components.SettingsMenu.Navbars;
 using PBGame.UI.Components.SettingsMenu.Contents;
 using PBGame.Animations;
+using PBGame.Configurations;
 using PBGame.Configurations.Settings;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -23,6 +24,9 @@ namespace PBGame.UI.Navigations.Overlays
 
 
         protected override int OverlayDepth => ViewDepths.SettingsMenuOverlay;
+
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
 
 
         [InitWithDependency]
@@ -87,6 +91,13 @@ namespace PBGame.UI.Navigations.Overlays
         {
             navBar.SetSettingsData(data);
             contentHolder.SetSettingsData(data);
+        }
+
+        protected override void OnPreHide()
+        {
+            base.OnPreHide();
+
+            GameConfiguration.Save();
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
