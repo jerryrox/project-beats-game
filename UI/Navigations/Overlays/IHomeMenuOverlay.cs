@@ -7,14 +7,6 @@ namespace PBGame.UI.Navigations.Overlays
     public interface IHomeMenuOverlay {
 
         /// <summary>
-        /// Event called on view hide event.
-        /// Returns whether the screen is transitioning to another view.
-        /// Reset when hidden.
-        /// </summary>
-        event Action<bool> OnViewHide;
-
-
-        /// <summary>
         /// Returns the background blur sprite.
         /// </summary>
         ISprite BlurSprite { get; }

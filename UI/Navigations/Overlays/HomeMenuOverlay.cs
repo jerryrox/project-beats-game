@@ -15,8 +15,6 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class HomeMenuOverlay : BaseOverlay, IHomeMenuOverlay {
 
-        public event Action<bool> OnViewHide;
-
         private GradientEffect gradientEffect;
 
 
@@ -108,15 +106,16 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override void OnEnableInited()
         {
-            MapSelection.OnBackgroundLoaded += OnBackgroundChange;
+            base.OnEnableInited();
 
+            MapSelection.OnBackgroundLoaded += OnBackgroundChange;
             OnBackgroundChange(MapSelection.Background);
         }
 
         protected override void OnDisable()
         {
-            OnViewHide = null;
-            
+            base.OnDisable();
+
             MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
         }
 
@@ -136,7 +135,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnBackButton()
         {
-            HideView(false);
+            OverlayNavigator.Hide(this);
         }
 
         /// <summary>
@@ -144,8 +143,8 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnPlayButton()
         {
-            HideView(true);
             ScreenNavigator.Show<SongsScreen>();
+            OverlayNavigator.Hide(this);
         }
 
         /// <summary>
@@ -153,8 +152,8 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnDownloadButton()
         {
-            HideView(true);
             // TODO: Show download screen.
+            OverlayNavigator.Hide(this);
         }
 
         /// <summary>
@@ -166,15 +165,6 @@ namespace PBGame.UI.Navigations.Overlays
             highlightColor.a = 0f;
             gradientEffect.Component.color1 = highlightColor;
             gradientEffect.Component.color2 = Color.black;
-        }
-
-        /// <summary>
-        /// Hides this view.
-        /// </summary>
-        private void HideView(bool isTransitioning)
-        {
-            OnViewHide?.Invoke(isTransitioning);
-            OverlayNavigator.Hide(this);
         }
     }
 }

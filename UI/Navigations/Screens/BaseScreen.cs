@@ -34,7 +34,6 @@ namespace PBGame.UI.Navigations.Screens
             Depth = ScreenDepth;
         }
 
-
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {
             return dependencies.Get<IAnimePreset>()?.GetDefaultScreenShow(this);

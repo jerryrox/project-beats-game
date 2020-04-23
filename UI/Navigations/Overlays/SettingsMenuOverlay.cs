@@ -96,7 +96,6 @@ namespace PBGame.UI.Navigations.Overlays
         protected override void OnPreHide()
         {
             base.OnPreHide();
-
             GameConfiguration.Save();
         }
     }
