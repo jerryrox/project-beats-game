@@ -110,12 +110,17 @@ namespace PBGame.UI.Components.Home
 
         protected override void OnEnableInited()
         {
+            base.OnEnableInited();
             BindEvents();
         }
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             UnbindEvents();
+
+            // The logo should be shrunk to its original size on disable.
+            zoomOutAni.Seek(zoomOutAni.Duration);
         }
 
         /// <summary>

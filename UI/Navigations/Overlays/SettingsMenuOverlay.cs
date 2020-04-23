@@ -99,15 +99,5 @@ namespace PBGame.UI.Navigations.Overlays
 
             GameConfiguration.Save();
         }
-
-        protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
-        {
-            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayPopupShow(this, () => container);
-        }
-
-        protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
-        {
-            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayPopupHide(this, () => container);
-        }
     }
 }

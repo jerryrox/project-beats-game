@@ -34,6 +34,7 @@ namespace PBGame
 
         public override void GracefulQuit()
         {
+            // TODO: Show confirmation.
             // TODO: Show fading animation through quit overlay.
             {
                 base.GracefulQuit();

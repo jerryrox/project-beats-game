@@ -26,9 +26,6 @@ namespace PBGame.UI.Navigations.Overlays
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
-        [ReceivesDependency]
-        private IAnimePreset AnimePreset { get; set; }
-
 
         [InitWithDependency]
         private void Init()
@@ -76,12 +73,12 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {
-            return AnimePreset.GetSubMenuOverlayShow(this);
+            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayShow(this);
         }
 
         protected override IAnime CreateHideAnime(IDependencyContainer dependencies)
         {
-            return AnimePreset.GetSubMenuOverlayHide(this);
+            return dependencies.Get<IAnimePreset>().GetSubMenuOverlayHide(this);
         }
     }
 }

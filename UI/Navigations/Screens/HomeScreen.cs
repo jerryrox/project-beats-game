@@ -48,6 +48,12 @@ namespace PBGame.UI.Navigations.Screens
             OverlayNavigator.Hide<MenuBarOverlay>();
         }
 
+        protected override void OnPreHide()
+        {
+            base.OnPreHide();
+            OverlayNavigator.Hide<HomeMenuOverlay>();
+        }
+
         /// <summary>
         /// Event called on logo button press.
         /// </summary>

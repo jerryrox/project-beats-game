@@ -1,9 +1,13 @@
+using PBGame.UI.Navigations.Overlays;
 using PBFramework.UI.Navigations;
 using PBFramework.Dependencies;
 
 namespace PBGame.UI.Components.MenuBar
 {
     public class ComboMenuButton : BaseMenuButton {
+
+        private bool hasOverlay = false;
+
 
         protected override string IconSpritename => "icon-menu";
 
@@ -15,12 +19,19 @@ namespace PBGame.UI.Components.MenuBar
             {
                 if (isFocused)
                 {
-                    // TODO: Display combo menu
-                    // TODO: Toggle off the button on combo menu hidden event.
+                    var overlay = overlayNavigator.Show<QuickMenuOverlay>();
+                    overlay.OnClose += () =>
+                    {
+                        hasOverlay = false;
+                        IsFocused = false;
+                    };
+                    hasOverlay = true;
                 }
                 else
                 {
-                    // TODO: Disable combo menu
+                    if (hasOverlay)
+                        overlayNavigator.Hide<QuickMenuOverlay>();
+                    hasOverlay = false;
                 }
             };
         }
