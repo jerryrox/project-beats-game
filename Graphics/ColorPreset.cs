@@ -20,6 +20,8 @@ namespace PBGame.Graphics
 
         public Color Passive { get; private set; } = HexColor.Create("1F77BC");
 
+        public Color DarkBackground { get; private set; } = HexColor.Create("0E1216");
+
 
         public Color GetDifficultyColor(DifficultyTypes type)
         {

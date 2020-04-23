@@ -1,4 +1,5 @@
 using System.Linq;
+using PBGame.Graphics;
 using PBGame.UI.Components.Prepare.Details;
 using PBGame.UI.Components.Prepare.Details.Meta;
 using PBGame.UI.Components.Prepare.Details.Ranking;
@@ -20,9 +21,9 @@ namespace PBGame.UI.Components.Prepare
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IColorPreset colorPreset)
         {
-            Color = HexColor.Create("0E1216");
+            Color = colorPreset.DarkBackground;
 
             menuHolder = CreateChild<MenuHolder>("menu", 0);
             {
