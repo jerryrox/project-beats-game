@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
@@ -13,6 +14,16 @@ using Newtonsoft.Json.Linq;
 namespace PBGame.Networking.API.Osu.Responses
 {
     public class MapsetListResponse : BaseResponse {
+
+        private static readonly string[] CursorKeyDomain = new string[] {
+            "approved_date",
+            "beatmaps.difficultyrating",
+            "title.raw",
+            "artist.raw",
+            "rating",
+            "play_count",
+            "favourite_count"
+        };
 
         private Action onParsed;
 
@@ -33,9 +44,9 @@ namespace PBGame.Networking.API.Osu.Responses
         public OnlineMapset[] Mapsets { get; private set; }
 
         /// <summary>
-        /// Returns the cursor date for querying next page.
+        /// Returns the cursor value for querying next page.
         /// </summary>
-        public int CursorDate { get; private set; }
+        public float CursorValue { get; private set; }
 
         /// <summary>
         /// Returns the cursor id for querying next page.
@@ -82,10 +93,39 @@ namespace PBGame.Networking.API.Osu.Responses
                         }
                         var cursor = json["cursor"];
                         {
-                            if (int.TryParse(cursor["approved_date"].ToString(), out int cursorDate))
-                                this.CursorDate = cursorDate;
                             if (int.TryParse(cursor["_id"].ToString(), out int cursorId))
                                 this.CursorId = cursorId;
+
+                            // Try to find a cursor key from the cursor data.
+                            bool foundKey = false;
+                            JToken cursorKeyToken = null;
+                            foreach (var cursorKey in CursorKeyDomain)
+                            {
+                                var token = cursor[cursorKey];
+                                if (token != null)
+                                {
+                                    cursorKeyToken = token;
+                                    foundKey = true;
+                                    break;
+                                }
+                            }
+                            // If no key is found, we must still make sure the feature works as best as possible.
+                            // The best possible way as of now is to search for a sibling entry whose path doesn't end with "_id".
+                            if (!foundKey)
+                            {
+                                Logger.LogWarning($"MapsetListResponse.Evaluate - Could not find a matching cursor key. Attempting to auto-detect this.");
+                                cursor.Where(c => {
+                                    if (!c.Path.EndsWith("_id", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        Logger.Log($"MapsetListResponse.Evaluate - Found a potentital cursor key at path ({c.Path}).");
+                                        return true;
+                                    }
+                                    return false;
+                                }).FirstOrDefault();
+                            }
+                            // Parse the cursor key's value.
+                            if (cursorKeyToken != null && float.TryParse(cursorKeyToken.ToString(), out float cursorValue))
+                                this.CursorValue = cursorValue;
                         }
                         Total = json["total"].Value<int>();
                     }

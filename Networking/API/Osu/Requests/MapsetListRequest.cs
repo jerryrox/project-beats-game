@@ -20,6 +20,10 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public MapLanguages Language { get; set; } = MapLanguages.Any;
 
+        public MapSortType Sort { get; set; } = MapSortType.Ranked;
+
+        public bool IsDescending { get; set; } = true;
+
         public bool HasVideo { get; set; } = false;
 
         public bool HasStoryboard { get; set; } = false;
@@ -44,7 +48,8 @@ namespace PBGame.Networking.API.Osu.Requests
                 request.AddQueryParam("l", ((int)Language).ToString());
             if(!string.IsNullOrWhiteSpace(SearchTerm))
                 request.AddQueryParam("q", SearchTerm.Trim());
-                
+            if(Sort != MapSortType.Ranked || !IsDescending)
+                request.AddQueryParam("sort", Api.Adaptor.GetMapSortName(Sort, IsDescending));
             if(HasVideo && HasStoryboard)
                 request.AddQueryParam("e", "storyboard.video");
             else if(HasVideo)

@@ -16,6 +16,8 @@ namespace PBGame.Networking.API
 
         public abstract ApiProviders ApiType { get; }
 
+        public abstract IApiAdaptor Adaptor { get; }
+
         public BindableBool IsOnline { get; private set; } = new BindableBool(false);
 
         public Bindable<IOnlineUser> User { get; protected set; }

@@ -19,6 +19,11 @@ namespace PBGame.Networking.API
         ApiProviders ApiType { get; }
 
         /// <summary>
+        /// Returns the adaptor for this api.
+        /// </summary>
+        IApiAdaptor Adaptor { get; }
+
+        /// <summary>
         /// Returns whether the user is currently logged into the API server.
         /// </summary>
         BindableBool IsOnline { get; }
