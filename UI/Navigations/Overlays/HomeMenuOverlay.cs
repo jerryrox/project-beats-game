@@ -124,10 +124,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnQuitButton()
         {
-            // Confirm quit
-            var dialog = OverlayNavigator.Show<DialogOverlay>();
-            dialog.SetMessage("Are you sure you want to quit Project: Beats?");
-            dialog.AddConfirmCancel(Game.GracefulQuit, null);
+            Game.GracefulQuit();
         }
 
         /// <summary>
