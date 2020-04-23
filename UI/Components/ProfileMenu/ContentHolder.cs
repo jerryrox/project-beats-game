@@ -20,7 +20,6 @@ namespace PBGame.UI.Components.ProfileMenu
         private const float LoggedInHeight = 480f;
         private const float LoggedOutHeight = 204f;
 
-        private ISprite glow;
         private ISprite background;
 
         private ISprite mask;
@@ -32,12 +31,6 @@ namespace PBGame.UI.Components.ProfileMenu
         private IAnime loggedOutAni;
 
 
-        /// <summary>
-        /// Returns the glow sprite.
-        /// </summary>
-        public ISprite GlowSprite => glow;
-
-
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
 
@@ -47,14 +40,6 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             Height = LoggedOutHeight;
 
-            glow = CreateChild<UguiSprite>("glow", 0);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.RawSize = new Vector2(30f, 30f);
-                glow.SpriteName = "square-32-glow";
-                glow.ImageType = Image.Type.Sliced;
-                glow.Color = Color.black;
-            }
             background = CreateChild<UguiSprite>("background", 1);
             {
                 background.Anchor = Anchors.Fill;

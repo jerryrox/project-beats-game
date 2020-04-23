@@ -19,7 +19,6 @@ namespace PBGame.UI.Navigations.Overlays
 
         private IScrollView scrollView;
         private IGrid grid;
-        private ISprite glow;
         private List<BaseMenuButton> menuButtons = new List<BaseMenuButton>();
 
 
@@ -41,14 +40,6 @@ namespace PBGame.UI.Navigations.Overlays
             container.Y = -16f;
             container.Height = ButtonSize.y;
 
-            glow = container.CreateChild<UguiSprite>("glow", -1);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.Offset = new Offset(-15f);
-                glow.SpriteName = "square-32-glow";
-                glow.ImageType = Image.Type.Sliced;
-                glow.Color = Color.black;
-            }
             scrollView = container.CreateChild<UguiScrollView>("scrollview", 0);
             {
                 scrollView.Anchor = Anchors.Fill;
@@ -73,18 +64,6 @@ namespace PBGame.UI.Navigations.Overlays
                     InvokeAfterFrames(1, () => scrollView.Container.Width = Mathf.Max(scrollView.Width, grid.ChildCount * ButtonSize.x));
                 }
             }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
-                .AddTime(0.25f, Color.gray)
-                .Build();
-
-            outAni = new Anime();
-            outAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
-                .AddTime(0.25f, Color.black)
-                .Build();
 
             OnEnableInited();
         }
