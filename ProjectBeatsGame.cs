@@ -34,11 +34,10 @@ namespace PBGame
 
         public override void GracefulQuit()
         {
-            // TODO: Show confirmation.
-            // TODO: Show fading animation through quit overlay.
-            {
-                base.GracefulQuit();
-            }
+            // Confirm quit
+            var dialog = overlayNavigator.Show<DialogOverlay>();
+            dialog.SetMessage("Are you sure you want to quit Project: Beats?");
+            dialog.AddConfirmCancel(OnConfirmQuit, null);
         }
 
         public override void ForceQuit()
@@ -49,6 +48,17 @@ namespace PBGame
             mapsetConfiguration.Save();
 
             base.ForceQuit();
+        }
+
+        /// <summary>
+        /// Event called from dialog when user decided to quit the game.
+        /// </summary>
+        private void OnConfirmQuit()
+        {
+            // TODO: Show fading animation through quit overlay.
+            {
+                base.GracefulQuit();
+            }
         }
 
         /// <summary>

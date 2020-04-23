@@ -33,19 +33,10 @@ namespace PBGame.UI.Navigations.Overlays
                 content.Pivot = Pivots.TopLeft;
                 content.Position = Vector2.zero;
                 content.Width = 320f;
+
+                glowSprite.SetParent(content);
+                glowSprite.Offset = new Offset(-15f);
             }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => content.GlowSprite.Color = color)
-                .AddTime(0f, () => content.GlowSprite.Color)
-                .AddTime(0.25f, Color.gray)
-                .Build();
-
-            outAni = new Anime();
-            outAni.AnimateColor(color => content.GlowSprite.Color = color)
-                .AddTime(0f, () => content.GlowSprite.Color)
-                .AddTime(0.25f, Color.black)
-                .Build();
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)

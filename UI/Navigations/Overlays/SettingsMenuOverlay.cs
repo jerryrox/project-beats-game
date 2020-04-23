@@ -20,8 +20,6 @@ namespace PBGame.UI.Navigations.Overlays
         private NavBar navBar;
         private ContentHolder contentHolder;
 
-        private ISprite glow;
-
 
         protected override int OverlayDepth => ViewDepths.SettingsMenuOverlay;
 
@@ -62,27 +60,6 @@ namespace PBGame.UI.Navigations.Overlays
 
                 contentHolder.OnTabFocus += (tabData) => navBar.ShowFocusOnTab(tabData);
             }
-            glow = container.CreateChild<UguiSprite>("glow", -1);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.RawSize = new Vector3(30f, 30f);
-                glow.Position = Vector2.zero;
-                glow.SpriteName = "square-32-glow";
-                glow.ImageType = Image.Type.Sliced;
-                glow.Color = Color.black;
-            }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
-                .AddTime(0.25f, Color.gray)
-                .Build();
-
-            outAni = new Anime();
-            outAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
-                .AddTime(0.25f, Color.black)
-                .Build();
 
             OnEnableInited();
         }

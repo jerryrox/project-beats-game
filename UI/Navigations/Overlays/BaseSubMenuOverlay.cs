@@ -9,6 +9,7 @@ using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Overlays
 {
@@ -19,6 +20,7 @@ namespace PBGame.UI.Navigations.Overlays
         protected ISprite darkSprite;
         protected ITrigger closeTrigger;
         protected ITrigger container;
+        protected ISprite glowSprite;
 
         protected IAnime hoverAni;
         protected IAnime outAni;
@@ -59,8 +61,29 @@ namespace PBGame.UI.Navigations.Overlays
                         hoverAni?.Stop();
                         outAni?.PlayFromStart();
                     };
+
+                    glowSprite = container.CreateChild<UguiSprite>("glow", -1);
+                    {
+                        glowSprite.Anchor = Anchors.Fill;
+                        glowSprite.Offset = new Offset(-15f);
+                        glowSprite.SpriteName = "square-32-glow";
+                        glowSprite.ImageType = Image.Type.Sliced;
+                        glowSprite.Color = Color.black;
+                    }
                 }
             }
+
+            hoverAni = new Anime();
+            hoverAni.AnimateColor(color => glowSprite.Color = color)
+                .AddTime(0f, () => glowSprite.Color)
+                .AddTime(0.25f, Color.gray)
+                .Build();
+
+            outAni = new Anime();
+            outAni.AnimateColor(color => glowSprite.Color = color)
+                .AddTime(0f, () => glowSprite.Color)
+                .AddTime(0.25f, Color.black)
+                .Build();
         }
 
         protected override void OnPreHide()
