@@ -55,10 +55,12 @@ namespace PBGame
         /// </summary>
         private void OnConfirmQuit()
         {
-            // TODO: Show fading animation through quit overlay.
+            var quitView = overlayNavigator.Show<QuitOverlay>();
+            quitView.OnQuitAniEnd += () =>
             {
-                base.GracefulQuit();
-            }
+                Debug.LogWarning("Quit");
+                base.ForceQuit();
+            };
         }
 
         /// <summary>

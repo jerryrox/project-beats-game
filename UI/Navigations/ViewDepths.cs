@@ -33,5 +33,7 @@ namespace PBGame.UI.Navigations
         public const int DialogOverlay = 200;
 
         public const int SystemOverlay = 1000;
+
+        public const int QuitOverlay = 1000000;
     }
 }
