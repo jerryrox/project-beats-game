@@ -15,9 +15,10 @@ namespace PBGame.UI.Navigations
         // =======================================
         public const int SplashScreen = 0;
         public const int InitializeScreen = 1;
-        
+
         public const int HomeScreen = 5;
         public const int HomeMenuOverlay = 6;
+        public const int DownloadScreen = 6;
 
         public const int SongsScreen = 10;
         public const int PrepareScreen = 11;
