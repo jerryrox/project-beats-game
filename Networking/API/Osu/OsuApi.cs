@@ -12,6 +12,10 @@ namespace PBGame.Networking.API.Osu
 
         public override API.ApiProviders ApiType => API.ApiProviders.Osu;
 
+        public override string Name => "osu!";
+
+        public override string IconName => "icon-provider-osu";
+
         public override IApiAdaptor Adaptor => adaptor;
 
 

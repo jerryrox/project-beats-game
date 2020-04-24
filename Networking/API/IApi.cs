@@ -19,6 +19,16 @@ namespace PBGame.Networking.API
         ApiProviders ApiType { get; }
 
         /// <summary>
+        /// The displayed name of the API provider.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Returns the spritename of the icon representing the API.
+        /// </summary>
+        string IconName { get; }
+
+        /// <summary>
         /// Returns the adaptor for this api.
         /// </summary>
         IApiAdaptor Adaptor { get; }
