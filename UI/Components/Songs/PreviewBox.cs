@@ -11,12 +11,13 @@ using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Graphics.Effects.Components;
-using PBFramework.Threading;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 using Coffee.UIExtensions;
+
+using ShadowEffect = PBFramework.Graphics.Effects.CoffeeUI.ShadowEffect;
 
 namespace PBGame.UI.Components.Songs
 {
