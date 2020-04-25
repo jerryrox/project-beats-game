@@ -26,6 +26,8 @@ namespace PBGame.UI.Navigations.Overlays
         };
 
 
+        public float ContainerHeight => 64f;
+
         public BackgroundSprite BackgroundSprite { get; private set; }
 
         public BaseMenuButton ComboMenuButton { get; private set; }
@@ -52,7 +54,7 @@ namespace PBGame.UI.Navigations.Overlays
                 container.Anchor = Anchors.TopStretch;
                 container.Pivot = Pivots.Top;
                 container.SetOffsetHorizontal(0f);
-                container.Height = 64f;
+                container.Height = ContainerHeight;
                 container.Y = 0f;
 
                 BackgroundSprite = container.CreateChild<BackgroundSprite>("background");
