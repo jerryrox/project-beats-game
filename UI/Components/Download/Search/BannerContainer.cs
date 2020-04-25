@@ -44,6 +44,7 @@ namespace PBGame.UI.Components.Download.Search
                 grid.Anchor = Anchors.Fill;
                 grid.Offset = new Offset(0f, 32f);
                 grid.SpaceHeight = 16f;
+                grid.Limit = 0;
 
                 var modeFilter = grid.CreateChild<DropdownFilter>("mode", 0);
                 {

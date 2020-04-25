@@ -89,7 +89,7 @@ namespace PBGame.UI.Components.Prepare
                 {
                     bg.Anchor = Anchors.Fill;
                     bg.RawSize = Vector2.zero;
-                    bg.SpriteName = "circle-320";
+                    bg.SpriteName = "circle-64";
                 }
                 center = holder.CreateChild<UguiSprite>("center", 2);
                 {
@@ -151,7 +151,7 @@ namespace PBGame.UI.Components.Prepare
             else
             {
                 icon.Active = true;
-                icon.SpriteName = service.IconName;
+                icon.SpriteName = service.GetIconName(64);
             }
 
             // Apply focus only if interactible.

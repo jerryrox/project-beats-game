@@ -40,7 +40,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
                 }
                 objectsInfo = grid.CreateChild<MetaDifficultyInfoCell>("objects", 1);
                 {
-                    objectsInfo.IconName = "icon-mode-osu";
+                    objectsInfo.IconName = "icon-mode-osu-32";
                     objectsInfo.Tint = colorPreset.SecondaryFocus;
                 }
             }

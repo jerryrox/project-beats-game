@@ -56,7 +56,7 @@ namespace PBGame.UI.Components.Download.Result
                 return;
             }
 
-            iconSprite.SpriteName = service.IconName;
+            iconSprite.SpriteName = service.GetIconName(32);
             label.Text = count.ToString("N0");
         }
 

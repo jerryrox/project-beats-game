@@ -21,7 +21,7 @@ namespace PBGame.Rulesets
 		
         public abstract string Name { get; }
 
-		public abstract string IconName { get; }
+		public abstract string BaseIconName { get; }
 
         public abstract GameModes GameMode { get; }
 
@@ -33,7 +33,9 @@ namespace PBGame.Rulesets
 			this.dependencyContainer = dependencyContainer;
 		}
 
-		public abstract IMapConverter CreateConverter(IOriginalMap map);
+        public string GetIconName(int size) => $"{BaseIconName}-{size}";
+
+        public abstract IMapConverter CreateConverter(IOriginalMap map);
 
 		public abstract IMapProcessor CreateProcessor(IPlayableMap map);
 

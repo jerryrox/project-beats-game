@@ -11,7 +11,7 @@ namespace PBGame.Rulesets.Osu.Standard
 
         public override string Name => "Osu Standard";
 
-        public override string IconName => "icon-mode-osu";
+        public override string BaseIconName => "icon-mode-osu";
 
         public override GameModes GameMode => GameModes.OsuStandard;
 
