@@ -14,9 +14,6 @@ namespace PBGame.UI.Components.Common
     /// </summary>
     public class BoxButton : HoverableTrigger, IHasColor, IHasTint, IHasLabel {
 
-        private const float HoveredInAlpha = 1f;
-        private const float HoveredOutAlpha = 0.4f;
-
         protected ILabel label;
 
 
@@ -47,6 +44,16 @@ namespace PBGame.UI.Components.Common
             get => hoverSprite.Alpha;
             set => label.Alpha = hoverSprite.Alpha = value;
         }
+
+        /// <summary>
+        /// Amount of alpha applied on hover in.
+        /// </summary>
+        protected virtual float HoveredInAlpha => 1f;
+
+        /// <summary>
+        /// Amount of alpha applied on hover out.
+        /// </summary>
+        protected virtual float HoveredOutAlpha => 0.4f;
 
 
         [InitWithDependency]

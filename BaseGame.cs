@@ -42,6 +42,7 @@ namespace PBGame
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
         protected WebImageCacher webImageCacher;
+        protected WebMusicCacher webMusicCacher;
 
         protected SkinManager skinManager;
 
@@ -108,6 +109,7 @@ namespace PBGame
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
             Dependencies.CacheAs<IWebImageCacher>(webImageCacher = new WebImageCacher());
+            Dependencies.CacheAs<IWebMusicCacher>(webMusicCacher = new WebMusicCacher());
 
             Dependencies.CacheAs<ISkinManager>(skinManager = new SkinManager());
             skinManager.DefaultSkin.AssetStore.Load();

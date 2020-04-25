@@ -24,6 +24,11 @@ namespace PBGame.UI.Components.Download
         public Bindable<OnlineMapset> PreviewingMapset { get; } = new Bindable<OnlineMapset>();
 
         /// <summary>
+        /// Returns the list of mapsets returned from search API.
+        /// </summary>
+        public Bindable<List<OnlineMapset>> Results { get; } = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
+
+        /// <summary>
         /// Returns the value of cursor.
         /// Depends on the sorting method.
         /// </summary>
@@ -55,6 +60,11 @@ namespace PBGame.UI.Components.Download
         public Bindable<MapLanguages> Language { get; } = new Bindable<MapLanguages>(MapLanguages.Any);
 
         /// <summary>
+        /// Current rank state filter.
+        /// </summary>
+        public Bindable<MapStatus> RankState { get; } = new Bindable<MapStatus>(MapStatus.Ranked);
+
+        /// <summary>
         /// Sorting criteria.
         /// </summary>
         public Bindable<MapSortType> Sort { get; } = new Bindable<MapSortType>(MapSortType.Ranked);
@@ -78,5 +88,15 @@ namespace PBGame.UI.Components.Download
         /// Returns the current search term.
         /// </summary>
         public Bindable<string> SearchTerm { get; } = new Bindable<string>("");
+
+
+        /// <summary>
+        /// Performs the specified action on given result list and triggers the bindable afterwards.
+        /// </summary>
+        public void ModifyResults(Action<List<OnlineMapset>> action)
+        {
+            action?.Invoke(Results.Value);
+            Results.Trigger();
+        }
     }
 }
