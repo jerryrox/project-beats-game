@@ -7,7 +7,6 @@ using PBGame.Assets.Fonts;
 using PBGame.Graphics;
 using PBGame.Configurations;
 using PBGame.Networking.API;
-using PBGame.Networking.API.Osu.Requests;
 using PBGame.Networking.API.Responses;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -129,11 +128,9 @@ namespace PBGame.UI.Components.ProfileMenu
             password.IsFocused = false;
 
             // Start request.
-            var request = new LoginRequest()
-            {
-                Username = username.Text,
-                Password = password.Text
-            };
+            var request = OsuApi.RequestFactory.GetLogin();
+            request.Username = username.Text;
+            request.Password = password.Text;
             request.OnRequestEnd += OnLoginResponse;
             OsuApi.Request(request);
         }
