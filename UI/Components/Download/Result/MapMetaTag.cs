@@ -33,7 +33,6 @@ namespace PBGame.UI.Components.Download.Result
                 iconSprite.Pivot = Pivots.Left;
                 iconSprite.Size = new Vector2(20f, 20f);
                 iconSprite.X = 8f;
-                iconSprite.SetOffsetVertical(2);
                 iconSprite.Color = Color.black;
             }
 
