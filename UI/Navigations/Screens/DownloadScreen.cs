@@ -82,7 +82,6 @@ namespace PBGame.UI.Navigations.Screens
             state.PreviewingMapset.Value = null;
             state.PreviewingMapset.BindAndTrigger(OnPreviewMapsetChange);
 
-            MusicController.IsLoop = false;
             MusicController.OnEnd += OnMusicEnded;
         }
         
