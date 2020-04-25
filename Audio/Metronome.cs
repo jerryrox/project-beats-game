@@ -41,7 +41,12 @@ namespace PBGame.Audio
                 curTime = time;
                 FindTimingPoint();
             };
-		}
+            controller.OnStop += () =>
+            {
+                curTime = 0f;
+                FindTimingPoint();
+            };
+        }
 
 		public void Update()
 		{
