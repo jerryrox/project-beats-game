@@ -67,7 +67,7 @@ namespace PBGame.UI.Components.Download.Search
                 }
             }
 
-            InvokeAfterFrames(1, () =>
+            InvokeAfterTransformed(1, () =>
             {
                 grid.CellSize = new Vector2(ProviderButtonWidth, this.Height);
             });

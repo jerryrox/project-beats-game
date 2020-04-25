@@ -41,7 +41,7 @@ namespace PBGame.UI.Components.Download.Search
                 touchArea.Alpha = 0f;
             }
 
-            InvokeAfterFrames(2, () =>
+            InvokeAfterTransformed(1, () =>
             {
                 touchArea.SetParent(toggle);
             });

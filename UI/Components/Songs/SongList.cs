@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.Songs
             OnEnableInited();
 
             // Recalibrate after a frame due to a limitation where a rect transform's size doesn't update immediately when using anchors.
-            InvokeAfterFrames(1, Recalibrate);
+            InvokeAfterTransformed(1, Recalibrate);
         }
 
         protected override void OnEnableInited()

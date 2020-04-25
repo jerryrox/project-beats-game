@@ -84,7 +84,7 @@ namespace PBGame.UI.Components.Download.Search
                 blocker.Alpha = 0f;
             }
 
-            InvokeAfterFrames(1, () =>
+            InvokeAfterTransformed(1, () =>
             {
                 grid.CellSize = GetFilterCellSize();
             });

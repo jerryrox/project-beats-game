@@ -19,22 +19,18 @@ namespace PBGame.UI.Components.Download.Result
         {
             label.Anchor = Anchors.RightStretch;
             label.Pivot = Pivots.Right;
+            label.Alignment = TextAnchor.MiddleRight;
 
             iconSprite = CreateChild<UguiSprite>("icon", 1);
             {
-                iconSprite.Anchor = Anchors.RightStretch;
+                iconSprite.Anchor = Anchors.Right;
                 iconSprite.Pivot = Pivots.Right;
+                iconSprite.Size = new Vector2(20f, 20f);
                 iconSprite.X = -8f;
-                iconSprite.SetOffsetVertical(2);
                 iconSprite.Color = Color.black;
             }
 
-            InvokeAfterFrames(1, () =>
-            {
-                iconSprite.Width = iconSprite.Height;
-
-                label.X = -16 - iconSprite.Width;
-            });
+            label.X = -16 - iconSprite.Width;
         }
 
         /// <summary>

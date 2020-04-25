@@ -61,7 +61,7 @@ namespace PBGame.UI.Navigations.Overlays
                     CreateBasicButton("Quit", "icon-power", () => Game.GracefulQuit());
 
                     // Resize scrollview container
-                    InvokeAfterFrames(1, () => scrollView.Container.Width = Mathf.Max(scrollView.Width, grid.ChildCount * ButtonSize.x));
+                    InvokeAfterTransformed(1, () => scrollView.Container.Width = Mathf.Max(scrollView.Width, grid.ChildCount * ButtonSize.x));
                 }
             }
 

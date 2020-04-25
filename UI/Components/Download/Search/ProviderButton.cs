@@ -36,7 +36,7 @@ namespace PBGame.UI.Components.Download.Search
 
             CreateIconSprite();
 
-            InvokeAfterFrames(2, () =>
+            InvokeAfterTransformed(2, () =>
             {
                 float size = Mathf.Min(this.Width, this.Height) - 16;
                 iconSprite.Size = new Vector2(size, size);

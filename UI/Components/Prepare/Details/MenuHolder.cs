@@ -40,7 +40,7 @@ namespace PBGame.UI.Components.Prepare.Details
             {
                 grid.Anchor = Anchors.Fill;
                 grid.RawSize = Vector2.zero;
-                InvokeAfterFrames(1, () => grid.CellSize = new Vector2(Width / 3f, 56f));
+                InvokeAfterTransformed(1, () => grid.CellSize = new Vector2(Width / 3f, 56f));
 
                 backButton = grid.CreateChild<MenuButton>("back", 0);
                 {

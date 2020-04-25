@@ -7,6 +7,7 @@ using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download
 {
@@ -21,9 +22,15 @@ namespace PBGame.UI.Components.Download
         {
             background.Alpha = 0f;
 
-            Initialize(CreateCell, UpdateCell);
+            InvokeAfterTransformed(1, () =>
+            {
+                Initialize(CreateCell, UpdateCell);
+                CellSize = new Vector2(this.Width / 2, 180f);
+                Axis = GridLayoutGroup.Axis.Vertical;
+                Limit = 2;
 
-            OnEnableInited();
+                OnEnableInited();
+            });
         }
 
         protected override void OnEnableInited()
@@ -44,6 +51,7 @@ namespace PBGame.UI.Components.Download
         private IListItem CreateCell()
         {
             var item = container.CreateChild<ResultCell>("item", container.ChildCount);
+            item.Size = CellSize;
             return item;
         }
 

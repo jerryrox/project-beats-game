@@ -67,7 +67,7 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
             Cleanup();
             this.settingsData = settingsData;
 
-            InvokeAfterFrames(1, () =>
+            InvokeAfterTransformed(1, () =>
             {
                 scrollviewHeight = Height;
 

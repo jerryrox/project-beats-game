@@ -32,6 +32,12 @@ namespace PBGame.UI.Components.Download.Result
             cacherAgent.OnFinished += OnImageLoaded;
 
             Color = new Color(0.75f, 0.75f, 0.75f);
+
+            showAni = new Anime();
+            showAni.AnimateFloat(a => Alpha = a)
+                .AddTime(0f, () => Alpha)
+                .AddTime(0.25f, 1f)
+                .Build();
         }
 
         protected override void OnDisable()
@@ -70,7 +76,7 @@ namespace PBGame.UI.Components.Download.Result
             this.Texture = image;
             if (image != null)
             {
-                InvokeAfterFrames(1, FillTexture);
+                InvokeAfterTransformed(1, FillTexture);
                 showAni.PlayFromStart();
             }
         }

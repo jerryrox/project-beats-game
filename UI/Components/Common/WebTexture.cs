@@ -86,7 +86,7 @@ namespace PBGame.UI.Components.Common
             this.Texture = image;
             showAni.PlayFromStart();
 
-            InvokeAfterFrames(1, FillTexture);
+            InvokeAfterTransformed(1, FillTexture);
         }
 
         /// <summary>

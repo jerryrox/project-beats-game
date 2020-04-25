@@ -45,7 +45,7 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
             Cleanup();
             this.settingsData = data;
 
-            InvokeAfterFrames(1, () =>
+            InvokeAfterTransformed(1, () =>
             {
                 CellSize = new Vector2(Width, Height / data.TabCount);
 

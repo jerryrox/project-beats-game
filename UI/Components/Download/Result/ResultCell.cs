@@ -82,7 +82,7 @@ namespace PBGame.UI.Components.Download.Result
                     mapperLabel.Anchor = Anchors.BottomStretch;
                     mapperLabel.Pivot = Pivots.Bottom;
                     mapperLabel.SetOffsetHorizontal(8f);
-                    mapperLabel.Y = 58f;
+                    mapperLabel.Y = 42f;
                     mapperLabel.IsBold = true;
                     mapperLabel.FontSize = 16;
                     mapperLabel.WrapText = true;

@@ -44,14 +44,14 @@ namespace PBGame.UI.Components.Download.Result
                 grid.Anchor = Anchors.Fill;
                 grid.Offset = Offset.Zero;
 
-                downloadButton = grid.CreateChild<HoverableTrigger>();
+                downloadButton = grid.CreateChild<HoverableTrigger>("download", 0);
                 {
                     downloadButton.CreateIconSprite(spriteName: "icon-download", size: 24f);
                     downloadButton.UseDefaultHoverAni();
 
                     downloadButton.OnTriggered += OnDownloadButton;
                 }
-                playButton = grid.CreateChild<HoverableTrigger>();
+                playButton = grid.CreateChild<HoverableTrigger>("play", 1);
                 {
                     playButton.CreateIconSprite(spriteName: "icon-play", size: 24f);
                     playButton.UseDefaultHoverAni();
@@ -59,11 +59,6 @@ namespace PBGame.UI.Components.Download.Result
                     playButton.OnTriggered += OnPlayButton;
                 }
             }
-
-            InvokeAfterFrames(1, () =>
-            {
-                grid.CellSize = new Vector2(this.Width / 2f, this.Height);
-            });
         }
 
         protected override void OnDisable()
@@ -77,6 +72,8 @@ namespace PBGame.UI.Components.Download.Result
         /// </summary>
         public void Setup(OnlineMapset mapset)
         {
+            grid.CellSize = new Vector2(this.Width / 2f, this.Height);
+
             Reset();
             if(mapset == null)
                 return;
