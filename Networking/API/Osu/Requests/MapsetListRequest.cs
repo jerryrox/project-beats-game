@@ -1,14 +1,18 @@
 using System;
 using PBGame.Networking.API.Osu.Responses;
+using PBGame.Networking.API.Requests;
+using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
 using PBFramework.Services;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Osu.Requests
 {
-    public class MapsetListRequest : BaseRequest<MapsetListResponse> {
+    public class MapsetListRequest : BaseRequest<IMapsetListResponse>, IMapsetListRequest {
 
-        public int? CursorDate { get; set; } = null;
+        public string CursorName { get; set; } = "approved_date";
+
+        public float? CursorValue { get; set; } = null;
 
         public int? CursorId { get; set; } = null;
 
@@ -34,8 +38,8 @@ namespace PBGame.Networking.API.Osu.Requests
         protected override IHttpRequest CreateRequest()
         {
             var request = new HttpGetRequest(Api.GetUrl("beatmapsets/search"));
-            if(CursorDate.HasValue)
-                request.AddQueryParam("cursor[approved_date]", CursorDate.Value.ToString());
+            if(CursorValue.HasValue)
+                request.AddQueryParam($"cursor[{CursorName}]", CursorValue.Value.ToString());
             if(CursorId.HasValue)
                 request.AddQueryParam("cursor[_id]", CursorId.Value.ToString());
             if(Mode.HasValue)
@@ -59,7 +63,7 @@ namespace PBGame.Networking.API.Osu.Requests
             return request;
         }
 
-        protected override MapsetListResponse CreateResponse(IHttpRequest request) => new MapsetListResponse(request, OnMapsetsParsed);
+        protected override IMapsetListResponse CreateResponse(IHttpRequest request) => new MapsetListResponse(request, OnMapsetsParsed);
 
         protected override void OnHttpResponse()
         {

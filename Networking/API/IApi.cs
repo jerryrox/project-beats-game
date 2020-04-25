@@ -34,6 +34,11 @@ namespace PBGame.Networking.API
         IApiAdaptor Adaptor { get; }
 
         /// <summary>
+        /// Returns the request factory of the api.
+        /// </summary>
+        IRequestFactory RequestFactory { get; }
+
+        /// <summary>
         /// Returns whether the user is currently logged into the API server.
         /// </summary>
         BindableBool IsOnline { get; }

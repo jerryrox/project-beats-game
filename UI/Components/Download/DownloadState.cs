@@ -29,6 +29,11 @@ namespace PBGame.UI.Components.Download
         public Bindable<List<OnlineMapset>> Results { get; } = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
 
         /// <summary>
+        /// Returns the name of the cursor associated with cursor value.
+        /// </summary>
+        public Bindable<string> CursorName { get; } = new Bindable<string>();
+
+        /// <summary>
         /// Returns the value of cursor.
         /// Depends on the sorting method.
         /// </summary>

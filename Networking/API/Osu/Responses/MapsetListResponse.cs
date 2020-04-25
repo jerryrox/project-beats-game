@@ -2,9 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets;
+using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
 using PBFramework.Debugging;
 using PBFramework.Networking.API;
@@ -13,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace PBGame.Networking.API.Osu.Responses
 {
-    public class MapsetListResponse : BaseResponse {
+    public class MapsetListResponse : BaseResponse, IMapsetListResponse {
 
         private static readonly string[] CursorKeyDomain = new string[] {
             "approved_date",

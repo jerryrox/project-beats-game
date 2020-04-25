@@ -1,4 +1,5 @@
 using System;
+using PBGame.Networking.API.Responses;
 using PBFramework.Debugging;
 using PBFramework.Networking.API;
 using Newtonsoft.Json;
@@ -6,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace PBGame.Networking.API.Osu.Responses
 {
-    public class LoginResponse : BaseResponse {
+    public class LoginResponse : BaseResponse, ILoginResponse {
     
         public LoginResponse(IHttpRequest request) : base(request) {}
 
