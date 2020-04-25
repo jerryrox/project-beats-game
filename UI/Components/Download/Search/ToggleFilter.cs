@@ -14,6 +14,7 @@ namespace PBGame.UI.Components.Download.Search
     public class ToggleFilter : BaseFilter {
 
         private BasicToggle toggle;
+        private UguiSprite touchArea;
 
         private BindableBool bindable;
 
@@ -34,17 +35,11 @@ namespace PBGame.UI.Components.Download.Search
                         bindable.Value = !bindable.Value;
                 };
             }
-            var touchArea = container.CreateChild<UguiSprite>("touch-area", 5);
+            touchArea = container.CreateChild<UguiSprite>("touch-area", 5);
             {
                 touchArea.Anchor = Anchors.Fill;
-                touchArea.Offset = Offset.Zero;
                 touchArea.Alpha = 0f;
             }
-
-            InvokeAfterTransformed(1, () =>
-            {
-                touchArea.SetParent(toggle);
-            });
 
             OnEnableInited();
         }
@@ -66,8 +61,24 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         public void Setup(BindableBool bindable)
         {
+            AdjustTouchArea();
+
             this.bindable = bindable;
             BindEvents();
+        }
+
+        /// <summary>
+        /// Adjusts touch area size so it fits this object.
+        /// </summary>
+        private void AdjustTouchArea()
+        {
+            // Making sure the area is fully covered correctly.
+            InvokeAfterTransformed(5, () =>
+            {
+                touchArea.SetParent(container);
+                touchArea.Offset = Offset.Zero;
+                touchArea.SetParent(toggle);
+            });
         }
 
         /// <summary>
