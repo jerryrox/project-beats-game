@@ -36,7 +36,7 @@ namespace PBGame.UI.Components.Download.Search
                 rankSearchFilter.Pivot = Pivots.Left;
                 rankSearchFilter.SetOffsetVertical(16f);
                 rankSearchFilter.X = 16f;
-                rankSearchFilter.Width = 250;
+                rankSearchFilter.Width = 240;
             }
             sortSearchFilter = CreateChild<SortSearchFilter>("sort-search", 1);
             {
@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Download.Search
                 sortSearchFilter.Pivot = Pivots.Left;
                 sortSearchFilter.SetOffsetVertical(16f);
                 sortSearchFilter.X = rankSearchFilter.X + rankSearchFilter.Width + 16f;
-                sortSearchFilter.Width = 288;
+                sortSearchFilter.Width = 295;
             }
 
             advancedButton = CreateChild<AdvancedButton>("advanced", 3);
