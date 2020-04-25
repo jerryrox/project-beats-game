@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
@@ -37,7 +38,7 @@ namespace PBGame.UI.Components.Prepare
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IPrepareScreen prepareScreen)
         {
             gradient = CreateChild<UguiSprite>("gradient", 0);
             {
@@ -51,8 +52,8 @@ namespace PBGame.UI.Components.Prepare
                 listContainer.Anchor = Anchors.TopStretch;
                 listContainer.Pivot = Pivots.Top;
                 listContainer.RawWidth = 0f;
-                listContainer.Y = -64f;
                 listContainer.Height = 64f;
+                listContainer.Y = -(prepareScreen as PrepareScreen).MenuBarHeight;
 
                 versionList = listContainer.CreateChild<UguiListView>("version-list", 0);
                 {
