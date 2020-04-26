@@ -23,6 +23,8 @@ namespace PBGame.UI.Components.Download.Result
         private MetaDisplayer metaDisplayer;
         private ActionBar actionBar;
 
+        private OnlineMapset mapset;
+
 
         public int ItemIndex { get; set; }
 
@@ -117,11 +119,19 @@ namespace PBGame.UI.Components.Download.Result
             }
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            this.mapset = null;
+        }
+
         /// <summary>
         /// Initializes the display for cell using the specified mapset.
         /// </summary>
         public void Setup(OnlineMapset mapset)
         {
+            this.mapset = mapset;
+
             coverImage.Setup(mapset);
             previewBar.Setup(mapset);
             metaDisplayer.Setup(mapset);
@@ -131,5 +141,16 @@ namespace PBGame.UI.Components.Download.Result
             artistLabel.Text = mapset.Artist;
             mapperLabel.Text = mapset.Creator;
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Log mapset info")]
+        private void LogMapsetInfo()
+        {
+            if(mapset == null)
+                Debug.Log("null");
+            else
+                Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(mapset).ToString());
+        }
+#endif
     }
 }
