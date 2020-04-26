@@ -24,6 +24,8 @@ namespace PBGame.Networking.API
         public T Response { get; private set; }
         IApiResponse IApiRequest.Response => Response;
 
+        public abstract bool RequiresLogin { get; }
+
         public virtual bool IsNotified => false;
 
         public virtual string RequestTitle => null;

@@ -9,8 +9,6 @@ namespace PBGame.Networking.API.Osu.Requests
 {
     public class MapDownloadRequest : BaseRequest<IMapDownloadResponse>, IMapDownloadRequest {
 
-        public override bool IsNotified => true;
-
         // public override string RequestTitle => 
 
         public IDownloadStore DownloadStore { get; set; }
@@ -18,6 +16,10 @@ namespace PBGame.Networking.API.Osu.Requests
         public int MapsetId { get; set; }
 
         public bool IsNoVideo { get; set; }
+        
+        public override bool IsNotified => true;
+
+        public override bool RequiresLogin => true;
 
 
         protected override IHttpRequest CreateRequest()

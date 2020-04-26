@@ -14,6 +14,8 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public string Password { get; set; }
 
+        public override bool RequiresLogin => false;
+
 
         protected override IHttpRequest CreateRequest()
         {

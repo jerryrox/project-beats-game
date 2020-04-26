@@ -34,6 +34,8 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public string SearchTerm { get; set; } = null;
 
+        public override bool RequiresLogin => false;
+
 
         protected override IHttpRequest CreateRequest()
         {
