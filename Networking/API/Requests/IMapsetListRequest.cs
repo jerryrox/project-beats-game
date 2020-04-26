@@ -13,7 +13,7 @@ namespace PBGame.Networking.API.Requests
         /// <summary>
         /// Value of the cursor under current sort type.
         /// </summary>
-        float? CursorValue { get; set; }
+        string CursorValue { get; set; }
 
         /// <summary>
         /// Identifier of the mapset currently on the cursor.

@@ -22,7 +22,6 @@ namespace PBGame.UI.Navigations.Screens
 {
     public class DownloadScreen : BaseScreen, IDownloadScreen
     {
-
         private UguiSprite bgSprite;
         private SearchMenu searchMenu;
         private ResultList resultList;
@@ -52,8 +51,6 @@ namespace PBGame.UI.Navigations.Screens
 
             musicAgent = new CacherAgent<IMusicAudio>(musicCacher);
             musicAgent.OnFinished += OnMusicAudioLoaded;
-
-            ListenToFilterChange();
 
             bgSprite = CreateChild<UguiSprite>("bg", -1);
             {
@@ -86,9 +83,12 @@ namespace PBGame.UI.Navigations.Screens
 
             state.PreviewingMapset.Value = null;
             state.PreviewingMapset.BindAndTrigger(OnPreviewMapsetChange);
-            state.OnNextPage += OnRequestNextPage;
+            state.OnNextPage += RequestMapsetList;
+            state.OnRequestList += RequestMapsetList;
 
             MusicController.OnEnd += OnMusicEnded;
+
+            RequestMapsetList();
         }
 
         protected override void OnDisable()
@@ -97,7 +97,8 @@ namespace PBGame.UI.Navigations.Screens
             musicAgent.Remove();
 
             state.PreviewingMapset.OnValueChanged -= OnPreviewMapsetChange;
-            state.OnNextPage -= OnRequestNextPage;
+            state.OnNextPage -= RequestMapsetList;
+            state.OnRequestList -= RequestMapsetList;
 
             state.ResetState();
         }
@@ -116,7 +117,7 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Requests for mapset list from API.
         /// </summary>
-        private void RequestMapsetList(bool isNextPage)
+        private void RequestMapsetList()
         {
             // Stop on-going request first.
             if (state.SearchRequest.Value != null)
@@ -137,17 +138,11 @@ namespace PBGame.UI.Navigations.Screens
             }
 
             // Cursor should be assigned if requesting next page.
-            if (isNextPage)
+            if (state.IsRequestingNextPage)
             {
                 request.CursorName = state.CursorName;
                 request.CursorValue = state.CursorValue;
                 request.CursorId = state.CursorId;
-            }
-            else
-            {
-                state.CursorName = "";
-                state.CursorValue = 0;
-                state.CursorId = 0;
             }
 
             request.Mode = state.Mode.Value.GetIndex();
@@ -166,38 +161,29 @@ namespace PBGame.UI.Navigations.Screens
         }
 
         /// <summary>
-        /// Listens to change in search filters in state to make a search request when changed.
-        /// </summary>
-        private void ListenToFilterChange()
-        {
-            state.Mode.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.Category.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.Genre.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.Language.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.RankState.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.Sort.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.HasVideo.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.HasStoryboard.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.IsDescending.OnValueChanged += delegate { RequestMapsetList(false); };
-            state.SearchTerm.OnValueChanged += delegate { RequestMapsetList(false); };
-        }
-
-        /// <summary>
         /// Event called on mapset list request end.
         /// </summary>
         private void OnMapsetListResponse(IMapsetListResponse response)
         {
+            bool isNextPage = state.IsRequestingNextPage;
+
             if (response.IsSuccess)
             {
+                state.CursorName = response.CursorName;
+                state.CursorValue = response.CursorValue;
+                state.CursorId = response.CursorId;
+
                 state.ModifyResults(resulsts =>
                 {
-                    resulsts.Clear();
+                    if(!isNextPage)
+                        resulsts.Clear();
                     resulsts.AddRange(response.Mapsets);
                 });
             }
             else
             {
-                state.ModifyResults(results => results.Clear());
+                if(!isNextPage)
+                    state.ModifyResults(results => results.Clear());
             }
             state.SearchRequest.Value = null;
         }
@@ -232,10 +218,5 @@ namespace PBGame.UI.Navigations.Screens
             if(!string.IsNullOrEmpty(mapset?.PreviewAudio))
                 musicAgent.Request(mapset.PreviewAudio);
         }
-
-        /// <summary>
-        /// Event called on request for the next page of results.
-        /// </summary>
-        private void OnRequestNextPage() => RequestMapsetList(true);
     }
 }

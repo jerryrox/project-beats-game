@@ -128,6 +128,9 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void OnResultsChange(List<OnlineMapset> mapsets, List<OnlineMapset> _)
         {
+            if(State.IsRequestingNextPage)
+                return;
+                
             bannerTexture.Unload();
             if(mapsets != null && mapsets.Count > 0)
                 bannerTexture.Load(mapsets[0].CoverImage);

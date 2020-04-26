@@ -41,7 +41,7 @@ namespace PBGame.Networking.API.Osu.Responses
 
         public string CursorName { get; private set; }
 
-        public float CursorValue { get; private set; }
+        public string CursorValue { get; private set; }
 
         public int CursorId { get; private set; }
 
@@ -94,7 +94,7 @@ namespace PBGame.Networking.API.Osu.Responses
                                 var token = cursor[cursorKey];
                                 if (token != null)
                                 {
-                                    cursorName = token.ToString();
+                                    cursorName = cursorKey;
                                     foundKey = true;
                                     break;
                                 }
@@ -104,20 +104,20 @@ namespace PBGame.Networking.API.Osu.Responses
                             if (!foundKey)
                             {
                                 Logger.LogWarning($"MapsetListResponse.Evaluate - Could not find a matching cursor key. Attempting to auto-detect this.");
-                                cursor.Where(c => {
+                                cursorName = cursor.Where(c => {
                                     if (!c.Path.EndsWith("_id", StringComparison.OrdinalIgnoreCase))
                                     {
                                         Logger.Log($"MapsetListResponse.Evaluate - Found a potentital cursor key at path ({c.Path}).");
                                         return true;
                                     }
                                     return false;
-                                }).FirstOrDefault();
+                                }).FirstOrDefault()?.ToString();
                             }
                             // Parse the cursor key's value.
-                            if (cursorName != null && float.TryParse(cursorName, out float cursorValue))
+                            if (cursorName != null && cursor[cursorName] != null)
                             {
                                 this.CursorName = cursorName;
-                                this.CursorValue = cursorValue;
+                                this.CursorValue = cursor[cursorName].ToString();
                             }
                         }
                         Total = json["total"].Value<int>();

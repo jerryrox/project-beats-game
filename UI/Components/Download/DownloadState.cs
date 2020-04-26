@@ -19,6 +19,11 @@ namespace PBGame.UI.Components.Download
         /// </summary>
         public event Action OnNextPage;
 
+        /// <summary>
+        /// Event called on fresh list request.
+        /// </summary>
+        public event Action OnRequestList;
+
 
         /// <summary>
         /// The name of the cursor associated with cursor value.
@@ -28,12 +33,17 @@ namespace PBGame.UI.Components.Download
         /// <summary>
         /// The value of cursor.
         /// </summary>
-        public float CursorValue { get; set; }
+        public string CursorValue { get; set; }
 
         /// <summary>
         /// Map identifier the cursor is on.
         /// </summary>
         public int CursorId { get; set; }
+
+        /// <summary>
+        /// Returns whether the search request is requesting for the next page.
+        /// </summary>
+        public bool IsRequestingNextPage { get; private set; }
 
         /// <summary>
         /// Returns the current search request in progress.
@@ -107,16 +117,32 @@ namespace PBGame.UI.Components.Download
 
 
 
-        public DownloadState() => ResetState();
+        public DownloadState()
+        {
+            ResetState();
+
+            // Trigger mapset list request when any of these values change.
+            Mode.OnValueChanged += delegate { RequestMapsetList(); };
+            Category.OnValueChanged += delegate { RequestMapsetList(); };
+            Genre.OnValueChanged += delegate { RequestMapsetList(); };
+            Language.OnValueChanged += delegate { RequestMapsetList(); };
+            RankState.OnValueChanged += delegate { RequestMapsetList(); };
+            Sort.OnValueChanged += delegate { RequestMapsetList(); };
+            HasVideo.OnValueChanged += delegate { RequestMapsetList(); };
+            HasStoryboard.OnValueChanged += delegate { RequestMapsetList(); };
+            IsDescending.OnValueChanged += delegate { RequestMapsetList(); };
+            SearchTerm.OnValueChanged += delegate { RequestMapsetList(); };
+        }
 
         /// <summary>
         /// Resets state to inital values.
         /// </summary>
         public void ResetState()
         {
-            CursorName = "";
-            CursorValue = 0;
+            CursorName = null;
+            CursorValue = null;
             CursorId = 0;
+            IsRequestingNextPage = false;
             SearchRequest.Value = null;
             ApiProvider.Value = ApiProviders.Osu;
             PreviewingMapset.Value = null;
@@ -133,9 +159,25 @@ namespace PBGame.UI.Components.Download
         }
 
         /// <summary>
+        /// Requests for fresh mapset list.
+        /// </summary>
+        public void RequestMapsetList()
+        {
+            IsRequestingNextPage = false;
+            CursorName = null;
+            CursorValue = null;
+            CursorId = 0;
+            OnRequestList?.Invoke();
+        }
+
+        /// <summary>
         /// Requests for the next page using the same options.
         /// </summary>
-        public void RequestNextPage() => OnNextPage?.Invoke();
+        public void RequestNextPage()
+        {
+            IsRequestingNextPage = true;
+            OnNextPage?.Invoke();
+        }
 
         /// <summary>
         /// Performs the specified action on given result list and triggers the bindable afterwards.

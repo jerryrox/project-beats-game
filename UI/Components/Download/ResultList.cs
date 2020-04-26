@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Components.Download.Result;
 using PBGame.Networking.Maps;
 using PBFramework.UI;
@@ -13,6 +14,16 @@ namespace PBGame.UI.Components.Download
 {
     public class ResultList : UguiListView {
 
+        /// <summary>
+        /// Amount of offset applied to container end Y pos which triggers next page request.
+        /// </summary>
+        private const float NextPageReqThreshold = 150f;
+
+        private BasicScrollbar scrollbar;
+
+        private bool requestedNextPage;
+
+
         [ReceivesDependency]
         private DownloadState State { get; set; }
 
@@ -21,6 +32,18 @@ namespace PBGame.UI.Components.Download
         private void Init()
         {
             background.Alpha = 0f;
+
+            scrollbar = CreateChild<BasicScrollbar>("scrollbar", 100);
+            {
+                scrollbar.Anchor = Anchors.RightStretch;
+                scrollbar.Pivot = Pivots.Right;
+                scrollbar.X = 0;
+                scrollbar.Width = 2f;
+                scrollbar.SetOffsetVertical(0f);
+                scrollbar.SetVertical();
+            }
+
+            VerticalScrollbar = scrollbar;
 
             InvokeAfterTransformed(1, () =>
             {
@@ -36,13 +59,31 @@ namespace PBGame.UI.Components.Download
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
+
+            requestedNextPage = false;
+
             State.Results.BindAndTrigger(OnResultChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
+
             State.Results.OnValueChanged -= OnResultChange;
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if(!ShouldUpdate || State.Results.Value.Count == 0 || requestedNextPage)
+                return;
+
+            var triggerPos = ContainerEndPos.y - NextPageReqThreshold;
+            if (container.Position.y >= triggerPos)
+            {
+                requestedNextPage = true;
+                State.RequestNextPage();
+            }
         }
 
         /// <summary>
@@ -69,7 +110,23 @@ namespace PBGame.UI.Components.Download
         /// </summary>
         private void OnResultChange(List<OnlineMapset> result, List<OnlineMapset> _)
         {
+            Vector2? lastDelta = null;
+            if (State.IsRequestingNextPage)
+            {
+                lastDelta = container.Position;
+                lastDelta -= ContainerStartPos;
+            }
+
             TotalItems = result.Count;
+
+            if (lastDelta.HasValue)
+            {
+                Vector2 pos = ContainerStartPos;
+                pos += lastDelta.Value;
+                container.Position = pos;
+            }
+
+            requestedNextPage = false;
         }
     }
 }

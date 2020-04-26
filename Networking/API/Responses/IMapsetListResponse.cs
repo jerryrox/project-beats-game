@@ -17,7 +17,7 @@ namespace PBGame.Networking.API.Responses
         /// <summary>
         /// Returns the cursor value for querying next page.
         /// </summary>
-        float CursorValue { get; }
+        string CursorValue { get; }
 
         /// <summary>
         /// Returns the cursor id for querying next page.

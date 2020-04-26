@@ -12,7 +12,7 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public string CursorName { get; set; } = "approved_date";
 
-        public float? CursorValue { get; set; } = null;
+        public string CursorValue { get; set; } = null;
 
         public int? CursorId { get; set; } = null;
 
@@ -40,8 +40,8 @@ namespace PBGame.Networking.API.Osu.Requests
         protected override IHttpRequest CreateRequest()
         {
             var request = new HttpGetRequest(Api.GetUrl("beatmapsets/search"));
-            if(CursorValue.HasValue)
-                request.AddQueryParam($"cursor[{CursorName}]", CursorValue.Value.ToString());
+            if(CursorValue != null && CursorName != null)
+                request.AddQueryParam($"cursor[{CursorName}]", CursorValue);
             if(CursorId.HasValue)
                 request.AddQueryParam("cursor[_id]", CursorId.Value.ToString());
             if(Mode.HasValue)
