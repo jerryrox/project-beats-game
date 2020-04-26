@@ -52,7 +52,7 @@ namespace PBGame.UI.Components.Common
         private void Update()
         {
             if(Rotate)
-                iconSprite.RotationZ -= Time.deltaTime - RotateSpeed;
+                iconSprite.RotationZ -= Time.deltaTime * RotateSpeed;
         }
     }
 }

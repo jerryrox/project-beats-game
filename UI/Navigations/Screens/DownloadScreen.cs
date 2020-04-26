@@ -7,6 +7,7 @@ using PBGame.Assets.Caching;
 using PBGame.Graphics;
 using PBGame.Rulesets;
 using PBGame.Networking.API;
+using PBGame.Networking.API.Requests;
 using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
 using PBFramework.UI;
@@ -24,7 +25,9 @@ namespace PBGame.UI.Navigations.Screens
     {
         private UguiSprite bgSprite;
         private SearchMenu searchMenu;
+        private UguiObject resultArea;
         private ResultList resultList;
+        private ResultLoader resultLoader;
 
         private CacherAgent<IMusicAudio> musicAgent;
 
@@ -68,10 +71,21 @@ namespace PBGame.UI.Navigations.Screens
                 searchMenu.Pivot = Pivots.Top;
                 searchMenu.Offset = new Offset(0f, MenuBarHeight, 0f, 0f);
             }
-            resultList = CreateChild<ResultList>("result-list", 0);
+            resultArea = CreateChild<UguiObject>("result-area", 1);
             {
-                resultList.Anchor = Anchors.Fill;
-                resultList.Offset = new Offset(8f, searchMenu.FoldedHeight + MenuBarHeight, 8f, 0f);
+                resultArea.Anchor = Anchors.Fill;
+                resultArea.Offset = new Offset(0f, searchMenu.FoldedHeight + MenuBarHeight, 0f, 0f);
+
+                resultList = resultArea.CreateChild<ResultList>("list", 0);
+                {
+                    resultList.Anchor = Anchors.Fill;
+                    resultList.Offset = new Offset(8f, 0f);
+                }
+                resultLoader = resultArea.CreateChild<ResultLoader>("loader", 1);
+                {
+                    resultLoader.Anchor = Anchors.Fill;
+                    resultLoader.Offset = Offset.Zero;
+                }
             }
 
             OnEnableInited();
@@ -85,6 +99,7 @@ namespace PBGame.UI.Navigations.Screens
             state.PreviewingMapset.BindAndTrigger(OnPreviewMapsetChange);
             state.OnNextPage += RequestMapsetList;
             state.OnRequestList += RequestMapsetList;
+            state.SearchRequest.BindAndTrigger(OnRequestChange);
 
             MusicController.OnEnd += OnMusicEnded;
 
@@ -99,6 +114,7 @@ namespace PBGame.UI.Navigations.Screens
             state.PreviewingMapset.OnValueChanged -= OnPreviewMapsetChange;
             state.OnNextPage -= RequestMapsetList;
             state.OnRequestList -= RequestMapsetList;
+            state.SearchRequest.OnValueChanged -= OnRequestChange;
 
             state.ResetState();
         }
@@ -217,6 +233,17 @@ namespace PBGame.UI.Navigations.Screens
 
             if(!string.IsNullOrEmpty(mapset?.PreviewAudio))
                 musicAgent.Request(mapset.PreviewAudio);
+        }
+
+        /// <summary>
+        /// Event called on mapset list request object change.
+        /// </summary>
+        private void OnRequestChange(IMapsetListRequest request, IMapsetListRequest _)
+        {
+            if(request == null)
+                resultLoader.Hide();
+            else
+                resultLoader.Show();
         }
     }
 }

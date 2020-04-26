@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.Download.Result;
+using PBGame.Networking.API.Requests;
 using PBGame.Networking.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -12,8 +13,8 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download
 {
-    public class ResultList : UguiListView {
-
+    public class ResultList : UguiListView
+    {
         /// <summary>
         /// Amount of offset applied to container end Y pos which triggers next page request.
         /// </summary>
@@ -63,19 +64,21 @@ namespace PBGame.UI.Components.Download
             requestedNextPage = false;
 
             State.Results.BindAndTrigger(OnResultChange);
+            State.SearchRequest.BindAndTrigger(OnRequestChange);
         }
-        
+
         protected override void OnDisable()
         {
             base.OnDisable();
 
             State.Results.OnValueChanged -= OnResultChange;
+            State.SearchRequest.OnValueChanged -= OnRequestChange;
         }
 
         protected override void Update()
         {
             base.Update();
-            if(!ShouldUpdate || State.Results.Value.Count == 0 || requestedNextPage)
+            if (!ShouldUpdate || State.Results.Value.Count == 0 || requestedNextPage)
                 return;
 
             var triggerPos = ContainerEndPos.y - NextPageReqThreshold;
@@ -127,6 +130,14 @@ namespace PBGame.UI.Components.Download
             }
 
             requestedNextPage = false;
+        }
+
+        /// <summary>
+        /// Event called on mapset list request object change.
+        /// </summary>
+        private void OnRequestChange(IMapsetListRequest request, IMapsetListRequest _)
+        {
+
         }
     }
 }
