@@ -31,7 +31,12 @@ namespace PBGame.UI.Components.Download.Search
                 input.Background.Color = new Color(1f, 1f, 1f, 0.25f);
                 input.CreateIconSprite(spriteName: "icon-search", size: 24f);
 
-                input.OnSubmitted += (value) => State.SearchTerm.Value = value.Trim();
+                input.OnSubmitted += (value) =>
+                {
+                    value = value.Trim();
+                    if (value != State.SearchTerm.Value)
+                        State.SearchTerm.Value = value;
+                };
             }
         }
 
