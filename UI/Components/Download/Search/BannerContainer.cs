@@ -26,9 +26,12 @@ namespace PBGame.UI.Components.Download.Search
             set => blocker.Active = !value;
         }
 
+        [ReceivesDependency]
+        private DownloadState State { get; set; }
+
 
         [InitWithDependency]
-        private void Init(DownloadState state)
+        private void Init()
         {
             var mask = AddEffect(new MaskEffect());
             Color = new Color(0f, 0f, 0f, 0.75f);
@@ -49,32 +52,32 @@ namespace PBGame.UI.Components.Download.Search
                 var modeFilter = grid.CreateChild<DropdownFilter>("mode", 0);
                 {
                     modeFilter.LabelText = "Mode";
-                    modeFilter.Setup<GameModes>(state.Mode);
+                    modeFilter.Setup<GameModes>(State.Mode);
                 }
                 var categoryFilter = grid.CreateChild<DropdownFilter>("category", 1);
                 {
                     categoryFilter.LabelText = "Category";
-                    categoryFilter.Setup<MapCategories>(state.Category);
+                    categoryFilter.Setup<MapCategories>(State.Category);
                 }
                 var genreFilter = grid.CreateChild<DropdownFilter>("genre", 2);
                 {
                     genreFilter.LabelText = "Genre";
-                    genreFilter.Setup<MapGenres>(state.Genre);
+                    genreFilter.Setup<MapGenres>(State.Genre);
                 }
                 var languageFilter = grid.CreateChild<DropdownFilter>("language", 3);
                 {
                     languageFilter.LabelText = "Language";
-                    languageFilter.Setup<MapLanguages>(state.Language);
+                    languageFilter.Setup<MapLanguages>(State.Language);
                 }
                 var hasVideoFilter = grid.CreateChild<ToggleFilter>("hasVideo", 4);
                 {
                     hasVideoFilter.LabelText = "Has Video";
-                    hasVideoFilter.Setup(state.HasVideo);
+                    hasVideoFilter.Setup(State.HasVideo);
                 }
                 var hasStoryboardFilter = grid.CreateChild<ToggleFilter>("hasStoryboard", 5);
                 {
                     hasStoryboardFilter.LabelText = "Has Storyboard";
-                    hasStoryboardFilter.Setup(state.HasStoryboard);
+                    hasStoryboardFilter.Setup(State.HasStoryboard);
                 }
             }
             blocker = CreateChild<UguiSprite>("blocker", 2);
@@ -88,6 +91,20 @@ namespace PBGame.UI.Components.Download.Search
             {
                 grid.CellSize = GetFilterCellSize();
             });
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+            State.Results.BindAndTrigger(OnResultsChange);
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            State.Results.OnValueChanged -= OnResultsChange;
         }
 
         /// <summary>
@@ -104,6 +121,16 @@ namespace PBGame.UI.Components.Download.Search
             if(width > 1400)
                 return new Vector2(width / 4f, 64f);
             return new Vector2(width / 3f, 64f);
+        }
+
+        /// <summary>
+        /// Event called on result mapset list change.
+        /// </summary>
+        private void OnResultsChange(List<OnlineMapset> mapsets, List<OnlineMapset> _)
+        {
+            bannerTexture.Unload();
+            if(mapsets != null && mapsets.Count > 0)
+                bannerTexture.Load(mapsets[0].CoverImage);
         }
     }
 }

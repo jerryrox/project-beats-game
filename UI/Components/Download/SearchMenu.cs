@@ -92,6 +92,7 @@ namespace PBGame.UI.Components.Download
             {
                 container.Height = h;
                 shadowButton.SetOffsetTop(h);
+                bannerContainer.AdjustBannerTexture();
             })
                 .AddTime(0f, () => container.Height)
                 .AddTime(0.25f, FoldedHeight)
@@ -108,6 +109,7 @@ namespace PBGame.UI.Components.Download
             {
                 container.Height = h;
                 shadowButton.SetOffsetTop(h);
+                bannerContainer.AdjustBannerTexture();
             })
                 .AddTime(0f, () => container.Height)
                 .AddTime(0.25f, UnfoldedHeight)
