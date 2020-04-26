@@ -33,7 +33,7 @@ namespace PBGame.UI.Components.Common
             }
         }
 
-        public Color Tint
+        public virtual Color Tint
         {
             get => Color;
             set => Color = value;
