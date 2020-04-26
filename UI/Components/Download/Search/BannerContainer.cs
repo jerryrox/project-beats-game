@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Download.Search
         private void Init(DownloadState state)
         {
             var mask = AddEffect(new MaskEffect());
-            mask.Component.showMaskGraphic = false;
+            Color = new Color(0f, 0f, 0f, 0.75f);
 
             bannerTexture = CreateChild<WebTexture>("banner", 0);
             {

@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
+using PBGame.Stores;
 using PBGame.Networking.API;
 using PBGame.Networking.Maps;
-using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Audio;
 using PBFramework.Graphics;
@@ -31,7 +32,13 @@ namespace PBGame.UI.Components.Download.Result
         private IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
+        private IApiManager ApiManager { get; set; }
+
+        [ReceivesDependency]
         private DownloadState State { get; set; }
+
+        [ReceivesDependency]
+        private IDownloadStore DownloadStore { get; set; }
 
 
         [InitWithDependency]
@@ -49,12 +56,16 @@ namespace PBGame.UI.Components.Download.Result
                     downloadButton.CreateIconSprite(spriteName: "icon-download", size: 24f);
                     downloadButton.UseDefaultHoverAni();
 
+                    downloadButton.IsClickToTrigger = true;
+
                     downloadButton.OnTriggered += OnDownloadButton;
                 }
                 playButton = grid.CreateChild<HoverableTrigger>("play", 1);
                 {
                     playButton.CreateIconSprite(spriteName: "icon-play", size: 24f);
                     playButton.UseDefaultHoverAni();
+
+                    playButton.IsClickToTrigger = true;
 
                     playButton.OnTriggered += OnPlayButton;
                 }
@@ -104,7 +115,15 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            // TODO: Request download.
+            var api = ApiManager.GetApi(State.ApiProvider.Value);
+            if(api == null)
+                return;
+            var request = api.RequestFactory.GetMapDownload();
+            request.DownloadStore = DownloadStore;
+            request.MapsetId = mapset.Id;
+            api.Request(request);
+
+            // TODO: Add requesting progress to notification.
         }
 
         /// <summary>
