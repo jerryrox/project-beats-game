@@ -142,6 +142,7 @@ namespace PBGame.UI.Components.Download
             PreviewingMapset.Value = null;
             Results.Value.Clear();
             Mode.Value = GameModes.OsuStandard;
+            Category.Value = MapCategories.Ranked;
             Genre.Value = MapGenres.Any;
             Language.Value = MapLanguages.Any;
             Sort.Value = MapSortType.Ranked;
