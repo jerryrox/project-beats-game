@@ -1,15 +1,17 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Rulesets.Maps;
 using PBGame.Networking.API;
 using UnityEngine;
 
 namespace PBGame
 {
-    public class ProjectBeatsGame : BaseGame {
-
+    public class ProjectBeatsGame : BaseGame
+    {
         /// <summary>
         /// Returns whether the initial splash view should be shown automatically.
         /// </summary>
@@ -26,9 +28,11 @@ namespace PBGame
             HookScreenNavigator();
             HookMapSelection();
             HookConfigurations();
+            HookDownloadStore();
+            HookMapManager();
 
             // Display splash view.
-            if(ShouldShowFirstView)
+            if (ShouldShowFirstView)
                 screenNavigator.Show<SplashScreen>();
         }
 
@@ -152,13 +156,13 @@ namespace PBGame
                 // Play music on load.
                 musicController.MountAudio(music);
                 musicController.Play();
-                
+
                 // Seek to preview time if not home screen.
                 if (!(screenNavigator.CurrentScreen is HomeScreen))
                 {
                     var previewTime = mapSelection.Map.Metadata.PreviewTime;
                     // Some songs don't have a proper preview time.
-                    if(previewTime < 0)
+                    if (previewTime < 0)
                         previewTime = music.Duration / 2;
 
                     musicController.LoopTime = previewTime;
@@ -201,10 +205,42 @@ namespace PBGame
             };
 
             // Mapset sort change events
-            gameConfiguration.MapsetSort.OnValueChanged += (sort, _) => 
+            gameConfiguration.MapsetSort.OnValueChanged += (sort, _) =>
             {
                 mapManager.Sort(sort);
             };
         }
-    }
+
+        /// <summary>
+        /// Triggers actions on certain download store events.
+        /// </summary>
+        private void HookDownloadStore()
+        {
+            // Handle mapset import
+            downloadStore.MapStorage.OnAdded += (path) =>
+            {
+                Debug.Log("ProjectBeatsGame.HookDownloadStore - Downloaded at path: " + path);
+                // TODO: Show notification.
+                mapManager.Import(downloadStore.MapStorage.GetFile(path));
+            };
+        }
+
+        /// <summary>
+        /// Triggers action on certain map manager events.
+        /// </summary>
+        private void HookMapManager()
+        {
+            mapManager.OnImportMapset += (mapset) =>
+            {
+                if(mapset == null)
+                    return;
+                    
+                Debug.Log("ProjectBeatsGame.HookMapManager - Imported mapset: " + mapset.MapsetId);
+                // Select new map if in songs selection.
+                if(screenNavigator.CurrentScreen is SongsScreen)
+                    mapSelection.SelectMapset(mapset);
+                // TODO: Show notification.
+            };
+        }
+}
 }

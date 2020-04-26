@@ -336,6 +336,8 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnBackgroundLoaded(IMapBackground background)
         {
+            if(Mapset == null)
+                return;
             if (backgroundAgent.CurrentKey != Mapset.Maps[0])
             {
                 LoadBackground();

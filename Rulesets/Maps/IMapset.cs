@@ -1,12 +1,13 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using PBFramework.IO;
 using PBFramework.Data.Queries;
 using PBFramework.Stores;
 
 namespace PBGame.Rulesets.Maps
 {
-    public interface IMapset : IDirectoryIndex, IQueryableData {
+    public interface IMapset : IHasFiles, IDirectoryIndex, IQueryableData {
     
         /// <summary>
         /// Identifier of the mapset, if exists.
@@ -32,11 +33,6 @@ namespace PBGame.Rulesets.Maps
         /// Returns the metadata of the mapset.
         /// </summary>
         MapMetadata Metadata { get; }
-
-        /// <summary>
-        /// Returns the list of files contained in this mapset.
-        /// </summary>
-        List<FileInfo> Files { get; }
 
 
         /// <summary>

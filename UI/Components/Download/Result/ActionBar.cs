@@ -120,8 +120,15 @@ namespace PBGame.UI.Components.Download.Result
                 return;
             var request = api.RequestFactory.GetMapDownload();
             request.DownloadStore = DownloadStore;
-            request.MapsetId = mapset.Id;
+            request.Mapset = mapset;
+
+            // TODO: Temporarily log onto console
             api.Request(request);
+            request.Promise.OnProgress += (progress) =>
+            {
+                Debug.Log("Download progress: " + progress);
+            };
+
 
             // TODO: Add requesting progress to notification.
         }

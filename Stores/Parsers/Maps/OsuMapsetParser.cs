@@ -19,13 +19,15 @@ namespace PBGame.Stores.Parsers.Maps
 
         public Mapset Parse(DirectoryInfo directory, Mapset mapset)
         {
+            mapset.Maps.Clear();
+            mapset.Files.Clear();
             mapset.Files.AddRange(directory.GetFiles());
 
-			// Search for map files in the directory.
-			foreach(var file in mapset.Files)
+            // Search for map files in the directory.
+            foreach(var file in mapset.Files)
 			{
-				// If a valid beatmap file extension
-				if(file.Extension.Equals(".osu"))
+                // If a valid beatmap file extension
+                if(file.Extension.Equals(".osu"))
 				{
 					// Open stream for read
 					using(var stream = file.OpenText())

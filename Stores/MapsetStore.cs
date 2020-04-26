@@ -8,6 +8,7 @@ using PBGame.Stores.Parsers.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBFramework;
+using PBFramework.IO;
 using PBFramework.DB;
 using PBFramework.Stores;
 using PBFramework.Storages;
@@ -64,29 +65,24 @@ namespace PBGame.Stores
             }
         }
 
-        public Task<Mapset> Load(Guid id, ISimpleProgress progress)
+        public Mapset Load(Guid id)
         {
-            return Task.Run(() => {
-                progress?.Report(0f);
+            // Initialize
+            InitModules(false);
 
-                // Initialize
-                InitModules(false);
+            // Find entry with matching id.
+            string stringId = id.ToString();
+            Mapset mapset = null;
+            using (var result = Database.Query()
+                .Where(d => d["Id"].ToString().Equals(stringId, StringComparison.Ordinal))
+                .GetResult())
+            {
+                Mapset rawMapset = result.FirstOrDefault();
+                if(rawMapset != null)
+                    mapset = LoadData(rawMapset);
+            }
 
-                // Find entry with matching id.
-                string stringId = id.ToString();
-                Mapset mapset = null;
-                using (var result = Database.Query()
-                    .Where(d => d["Id"].ToString().Equals(stringId, StringComparison.Ordinal))
-                    .GetResult())
-                {
-                    Mapset rawMapset = result.FirstOrDefault();
-                    if(rawMapset != null)
-                        mapset = LoadData(rawMapset);
-                }
-
-                progress?.Report(1f);
-                return mapset;
-            });
+            return mapset;
         }
 
         protected override IDatabase<Mapset> CreateDatabase() => new Database<Mapset>(GameDirectory.Maps.GetSubdirectory("data"));

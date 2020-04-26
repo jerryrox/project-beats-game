@@ -117,7 +117,7 @@ namespace PBGame.UI.Components.Songs
             // Refresh the list.
             this.mapsets = mapsets;
             TotalItems = mapsets.Count;
-
+            
             CenterOnSelection(MapSelection.Mapset);
         }
 

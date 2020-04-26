@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Stores;
@@ -45,15 +46,32 @@ namespace PBGame.Maps
                 var returnableProgress = new ReturnableProgress<Mapset>();
                 // Start importing the file
                 Mapset mapset = await store.Import(file, progress: returnableProgress);
-                // Dispatch mapset imported event on main thread.
                 if (mapset != null)
                 {
-                    UnityThreadService.Dispatch(() =>
+                    // Mapset must be fully loaded.
+                    mapset = store.LoadData(mapset);
+                    if (mapset != null)
                     {
-                        OnImportMapset?.Invoke(mapset);
-                        return null;
-                    });
-                    return true;
+                        // Dispatch mapset imported event on main thread.
+                        UnityThreadService.Dispatch(() =>
+                        {
+                            // Add to all mapsets
+                            allMapsets.AddOrReplace(mapset);
+                            // Reapply filter
+                            Search(lastSearch);
+                            OnImportMapset?.Invoke(mapset);
+                            return null;
+                        });
+                        return true;
+                    }
+                    else
+                    {
+                        // TODO: Notification
+                    }
+                }
+                else
+                {
+                    // TODO: Notification
                 }
                 return false;
             });
@@ -86,9 +104,10 @@ namespace PBGame.Maps
 
         public Task Load(Guid id, IReturnableProgress<IMapset> progress)
         {
-            return Task.Run(async() =>
+            return Task.Run(() =>
             {
-                IMapset mapset = await store.Load(id, progress);
+                progress?.Report(0f);
+                IMapset mapset = store.Load(id);
 
                 UnityThreadService.DispatchUnattended(() =>
                 {
@@ -97,6 +116,7 @@ namespace PBGame.Maps
                     // Search again.
                     Search(lastSearch);
                     // Finished.
+                    progress?.Report(1f);
                     progress.InvokeFinished(mapset);
                     return null;
                 });
