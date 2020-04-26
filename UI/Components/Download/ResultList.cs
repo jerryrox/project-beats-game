@@ -64,7 +64,6 @@ namespace PBGame.UI.Components.Download
             requestedNextPage = false;
 
             State.Results.BindAndTrigger(OnResultChange);
-            State.SearchRequest.BindAndTrigger(OnRequestChange);
         }
 
         protected override void OnDisable()
@@ -72,7 +71,6 @@ namespace PBGame.UI.Components.Download
             base.OnDisable();
 
             State.Results.OnValueChanged -= OnResultChange;
-            State.SearchRequest.OnValueChanged -= OnRequestChange;
         }
 
         protected override void Update()
@@ -130,14 +128,6 @@ namespace PBGame.UI.Components.Download
             }
 
             requestedNextPage = false;
-        }
-
-        /// <summary>
-        /// Event called on mapset list request object change.
-        /// </summary>
-        private void OnRequestChange(IMapsetListRequest request, IMapsetListRequest _)
-        {
-
         }
     }
 }
