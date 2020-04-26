@@ -4,6 +4,7 @@ using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Skins;
 using PBGame.Audio;
+using PBGame.Stores;
 using PBGame.Configurations;
 using PBFramework.Services;
 using PBFramework.Threading;
@@ -48,6 +49,9 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         [ReceivesDependency]
         private IRecordManager RecordManager { get; set; }
 
+        [ReceivesDependency]
+        private IDownloadStore DownloadStore { get; set; }
+
 
         public InitLoader(IDependencyContainer dependencies)
         {
@@ -87,7 +91,13 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 
             IEventProgress progress = new EventProgress();
             progress.OnProgress += SetProgress;
-            progress.OnFinished += LoadSkinManager;
+            progress.OnFinished += () =>
+            {
+                // Load any downloaded mapset files that weren't imported concurrently.
+                foreach(var archive in DownloadStore.MapStorage.GetAllFiles())
+                    MapManager.Import(archive);
+                LoadSkinManager();
+            };
             MapManager.Reload(progress);
         }
 
