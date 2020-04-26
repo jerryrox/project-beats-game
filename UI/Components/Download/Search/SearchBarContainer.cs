@@ -13,7 +13,7 @@ namespace PBGame.UI.Components.Download.Search
 {
     public class SearchBarContainer : UguiSprite {
 
-        private RankSearchFilter rankSearchFilter;
+        private CategorySearchFilter rankSearchFilter;
         private SortSearchFilter sortSearchFilter;
         private SearchBarFilter searchBarFilter;
         private AdvancedButton advancedButton;
@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.Download.Search
         {
             Color = colorPreset.DarkBackground;
 
-            rankSearchFilter = CreateChild<RankSearchFilter>("rank-search", 0);
+            rankSearchFilter = CreateChild<CategorySearchFilter>("rank-search", 0);
             {
                 rankSearchFilter.Anchor = Anchors.LeftStretch;
                 rankSearchFilter.Pivot = Pivots.Left;

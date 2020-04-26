@@ -86,11 +86,6 @@ namespace PBGame.UI.Components.Download
         public Bindable<MapLanguages> Language { get; } = new Bindable<MapLanguages>();
 
         /// <summary>
-        /// Current rank state filter.
-        /// </summary>
-        public Bindable<MapStatus> RankState { get; } = new Bindable<MapStatus>();
-
-        /// <summary>
         /// Sorting criteria.
         /// </summary>
         public Bindable<MapSortType> Sort { get; } = new Bindable<MapSortType>();
@@ -126,7 +121,6 @@ namespace PBGame.UI.Components.Download
             Category.OnValueChanged += delegate { RequestMapsetList(); };
             Genre.OnValueChanged += delegate { RequestMapsetList(); };
             Language.OnValueChanged += delegate { RequestMapsetList(); };
-            RankState.OnValueChanged += delegate { RequestMapsetList(); };
             Sort.OnValueChanged += delegate { RequestMapsetList(); };
             HasVideo.OnValueChanged += delegate { RequestMapsetList(); };
             HasStoryboard.OnValueChanged += delegate { RequestMapsetList(); };
@@ -150,7 +144,6 @@ namespace PBGame.UI.Components.Download
             Mode.Value = GameModes.OsuStandard;
             Genre.Value = MapGenres.Any;
             Language.Value = MapLanguages.Any;
-            RankState.Value = MapStatus.Ranked;
             Sort.Value = MapSortType.Ranked;
             HasVideo.Value = false;
             HasStoryboard.Value = false;

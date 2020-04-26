@@ -54,11 +54,6 @@ namespace PBGame.UI.Components.Download.Search
                     modeFilter.LabelText = "Mode";
                     modeFilter.Setup<GameModes>(State.Mode);
                 }
-                var categoryFilter = grid.CreateChild<DropdownFilter>("category", 1);
-                {
-                    categoryFilter.LabelText = "Category";
-                    categoryFilter.Setup<MapCategories>(State.Category);
-                }
                 var genreFilter = grid.CreateChild<DropdownFilter>("genre", 2);
                 {
                     genreFilter.LabelText = "Genre";

@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.Download.Search
             context.ImportFromEnum<MapSortType>(State.Sort.Value);
             context.OnSelection += (data) =>
             {
-                if(data != null)
+                if(data != null && State.Sort.RawValue.ToString() != data.ExtraData.ToString())
                     State.Sort.RawValue = data.ExtraData;
             };
 

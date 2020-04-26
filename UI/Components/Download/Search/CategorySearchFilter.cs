@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Search
 {
-    public class RankSearchFilter : BaseSearchFilter {
+    public class CategorySearchFilter : BaseSearchFilter {
 
         private DropdownButton dropdown;
         private DropdownContext context;
@@ -26,11 +26,11 @@ namespace PBGame.UI.Components.Download.Search
         private void Init()
         {
             context = new DropdownContext();
-            context.ImportFromEnum<MapStatus>(State.RankState.Value);
+            context.ImportFromEnum<MapCategories>(State.Category.Value);
             context.OnSelection += (data) =>
             {
-                if(data != null)
-                    State.RankState.RawValue = data.ExtraData;
+                if(data != null && State.Category.RawValue.ToString() != data.ExtraData.ToString())
+                    State.Category.RawValue = data.ExtraData;
             };
 
             label.Text = "Rank state";
@@ -52,20 +52,20 @@ namespace PBGame.UI.Components.Download.Search
         {
             base.OnEnableInited();
 
-            State.RankState.BindAndTrigger(OnRankStateChange);
+            State.Category.BindAndTrigger(OnRankStateChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            State.RankState.OnValueChanged -= OnRankStateChange;
+            State.Category.OnValueChanged -= OnRankStateChange;
         }
 
         /// <summary>
         /// Event called on rank state filter change.
         /// </summary>
-        private void OnRankStateChange(MapStatus status, MapStatus _)
+        private void OnRankStateChange(MapCategories status, MapCategories _)
         {
             dropdown.LabelText = status.ToString();
         }
