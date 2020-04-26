@@ -107,6 +107,11 @@ namespace PBGame
                     {
                         mapSelection.SelectMapset(mapManager.AllMapsets.GetRandom());
                     }
+                    // Else if download screen, just stop there.
+                    else if (screenNavigator.CurrentScreen is DownloadScreen)
+                    {
+                        musicController.Stop();
+                    }
                     else
                     {
                         musicController.Play();
@@ -129,7 +134,7 @@ namespace PBGame
                 {
                     // Change loop time based on the screens.
                     // TODO: Uncomment when game screen is implemented.
-                    if (view is HomeScreen)// || view is GameScreen)
+                    if (view is HomeScreen || view is DownloadScreen)// || view is GameScreen)
                         musicController.LoopTime = 0f;
                     else
                         musicController.LoopTime = mapSelection.Map.Metadata.PreviewTime;
