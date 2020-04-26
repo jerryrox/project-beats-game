@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using PBGame.Assets.Caching;
 using PBGame.Networking.Maps;
 using PBFramework.UI;
-using PBFramework.Graphics;
+using PBFramework.Threading;
 using PBFramework.Allocation.Caching;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -19,6 +19,7 @@ namespace PBGame.UI.Components.Download.Result
 
         private CacherAgent<Texture2D> cacherAgent;
         private OnlineMapset mapset;
+        private SynchronizedTimer loadDelay;
 
 
         [ReceivesDependency]
@@ -54,7 +55,18 @@ namespace PBGame.UI.Components.Download.Result
             Reset();
             
             this.mapset = mapset;
-            cacherAgent.Request(mapset.CoverImage);
+
+            // Load the image after delay to reduce performance implications when scrolling quickly.
+            loadDelay = new SynchronizedTimer()
+            {
+                Limit = 1f
+            };
+            loadDelay.OnFinished += delegate
+            {
+                loadDelay = null;
+                cacherAgent.Request(mapset.CardImage);
+            };
+            loadDelay.Start();
         }
 
         /// <summary>
@@ -66,6 +78,12 @@ namespace PBGame.UI.Components.Download.Result
             Alpha = 0f;
             showAni.Stop();
             cacherAgent.Remove();
+
+            if (loadDelay != null)
+            {
+                loadDelay.Stop();
+                loadDelay = null;
+            }
         }
 
         /// <summary>
