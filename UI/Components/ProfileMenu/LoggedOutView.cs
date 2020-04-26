@@ -86,7 +86,13 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 remember.OnFocused += (isFocused) =>
                 {
+                    if (!isFocused)
+                    {
+                        GameConfiguration.Username.Value = "";
+                        GameConfiguration.Password.Value = "";
+                    }
                     GameConfiguration.SaveCredentials.Value = isFocused;
+                    GameConfiguration.Save();
                 };
             }
             loginButton = CreateChild<BoxButton>("login", 4);
@@ -199,6 +205,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 GameConfiguration.Username.Value = username.Text;
                 GameConfiguration.Password.Value = password.Text;
+                GameConfiguration.Save();
             }
             username.Text = password.Text = "";
         }
