@@ -37,13 +37,7 @@ namespace PBGame.UI.Components.Songs
             OnEnableInited();
 
             // Recalibrate after a frame due to a limitation where a rect transform's size doesn't update immediately when using anchors.
-            var timer = new SynchronizedTimer()
-            {
-                WaitFrameOnStart = true,
-                Limit = 0f
-            };
-            timer.OnFinished += delegate { Recalibrate(); };
-            timer.Start();
+            InvokeAfterTransformed(1, Recalibrate);
         }
 
         protected override void OnEnableInited()

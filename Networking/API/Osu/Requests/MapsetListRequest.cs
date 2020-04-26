@@ -1,14 +1,18 @@
 using System;
 using PBGame.Networking.API.Osu.Responses;
+using PBGame.Networking.API.Requests;
+using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
 using PBFramework.Services;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Osu.Requests
 {
-    public class MapsetListRequest : BaseRequest<MapsetListResponse> {
+    public class MapsetListRequest : BaseRequest<IMapsetListResponse>, IMapsetListRequest {
 
-        public int? CursorDate { get; set; } = null;
+        public string CursorName { get; set; } = "approved_date";
+
+        public string CursorValue { get; set; } = null;
 
         public int? CursorId { get; set; } = null;
 
@@ -20,18 +24,24 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public MapLanguages Language { get; set; } = MapLanguages.Any;
 
+        public MapSortType Sort { get; set; } = MapSortType.Ranked;
+
+        public bool IsDescending { get; set; } = true;
+
         public bool HasVideo { get; set; } = false;
 
         public bool HasStoryboard { get; set; } = false;
 
         public string SearchTerm { get; set; } = null;
 
+        public override bool RequiresLogin => false;
+
 
         protected override IHttpRequest CreateRequest()
         {
             var request = new HttpGetRequest(Api.GetUrl("beatmapsets/search"));
-            if(CursorDate.HasValue)
-                request.AddQueryParam("cursor[approved_date]", CursorDate.Value.ToString());
+            if(CursorValue != null && CursorName != null)
+                request.AddQueryParam($"cursor[{CursorName}]", CursorValue);
             if(CursorId.HasValue)
                 request.AddQueryParam("cursor[_id]", CursorId.Value.ToString());
             if(Mode.HasValue)
@@ -44,7 +54,8 @@ namespace PBGame.Networking.API.Osu.Requests
                 request.AddQueryParam("l", ((int)Language).ToString());
             if(!string.IsNullOrWhiteSpace(SearchTerm))
                 request.AddQueryParam("q", SearchTerm.Trim());
-                
+            if(Sort != MapSortType.Ranked || !IsDescending)
+                request.AddQueryParam("sort", Api.Adaptor.GetMapSortName(Sort, IsDescending));
             if(HasVideo && HasStoryboard)
                 request.AddQueryParam("e", "storyboard.video");
             else if(HasVideo)
@@ -54,7 +65,7 @@ namespace PBGame.Networking.API.Osu.Requests
             return request;
         }
 
-        protected override MapsetListResponse CreateResponse(IHttpRequest request) => new MapsetListResponse(request, OnMapsetsParsed);
+        protected override IMapsetListResponse CreateResponse(IHttpRequest request) => new MapsetListResponse(request, OnMapsetsParsed);
 
         protected override void OnHttpResponse()
         {

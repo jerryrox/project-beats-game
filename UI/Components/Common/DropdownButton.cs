@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Common
 {
-    public class DropdownButton : HoverableTrigger {
+    public class DropdownButton : HoverableTrigger, IHasLabel {
 
         private ILabel label;
         private ISprite backgroundSprite;
@@ -50,6 +50,18 @@ namespace PBGame.UI.Components.Common
                     OnSelectedData(value.Selection);
                 }
             }
+        }
+
+        /// <summary>
+        /// Whether the dropdown data selection should automatically refresh.
+        /// Default: true
+        /// </summary>
+        public bool UseAutoSelect { get; set; } = true;
+
+        public string LabelText
+        {
+            get => label.Text;
+            set => label.Text = value;
         }
 
         protected override int HoverSpriteDepth => 1;
@@ -132,10 +144,13 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         private void OnSelectedData(DropdownData data)
         {
+            if(!UseAutoSelect)
+                return;
+
             if (data != null)
-                label.Text = data.Text;
+                LabelText = data.Text;
             else
-                label.Text = "";
+                LabelText = "";
         }
     }
 }

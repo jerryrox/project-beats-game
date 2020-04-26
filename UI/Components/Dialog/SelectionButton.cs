@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.Dialog
         private Color tint;
 
 
-        public Color Tint
+        public override Color Tint
         {
             get => tint;
             set => hoverSprite.Color = tint = value;

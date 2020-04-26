@@ -16,11 +16,6 @@ namespace PBGame.Rulesets
         string Name { get; }
 
         /// <summary>
-        /// Returns the sprite name of the icon which represents this mode.
-        /// </summary>
-        string IconName { get; }
-
-        /// <summary>
         /// Returns the type of the game mode.
         /// </summary>
         GameModes GameMode { get; }
@@ -30,6 +25,11 @@ namespace PBGame.Rulesets
         /// </summary>
         bool IsPlayable { get; }
 
+
+        /// <summary>
+        /// Returns the icon name suitable for specified size.
+        /// </summary>
+        string GetIconName(int size);
 
         /// <summary>
         /// Creates a new map converter instance for this game mode.

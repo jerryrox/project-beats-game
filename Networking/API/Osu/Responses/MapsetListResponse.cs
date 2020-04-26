@@ -1,9 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets;
+using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
 using PBFramework.Debugging;
 using PBFramework.Networking.API;
@@ -12,7 +12,17 @@ using Newtonsoft.Json.Linq;
 
 namespace PBGame.Networking.API.Osu.Responses
 {
-    public class MapsetListResponse : BaseResponse {
+    public class MapsetListResponse : BaseResponse, IMapsetListResponse {
+
+        private static readonly string[] CursorKeyDomain = new string[] {
+            "approved_date",
+            "beatmaps.difficultyrating",
+            "title.raw",
+            "artist.raw",
+            "rating",
+            "play_count",
+            "favourite_count"
+        };
 
         private Action onParsed;
 
@@ -27,24 +37,14 @@ namespace PBGame.Networking.API.Osu.Responses
         private int curTaskCount = 0;
 
 
-        /// <summary>
-        /// Returns the array of mapsets retrieved from the server.
-        /// </summary>
         public OnlineMapset[] Mapsets { get; private set; }
 
-        /// <summary>
-        /// Returns the cursor date for querying next page.
-        /// </summary>
-        public int CursorDate { get; private set; }
+        public string CursorName { get; private set; }
 
-        /// <summary>
-        /// Returns the cursor id for querying next page.
-        /// </summary>
+        public string CursorValue { get; private set; }
+
         public int CursorId { get; private set; }
 
-        /// <summary>
-        /// Returns the total results of the search.
-        /// </summary>
         public int Total { get; private set; }
 
 
@@ -81,11 +81,44 @@ namespace PBGame.Networking.API.Osu.Responses
                             }
                         }
                         var cursor = json["cursor"];
+                        if (cursor.HasValues)
                         {
-                            if (int.TryParse(cursor["approved_date"].ToString(), out int cursorDate))
-                                this.CursorDate = cursorDate;
                             if (int.TryParse(cursor["_id"].ToString(), out int cursorId))
                                 this.CursorId = cursorId;
+
+                            // Try to find a cursor key from the cursor data.
+                            bool foundKey = false;
+                            string cursorName = null;
+                            foreach (var cursorKey in CursorKeyDomain)
+                            {
+                                var token = cursor[cursorKey];
+                                if (token != null)
+                                {
+                                    cursorName = cursorKey;
+                                    foundKey = true;
+                                    break;
+                                }
+                            }
+                            // If no key is found, we must still make sure the feature works as best as possible.
+                            // The best possible way as of now is to search for a sibling entry whose path doesn't end with "_id".
+                            if (!foundKey)
+                            {
+                                Logger.LogWarning($"MapsetListResponse.Evaluate - Could not find a matching cursor key. Attempting to auto-detect this.");
+                                cursorName = cursor.Where(c => {
+                                    if (!c.Path.EndsWith("_id", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        Logger.Log($"MapsetListResponse.Evaluate - Found a potentital cursor key at path ({c.Path}).");
+                                        return true;
+                                    }
+                                    return false;
+                                }).FirstOrDefault()?.ToString();
+                            }
+                            // Parse the cursor key's value.
+                            if (cursorName != null && cursor[cursorName] != null)
+                            {
+                                this.CursorName = cursorName;
+                                this.CursorValue = cursor[cursorName].ToString();
+                            }
                         }
                         Total = json["total"].Value<int>();
                     }

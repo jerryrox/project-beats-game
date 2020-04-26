@@ -149,7 +149,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnDownloadButton()
         {
-            // TODO: Show download screen.
+            ScreenNavigator.Show<DownloadScreen>();
             OverlayNavigator.Hide(this);
         }
 

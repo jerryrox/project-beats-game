@@ -17,6 +17,8 @@ namespace PBGame.Graphics
 
         Color Passive { get; }
 
+        Color DarkBackground { get; }
+
 
         /// <summary>
         /// Returns the color resembling the specified difficulty categorization type.

@@ -27,6 +27,11 @@ namespace PBGame.Networking.API
         IApiResponse Response { get; }
 
         /// <summary>
+        /// Returns whether this request requires login.
+        /// </summary>
+        bool RequiresLogin { get; }
+
+        /// <summary>
         /// Returns whether the requesting progress should be displayed as a notification.
         /// </summary>
         bool IsNotified { get; }

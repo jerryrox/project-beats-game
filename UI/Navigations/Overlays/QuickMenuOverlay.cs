@@ -57,11 +57,11 @@ namespace PBGame.UI.Navigations.Overlays
                     CreateScreenButton<HomeScreen>("Home", "icon-home");
                     CreateScreenButton<SongsScreen>("Play", "icon-play");
                     CreateScreenButton<PrepareScreen>("Prepare", "icon-game");
-                    // CreateScreenButton<DownloadScreen>("Download", "icon-download");
+                    CreateScreenButton<DownloadScreen>("Download", "icon-download");
                     CreateBasicButton("Quit", "icon-power", () => Game.GracefulQuit());
 
                     // Resize scrollview container
-                    InvokeAfterFrames(1, () => scrollView.Container.Width = Mathf.Max(scrollView.Width, grid.ChildCount * ButtonSize.x));
+                    InvokeAfterTransformed(1, () => scrollView.Container.Width = Mathf.Max(scrollView.Width, grid.ChildCount * ButtonSize.x));
                 }
             }
 

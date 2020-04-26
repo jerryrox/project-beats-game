@@ -7,7 +7,8 @@ using PBFramework.Networking;
 
 namespace PBGame.Networking.API
 {
-    public abstract class BaseApi : IApi {
+    public abstract class BaseApi : IApi
+    {
 
         protected readonly OfflineUser offlineUser = new OfflineUser();
 
@@ -15,6 +16,14 @@ namespace PBGame.Networking.API
         public abstract string BaseUrl { get; }
 
         public abstract ApiProviders ApiType { get; }
+
+        public abstract string Name { get; }
+
+        public abstract string IconName { get; }
+
+        public abstract IApiAdaptor Adaptor { get; }
+
+        public abstract IRequestFactory RequestFactory { get; }
 
         public BindableBool IsOnline { get; private set; } = new BindableBool(false);
 

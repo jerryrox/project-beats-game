@@ -35,7 +35,7 @@ namespace PBGame.UI.Navigations.Overlays
             darkSprite = CreateChild<UguiSprite>("dark", 0);
             {
                 darkSprite.Anchor = Anchors.Fill;
-                darkSprite.Offset = new Offset(0f, 64f, 0f, 0f);
+                darkSprite.Offset = new Offset(0f, MenuBarHeight, 0f, 0f);
                 darkSprite.Color = new Color(0f, 0f, 0f, 0.5f);
 
                 closeTrigger = darkSprite.CreateChild<UguiTrigger>("close", 0);

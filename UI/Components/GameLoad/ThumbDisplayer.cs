@@ -46,7 +46,7 @@ namespace PBGame.UI.Components.GameLoad
                 maskSprite.Color = new Color(0f, 0f, 0f, 0.5f);
 
                 var mask = maskSprite.AddEffect(new MaskEffect());
-                mask.Mask.showMaskGraphic = false;
+                mask.Component.showMaskGraphic = false;
 
                 imageDisplay = maskSprite.CreateChild<MapImageDisplay>();
                 {

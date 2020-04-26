@@ -27,7 +27,11 @@ namespace PBGame.UI.Components.QuickMenu
         private void Init()
         {
             IsClickToTrigger = true;
-            OnTriggered += () => triggerAction?.Invoke();
+            OnTriggered += () =>
+            {
+                if(!IsFocused)
+                    triggerAction?.Invoke();
+            };
 
             var icon = CreateIconSprite(depth: 4, size: 32f);
             {

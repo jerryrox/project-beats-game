@@ -48,7 +48,7 @@ namespace PBGame.UI.Navigations.Screens
                 SearchMenu.Anchor = Anchors.TopStretch;
                 SearchMenu.Pivot = Pivots.Top;
                 SearchMenu.SetOffsetHorizontal(0f);
-                SearchMenu.Y = -64f;
+                SearchMenu.Y = -MenuBarHeight;
                 SearchMenu.Height = 56;
             }
         }
