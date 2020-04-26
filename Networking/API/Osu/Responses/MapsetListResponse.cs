@@ -37,24 +37,14 @@ namespace PBGame.Networking.API.Osu.Responses
         private int curTaskCount = 0;
 
 
-        /// <summary>
-        /// Returns the array of mapsets retrieved from the server.
-        /// </summary>
         public OnlineMapset[] Mapsets { get; private set; }
 
-        /// <summary>
-        /// Returns the cursor value for querying next page.
-        /// </summary>
+        public string CursorName { get; private set; }
+
         public float CursorValue { get; private set; }
 
-        /// <summary>
-        /// Returns the cursor id for querying next page.
-        /// </summary>
         public int CursorId { get; private set; }
 
-        /// <summary>
-        /// Returns the total results of the search.
-        /// </summary>
         public int Total { get; private set; }
 
 
@@ -97,13 +87,13 @@ namespace PBGame.Networking.API.Osu.Responses
 
                             // Try to find a cursor key from the cursor data.
                             bool foundKey = false;
-                            JToken cursorKeyToken = null;
+                            string cursorName = null;
                             foreach (var cursorKey in CursorKeyDomain)
                             {
                                 var token = cursor[cursorKey];
                                 if (token != null)
                                 {
-                                    cursorKeyToken = token;
+                                    cursorName = token.ToString();
                                     foundKey = true;
                                     break;
                                 }
@@ -123,8 +113,11 @@ namespace PBGame.Networking.API.Osu.Responses
                                 }).FirstOrDefault();
                             }
                             // Parse the cursor key's value.
-                            if (cursorKeyToken != null && float.TryParse(cursorKeyToken.ToString(), out float cursorValue))
+                            if (cursorName != null && float.TryParse(cursorName, out float cursorValue))
+                            {
+                                this.CursorName = cursorName;
                                 this.CursorValue = cursorValue;
+                            }
                         }
                         Total = json["total"].Value<int>();
                     }

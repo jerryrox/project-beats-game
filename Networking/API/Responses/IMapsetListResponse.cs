@@ -10,6 +10,11 @@ namespace PBGame.Networking.API.Responses
         OnlineMapset[] Mapsets { get; }
 
         /// <summary>
+        /// Returns the name of the cursor for cursor value.
+        /// </summary>
+        string CursorName { get; }
+
+        /// <summary>
         /// Returns the cursor value for querying next page.
         /// </summary>
         float CursorValue { get; }
