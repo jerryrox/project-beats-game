@@ -81,6 +81,7 @@ namespace PBGame.Networking.API.Osu.Responses
                             }
                         }
                         var cursor = json["cursor"];
+                        if (cursor.HasValues)
                         {
                             if (int.TryParse(cursor["_id"].ToString(), out int cursorId))
                                 this.CursorId = cursorId;
