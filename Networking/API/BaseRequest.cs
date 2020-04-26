@@ -50,6 +50,12 @@ namespace PBGame.Networking.API
 
         public virtual void Request()
         {
+            if (RequiresLogin && !Api.IsOnline.Value)
+            {
+                Response.SetLoginRequired();
+                InvokeRequestEnd();
+                return;
+            }
             Requester.Request();
         }
 

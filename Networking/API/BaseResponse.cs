@@ -43,5 +43,11 @@ namespace PBGame.Networking.API
                 }
             }
         }
+
+        public virtual void SetLoginRequired()
+        {
+            IsSuccess = false;
+            ErrorMessage = "You must be logged in first.";
+        }
     }
 }

@@ -22,5 +22,10 @@ namespace PBGame.Networking.API
         /// Applies any state changes to the api, if applicable.
         /// </summary>
         void ApplyResponse(IApi api);
+
+        /// <summary>
+        /// Sets the response result to failed, noting that login is required.
+        /// </summary>
+        void SetLoginRequired();
     }
 }
