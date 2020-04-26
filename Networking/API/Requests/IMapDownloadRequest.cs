@@ -1,4 +1,5 @@
 using PBGame.Networking.API.Responses;
+using PBGame.Networking.Maps;
 using PBGame.Stores;
 
 namespace PBGame.Networking.API.Requests
@@ -11,9 +12,9 @@ namespace PBGame.Networking.API.Requests
         IDownloadStore DownloadStore { get; set; }
 
         /// <summary>
-        /// Id of the mapset to download.
+        /// The mapset to download.
         /// </summary>
-        int MapsetId { get; set; }
+        OnlineMapset Mapset { get; set; }
 
         /// <summary>
         /// Whether video should be included if the mapset contains it.
