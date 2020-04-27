@@ -27,6 +27,7 @@ namespace PBGame.UI.Components.Common
             {
                 blurSprite.Anchor = Anchors.Fill;
                 blurSprite.Offset = Offset.Zero;
+                blurSprite.SpriteName = "null";
                 blurSprite.AddEffect(new BlurShaderEffect());
             }
             fallbackSprite = CreateChild<UguiSprite>("fallback", 1);

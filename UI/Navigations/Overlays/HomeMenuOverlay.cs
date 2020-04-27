@@ -1,4 +1,5 @@
 using System;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Components.HomeMenu;
 using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
@@ -18,7 +19,7 @@ namespace PBGame.UI.Navigations.Overlays
         private GradientEffect gradientEffect;
 
 
-        public ISprite BlurSprite { get; private set; }
+        public BlurDisplay Blur { get; private set; }
 
         public ISprite GradientSprite { get; private set; }
 
@@ -48,13 +49,10 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IMapSelection mapSelection)
         {
-            BlurSprite = CreateChild<UguiSprite>("focus-blur", 0);
+            Blur = CreateChild<BlurDisplay>("focus-blur", 0);
             {
-                BlurSprite.Anchor = Anchors.Fill;
-                BlurSprite.RawSize = Vector2.zero;
-                BlurSprite.SpriteName = "null";
-
-                BlurSprite.AddEffect(new BlurShaderEffect());
+                Blur.Anchor = Anchors.Fill;
+                Blur.Offset = Offset.Zero;
             }
             GradientSprite = CreateChild<UguiSprite>("gradient", 1);
             {

@@ -1,5 +1,6 @@
 using System;
 using PBGame.UI.Components.Dialog;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
@@ -12,7 +13,7 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class DialogOverlay : BaseOverlay, IDialogOverlay {
 
-        private ISprite blurSprite;
+        private BlurDisplay blurDisplay;
         private ISprite bgSprite;
         private ISprite blocker;
         private ILabel messageLabel;
@@ -31,13 +32,10 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IRootMain root)
         {
-            blurSprite = CreateChild<UguiSprite>("blur", 0);
+            blurDisplay = CreateChild<BlurDisplay>("blur", 0);
             {
-                blurSprite.Anchor = Anchors.Fill;
-                blurSprite.RawSize = Vector2.zero;
-                blurSprite.SpriteName = "null";
-
-                blurSprite.AddEffect(new BlurShaderEffect());
+                blurDisplay.Anchor = Anchors.Fill;
+                blurDisplay.RawSize = Vector2.zero;
             }
             bgSprite = CreateChild<UguiSprite>("bg", 1);
             {

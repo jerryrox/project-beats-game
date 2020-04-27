@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -14,7 +15,7 @@ namespace PBGame.UI.Components.Songs
 {
     public class Background : UguiObject {
 
-        private ISprite blurSprite;
+        private BlurDisplay blurDisplay;
         private ISprite darkSprite;
         private ISprite brightenSprite;
         private ISprite shadeSprite;
@@ -27,13 +28,10 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
-            blurSprite = CreateChild<UguiSprite>("blur", 0);
+            blurDisplay = CreateChild<BlurDisplay>("blur", 0);
             {
-                blurSprite.Anchor = Anchors.Fill;
-                blurSprite.RawSize = Vector2.zero;
-                blurSprite.SpriteName = "null";
-
-                blurSprite.AddEffect(new BlurShaderEffect());
+                blurDisplay.Anchor = Anchors.Fill;
+                blurDisplay.RawSize = Vector2.zero;
             }
             darkSprite = CreateChild<UguiSprite>("dark", 1);
             {

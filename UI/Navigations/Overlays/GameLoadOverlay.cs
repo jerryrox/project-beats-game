@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Components.GameLoad;
 using PBGame.UI.Navigations.Screens;
 using PBFramework.UI;
@@ -39,12 +40,10 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init()
         {
-            var blur = CreateChild<UguiSprite>("blur", 0);
+            var blur = CreateChild<BlurDisplay>("blur", 0);
             {
                 blur.Anchor = Anchors.Fill;
                 blur.Offset = Offset.Zero;
-                blur.SpriteName = "null";
-                blur.AddEffect(new BlurShaderEffect());
 
                 var dark = blur.CreateChild<UguiSprite>("dark", 0);
                 {

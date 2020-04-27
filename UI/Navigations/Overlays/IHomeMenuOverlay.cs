@@ -1,5 +1,6 @@
 using System;
 using PBFramework.UI;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Components.HomeMenu;
 
 namespace PBGame.UI.Navigations.Overlays
@@ -9,7 +10,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Returns the background blur sprite.
         /// </summary>
-        ISprite BlurSprite { get; }
+        BlurDisplay Blur { get; }
 
         /// <summary>
         /// Returns the background gradation sprite.
