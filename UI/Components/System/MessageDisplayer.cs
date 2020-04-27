@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Notifications;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
@@ -19,6 +20,10 @@ namespace PBGame.UI.Components.System
 
         private IAnime showAni;
         private IAnime hideAni;
+
+
+        [ReceivesDependency]
+        private INotificationBox NotificationBox { get; set; }
 
 
         [InitWithDependency]
@@ -47,17 +52,15 @@ namespace PBGame.UI.Components.System
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            
-            // TODO: Listen to notifications
+            NotificationBox.OnNewNotification += OnNotification;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            NotificationBox.OnNewNotification -= OnNotification;
 
             cellRecycler.ReturnAll();
-
-            // TODO: Unsubscribe from notifications.
         }
 
         public void ToggleDisplay(bool enable)
@@ -72,22 +75,65 @@ namespace PBGame.UI.Components.System
         }
 
         /// <summary>
+        /// Displays the specified notification.
+        /// </summary>
+        public void DisplayNotification(INotification notification)
+        {
+            // Display a new cell for this notification
+            var cell = cellRecycler.GetNext();
+            cell.Show(notification);
+            cell.PositionTo(GetNextCellPos(), false);
+        }
+
+        /// <summary>
+        /// Returns the Y position for the next cell.
+        /// </summary>
+        private float GetNextCellPos()
+        {
+            if(cellRecycler.ActiveCount <= 1)
+                return 0f;
+            var lastCell = cellRecycler.ActiveObjects[cellRecycler.ActiveObjects.Count - 2];
+            return lastCell.TargetY - lastCell.Height;
+        }
+
+        /// <summary>
+        /// Adjusts all active cells' Y positions in case a message was removed from anywhere except the beginning.
+        /// </summary>
+        private void AdjustCellPos()
+        {
+            float nextPos = 0f;
+            foreach (var cell in cellRecycler.ActiveObjects)
+            {
+                cell.PositionTo(nextPos, true);
+                nextPos -= cell.Height;
+            }
+        }
+
+        /// <summary>
         /// Creates a new message cell.
         /// </summary>
         private MessageCell CreateCell()
         {
             var cell = CreateChild<MessageCell>("cell", ChildCount);
-            cell.Anchor = Anchors.TopStretch;
+            cell.Anchor = Anchors.Top;
             cell.Pivot = Pivots.Top;
+            cell.Width = this.Width;
+            cell.OnHidden += (c) => {
+                // Remove from notifications automatically if hidden.
+                if(c.Notification.Scope == NotificationScope.Temporary)
+                    NotificationBox.Remove(c.Notification);
+                cellRecycler.Return(c);
+                AdjustCellPos();
+            };
             return cell;
         }
 
         /// <summary>
         /// Event called on new notification.
         /// </summary>
-        private void OnNotification()
+        private void OnNotification(INotification notification)
         {
-            // TODO:
+            DisplayNotification(notification);
         }
     }
 }

@@ -15,7 +15,8 @@ namespace PBGame.Notifications
 
         public void Add(INotification notification)
         {
-            notifications.Add(notification);
+            if(notification.Scope != NotificationScope.Temporary)
+                notifications.Add(notification);
             OnNewNotification?.Invoke(notification);
         }
 

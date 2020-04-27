@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using PBFramework;
-using PBFramework.Graphics;
 
 namespace PBGame.Notifications
 {
@@ -31,15 +31,17 @@ namespace PBGame.Notifications
         NotificationAction DefaultAction { get; set; }
 
         /// <summary>
+        /// Returns whether the notification contains optional actions.
+        /// </summary>
+        bool HasActions { get; }
+
+        /// <summary>
         /// Type of notification message.
         /// </summary>
         NotificationType Type { get; set; }
 
         /// <summary>
         /// Promise instance bound to the notification.
-        /// If specified,
-        /// - Notification's progress will be referred from this object.
-        /// - Notification will be removed automatically if the promise has finished.
         /// </summary>
         IPromise Promise { get; set; }
 
@@ -48,5 +50,10 @@ namespace PBGame.Notifications
         /// Adds an optional action that can be performed from the notification.
         /// </summary>
         void AddAction(NotificationAction action);
+
+        /// <summary>
+        /// Returns all optional actions added to the notification.
+        /// </summary>
+        IEnumerable<NotificationAction> GetActions();
     }
 }

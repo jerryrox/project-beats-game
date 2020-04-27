@@ -6,18 +6,13 @@ namespace PBGame.Notifications
     public enum NotificationScope {
 
         /// <summary>
-        /// Notification is displayed for both quick message and notification panels.
+        /// Notification is only broadcast through event and not stored.
         /// </summary>
-        All,
+        Temporary,
 
         /// <summary>
-        /// Notification is displayed for quick message only.
+        /// Notification is broadcast through event and stored in notifications list.
         /// </summary>
-        QuickOnly,
-
-        /// <summary>
-        /// Notification is displayed for notification panel only.
-        /// </summary>
-        NotificationOnly,
+        Stored,
     }
 }
