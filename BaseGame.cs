@@ -17,6 +17,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Animations;
 using PBGame.Networking.API;
+using PBGame.Notifications;
 using PBGame.Configurations;
 using PBFramework.IO.Decoding;
 using PBFramework.UI.Navigations;
@@ -31,6 +32,8 @@ namespace PBGame
     public abstract class BaseGame : MonoBehaviour, IGame {
 
         protected ModeManager modeManager;
+
+        protected NotificationBox notificationBox;
 
         protected GameConfiguration gameConfiguration;
         protected MapConfiguration mapConfiguration;
@@ -99,6 +102,8 @@ namespace PBGame
 
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager(Dependencies));
 
+            Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
+
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());
             Dependencies.CacheAs<IMapConfiguration>(mapConfiguration = new MapConfiguration());
             Dependencies.CacheAs<IMapsetConfiguration>(mapsetConfiguration = new MapsetConfiguration());
@@ -119,7 +124,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration));
-            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
+            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
@@ -141,6 +146,10 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
+            // Inject notification box into api manager
+            foreach(var api in apiManager.GetAllApi())
+                api.NotificationBox = notificationBox;
+
             // Register decoders.
             Decoders.AddDecoder<OriginalMap>(
                 "osu file format v",

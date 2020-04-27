@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.System
 {
-    public class FpsDisplayer : UguiObject, IHasTint {
+    public class FpsDisplayer : UguiObject, IHasTint, IDisplayer {
 
         /// <summary>
         /// Number of frames to sample for calculating FPS.
@@ -151,9 +151,6 @@ namespace PBGame.UI.Components.System
             Refresh();
         }
 
-        /// <summary>
-        /// Toggles displayer active state.
-        /// </summary>
         public void ToggleDisplay(bool enable)
         {
             if (enable && !Active)

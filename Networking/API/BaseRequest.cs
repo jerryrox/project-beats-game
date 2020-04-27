@@ -26,12 +26,6 @@ namespace PBGame.Networking.API
 
         public abstract bool RequiresLogin { get; }
 
-        public virtual bool IsNotified => false;
-
-        public virtual string RequestTitle => null;
-
-        public virtual string ResponseTitle => null;
-
         protected IHttpRequest Requester { get; private set; }
 
         protected IApi Api { get; private set; }

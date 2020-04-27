@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
+using PBGame.Notifications;
 using PBFramework.Data.Bindables;
 using PBFramework.Networking;
 
@@ -52,6 +53,11 @@ namespace PBGame.Networking.API
         /// Returns the cookie container instance.
         /// </summary>
         CookieContainer Cookies { get; }
+
+        /// <summary>
+        /// An optional notification box for notifying certain events happening in API.
+        /// </summary>
+        INotificationBox NotificationBox { get; set; }
 
 
         /// <summary>

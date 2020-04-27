@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Rulesets.Maps;
+using PBGame.Notifications;
 using PBFramework.Services;
 using PBFramework.Threading;
 
@@ -24,6 +25,8 @@ namespace PBGame.Maps
 
         private string lastSearch = null;
 
+        private INotificationBox notificationBox;
+
 
         public IMapsetList AllMapsets => allMapsets;
 
@@ -32,11 +35,12 @@ namespace PBGame.Maps
         public string LastSearch => lastSearch;
 
 
-        public MapManager(IMapsetStore store)
+        public MapManager(IMapsetStore store, INotificationBox notificationBox)
         {
             if(store == null) throw new ArgumentNullException(nameof(store));
 
             this.store = store;
+            this.notificationBox = notificationBox;
         }
 
         public Task<bool> Import(FileInfo file)
@@ -49,29 +53,36 @@ namespace PBGame.Maps
                 if (mapset != null)
                 {
                     // Mapset must be fully loaded.
-                    mapset = store.LoadData(mapset);
-                    if (mapset != null)
+                    Mapset loadedMapset = store.LoadData(mapset);
+                    if (loadedMapset != null)
                     {
                         // Dispatch mapset imported event on main thread.
                         UnityThreadService.Dispatch(() =>
                         {
                             // Add to all mapsets
-                            allMapsets.AddOrReplace(mapset);
+                            allMapsets.AddOrReplace(loadedMapset);
                             // Reapply filter
                             Search(lastSearch);
-                            OnImportMapset?.Invoke(mapset);
+                            OnImportMapset?.Invoke(loadedMapset);
                             return null;
                         });
                         return true;
                     }
                     else
                     {
-                        // TODO: Notification
+                        notificationBox?.Add(new Notification() {
+                            Message = $"Failed to load imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
+                            Type = NotificationType.Negative
+                        });
                     }
                 }
                 else
                 {
-                    // TODO: Notification
+                    notificationBox?.Add(new Notification()
+                    {
+                        Message = $"Failed to import mapset at ({file.FullName})",
+                        Type = NotificationType.Negative
+                    });
                 }
                 return false;
             });

@@ -41,6 +41,8 @@ namespace PBGame.Configurations
         // General settings
         // ============================================================
         public ProxyBindable<bool> PreferUnicode { get; private set; }
+        public ProxyBindable<bool> DisplayMessages { get; private set; }
+        public ProxyBindable<bool> DisplayMessagesInGame { get; private set; }
 
         // ============================================================
         // Performance settings
@@ -83,6 +85,20 @@ namespace PBGame.Configurations
             SettingsTab generalTab = Settings.AddTabData(new SettingsTab("General", "icon-settings"));
             {
                 generalTab.AddEntry(new SettingsEntryBool("Prefer unicode", PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false)));
+                generalTab.AddEntry(new SettingsEntryBool("Show messages", DisplayMessages = InitBoolBindable(nameof(DisplayMessages), true)));
+                DisplayMessages.OnValueChanged += (display, _) =>
+                {
+                    // Automatically disable messages in game if message displaying is false.
+                    if(!display)
+                        DisplayMessagesInGame.Value = false;
+                };
+                generalTab.AddEntry(new SettingsEntryBool("Show messages in game", DisplayMessagesInGame = InitBoolBindable(nameof(DisplayMessagesInGame), false)));
+                DisplayMessagesInGame.OnValueChanged += (display, _) =>
+                {
+                    // Turn off this configuration when toggled on but display message itself is turned off.
+                    if(display && !DisplayMessages.Value)
+                        DisplayMessagesInGame.Value = false;
+                };
             }
 
             // Performance settings

@@ -1,21 +1,22 @@
 using PBGame.Rulesets.Difficulty;
+using PBFramework.Graphics;
 using UnityEngine;
 
 namespace PBGame.Graphics
 {
     public interface IColorPreset {
     
-        Color PrimaryFocus { get; }
+        ColorPalette PrimaryFocus { get; }
 
-        Color SecondaryFocus { get; }
+        ColorPalette SecondaryFocus { get; }
 
-        Color Positive { get; }
+        ColorPalette Positive { get; }
 
-        Color Negative { get; }
+        ColorPalette Negative { get; }
 
-        Color Warning { get; }
+        ColorPalette Warning { get; }
 
-        Color Passive { get; }
+        ColorPalette Passive { get; }
 
         Color DarkBackground { get; }
 
@@ -23,6 +24,6 @@ namespace PBGame.Graphics
         /// <summary>
         /// Returns the color resembling the specified difficulty categorization type.
         /// </summary>
-        Color GetDifficultyColor(DifficultyTypes type);
+        ColorPalette GetDifficultyColor(DifficultyTypes type);
     }
 }

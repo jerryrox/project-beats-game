@@ -24,5 +24,7 @@ namespace PBGame.Networking.API
         public IApi GetApi(ApiProviders provider) => apis[provider];
 
         public IApi GetRelevantApi(IMap map) => apis.Values.FirstOrDefault(api => api.IsRelevantMap(map));
+
+        public IEnumerable<IApi> GetAllApi() => apis.Values;
     }
 }
