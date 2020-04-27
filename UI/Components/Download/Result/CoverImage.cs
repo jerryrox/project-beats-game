@@ -55,18 +55,22 @@ namespace PBGame.UI.Components.Download.Result
             Reset();
             
             this.mapset = mapset;
-
-            // Load the image after delay to reduce performance implications when scrolling quickly.
-            loadDelay = new SynchronizedTimer()
-            {
-                Limit = 1f
-            };
-            loadDelay.OnFinished += delegate
-            {
-                loadDelay = null;
+            if(Cacher.IsCached(mapset.CardImage))
                 cacherAgent.Request(mapset.CardImage);
-            };
-            loadDelay.Start();
+            else
+            {
+                // Load the image after delay to reduce performance implications when scrolling quickly.
+                loadDelay = new SynchronizedTimer()
+                {
+                    Limit = 1f
+                };
+                loadDelay.OnFinished += delegate
+                {
+                    loadDelay = null;
+                    cacherAgent.Request(mapset.CardImage);
+                };
+                loadDelay.Start();
+            }
         }
 
         /// <summary>
