@@ -24,6 +24,7 @@ using PBFramework.UI.Navigations;
 using PBFramework.Utils;
 using PBFramework.Audio;
 using PBFramework.Assets.Atlasing;
+using PBFramework.Inputs;
 using PBFramework.Services;
 using PBFramework.Dependencies;
 
@@ -69,6 +70,8 @@ namespace PBGame
         protected IAnimePreset animePreset;
         protected IScreenNavigator screenNavigator;
         protected IOverlayNavigator overlayNavigator;
+
+        protected InputManager inputManager;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -139,6 +142,8 @@ namespace PBGame
             Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
+
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution));
         }
 
         /// <summary>
@@ -149,6 +154,9 @@ namespace PBGame
             // Inject notification box into api manager
             foreach(var api in apiManager.GetAllApi())
                 api.NotificationBox = notificationBox;
+
+            // Apply accelerator to input manager
+            inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());
 
             // Register decoders.
             Decoders.AddDecoder<OriginalMap>(

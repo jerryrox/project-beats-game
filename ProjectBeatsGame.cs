@@ -210,6 +210,12 @@ namespace PBGame
             {
                 mapManager.Sort(sort);
             };
+
+            // Parallax events
+            gameConfiguration.UseParallax.OnValueChanged += (useParallax, _) =>
+            {
+                inputManager.UseAcceleration = useParallax;
+            };
         }
 
         /// <summary>

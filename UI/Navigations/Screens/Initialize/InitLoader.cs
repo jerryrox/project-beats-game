@@ -76,8 +76,9 @@ namespace PBGame.UI.Navigations.Screens.Initialize
             MapConfiguration.Load();
             MapsetConfiguration.Load();
 
-            // Apply volume changes.
+            // Trigger options which must be applied on entering the game.
             GameConfiguration.MasterVolume.Trigger();
+            GameConfiguration.UseParallax.Trigger();
 
             LoadMapManager();
         }
