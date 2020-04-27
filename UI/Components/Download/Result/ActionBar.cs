@@ -128,9 +128,6 @@ namespace PBGame.UI.Components.Download.Result
             {
                 Debug.Log("Download progress: " + progress);
             };
-
-
-            // TODO: Add requesting progress to notification.
         }
 
         /// <summary>
