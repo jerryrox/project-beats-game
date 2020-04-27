@@ -120,11 +120,13 @@ namespace PBGame.UI.Navigations.Overlays
         {
             if (GameConfiguration.DisplayMessages.Value)
             {
+                // TODO: Hide when NotificationMenuOverlay is currently displayed.
+
                 // TODO: Uncomment when GameScreen is implemented.
                 // if (ScreenNavigator.CurrentScreen is GameScreen)
                 //     MessageDisplayer.ToggleDisplay(GameConfiguration.DisplayMessagesInGame.Value);
                 // else
-                    MessageDisplayer.ToggleDisplay(true);
+                MessageDisplayer.ToggleDisplay(true);
             }
             else
             {
@@ -147,6 +149,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnOverlayShow(INavigationView view)
         {
+            ToggleMessageDisplayer();
             if(view is MenuBarOverlay)
                 AdjustForMenubar(true);
         }
@@ -156,6 +159,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnOverlayHide(INavigationView view)
         {
+            ToggleMessageDisplayer();
             if(view is MenuBarOverlay)
                 AdjustForMenubar(false);
         }

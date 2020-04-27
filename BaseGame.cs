@@ -146,6 +146,10 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
+            // Inject notification box into api manager
+            foreach(var api in apiManager.GetAllApi())
+                api.NotificationBox = notificationBox;
+
             // Register decoders.
             Decoders.AddDecoder<OriginalMap>(
                 "osu file format v",
