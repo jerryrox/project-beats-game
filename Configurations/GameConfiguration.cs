@@ -43,6 +43,7 @@ namespace PBGame.Configurations
         public ProxyBindable<bool> PreferUnicode { get; private set; }
         public ProxyBindable<bool> DisplayMessages { get; private set; }
         public ProxyBindable<bool> DisplayMessagesInGame { get; private set; }
+        public ProxyBindable<bool> UseParallax { get; private set; }
 
         // ============================================================
         // Performance settings
@@ -99,6 +100,7 @@ namespace PBGame.Configurations
                     if(display && !DisplayMessages.Value)
                         DisplayMessagesInGame.Value = false;
                 };
+                generalTab.AddEntry(new SettingsEntryBool("Use parallax", UseParallax = InitBoolBindable(nameof(UseParallax), true)));
             }
 
             // Performance settings

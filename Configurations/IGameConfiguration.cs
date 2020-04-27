@@ -68,6 +68,10 @@ namespace PBGame.Configurations
         /// Whether quick message should be displayed in game.
         /// </summary>
         ProxyBindable<bool> DisplayMessagesInGame { get; }
+        /// <summary>
+        /// Whether parallax effect should be used.
+        /// </summary>
+        ProxyBindable<bool> UseParallax { get; }
 
         // ============================================================
         // Performance settings
