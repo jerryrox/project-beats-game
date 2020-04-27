@@ -120,7 +120,7 @@ namespace PBGame.UI.Components.System
                 .Build();
             showAni.AnimateFloat(a => this.Alpha = a)
                 .AddTime(0f, () => this.Alpha)
-                .AddTime(0.25f, 0.5f)
+                .AddTime(0.25f, 0.75f)
                 .Build();
 
             triggerAni = new Anime();
@@ -143,7 +143,7 @@ namespace PBGame.UI.Components.System
             hoverOutAni = new Anime();
             hoverOutAni.AnimateFloat(a => this.Alpha = a)
                 .AddTime(0f, () => this.Alpha)
-                .AddTime(0.25f, 0.5f)
+                .AddTime(0.25f, 0.75f)
                 .Build();
 
             positionAni = new Anime();
