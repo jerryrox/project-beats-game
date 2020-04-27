@@ -228,7 +228,6 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         private void StopHold()
         {
-            Debug.Log("Stopped hold");
             holdTime = -1f;
             didHold = false;
         }

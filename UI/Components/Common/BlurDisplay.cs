@@ -34,7 +34,7 @@ namespace PBGame.UI.Components.Common
             {
                 fallbackSprite.Anchor = Anchors.Fill;
                 fallbackSprite.Offset = Offset.Zero;
-                fallbackSprite.Color = new Color(0f, 0f, 0f, 0.65f);
+                fallbackSprite.Color = new Color(0f, 0f, 0f, 0.4f);
             }
 
             OnEnableInited();
