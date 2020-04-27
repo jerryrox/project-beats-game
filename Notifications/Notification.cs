@@ -16,13 +16,13 @@ namespace PBGame.Notifications
 
         public string CoverImage { get; set; }
 
-        public NotificationScope Scope { get; set; }
+        public NotificationScope Scope { get; set; } = NotificationScope.Stored;
 
         public NotificationAction DefaultAction { get; set; }
 
         public bool HasActions => actions != null && actions.Count > 0;
 
-        public NotificationType Type { get; set; }
+        public NotificationType Type { get; set; } = NotificationType.Passive;
 
         public IPromise Promise { get; set; }
 

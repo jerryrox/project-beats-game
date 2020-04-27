@@ -60,6 +60,14 @@ namespace PBGame.Configurations
         /// Whether unicode texts should be preferred over english/romaji text.
         /// </summary>
 		ProxyBindable<bool> PreferUnicode { get; }
+        /// <summary>
+        /// Whether quick messages should be displayed.
+        /// </summary>
+        ProxyBindable<bool> DisplayMessages { get; }
+        /// <summary>
+        /// Whether quick message should be displayed in game.
+        /// </summary>
+        ProxyBindable<bool> DisplayMessagesInGame { get; }
 
         // ============================================================
         // Performance settings
