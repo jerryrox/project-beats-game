@@ -33,6 +33,8 @@ namespace PBGame
 
         protected ModeManager modeManager;
 
+        protected NotificationBox notificationBox;
+
         protected GameConfiguration gameConfiguration;
         protected MapConfiguration mapConfiguration;
         protected MapsetConfiguration mapsetConfiguration;
@@ -68,8 +70,6 @@ namespace PBGame
         protected IScreenNavigator screenNavigator;
         protected IOverlayNavigator overlayNavigator;
 
-        protected NotificationBox notificationBox;
-
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
 
@@ -102,6 +102,8 @@ namespace PBGame
 
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager(Dependencies));
 
+            Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
+
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());
             Dependencies.CacheAs<IMapConfiguration>(mapConfiguration = new MapConfiguration());
             Dependencies.CacheAs<IMapsetConfiguration>(mapsetConfiguration = new MapsetConfiguration());
@@ -122,7 +124,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration));
-            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
+            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
@@ -137,8 +139,6 @@ namespace PBGame
             Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
-
-            Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
         }
 
         /// <summary>

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
+using PBGame.Notifications;
 using PBFramework.Data.Bindables;
 using PBFramework.Networking;
 
@@ -9,7 +10,6 @@ namespace PBGame.Networking.API
 {
     public abstract class BaseApi : IApi
     {
-
         protected readonly OfflineUser offlineUser = new OfflineUser();
 
 
@@ -30,6 +30,8 @@ namespace PBGame.Networking.API
         public Bindable<IOnlineUser> User { get; protected set; }
 
         public CookieContainer Cookies { get; private set; } = new CookieContainer();
+
+        public INotificationBox NotificationBox { get; set; }
 
 
         public BaseApi()
@@ -62,15 +64,13 @@ namespace PBGame.Networking.API
                 }
                 else
                 {
-                    // TODO: Display failed on notification.
+                    NotificationBox.Add(new Notification() {
+                        Message = $"Failed API request. ({response.ErrorMessage})",
+                        Type = NotificationType.Negative,
+                    });
                 }
                 request.Dispose();
             };
-
-            // TODO: Notification
-            if (request.IsNotified)
-            {
-            }
 
             // Start requesting
             request.Request();

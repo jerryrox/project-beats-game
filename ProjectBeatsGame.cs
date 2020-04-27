@@ -6,6 +6,7 @@ using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Rulesets.Maps;
 using PBGame.Networking.API;
+using PBGame.Notifications;
 using UnityEngine;
 
 namespace PBGame
@@ -220,8 +221,12 @@ namespace PBGame
             downloadStore.MapStorage.OnAdded += (path) =>
             {
                 Debug.Log("ProjectBeatsGame.HookDownloadStore - Downloaded at path: " + path);
-                // TODO: Show notification.
                 mapManager.Import(downloadStore.MapStorage.GetFile(path));
+
+                notificationBox.Add(new Notification()
+                {
+                    Message = $"Successfully downloaded mapset at ({path})",
+                });
             };
         }
 
@@ -235,11 +240,14 @@ namespace PBGame
                 if(mapset == null)
                     return;
                     
-                Debug.Log("ProjectBeatsGame.HookMapManager - Imported mapset: " + mapset.MapsetId);
                 // Select new map if in songs selection.
                 if(screenNavigator.CurrentScreen is SongsScreen)
                     mapSelection.SelectMapset(mapset);
-                // TODO: Show notification.
+
+                notificationBox.Add(new Notification()
+                {
+                    Message = $"Imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
+                });
             };
         }
 }

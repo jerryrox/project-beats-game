@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBFramework.Services;
 
 namespace PBGame.Notifications
 {
@@ -15,15 +16,23 @@ namespace PBGame.Notifications
 
         public void Add(INotification notification)
         {
-            if(notification.Scope != NotificationScope.Temporary)
-                notifications.Add(notification);
-            OnNewNotification?.Invoke(notification);
+            UnityThreadService.DispatchUnattended(() =>
+            {
+                if (notification.Scope != NotificationScope.Temporary)
+                    notifications.Add(notification);
+                OnNewNotification?.Invoke(notification);
+                return null;
+            });
         }
 
         public void Remove(INotification notification)
         {
-            if(notifications.Remove(notification))
-                OnRemoveNotification?.Invoke(notification);
+            UnityThreadService.DispatchUnattended(() =>
+            {
+                if (notifications.Remove(notification))
+                    OnRemoveNotification?.Invoke(notification);
+                return null;
+            });
         }
 
         public void RemoveById(string id, bool multiple)
@@ -31,17 +40,21 @@ namespace PBGame.Notifications
             if(string.IsNullOrEmpty(id))
                 return;
 
-            for (int i = notifications.Count - 1; i >= 0; i--)
+            UnityThreadService.DispatchUnattended(() =>
             {
-                var notif = notifications[i];
-                if (notif.Id == id)
+                for (int i = notifications.Count - 1; i >= 0; i--)
                 {
-                    notifications.RemoveAt(i);
-                    OnRemoveNotification?.Invoke(notif);
-                    if(!multiple)
-                        return;
+                    var notif = notifications[i];
+                    if (notif.Id == id)
+                    {
+                        notifications.RemoveAt(i);
+                        OnRemoveNotification?.Invoke(notif);
+                        if (!multiple)
+                            return null;
+                    }
                 }
-            }
+                return null;
+            });
         }
     }
 }

@@ -4,13 +4,12 @@ using PBGame.Networking.API.Osu.Responses;
 using PBGame.Networking.API.Requests;
 using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
+using PBGame.Notifications;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Osu.Requests
 {
     public class MapDownloadRequest : BaseRequest<IMapDownloadResponse>, IMapDownloadRequest {
-
-        // public override string RequestTitle => 
 
         public IDownloadStore DownloadStore { get; set; }
 
@@ -18,10 +17,22 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public bool IsNoVideo { get; set; }
         
-        public override bool IsNotified => true;
-
         public override bool RequiresLogin => true;
 
+
+        public override void Request()
+        {
+            base.Request();
+            if (Promise != null)
+            {
+                // TODO: Add cancel actions for notification.
+                Api.NotificationBox?.Add(new Notification() {
+                    Message = $"Downloading mapset ({Mapset.Id} {Mapset.Artist} - {Mapset.Title})",
+                    Promise = this.Promise,
+
+                });
+            }
+        }
 
         protected override IHttpRequest CreateRequest()
         {
