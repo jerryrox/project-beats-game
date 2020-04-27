@@ -17,6 +17,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Animations;
 using PBGame.Networking.API;
+using PBGame.Notifications;
 using PBGame.Configurations;
 using PBFramework.IO.Decoding;
 using PBFramework.UI.Navigations;
@@ -66,6 +67,8 @@ namespace PBGame
         protected IAnimePreset animePreset;
         protected IScreenNavigator screenNavigator;
         protected IOverlayNavigator overlayNavigator;
+
+        protected NotificationBox notificationBox;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -134,6 +137,8 @@ namespace PBGame
             Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
+
+            Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
         }
 
         /// <summary>
