@@ -7,18 +7,35 @@ using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components.Common
 {
     /// <summary>
     /// The basis of any triggers in PB.
+    /// Supports hold but note that it won't work if trigger is set to work on pointer down instead of click.
     /// </summary>
     public class BasicTrigger : UguiTrigger, IHasIcon {
+
+        /// <summary>
+        /// The duration of press & hold required to trigger hold event.
+        /// </summary>
+        private const float HoldThreshold = 1f;
+
+        /// <summary>
+        /// Max distance from pointer down position before a hold is cancelled for dragging.
+        /// </summary>
+        private const float DragThreshold = 20f;
 
         /// <summary>
         /// Event called on button trigger event.
         /// </summary>
         public event Action OnTriggered;
+
+        /// <summary>
+        /// Event called on hold action event.
+        /// </summary>
+        public event Action OnHold;
 
         /// <summary>
         /// Animation played on trigger.
@@ -29,6 +46,21 @@ namespace PBGame.UI.Components.Common
         /// Icon sprite on the trigger, if created.
         /// </summary>
         protected ISprite iconSprite;
+
+        /// <summary>
+        /// Amount of time left until triggering hold event.
+        /// </summary>
+        private float holdTime;
+
+        /// <summary>
+        /// Cursor position recorded on hold start.
+        /// </summary>
+        private Vector2 holdPos;
+
+        /// <summary>
+        /// A flag used to check during click trigger whether the pointer was already consumed through Hold event.
+        /// </summary>
+        private bool didHold = false;
 
 
         public virtual string IconName
@@ -68,6 +100,13 @@ namespace PBGame.UI.Components.Common
             OnPointerExit += OnPointerExited;
             OnPointerClick += OnPointerClicked;
             OnPointerDown += OnPointerDowned;
+            OnPointerUp += OnPointerUpped;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            StopHold();
         }
 
         protected override void OnDisable()
@@ -111,8 +150,12 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected virtual void OnPointerClicked()
         {
-            if(IsClickToTrigger)
+            if (IsClickToTrigger)
+            {
+                if(didHold)
+                    return;
                 OnClickTriggered();
+            }
         }
 
         /// <summary>
@@ -120,8 +163,22 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected virtual void OnPointerDowned()
         {
+            StopHold();
+
             if(!IsClickToTrigger)
                 OnClickTriggered();
+            else
+                StartHold();
+        }
+
+        /// <summary>
+        /// Event called on pointer up event.
+        /// </summary>
+        protected virtual void OnPointerUpped()
+        {
+            if(didHold)
+                return;
+            StopHold();
         }
 
         /// <summary>
@@ -132,8 +189,48 @@ namespace PBGame.UI.Components.Common
             if(triggerAni != null)
                 triggerAni.PlayFromStart();
 
+            StopHold();
+
             SoundPooler.Play(TriggerAudio);
             OnTriggered?.Invoke();
+        }
+
+        protected virtual void Update()
+        {
+            if (holdTime > 0f)
+            {
+                holdTime -= Time.deltaTime;
+                if (holdTime <= 0f)
+                {
+                    // Trigger hold only if not moved away from hold pos.
+                    Vector2 mousePos = Input.mousePosition;
+                    if (Mathf.Abs(mousePos.x - holdPos.x) < DragThreshold && Mathf.Abs(mousePos.y - holdPos.y) < DragThreshold)
+                    {
+                        // Invoke hold action.
+                        didHold = true;
+                        OnHold?.Invoke();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Starts detection of hold action.
+        /// </summary>
+        private void StartHold()
+        {
+            holdTime = HoldThreshold;
+            holdPos = Input.mousePosition;
+        }
+
+        /// <summary>
+        /// Forcibly stops detection of hold action for current pointer.
+        /// </summary>
+        private void StopHold()
+        {
+            Debug.Log("Stopped hold");
+            holdTime = -1f;
+            didHold = false;
         }
     }
 }

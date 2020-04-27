@@ -356,8 +356,10 @@ namespace PBGame.UI.Components.Songs
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+            
             // Load background.
             if (isBackgroundWait)
             {
