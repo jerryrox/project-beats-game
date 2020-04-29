@@ -88,6 +88,10 @@ namespace PBGame.Configurations
         /// Type of resolution quality.
         /// </summary>
 		ProxyBindable<ResolutionType> ResolutionQuality { get; }
+        /// <summary>
+        /// Type of framerate setting.
+        /// </summary>
+        ProxyBindable<FramerateType> Framerate { get; }
 
         // ============================================================
         // Gameplay settings

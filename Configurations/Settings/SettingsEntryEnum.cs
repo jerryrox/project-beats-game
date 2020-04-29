@@ -25,7 +25,7 @@ namespace PBGame.Configurations.Settings
 
         public override string Value
         {
-            get => data.Value.ToString();
+            get => GetEnumString(data.Value);
             set
             {
                 if(valueMap.TryGetValue(value, out T v))
@@ -48,7 +48,15 @@ namespace PBGame.Configurations.Settings
         private void GenerateValueMap()
         {
             foreach (var value in (T[])Enum.GetValues(typeof(T)))
-                valueMap[value.ToString()] = value;
+                valueMap[GetEnumString(value)] = value;
+        }
+
+        /// <summary>
+        /// Returns the final enum string to be displayed.
+        /// </summary>
+        private string GetEnumString(T value)
+        {
+            return value.ToString().Trim().Trim('_');
         }
     }
 }

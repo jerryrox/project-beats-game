@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Rulesets.Maps;
+using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBGame.Notifications;
 using UnityEngine;
@@ -14,6 +15,12 @@ namespace PBGame
     public class ProjectBeatsGame : BaseGame
     {
         /// <summary>
+        /// Holds the original screen size before modifying with game configurations.
+        /// </summary>
+        private Vector2 originalScreenSize;
+
+
+        /// <summary>
         /// Returns whether the initial splash view should be shown automatically.
         /// </summary>
         public virtual bool ShouldShowFirstView => true;
@@ -22,6 +29,8 @@ namespace PBGame
         protected override void PostInitialize()
         {
             base.PostInitialize();
+
+            originalScreenSize = new Vector2(Screen.width, Screen.height);
 
             // Hook events
             HookEngine();
@@ -216,6 +225,16 @@ namespace PBGame
             {
                 inputManager.UseAcceleration = useParallax;
             };
+
+            // Resolution & framerate change events
+            gameConfiguration.ResolutionQuality.OnValueChanged += (quality, _) =>
+            {
+                ApplyScreenResolution();
+            };
+            gameConfiguration.Framerate.OnValueChanged += (framerate, _) =>
+            {
+                ApplyScreenResolution();
+            };
         }
 
         /// <summary>
@@ -256,5 +275,18 @@ namespace PBGame
                 });
             };
         }
-}
+
+        /// <summary>
+        /// Applies screen resolution and framerate settings.
+        /// </summary>
+        private void ApplyScreenResolution()
+        {
+            Vector2 newResolution = originalScreenSize * gameConfiguration.ResolutionQuality.Value.GetResolutionScale();
+            int framerate = gameConfiguration.Framerate.Value.GetFrameRate();
+            Debug.Log($"Resolution: {newResolution}, framerate: {framerate}");
+            Screen.SetResolution((int)newResolution.x, (int)newResolution.y, FullScreenMode.ExclusiveFullScreen, framerate);
+
+            Application.targetFrameRate = framerate;
+        }
+    }
 }

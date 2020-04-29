@@ -51,6 +51,7 @@ namespace PBGame.Configurations
         public ProxyBindable<bool> ShowFps { get; private set; }
         public ProxyBindable<bool> UseBlurShader { get; private set; }
         public ProxyBindable<ResolutionType> ResolutionQuality { get; private set; }
+        public ProxyBindable<FramerateType> Framerate { get; }
 
         // ============================================================
         // Gameplay settings
@@ -109,6 +110,7 @@ namespace PBGame.Configurations
                 performanceTab.AddEntry(new SettingsEntryBool("Show FPS", ShowFps = InitBoolBindable(nameof(ShowFps), false)));
                 performanceTab.AddEntry(new SettingsEntryBool("Use Blur", UseBlurShader = InitBoolBindable(nameof(UseBlurShader), false)));
                 performanceTab.AddEntry(new SettingsEntryEnum<ResolutionType>("Resolution Quality", ResolutionQuality = InitEnumBindable(nameof(ResolutionQuality), ResolutionType.Best)));
+                performanceTab.AddEntry(new SettingsEntryEnum<FramerateType>("Framerate", Framerate = InitEnumBindable(nameof(Framerate), FramerateType._60fps)));
             }
 
             // Gameplay settings

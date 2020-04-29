@@ -151,6 +151,10 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
+            // Some default system settings.
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+            Application.targetFrameRate = 60;
+
             // Inject notification box into api manager
             foreach(var api in apiManager.GetAllApi())
                 api.NotificationBox = notificationBox;

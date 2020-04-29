@@ -79,6 +79,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
             // Trigger options which must be applied on entering the game.
             GameConfiguration.MasterVolume.Trigger();
             GameConfiguration.UseParallax.Trigger();
+            GameConfiguration.ResolutionQuality.Trigger();
 
             LoadMapManager();
         }
