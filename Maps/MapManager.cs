@@ -47,40 +47,53 @@ namespace PBGame.Maps
         {
             return Task.Run(async () =>
             {
-                var returnableProgress = new ReturnableProgress<Mapset>();
-                // Start importing the file
-                Mapset mapset = await store.Import(file, progress: returnableProgress);
-                if (mapset != null)
+                try
                 {
-                    // Mapset must be fully loaded.
-                    Mapset loadedMapset = store.LoadData(mapset);
-                    if (loadedMapset != null)
+                    var returnableProgress = new ReturnableProgress<Mapset>();
+                    // Start importing the file
+                    Mapset mapset = await store.Import(file, progress: returnableProgress);
+                    if (mapset != null)
                     {
-                        // Dispatch mapset imported event on main thread.
-                        UnityThreadService.Dispatch(() =>
+                        // Mapset must be fully loaded.
+                        Mapset loadedMapset = store.LoadData(mapset);
+                        if (loadedMapset != null)
                         {
-                            // Add to all mapsets
-                            allMapsets.AddOrReplace(loadedMapset);
-                            // Reapply filter
-                            Search(lastSearch);
-                            OnImportMapset?.Invoke(loadedMapset);
-                            return null;
-                        });
-                        return true;
+                            // Dispatch mapset imported event on main thread.
+                            UnityThreadService.Dispatch(() =>
+                            {
+                                // Add to all mapsets
+                                allMapsets.AddOrReplace(loadedMapset);
+                                // Reapply filter
+                                Search(lastSearch);
+                                OnImportMapset?.Invoke(loadedMapset);
+                                return null;
+                            });
+                            return true;
+                        }
+                        else
+                        {
+                            notificationBox?.Add(new Notification()
+                            {
+                                Message = $"Failed to load imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
+                                Type = NotificationType.Negative
+                            });
+                        }
                     }
                     else
                     {
-                        notificationBox?.Add(new Notification() {
-                            Message = $"Failed to load imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
+                        notificationBox?.Add(new Notification()
+                        {
+                            Message = $"Failed to import mapset at ({file.FullName})",
                             Type = NotificationType.Negative
                         });
                     }
                 }
-                else
+                catch (Exception e)
                 {
+                    UnityEngine.Debug.LogError(e);
                     notificationBox?.Add(new Notification()
                     {
-                        Message = $"Failed to import mapset at ({file.FullName})",
+                        Message = $"Error while importing mapset: ({e.Message})\n{e.StackTrace}",
                         Type = NotificationType.Negative
                     });
                 }
