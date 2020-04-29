@@ -103,7 +103,7 @@ namespace PBGame
                     // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
                     // Check whether menu bar exists and try letting the music menu handle music switching.
                     var menuBar = overlayNavigator.Get<MenuBarOverlay>();
-                    if (menuBar.MusicButton.Active)
+                    if (menuBar != null && menuBar.MusicButton.Active)
                     {
                         menuBar.MusicButton.SetNextMusic();
                     }
