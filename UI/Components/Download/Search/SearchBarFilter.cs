@@ -34,7 +34,7 @@ namespace PBGame.UI.Components.Download.Search
                 input.OnSubmitted += (value) =>
                 {
                     value = value.Trim();
-                    if (value != State.SearchTerm.Value)
+                    if (!string.IsNullOrEmpty(value) || value != State.SearchTerm.Value)
                         State.SearchTerm.Value = value;
                 };
             }
