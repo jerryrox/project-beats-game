@@ -8,6 +8,11 @@ namespace PBGame.Networking.API
         protected readonly IHttpRequest request;
 
 
+        /// <summary>
+        /// Whether the response error should be sent to the notification box.
+        /// </summary>
+        public bool ShouldNotifyError { get; protected set; } = true;
+
         public bool IsSuccess { get; protected set; }
 
         public string ErrorMessage { get; protected set; }

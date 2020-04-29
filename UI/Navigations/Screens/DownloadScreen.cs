@@ -10,6 +10,7 @@ using PBGame.Networking.API;
 using PBGame.Networking.API.Requests;
 using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
+using PBGame.Notifications;
 using PBFramework.UI;
 using PBFramework.Audio;
 using PBFramework.Graphics;
@@ -44,6 +45,9 @@ namespace PBGame.UI.Navigations.Screens
 
         [ReceivesDependency]
         private IApiManager ApiManager { get; set; }
+
+        [ReceivesDependency]
+        private INotificationBox NotificationBox { get; set; }
 
 
         [InitWithDependency]
@@ -149,7 +153,13 @@ namespace PBGame.UI.Navigations.Screens
             var request = api.RequestFactory.GetMapsetList();
             if (request == null)
             {
-                // TODO: Show notification that this request is not supported on current provider.
+                // Show notification that this request is not supported on current provider.
+                NotificationBox.Add(new Notification()
+                {
+                    Message = "The current provider does not support mapset search.",
+                    Type = NotificationType.Warning,
+                    Scope = NotificationScope.Temporary
+                });
                 return;
             }
 

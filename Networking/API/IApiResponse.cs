@@ -3,6 +3,11 @@ namespace PBGame.Networking.API
     public interface IApiResponse {
     
         /// <summary>
+        /// Returns whether error response should be notified to available notification box.
+        /// </summary>
+        bool ShouldNotifyError { get; }
+
+        /// <summary>
         /// Returns whether the request was a success.
         /// </summary>
         bool IsSuccess { get; }

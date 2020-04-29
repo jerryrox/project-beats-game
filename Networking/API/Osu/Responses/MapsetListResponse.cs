@@ -56,8 +56,12 @@ namespace PBGame.Networking.API.Osu.Responses
         public override void Evaluate()
         {
             IsSuccess = request.Response.Code == 200;
-            if(!IsSuccess)
+            if (!IsSuccess)
+            {
+                ShouldNotifyError = false;
                 ErrorMessage = request.Response.ErrorMessage;
+                onParsed?.Invoke();
+            }
             // If successful, start parsing the result.
             else
             {
@@ -65,21 +69,6 @@ namespace PBGame.Networking.API.Osu.Responses
                 {
                     var json = JsonConvert.DeserializeObject<JObject>(request.Response.TextData);
                     {
-                        var beatmapsets = json["beatmapsets"].ToObject<JArray>();
-                        {
-                            Mapsets = new OnlineMapset[beatmapsets.Count];
-                            if (Mapsets.Length > 0)
-                            {
-                                int mapsetPerTask = 10;
-                                targetTaskCount = (beatmapsets.Count - 1) / mapsetPerTask + 1;
-                                for (int i = 0; i < targetTaskCount; i++)
-                                    ParseMapsets(beatmapsets, i * mapsetPerTask, Math.Min((i + 1) * mapsetPerTask, Mapsets.Length - 1));
-                            }
-                            else
-                            {
-                                onParsed?.Invoke();
-                            }
-                        }
                         var cursor = json["cursor"];
                         if (cursor.HasValues)
                         {
@@ -104,7 +93,8 @@ namespace PBGame.Networking.API.Osu.Responses
                             if (!foundKey)
                             {
                                 Logger.LogWarning($"MapsetListResponse.Evaluate - Could not find a matching cursor key. Attempting to auto-detect this.");
-                                cursorName = cursor.Where(c => {
+                                cursorName = cursor.Where(c =>
+                                {
                                     if (!c.Path.EndsWith("_id", StringComparison.OrdinalIgnoreCase))
                                     {
                                         Logger.Log($"MapsetListResponse.Evaluate - Found a potentital cursor key at path ({c.Path}).");
@@ -122,10 +112,27 @@ namespace PBGame.Networking.API.Osu.Responses
                         }
                         Total = json["total"].Value<int>();
                     }
+                        var beatmapsets = json["beatmapsets"].ToObject<JArray>();
+                        {
+                            Mapsets = new OnlineMapset[beatmapsets.Count];
+                            if (Mapsets.Length > 0)
+                            {
+                                int mapsetPerTask = 10;
+                                targetTaskCount = (beatmapsets.Count - 1) / mapsetPerTask + 1;
+                                for (int i = 0; i < targetTaskCount; i++)
+                                    ParseMapsets(beatmapsets, i * mapsetPerTask, Math.Min((i + 1) * mapsetPerTask, Mapsets.Length - 1));
+                            }
+                            else
+                            {
+                                onParsed?.Invoke();
+                            }
+                        }
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"MapsetListResponse.Evaluate - Error while parsing response: {e.Message}\n{e.StackTrace}");
+                    IsSuccess = false;
+                    ErrorMessage = $"MapsetListResponse.Evaluate - Error while parsing response: {e.Message}\n{e.StackTrace}";
+                    onParsed?.Invoke();
                 }
             }
         }

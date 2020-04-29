@@ -64,10 +64,14 @@ namespace PBGame.Networking.API
                 }
                 else
                 {
-                    NotificationBox?.Add(new Notification() {
-                        Message = $"Failed API request. ({response.ErrorMessage})",
-                        Type = NotificationType.Negative,
-                    });
+                    if (response.ShouldNotifyError)
+                    {
+                        NotificationBox?.Add(new Notification()
+                        {
+                            Message = $"Failed API request. ({response.ErrorMessage})",
+                            Type = NotificationType.Negative,
+                        });
+                    }
                 }
                 request.Dispose();
             };
