@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Common.Dropdown
 {
-    public class DropdownMenu : UguiObject {
+    public class DropdownMenu : UguiObject, IRecyclable<DropdownMenu> {
 
         /// <summary>
         /// The width of the menu container.
@@ -34,6 +34,11 @@ namespace PBGame.UI.Components.Common.Dropdown
         /// </summary>
         public static readonly Vector2 ItemSize = new Vector2(ContainerWidth, 40f);
 
+        /// <summary>
+        /// EVent called when this menu is hidden.
+        /// </summary>
+        public event Action<DropdownMenu> OnHidden;
+
         private IGraphicObject holder;
         private IGraphicObject aniHolder;
         private CanvasGroup canvasGroup;
@@ -54,6 +59,8 @@ namespace PBGame.UI.Components.Common.Dropdown
         /// Returns the size of the menu items holder.
         /// </summary>
         public Vector2 HolderSize => holder.Size;
+
+        public IRecycler<DropdownMenu> Recycler { get; set; }
 
         /// <summary>
         /// Returns whether the show or hide animation is currently playing.
@@ -136,7 +143,11 @@ namespace PBGame.UI.Components.Common.Dropdown
                 .AddTime(0f, 0f, EaseType.QuadEaseOut)
                 .AddTime(0.25f, MoveAniAmount)
                 .Build();
-            hideAni.AddEvent(hideAni.Duration, () => Active = false);
+            hideAni.AddEvent(hideAni.Duration, () =>
+            {
+                OnHidden?.Invoke(this);
+                Active = false;
+            });
         }
 
         /// <summary>
@@ -191,6 +202,10 @@ namespace PBGame.UI.Components.Common.Dropdown
 
             hideAni.PlayFromStart();
         }
+
+        void IRecyclable<DropdownMenu>.OnRecycleNew() {}
+
+        void IRecyclable<DropdownMenu>.OnRecycleDestroy() {}
 
         /// <summary>
         /// Makes sure the menu does not go outside of the view boundary.
