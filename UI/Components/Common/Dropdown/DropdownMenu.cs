@@ -56,9 +56,9 @@ namespace PBGame.UI.Components.Common.Dropdown
 
 
         /// <summary>
-        /// Returns the size of the menu items holder.
+        /// Returns the menu holder object.
         /// </summary>
-        public Vector2 HolderSize => holder.Size;
+        public IGraphicObject Holder => holder;
 
         public IRecycler<DropdownMenu> Recycler { get; set; }
 

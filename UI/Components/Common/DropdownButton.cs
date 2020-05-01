@@ -16,8 +16,6 @@ namespace PBGame.UI.Components.Common
         private ILabel label;
         private ISprite backgroundSprite;
 
-        private DropdownMenu dropdownMenu;
-
         private DropdownContext curContext;
 
 
@@ -67,7 +65,7 @@ namespace PBGame.UI.Components.Common
         protected override int HoverSpriteDepth => 1;
 
         [ReceivesDependency]
-        private IRootMain RootMain { get; set; }
+        private IDropdownProvider DropdownProvider { get; set; }
 
 
         [InitWithDependency]
@@ -114,26 +112,13 @@ namespace PBGame.UI.Components.Common
                 return;
             }
 
-            // Spawn dropdown menu on the dropdown level.
-            if (dropdownMenu == null)
-            {
-                dropdownMenu = RootMain.CreateChild<DropdownMenu>("dropdown-menu", DepthPresets.DropdownPopup);
-                dropdownMenu.Active = false;
-
-                var dropdownCanvas = dropdownMenu.Canvas = dropdownMenu.RawObject.AddComponent<Canvas>();
-                dropdownCanvas.overrideSorting = true;
-                dropdownCanvas.sortingOrder = DepthPresets.DropdownPopup;
-
-                var raycaster = dropdownMenu.RawObject.AddComponent<GraphicRaycaster>();
-                raycaster.ignoreReversedGraphics = true;
-            }
-            dropdownMenu.OpenMenu(Context);
-
+            // Get a dropdown menu from provider.
+            var dropdown = DropdownProvider.Open(Context);
             // Make the menu appear on the right side of the button.
             Vector2 menuPosition = this.GetPositionAtCorner(Pivots.Right);
-            menuPosition.x += DropdownMenu.ContainerWidth * 0.5f;
-            menuPosition.y += -dropdownMenu.HolderSize.y * 0.5f + DropdownMenu.ItemSize.y * 0.5f;
-            dropdownMenu.PositionMenu(
+            menuPosition -= dropdown.Holder.GetPositionAtCorner(Pivots.TopLeft);
+            menuPosition.y += DropdownMenu.ItemSize.y * 0.5f;
+            dropdown.PositionMenu(
                 myTransform.TransformPoint(menuPosition),
                 Space.World
             );
