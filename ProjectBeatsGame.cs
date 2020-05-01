@@ -283,7 +283,6 @@ namespace PBGame
         {
             Vector2 newResolution = originalScreenSize * gameConfiguration.ResolutionQuality.Value.GetResolutionScale();
             int framerate = gameConfiguration.Framerate.Value.GetFrameRate();
-            Debug.Log($"Resolution: {newResolution}, framerate: {framerate}");
             Screen.SetResolution((int)newResolution.x, (int)newResolution.y, FullScreenMode.ExclusiveFullScreen, framerate);
 
             Application.targetFrameRate = framerate;

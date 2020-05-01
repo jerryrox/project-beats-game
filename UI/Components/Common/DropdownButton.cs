@@ -129,12 +129,12 @@ namespace PBGame.UI.Components.Common
             }
             dropdownMenu.OpenMenu(Context);
 
-            // Make the menu appear on the left side of the screen.
-            Vector2 menuPosition = Position;
-            menuPosition.x += Width * 0.5f + DropdownMenu.ContainerWidth * 0.5f;
+            // Make the menu appear on the right side of the button.
+            Vector2 menuPosition = this.GetPositionAtCorner(Pivots.Right);
+            menuPosition.x += DropdownMenu.ContainerWidth * 0.5f;
             menuPosition.y += -dropdownMenu.HolderSize.y * 0.5f + DropdownMenu.ItemSize.y * 0.5f;
             dropdownMenu.PositionMenu(
-                transform.TransformPoint(menuPosition),
+                myTransform.TransformPoint(menuPosition),
                 Space.World
             );
         }
