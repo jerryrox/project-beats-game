@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Maps;
 using PBGame.Graphics;
 using PBGame.Rulesets.Maps;
@@ -13,7 +14,17 @@ namespace PBGame.UI.Components.Songs
 {
     public class SongList : UguiListView, IListView {
 
+        private const int DeleteActionCode = 0;
+
+
         private List<IMapset> mapsets;
+
+        private DropdownContext dropdownContext;
+
+        /// <summary>
+        /// The mapset currently under context of dropdown menu.
+        /// </summary>
+        private IMapset heldMapset;
 
 
         [ReceivesDependency]
@@ -22,10 +33,18 @@ namespace PBGame.UI.Components.Songs
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
+        [ReceivesDependency]
+        private IDropdownProvider DropdownProvider { get; set; }
+
 
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
+            // Init dropdown context.
+            dropdownContext = new DropdownContext() { IsSelectionMenu = false };
+            dropdownContext.OnSelection += OnDropdownSelection;
+            dropdownContext.Datas.Add(new DropdownData("Delete", DeleteActionCode));
+
             // Init the list view.
             Initialize(OnCreateListItem, OnUpdateListItem);
             CellSize = new Vector2(rootMain.Resolution.x, 82f);
@@ -75,6 +94,35 @@ namespace PBGame.UI.Components.Songs
         }
 
         /// <summary>
+        /// Event called from dropdown context when a menu iten has been selected.
+        /// </summary>
+        private void OnDropdownSelection(DropdownData data)
+        {
+            if (heldMapset == null)
+                return;
+
+            int action = (int)data.ExtraData;
+            switch (action)
+            {
+                case DeleteActionCode:
+                    Debug.LogWarning("Delete mapset: " + heldMapset.Metadata.Title);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Event called from song cell when hold action is invoked.
+        /// </summary>
+        private void OnItemHold(SongListItem item)
+        {
+            if(!item.Active || item.Mapset == null)
+                return;
+
+            heldMapset = item.Mapset;
+            DropdownProvider.OpenAt(dropdownContext, item.RawTransform.position);
+        }
+
+        /// <summary>
         /// Event called from listview when another item should be created.
         /// </summary>
         private IListItem OnCreateListItem()
@@ -83,6 +131,7 @@ namespace PBGame.UI.Components.Songs
             item.Anchor = Anchors.MiddleStretch;
             item.Size = CellSize;
             item.SetOffsetHorizontal(0f);
+            item.OnHold += () => OnItemHold(item);
             return item;
         }
 

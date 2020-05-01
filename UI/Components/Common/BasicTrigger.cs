@@ -20,7 +20,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// The duration of press & hold required to trigger hold event.
         /// </summary>
-        private const float HoldThreshold = 1f;
+        private const float HoldThreshold = 0.75f;
 
         /// <summary>
         /// Max distance from pointer down position before a hold is cancelled for dragging.

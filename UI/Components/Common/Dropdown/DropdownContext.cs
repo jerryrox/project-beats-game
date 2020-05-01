@@ -17,6 +17,12 @@ namespace PBGame.UI.Components.Common.Dropdown
 
 
         /// <summary>
+        /// Whether the context resembles a persisting selection data.
+        /// Default: true
+        /// </summary>
+        public bool IsSelectionMenu { get; set; } = true;
+
+        /// <summary>
         /// Returns the currently selected data.
         /// </summary>
         public DropdownData Selection { get; private set; }
@@ -32,7 +38,8 @@ namespace PBGame.UI.Components.Common.Dropdown
         /// </summary>
         public void SelectData(DropdownData data)
         {
-            Selection = data;
+            if(IsSelectionMenu)
+                Selection = data;
             OnSelection?.Invoke(data);
         }
 
