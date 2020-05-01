@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PBGame.IO.Decoding.Osu;
+using PBGame.UI;
 using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
@@ -70,6 +71,7 @@ namespace PBGame
         protected IAnimePreset animePreset;
         protected IScreenNavigator screenNavigator;
         protected IOverlayNavigator overlayNavigator;
+        protected IDropdownProvider dropdownProvider;
 
         protected InputManager inputManager;
 
@@ -142,6 +144,7 @@ namespace PBGame
             Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
+            Dependencies.CacheAs<IDropdownProvider>(dropdownProvider = new DropdownProvider(rootMain));
 
             Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution));
         }
