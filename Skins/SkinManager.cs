@@ -78,7 +78,7 @@ namespace PBGame.Skins
             });
         }
 
-        public IPromise SelectSkin(ISkin skin, ISoundPooler soundPooler)
+        public IExplicitPromise SelectSkin(ISkin skin, ISoundPooler soundPooler)
         {
             if (skin == CurrentSkin)
             {

@@ -29,7 +29,7 @@ namespace PBGame.Assets.Caching
             return base.IsCached(key.Detail.GetFullAudioPath());
         }
 
-        protected override IPromise<IMusicAudio> CreateRequest(string key)
+        protected override IExplicitPromise<IMusicAudio> CreateRequest(string key)
         {
             return new MusicAudioRequest(key, true);
         }

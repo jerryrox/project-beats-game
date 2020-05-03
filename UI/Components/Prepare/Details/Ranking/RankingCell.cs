@@ -17,7 +17,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
         private ILabel rank;
         private IGraphicObject scoreHolder;
-        private ITexture rankIcon;
+        private ISprite rankIcon;
         private ILabel score;
         private ILabel accuracy;
         private ILabel username;
@@ -41,9 +41,6 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         [ReceivesDependency]
         private IModeManager ModeManager { get; set; }
 
-        [ReceivesDependency]
-        private ISkinManager SkinManager { get; set; }
-
 
         [InitWithDependency]
         private void Init()
@@ -58,7 +55,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             {
                 scoreHolder.Pivot = PivotType.Left;
 
-                rankIcon = scoreHolder.CreateChild<UguiTexture>("icon", 0);
+                rankIcon = scoreHolder.CreateChild<UguiSprite>("icon", 0);
                 {
                     rankIcon.Pivot = PivotType.Left;
                     rankIcon.Scale = new Vector3(0.3f, 0.3f, 1f);
@@ -129,7 +126,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             var record = info.Record;
 
             rank.Text = $"#{info.Rank}";
-            rankIcon.Texture = SkinManager.CurrentSkin.GetTexture($"ranking-{record.Rank}-small").Element;
+            rankIcon.SpriteName = $"ranking-{record.Rank}-small";
             score.Text = record.Score.ToString("N0");
             accuracy.Text = record.Accuracy.ToString("P2");
             username.Text = record.Username;

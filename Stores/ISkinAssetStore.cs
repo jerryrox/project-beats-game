@@ -22,7 +22,7 @@ namespace PBGame.Stores
         /// <summary>
         /// Loads all assets in the skin directory.
         /// </summary>
-        IPromise Load();
+        IExplicitPromise Load();
 
         /// <summary>
         /// Unloads all assets currently loaded.

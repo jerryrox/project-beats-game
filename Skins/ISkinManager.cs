@@ -40,6 +40,6 @@ namespace PBGame.Skins
         /// <summary>
         /// Selects the specified skin for usage.
         /// </summary>
-        IPromise SelectSkin(ISkin skin, ISoundPooler soundPooler);
+        IExplicitPromise SelectSkin(ISkin skin, ISoundPooler soundPooler);
     }
 }

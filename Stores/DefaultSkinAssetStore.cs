@@ -17,45 +17,11 @@ namespace PBGame.Stores
         {
         }
 
-        public override IPromise Load()
+        public override IExplicitPromise Load()
         {
             // Default assets are only loaded once.
             if(isLoaded) return null;
             isLoaded = true;
-
-            LoadTexture("circle-base");
-            LoadTexture("circle-body");
-            LoadTexture("circle-cover");
-            LoadTexture("circle-glow");
-            LoadTexture("circle-tick");
-            LoadTexture("count1");
-            LoadTexture("count2");
-            LoadTexture("count3");
-            LoadTexture("go");
-            LoadTexture("hit-bad");
-            LoadTexture("hit-good");
-            LoadTexture("hit-great");
-            LoadTexture("hit-miss");
-            LoadTexture("hit-ok");
-            LoadTexture("hit-perfect");
-            LoadTexture("pause-overlay");
-            LoadTexture("play-warningarrow");
-            LoadTexture("ranking-A");
-            LoadTexture("ranking-A-small");
-            LoadTexture("ranking-B");
-            LoadTexture("ranking-B-small");
-            LoadTexture("ranking-C");
-            LoadTexture("ranking-C-small");
-            LoadTexture("ranking-D");
-            LoadTexture("ranking-D-small");
-            LoadTexture("ranking-S");
-            LoadTexture("ranking-S-small");
-            LoadTexture("ranking-SH");
-            LoadTexture("ranking-SH-small");
-            LoadTexture("ranking-X");
-            LoadTexture("ranking-X-small");
-            LoadTexture("ranking-XH");
-            LoadTexture("ranking-XH-small");
 
             LoadAudio("applause");
             LoadAudio("combobreak");

@@ -58,7 +58,7 @@ namespace PBGame.Stores
             this.skin = skin;
         }
 
-        public virtual IPromise Load()
+        public virtual IExplicitPromise Load()
         {
             var audioRequests = FindAudioAssets().Select(RequestAudio);
             var textureRequests = FindTextureAssets().Select(RequestTexture);
@@ -119,7 +119,7 @@ namespace PBGame.Stores
         /// <summary>
         /// Returns the audio requester instance.
         /// </summary>
-        private IPromise RequestAudio(FileInfo audioFile)
+        private IExplicitPromise RequestAudio(FileInfo audioFile)
         {
             var request = new EffectAudioRequest(audioFile.FullName);
             request.OnFinishedResult += (result) =>
@@ -133,13 +133,13 @@ namespace PBGame.Stores
                 };
                 audios.Add(skinnable.LookupName, skinnable);
             };
-            return request as IPromise;
+            return request as IExplicitPromise;
         }
 
         /// <summary>
         /// Returns the texture requester instance.
         /// </summary>
-        private IPromise RequestTexture(FileInfo textureFile)
+        private IExplicitPromise RequestTexture(FileInfo textureFile)
         {
             var request = new TextureRequest(textureFile.FullName);
             request.OnFinishedResult += (result) =>
@@ -153,7 +153,7 @@ namespace PBGame.Stores
                 };
                 textures.Add(skinnable.LookupName, skinnable);
             };
-            return request as IPromise;
+            return request as IExplicitPromise;
         }
     }
 }
