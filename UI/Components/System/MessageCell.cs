@@ -85,7 +85,7 @@ namespace PBGame.UI.Components.System
 
             bgSprite = CreateChild<UguiSprite>("bg", 0);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.Offset = new Offset(8f);
                 bgSprite.SpriteName = "circle-16";
                 bgSprite.ImageType = Image.Type.Sliced;
@@ -96,15 +96,15 @@ namespace PBGame.UI.Components.System
 
                 glowSprite = bgSprite.CreateChild<UguiSprite>("glow", 0);
                 {
-                    glowSprite.Anchor = Anchors.Fill;
+                    glowSprite.Anchor = AnchorType.Fill;
                     glowSprite.Offset = new Offset(-13.5f);
                     glowSprite.SpriteName = "glow-circle-16-x2";
                     glowSprite.ImageType = Image.Type.Sliced;
                 }
                 label = bgSprite.CreateChild<Label>("label", 1);
                 {
-                    label.Anchor = Anchors.TopStretch;
-                    label.Pivot = Pivots.Top;
+                    label.Anchor = AnchorType.TopStretch;
+                    label.Pivot = PivotType.Top;
                     label.Y = -12f;
                     label.FontSize = 16;
                     label.Alignment = TextAnchor.MiddleCenter;

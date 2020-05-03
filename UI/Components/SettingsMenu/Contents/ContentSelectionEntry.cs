@@ -41,8 +41,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
             dropdown = CreateChild<DropdownButton>("dropdown");
             {
-                dropdown.Anchor = Anchors.BottomStretch;
-                dropdown.Pivot = Pivots.Bottom;
+                dropdown.Anchor = AnchorType.BottomStretch;
+                dropdown.Pivot = PivotType.Bottom;
                 dropdown.SetOffsetHorizontal(8f);
                 dropdown.Y = 8f;
                 dropdown.Height = 30f;

@@ -25,14 +25,14 @@ namespace PBGame.UI.Components.Common
         {
             blurSprite = CreateChild<UguiSprite>("blur", 0);
             {
-                blurSprite.Anchor = Anchors.Fill;
+                blurSprite.Anchor = AnchorType.Fill;
                 blurSprite.Offset = Offset.Zero;
                 blurSprite.SpriteName = "null";
                 blurSprite.AddEffect(new BlurShaderEffect());
             }
             fallbackSprite = CreateChild<UguiSprite>("fallback", 1);
             {
-                fallbackSprite.Anchor = Anchors.Fill;
+                fallbackSprite.Anchor = AnchorType.Fill;
                 fallbackSprite.Offset = Offset.Zero;
                 fallbackSprite.Color = new Color(0f, 0f, 0f, 0.4f);
             }

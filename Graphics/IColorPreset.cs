@@ -24,6 +24,6 @@ namespace PBGame.Graphics
         /// <summary>
         /// Returns the color resembling the specified difficulty categorization type.
         /// </summary>
-        ColorPalette GetDifficultyColor(DifficultyTypes type);
+        ColorPalette GetDifficultyColor(DifficultyType type);
     }
 }

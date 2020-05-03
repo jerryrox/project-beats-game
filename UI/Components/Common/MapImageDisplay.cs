@@ -47,7 +47,7 @@ namespace PBGame.UI.Components
             for (int i = 0; i < textures.Length; i++)
             {
                 var texture = textures[i] = CreateChild<UguiTexture>($"texture{i}", i);
-                texture.Anchor = Anchors.Fill;
+                texture.Anchor = AnchorType.Fill;
                 texture.RawSize = Vector2.zero;
                 texture.Alpha = 0f;
             }

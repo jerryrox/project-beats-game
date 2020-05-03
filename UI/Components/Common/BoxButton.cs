@@ -64,7 +64,7 @@ namespace PBGame.UI.Components.Common
 
             label = CreateChild<Label>("label", 1);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.RawSize = Vector2.zero;
                 label.IsBold = true;
                 label.Alignment = TextAnchor.MiddleCenter;

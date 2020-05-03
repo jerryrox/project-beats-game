@@ -45,7 +45,7 @@ namespace PBGame.UI.Navigations.Screens
             // Initialize load displayer,
             LoadDisplay = CreateChild<LoadDisplay>("load", 9);
             {
-                LoadDisplay.Anchor = Anchors.BottomStretch;
+                LoadDisplay.Anchor = AnchorType.BottomStretch;
                 LoadDisplay.SetOffsetHorizontal(0f);
                 LoadDisplay.Y = 0f;
             }

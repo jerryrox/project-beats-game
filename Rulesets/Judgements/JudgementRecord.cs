@@ -8,7 +8,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// The result type of the judgement.
 		/// </summary>
-		public HitResults Result { get; set; }
+		public HitResultType Result { get; set; }
 
 		/// <summary>
 		/// The amount of offset from a perfect hit timing.

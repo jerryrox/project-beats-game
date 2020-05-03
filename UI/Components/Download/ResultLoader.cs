@@ -36,7 +36,7 @@ namespace PBGame.UI.Components.Download
 
             bgSprite = CreateChild<UguiSprite>("bg", 0);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.Offset = Offset.Zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.5f);
             }

@@ -30,8 +30,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.TopLeft;
-                label.Pivot = Pivots.TopLeft;
+                label.Anchor = AnchorType.TopLeft;
+                label.Pivot = PivotType.TopLeft;
                 label.X = 32f;
                 label.Y = -32f;
                 label.IsBold = true;
@@ -42,14 +42,14 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             scrollView = CreateChild<UguiScrollView>("scrollview", 1);
             {
-                scrollView.Anchor = Anchors.Fill;
+                scrollView.Anchor = AnchorType.Fill;
                 scrollView.Offset = new Offset(32f, 64f, 32f, 32f);
 
                 scrollView.Background.Alpha = 0f;
 
                 contentLabel = scrollView.Container.CreateChild<Label>("content", 0);
                 {
-                    contentLabel.Anchor = Anchors.Fill;
+                    contentLabel.Anchor = AnchorType.Fill;
                     contentLabel.RawSize = Vector2.zero;
                     contentLabel.FontSize = 16;
                     contentLabel.Alignment = TextAnchor.UpperLeft;

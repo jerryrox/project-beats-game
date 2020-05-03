@@ -82,7 +82,7 @@ namespace PBGame.UI.Components.Home
 
             trigger = CreateChild<UguiTrigger>("trigger", 1000);
             {
-                trigger.Anchor = Anchors.Fill;
+                trigger.Anchor = AnchorType.Fill;
                 trigger.RawSize = Vector2.zero;
 
                 trigger.OnPointerEnter += () =>

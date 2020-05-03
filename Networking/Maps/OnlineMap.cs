@@ -17,7 +17,7 @@ namespace PBGame.Networking.Maps
         /// <summary>
         /// Returns the game mode which the map is created for.
         /// </summary>
-        public GameModes Mode { get; set; }
+        public GameModeType Mode { get; set; }
 
         /// <summary>
         /// Returns the difficulty value calculated on the provider's side.

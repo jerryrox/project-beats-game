@@ -49,7 +49,7 @@ namespace PBGame.Rulesets
             // Create game gui.
             GameGui = CreateGameGui(containerObject, this.Dependencies);
             {
-                GameGui.Anchor = Anchors.Fill;
+                GameGui.Anchor = AnchorType.Fill;
                 GameGui.RawSize = Vector2.zero;
             }
         }

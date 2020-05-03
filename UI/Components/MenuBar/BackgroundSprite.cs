@@ -64,7 +64,7 @@ namespace PBGame.UI.Components.MenuBar
             Sprite = CreateChild<UguiSprite>("sprite");
             {
                 Sprite.Color = curColor;
-                Sprite.Anchor = Anchors.Fill;
+                Sprite.Anchor = AnchorType.Fill;
                 Sprite.RawSize = Vector2.zero;
             }
         }

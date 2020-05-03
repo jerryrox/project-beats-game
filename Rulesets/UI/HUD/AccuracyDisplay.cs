@@ -16,7 +16,7 @@ namespace PBGame.Rulesets.UI.HUD
         {
             AccuracyLabel = CreateChild<Label>("label");
             {
-                AccuracyLabel.Anchor = Anchors.Fill;
+                AccuracyLabel.Anchor = AnchorType.Fill;
                 AccuracyLabel.RawSize = Vector2.zero;
             }
         }

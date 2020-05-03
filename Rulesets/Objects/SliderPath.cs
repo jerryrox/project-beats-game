@@ -20,7 +20,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Type of the path to be used by the slider.
 		/// </summary>
-		public PathTypes PathType;
+		public PathType PathType;
 
 		/// <summary>
 		/// Finalized path of the slider.
@@ -57,7 +57,7 @@ namespace PBGame.Rulesets.Objects
 		}
 
 
-		public SliderPath(PathTypes type, Vector2[] points, float? expectedDistance = null)
+		public SliderPath(PathType type, Vector2[] points, float? expectedDistance = null)
 		{
 			this.points = points;
 			PathType = type;
@@ -197,9 +197,9 @@ namespace PBGame.Rulesets.Objects
 		{
 			switch(PathType)
 			{
-			case PathTypes.Linear:
+			case PathType.Linear:
 				return PathCalculator.ApproximateLinear(subPoints);
-			case PathTypes.PerfectCurve:
+			case PathType.PerfectCurve:
 				// Perfect curve types must only have 3 points.
 				if(points.Length != 3 || subPoints.Length != 3)
 					break;
@@ -208,7 +208,7 @@ namespace PBGame.Rulesets.Objects
 				if(subPath.Count == 0)
 					break;
 				return subPath;
-			case PathTypes.Catmull:
+			case PathType.Catmull:
 				return PathCalculator.CalculateCatmull(subPoints);
 			}
 			return PathCalculator.CalculateBezier(subPoints);

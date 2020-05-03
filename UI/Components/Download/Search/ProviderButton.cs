@@ -14,7 +14,7 @@ namespace PBGame.UI.Components.Download.Search
 {
     public class ProviderButton : HighlightableTrigger {
 
-        private ApiProviders provider;
+        private ApiProviderType provider;
 
 
         [ReceivesDependency]
@@ -65,7 +65,7 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Sets the provider type to represent.
         /// </summary>
-        public void SetProvider(ApiProviders provider)
+        public void SetProvider(ApiProviderType provider)
         {
             this.provider = provider;
 
@@ -92,7 +92,7 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on api provider change.
         /// </summary>
-        private void OnProviderChange(ApiProviders provider, ApiProviders _)
+        private void OnProviderChange(ApiProviderType provider, ApiProviderType _)
         {
             IsFocused = provider == this.provider;
         }

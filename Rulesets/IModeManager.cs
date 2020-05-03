@@ -8,7 +8,7 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns the game mode service instance for specified mode.
         /// </summary>
-        IModeService GetService(GameModes mode);
+        IModeService GetService(GameModeType mode);
 
         /// <summary>
         /// Returns all available mode servicer instances.

@@ -1,6 +1,6 @@
 namespace PBGame.Networking.Maps
 {
-    public enum MapGenres {
+    public enum MapGenreType {
     
         Any = 0,
         Unspecified = 1,

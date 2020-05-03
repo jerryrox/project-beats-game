@@ -12,7 +12,7 @@ namespace PBGame.UI.Navigations.Overlays
         private float? menuBarHeight = null;
 
 
-        public override HideActions HideAction => HideActions.Recycle;
+        public override HideActionType HideAction => HideActionType.Recycle;
 
         /// <summary>
         /// Returns the height of the menu bar overlay's container.

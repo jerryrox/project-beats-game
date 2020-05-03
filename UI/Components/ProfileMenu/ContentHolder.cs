@@ -42,14 +42,14 @@ namespace PBGame.UI.Components.ProfileMenu
 
             background = CreateChild<UguiSprite>("background", 1);
             {
-                background.Anchor = Anchors.Fill;
+                background.Anchor = AnchorType.Fill;
                 background.RawSize = Vector2.zero;
                 background.Position = Vector2.zero;
                 background.Color = new Color(0f, 0f, 0f, 0.25f);
             }
             mask = CreateChild<UguiSprite>("mask", 3);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Position = Vector2.zero;
                 mask.SpriteName = "box";
@@ -58,16 +58,16 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 loggedInView = mask.CreateChild<LoggedInView>("logged-in", 0);
                 {
-                    loggedInView.Anchor = Anchors.BottomStretch;
-                    loggedInView.Pivot = Pivots.Bottom;
+                    loggedInView.Anchor = AnchorType.BottomStretch;
+                    loggedInView.Pivot = PivotType.Bottom;
                     loggedInView.SetOffsetHorizontal(0f);
                     loggedInView.Y = 0f;
                     loggedInView.Height = LoggedInHeight;
                 }
                 loggedOutView = mask.CreateChild<LoggedOutView>("logged-out", 0);
                 {
-                    loggedOutView.Anchor = Anchors.BottomStretch;
-                    loggedOutView.Pivot = Pivots.Bottom;
+                    loggedOutView.Anchor = AnchorType.BottomStretch;
+                    loggedOutView.Pivot = PivotType.Bottom;
                     loggedOutView.SetOffsetHorizontal(0f);
                     loggedOutView.Y = 0f;
                     loggedOutView.Height = LoggedOutHeight;
@@ -75,7 +75,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             pointerBlocker = CreateChild<UguiSprite>("blocker", 4);
             {
-                pointerBlocker.Anchor = Anchors.Fill;
+                pointerBlocker.Anchor = AnchorType.Fill;
                 pointerBlocker.RawSize = Vector2.zero;
                 pointerBlocker.Position = Vector2.zero;
                 pointerBlocker.Alpha = 0f;

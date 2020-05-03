@@ -47,8 +47,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
         protected ILabel CreateLabel(string text = "", float offsetLeft = 8f, float offsetRight = 8f, float y = -8f, float height = 32f)
         {
             var label = CreateChild<Label>("label");
-            label.Anchor = Anchors.TopStretch;
-            label.Pivot = Pivots.TopLeft;
+            label.Anchor = AnchorType.TopStretch;
+            label.Pivot = PivotType.TopLeft;
             label.Text = text;
             label.Y = y;
             label.Height = height;

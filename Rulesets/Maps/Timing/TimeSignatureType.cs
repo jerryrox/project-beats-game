@@ -1,6 +1,6 @@
 namespace PBGame.Rulesets.Maps.Timing
 {
-    public enum TimeSignatures {
+    public enum TimeSignatureType {
     
       Quadruple = 4,
       Triple = 3

@@ -38,8 +38,8 @@ namespace PBGame.UI.Components.Download.Search
 
             dropdown = CreateChild<DropdownButton>("dropdown", 1);
             {
-                dropdown.Anchor = Anchors.LeftStretch;
-                dropdown.Pivot = Pivots.Left;
+                dropdown.Anchor = AnchorType.LeftStretch;
+                dropdown.Pivot = PivotType.Left;
                 dropdown.X = 0f;
                 dropdown.SetOffsetVertical(24f, 0f);
                 dropdown.Width = 140f;
@@ -50,7 +50,7 @@ namespace PBGame.UI.Components.Download.Search
             }
             toggle = CreateChild<LabelledToggle>("toggle", 2);
             {
-                toggle.Anchor = Anchors.Fill;
+                toggle.Anchor = AnchorType.Fill;
                 toggle.Offset = new Offset(156f, 24f, 0f, 0f);
 
                 toggle.LabelText = "Descending";

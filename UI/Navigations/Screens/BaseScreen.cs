@@ -13,7 +13,7 @@ namespace PBGame.UI.Navigations.Screens
         private float? menuBarHeight = null;
 
 
-        public override HideActions HideAction => HideActions.Recycle;
+        public override HideActionType HideAction => HideActionType.Recycle;
 
         /// <summary>
         /// Returns the height of the menu bar overlay's container.
@@ -39,7 +39,7 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Returns whether the screen should be displayed on 3D root.
         /// </summary>
-        protected virtual bool IsRoot3D { get; } = false;
+        protected virtual bool IsRoot3D => false;
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }

@@ -39,6 +39,6 @@ namespace PBGame.Rulesets.Maps
         /// Sorts the bundled maps by difficulty for specified game mode.
         /// If the given mode cannot be evaluated for, it will be pushed to the back.
         /// </summary>
-        void SortMapsByMode(GameModes gameMode);
+        void SortMapsByMode(GameModeType gameMode);
     }
 }

@@ -30,16 +30,16 @@ namespace PBGame.UI.Navigations.Screens
 
             infoContainer = CreateChild<InfoContainer>("info", 0);
             {
-                infoContainer.Anchor = Anchors.BottomStretch;
-                infoContainer.Pivot = Pivots.Top;
+                infoContainer.Anchor = AnchorType.BottomStretch;
+                infoContainer.Pivot = PivotType.Top;
                 infoContainer.RawWidth = 0f;
                 infoContainer.Height = 640f;
                 infoContainer.Y = InfoBriefY;
             }
             versionContainer = CreateChild<VersionContainer>("version", 1);
             {
-                versionContainer.Anchor = Anchors.TopStretch;
-                versionContainer.Pivot = Pivots.Top;
+                versionContainer.Anchor = AnchorType.TopStretch;
+                versionContainer.Pivot = PivotType.Top;
                 versionContainer.RawWidth = 0;
                 versionContainer.Y = 0f;
                 versionContainer.Height = 160f;

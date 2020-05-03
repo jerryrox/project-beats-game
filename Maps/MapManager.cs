@@ -154,7 +154,7 @@ namespace PBGame.Maps
             displayedMapsets.AddRange(allMapsets.Search(filter));
         }
 
-        public void Sort(MapsetSorts sort) => displayedMapsets.Sort(sort);
+        public void Sort(MapsetSortType sort) => displayedMapsets.Sort(sort);
 
         public void DeleteMap(IOriginalMap map)
         {

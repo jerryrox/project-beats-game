@@ -18,7 +18,7 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// Returns the game mode which the map is being converted for.
         /// </summary>
-        GameModes TargetMode { get; }
+        GameModeType TargetMode { get; }
 
 
         /// <summary>

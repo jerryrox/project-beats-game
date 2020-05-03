@@ -32,7 +32,7 @@ namespace PBGame.UI.Components.Download.Search
 
             dropdown = container.CreateChild<DropdownButton>("dropdown", 1);
             {
-                dropdown.Anchor = Anchors.Fill;
+                dropdown.Anchor = AnchorType.Fill;
                 dropdown.Offset = new Offset(106f, 12f, 16f, 12f);
                 dropdown.BackgroundSprite.Color = new Color(1f, 1f, 1f, 0.125f);
 

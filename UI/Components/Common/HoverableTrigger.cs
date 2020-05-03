@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Common
         {
             hoverSprite = CreateChild<UguiSprite>("hover", HoverSpriteDepth);
             {
-                hoverSprite.Anchor = Anchors.Fill;
+                hoverSprite.Anchor = AnchorType.Fill;
                 hoverSprite.RawSize = Vector2.zero;
                 hoverSprite.Position = Vector2.zero;
                 hoverSprite.Alpha = 0f;

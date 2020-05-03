@@ -38,13 +38,13 @@ namespace PBGame.UI.Components.Download.Search
 
             bannerTexture = CreateChild<WebTexture>("banner", 0);
             {
-                bannerTexture.Anchor = Anchors.Fill;
+                bannerTexture.Anchor = AnchorType.Fill;
                 bannerTexture.Offset = Offset.Zero;
                 bannerTexture.Tint = new Color(0.25f, 0.25f, 0.25f);
             }
             grid = CreateChild<UguiGrid>("grid", 1);
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.Offset = new Offset(0f, 32f);
                 grid.SpaceHeight = 16f;
                 grid.Limit = 0;
@@ -52,17 +52,17 @@ namespace PBGame.UI.Components.Download.Search
                 var modeFilter = grid.CreateChild<DropdownFilter>("mode", 0);
                 {
                     modeFilter.LabelText = "Mode";
-                    modeFilter.Setup<GameModes>(State.Mode);
+                    modeFilter.Setup<GameModeType>(State.Mode);
                 }
                 var genreFilter = grid.CreateChild<DropdownFilter>("genre", 2);
                 {
                     genreFilter.LabelText = "Genre";
-                    genreFilter.Setup<MapGenres>(State.Genre);
+                    genreFilter.Setup<MapGenreType>(State.Genre);
                 }
                 var languageFilter = grid.CreateChild<DropdownFilter>("language", 3);
                 {
                     languageFilter.LabelText = "Language";
-                    languageFilter.Setup<MapLanguages>(State.Language);
+                    languageFilter.Setup<MapLanguageType>(State.Language);
                 }
                 var hasVideoFilter = grid.CreateChild<ToggleFilter>("hasVideo", 4);
                 {
@@ -77,7 +77,7 @@ namespace PBGame.UI.Components.Download.Search
             }
             blocker = CreateChild<UguiSprite>("blocker", 2);
             {
-                blocker.Anchor = Anchors.Fill;
+                blocker.Anchor = AnchorType.Fill;
                 blocker.Offset = Offset.Zero;
                 blocker.Alpha = 0f;
             }

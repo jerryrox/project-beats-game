@@ -30,9 +30,9 @@ namespace PBGame.Configurations
         // ============================================================
         // Internal settings
         // ============================================================
-        public ProxyBindable<GameModes> RulesetMode { get; private set; }
-        public ProxyBindable<MapsetSorts> MapsetSort { get; private set; }
-        public ProxyBindable<RankDisplayTypes> RankDisplay { get; private set; }
+        public ProxyBindable<GameModeType> RulesetMode { get; private set; }
+        public ProxyBindable<MapsetSortType> MapsetSort { get; private set; }
+        public ProxyBindable<RankDisplayType> RankDisplay { get; private set; }
         public ProxyBindable<string> Username { get; private set; }
         public ProxyBindable<string> Password { get; private set; }
         public ProxyBindable<bool> SaveCredentials { get; private set; }
@@ -76,9 +76,9 @@ namespace PBGame.Configurations
         {
             Settings = new SettingsData();
 
-            RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModes.BeatsStandard);
-            MapsetSort = InitEnumBindable(nameof(MapsetSort), MapsetSorts.Title);
-            RankDisplay = InitEnumBindable(nameof(RankDisplay), RankDisplayTypes.Local);
+            RulesetMode = InitEnumBindable(nameof(RulesetMode), GameModeType.BeatsStandard);
+            MapsetSort = InitEnumBindable(nameof(MapsetSort), MapsetSortType.Title);
+            RankDisplay = InitEnumBindable(nameof(RankDisplay), RankDisplayType.Local);
             Username = InitStringBindable(nameof(Username), "");
             Password = InitStringBindable(nameof(Password), "");
             SaveCredentials = InitBoolBindable(nameof(SaveCredentials), false);

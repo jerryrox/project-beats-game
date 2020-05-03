@@ -6,7 +6,7 @@ namespace PBGame.Audio
 	/// Types of sounds included in a sample group.
 	/// </summary>
 	[Flags]
-	public enum SoundTypes {
+	public enum SoundType {
 
 		None = 0,
 		Normal = 1,

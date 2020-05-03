@@ -5,25 +5,25 @@ namespace PBGame.Rulesets
     /// <summary>
     /// Types of game modes supported.
     /// </summary>
-    public enum GameModes {
+    public enum GameModeType {
     
-        OsuStandard = GameProviders.Osu,
+        OsuStandard = GameProviderType.Osu,
         // OsuTaiko = 1,
         // OsuCatch = 2,
         // OsuMania = 3,
 
-        BeatsStandard = GameProviders.Beats,
+        BeatsStandard = GameProviderType.Beats,
     }
 
-    public static class GameModeExtensions
+    public static class GameModeTypeExtension
     {
         /// <summary>
         /// Returns the actual index value of this game mode relative to game provider's mode index offset.
         /// </summary>
-        public static int GetIndex(this GameModes context)
+        public static int GetIndex(this GameModeType context)
         {
             string contextStr = context.ToString();
-            foreach (var provider in (GameProviders[])Enum.GetValues(typeof(GameProviders)))
+            foreach (var provider in (GameProviderType[])Enum.GetValues(typeof(GameProviderType)))
             {
                 if (contextStr.StartsWith(provider.ToString(), StringComparison.OrdinalIgnoreCase))
                     return (int)context - (int)provider;

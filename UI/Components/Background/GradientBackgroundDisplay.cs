@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Background
         {
             sprite = CreateChild<UguiSprite>("sprite");
             {
-                sprite.Anchor = Anchors.Fill;
+                sprite.Anchor = AnchorType.Fill;
                 sprite.RawSize = Vector2.zero;
 
                 var effect = sprite.AddEffect(new GradientEffect());

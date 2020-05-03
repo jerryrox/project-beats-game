@@ -13,7 +13,7 @@ namespace PBGame.Rulesets.Maps
 
 		public bool IsConvertible => RequiredTypes.All(t => Map.HitObjects.Any(t.IsInstanceOfType));
 
-		public abstract GameModes TargetMode { get; }
+		public abstract GameModeType TargetMode { get; }
 
 		/// <summary>
 		/// Types of interfaces which all hit objects should be implemented with.

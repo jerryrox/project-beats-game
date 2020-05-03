@@ -29,7 +29,7 @@ namespace PBGame.Maps
 
         private IMapBackground emptyBackground;
 
-        private GameModes currentMode;
+        private GameModeType currentMode;
 
 
         public IMapset Mapset { get; private set; }

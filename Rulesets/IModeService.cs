@@ -18,7 +18,7 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns the type of the game mode.
         /// </summary>
-        GameModes GameMode { get; }
+        GameModeType GameMode { get; }
 
         /// <summary>
         /// Returns whether this game mode is available for play.

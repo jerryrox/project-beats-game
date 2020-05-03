@@ -34,13 +34,13 @@ namespace PBGame.UI.Navigations.Overlays
         {
             darkSprite = CreateChild<UguiSprite>("dark", 0);
             {
-                darkSprite.Anchor = Anchors.Fill;
+                darkSprite.Anchor = AnchorType.Fill;
                 darkSprite.Offset = new Offset(0f, MenuBarHeight, 0f, 0f);
                 darkSprite.Color = new Color(0f, 0f, 0f, 0.5f);
 
                 closeTrigger = darkSprite.CreateChild<UguiTrigger>("close", 0);
                 {
-                    closeTrigger.Anchor = Anchors.Fill;
+                    closeTrigger.Anchor = AnchorType.Fill;
                     closeTrigger.RawSize = Vector2.zero;
 
                     closeTrigger.OnPointerDown += () =>
@@ -64,7 +64,7 @@ namespace PBGame.UI.Navigations.Overlays
 
                     glowSprite = container.CreateChild<UguiSprite>("glow", -1);
                     {
-                        glowSprite.Anchor = Anchors.Fill;
+                        glowSprite.Anchor = AnchorType.Fill;
                         glowSprite.Offset = new Offset(-15f);
                         glowSprite.SpriteName = "square-32-glow";
                         glowSprite.ImageType = Image.Type.Sliced;

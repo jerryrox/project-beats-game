@@ -13,22 +13,22 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 		/// <summary>
 		/// The base hit timing values table.
 		/// </summary>
-		private static Dictionary<HitResults, Tuple<float, float, float>> timingRanges = new Dictionary<HitResults, Tuple<float, float, float>>() {
-			{ HitResults.Good, new Tuple<float, float, float>(400, 300, 200) },
-			{ HitResults.Miss, new Tuple<float, float, float>(400, 400, 400) }
+		private static Dictionary<HitResultType, Tuple<float, float, float>> timingRanges = new Dictionary<HitResultType, Tuple<float, float, float>>() {
+			{ HitResultType.Good, new Tuple<float, float, float>(400, 300, 200) },
+			{ HitResultType.Miss, new Tuple<float, float, float>(400, 400, 400) }
 		};
 
 
 		public override void SetDifficulty (float difficulty)
 		{
-			Good = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Good]);
-			Miss = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Miss]);
+			Good = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResultType.Good]);
+			Miss = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResultType.Miss]);
 		}
 
-		public override IEnumerable<HitResults> SupportedHitResults ()
+		public override IEnumerable<HitResultType> SupportedHitResults ()
 		{
-			yield return HitResults.Good;
-			yield return HitResults.Miss;
+			yield return HitResultType.Good;
+			yield return HitResultType.Miss;
 		}
 	}
 }

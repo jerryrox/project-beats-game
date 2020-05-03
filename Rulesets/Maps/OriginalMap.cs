@@ -15,7 +15,7 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// Table of playable map variants for each supported game mode.
         /// </summary>
-        private Dictionary<GameModes, IPlayableMap> playableMaps = new Dictionary<GameModes, IPlayableMap>();
+        private Dictionary<GameModeType, IPlayableMap> playableMaps = new Dictionary<GameModeType, IPlayableMap>();
 
 
         public override MapDetail Detail { get; } = new MapDetail()
@@ -63,7 +63,7 @@ namespace PBGame.Rulesets.Maps
             }
         }
 
-        public IPlayableMap GetPlayable(GameModes gameMode)
+        public IPlayableMap GetPlayable(GameModeType gameMode)
         {
             // Prioritize the queried game mode. Else, fallback.
             if (this.playableMaps.TryGetValue(gameMode, out IPlayableMap map))

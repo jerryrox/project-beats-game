@@ -23,7 +23,7 @@ namespace PBGame.UI.Components.Dialog
 
             bgSprite = CreateChild<UguiSprite>("bg", -1);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.5f);
             }
@@ -36,8 +36,8 @@ namespace PBGame.UI.Components.Dialog
         {
             SelectionButton button = CreateChild<SelectionButton>("selection", buttons.Count);
             {
-                button.Anchor = Anchors.Top;
-                button.Pivot = Pivots.Top;
+                button.Anchor = AnchorType.Top;
+                button.Pivot = PivotType.Top;
                 button.Y = Height == 0f ? 0f : -Height - 2f;
                 
                 button.LabelText = label;

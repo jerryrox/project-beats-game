@@ -1,6 +1,6 @@
 namespace PBGame.Networking.Maps
 {
-    public enum MapLanguages {
+    public enum MapLanguageType {
     
         Any = 0,
         Other = 1,

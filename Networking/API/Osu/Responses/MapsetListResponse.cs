@@ -210,20 +210,20 @@ namespace PBGame.Networking.API.Osu.Responses
         /// <summary>
         /// Parses the specified status string into MapStatus enum value.
         /// </summary>
-        private MapStatus ParseStatus(string status)
+        private MapStateType ParseStatus(string status)
         {
-            foreach (var s in (MapStatus[])Enum.GetValues(typeof(MapStatus)))
+            foreach (var s in (MapStateType[])Enum.GetValues(typeof(MapStateType)))
             {
                 if(status.Equals(s.ToString(), StringComparison.OrdinalIgnoreCase))
                     return s;
             }
             Logger.LogWarning($"MapsetListResponse.ParseStatus - Unknown status name: {status}");
-            return MapStatus.Graveyard;
+            return MapStateType.Graveyard;
         }
 
         /// <summary>
         /// Parses the specified osu game mode index into GameModes enum value.
         /// </summary>
-        private GameModes ParseMode(int modeIndex) => (GameModes)(modeIndex + GameProviders.Osu);
+        private GameModeType ParseMode(int modeIndex) => (GameModeType)(modeIndex + GameProviderType.Osu);
     }
 }

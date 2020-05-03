@@ -40,7 +40,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             dark = CreateChild<UguiSprite>("dark", 0);
             {
-                dark.Anchor = Anchors.Fill;
+                dark.Anchor = AnchorType.Fill;
                 dark.RawSize = Vector2.zero;
                 dark.Color = new Color(0f, 0f, 0f, 0.5f);
 

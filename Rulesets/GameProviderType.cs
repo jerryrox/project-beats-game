@@ -1,6 +1,6 @@
 namespace PBGame.Rulesets
 {
-    public enum GameProviders {
+    public enum GameProviderType {
     
         Osu = 0,
         

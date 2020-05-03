@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.Download.Search
         {
             shadowSprite = CreateChild<UguiSprite>("shadow", 1);
             {
-                shadowSprite.Anchor = Anchors.Fill;
+                shadowSprite.Anchor = AnchorType.Fill;
                 shadowSprite.Offset = Offset.Zero;
                 shadowSprite.SpriteName = "gradation-top";
                 shadowSprite.Color = new Color(0f, 0f, 0f, 0.5f);

@@ -32,16 +32,16 @@ namespace PBGame.UI.Components.Download.Search
 
             rankSearchFilter = CreateChild<CategorySearchFilter>("rank-search", 0);
             {
-                rankSearchFilter.Anchor = Anchors.LeftStretch;
-                rankSearchFilter.Pivot = Pivots.Left;
+                rankSearchFilter.Anchor = AnchorType.LeftStretch;
+                rankSearchFilter.Pivot = PivotType.Left;
                 rankSearchFilter.SetOffsetVertical(16f);
                 rankSearchFilter.X = 16f;
                 rankSearchFilter.Width = 240;
             }
             sortSearchFilter = CreateChild<SortSearchFilter>("sort-search", 1);
             {
-                sortSearchFilter.Anchor = Anchors.LeftStretch;
-                sortSearchFilter.Pivot = Pivots.Left;
+                sortSearchFilter.Anchor = AnchorType.LeftStretch;
+                sortSearchFilter.Pivot = PivotType.Left;
                 sortSearchFilter.SetOffsetVertical(16f);
                 sortSearchFilter.X = rankSearchFilter.X + rankSearchFilter.Width + 16f;
                 sortSearchFilter.Width = 295;
@@ -49,16 +49,16 @@ namespace PBGame.UI.Components.Download.Search
 
             advancedButton = CreateChild<AdvancedButton>("advanced", 3);
             {
-                advancedButton.Anchor = Anchors.RightStretch;
-                advancedButton.Pivot = Pivots.Right;
+                advancedButton.Anchor = AnchorType.RightStretch;
+                advancedButton.Pivot = PivotType.Right;
                 advancedButton.SetOffsetVertical(16f);
                 advancedButton.X = -16f;
                 advancedButton.Width = 150f;
             }
             searchBarFilter = CreateChild<SearchBarFilter>("search-bar", 2);
             {
-                searchBarFilter.Anchor = Anchors.RightStretch;
-                searchBarFilter.Pivot = Pivots.Right;
+                searchBarFilter.Anchor = AnchorType.RightStretch;
+                searchBarFilter.Pivot = PivotType.Right;
                 searchBarFilter.SetOffsetVertical(16f);
                 searchBarFilter.X = advancedButton.X - advancedButton.Width - 16f;
                 searchBarFilter.Width = 420f;

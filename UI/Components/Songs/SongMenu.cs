@@ -28,14 +28,14 @@ namespace PBGame.UI.Components.Songs
         {
             bgSprite = CreateChild<UguiSprite>("bg", -1);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.125f);
             }
             backButton = CreateChild<HoverableTrigger>("back", 0);
             {
-                backButton.Anchor = Anchors.LeftStretch;
-                backButton.Pivot = Pivots.Left;
+                backButton.Anchor = AnchorType.LeftStretch;
+                backButton.Pivot = PivotType.Left;
                 backButton.Width = 100f;
                 backButton.X = 0f;
                 
@@ -50,8 +50,8 @@ namespace PBGame.UI.Components.Songs
             }
             randomButton = CreateChild<HoverableTrigger>("random", 1);
             {
-                randomButton.Anchor = Anchors.LeftStretch;
-                randomButton.Pivot = Pivots.Left;
+                randomButton.Anchor = AnchorType.LeftStretch;
+                randomButton.Pivot = PivotType.Left;
                 randomButton.X = 670f;
                 randomButton.Width = 80f;
                 randomButton.SetOffsetVertical(0f);
@@ -66,8 +66,8 @@ namespace PBGame.UI.Components.Songs
             }
             prevButton = CreateChild<HoverableTrigger>("prev", 2);
             {
-                prevButton.Anchor = Anchors.LeftStretch;
-                prevButton.Pivot = Pivots.Left;
+                prevButton.Anchor = AnchorType.LeftStretch;
+                prevButton.Pivot = PivotType.Left;
                 prevButton.X = 750f;
                 prevButton.Width = 80f;
                 prevButton.SetOffsetVertical(0f);
@@ -82,8 +82,8 @@ namespace PBGame.UI.Components.Songs
             }
             nextButton = CreateChild<HoverableTrigger>("next", 3);
             {
-                nextButton.Anchor = Anchors.LeftStretch;
-                nextButton.Pivot = Pivots.Left;
+                nextButton.Anchor = AnchorType.LeftStretch;
+                nextButton.Pivot = PivotType.Left;
                 nextButton.X = 830f;
                 nextButton.Width = 80f;
                 nextButton.SetOffsetVertical(0f);
@@ -98,8 +98,8 @@ namespace PBGame.UI.Components.Songs
             }
             playButton = CreateChild<HoverableTrigger>("play", 4);
             {
-                playButton.Anchor = Anchors.RightStretch;
-                playButton.Pivot = Pivots.Right;
+                playButton.Anchor = AnchorType.RightStretch;
+                playButton.Pivot = PivotType.Right;
                 playButton.X = 0f;
                 playButton.Width = 100f;
                 playButton.SetOffsetVertical(0f);
@@ -114,8 +114,8 @@ namespace PBGame.UI.Components.Songs
             }
             previewBox = CreateChild<PreviewBox>("preview", 5);
             {
-                previewBox.Anchor = Anchors.LeftStretch;
-                previewBox.Pivot = Pivots.Left;
+                previewBox.Anchor = AnchorType.LeftStretch;
+                previewBox.Pivot = PivotType.Left;
                 previewBox.X = 100f;
                 previewBox.Width = 560f;
                 previewBox.SetOffsetVertical(-18f, 18f);

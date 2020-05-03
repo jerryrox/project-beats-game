@@ -10,7 +10,7 @@ namespace PBGame.Rulesets.Osu.Standard.Maps
 {
     public class MapConverter : Rulesets.Maps.MapConverter<HitObject> {
 
-        public override GameModes TargetMode => GameModes.OsuStandard;
+        public override GameModeType TargetMode => GameModeType.OsuStandard;
 
         protected override IEnumerable<Type> RequiredTypes { get { yield return typeof(IHasPosition); } }
 

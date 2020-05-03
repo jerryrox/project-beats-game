@@ -28,17 +28,17 @@ namespace PBGame.Networking.API.Requests
         /// <summary>
         /// The specific category to search for.
         /// </summary>
-        MapCategories Category { get; set; }
+        MapCategoryType Category { get; set; }
 
         /// <summary>
         /// The specific genre to search for.
         /// </summary>
-        MapGenres Genre { get; set; }
+        MapGenreType Genre { get; set; }
 
         /// <summary>
         /// The specific language to search for.
         /// </summary>
-        MapLanguages Language { get; set; }
+        MapLanguageType Language { get; set; }
 
         /// <summary>
         /// The sorting method of mapsets.

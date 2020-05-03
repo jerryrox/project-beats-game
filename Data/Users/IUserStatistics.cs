@@ -10,7 +10,7 @@ namespace PBGame.Data.Users
         /// <summary>
         /// Returns the game mode this statistics apply for.
         /// </summary>
-        GameModes GameMode { get; }
+        GameModeType GameMode { get; }
 
         /// <summary>
         /// Returns the level of the user.
@@ -86,7 +86,7 @@ namespace PBGame.Data.Users
         /// <summary>
         /// Returns the number of ranks achieved for specified rank type.
         /// </summary>
-        int GetRankCount(RankTypes type);
+        int GetRankCount(RankType type);
 
         /// <summary>
         /// Records an incompleted play to the statistics.

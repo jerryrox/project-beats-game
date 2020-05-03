@@ -10,13 +10,13 @@ namespace PBGame.Graphics
 {
     public class ColorPreset : IColorPreset {
 
-        private Dictionary<DifficultyTypes, ColorPalette> difficultyColors = new Dictionary<DifficultyTypes, ColorPalette>()
+        private Dictionary<DifficultyType, ColorPalette> difficultyColors = new Dictionary<DifficultyType, ColorPalette>()
         {
-            { DifficultyTypes.Easy, new ColorPalette(HexColor.Create("A1FFB9")) },
-            { DifficultyTypes.Normal, new ColorPalette(HexColor.Create("EAFFA1")) },
-            { DifficultyTypes.Hard, new ColorPalette(HexColor.Create("FFCEA1")) },
-            { DifficultyTypes.Insane, new ColorPalette(HexColor.Create("FFA1A1")) },
-            { DifficultyTypes.Extreme, new ColorPalette(HexColor.Create("B8AFFF")) },
+            { DifficultyType.Easy, new ColorPalette(HexColor.Create("A1FFB9")) },
+            { DifficultyType.Normal, new ColorPalette(HexColor.Create("EAFFA1")) },
+            { DifficultyType.Hard, new ColorPalette(HexColor.Create("FFCEA1")) },
+            { DifficultyType.Insane, new ColorPalette(HexColor.Create("FFA1A1")) },
+            { DifficultyType.Extreme, new ColorPalette(HexColor.Create("B8AFFF")) },
         };
 
 
@@ -35,7 +35,7 @@ namespace PBGame.Graphics
         public Color DarkBackground { get; private set; } = HexColor.Create("0E1216");
 
 
-        public ColorPalette GetDifficultyColor(DifficultyTypes type)
+        public ColorPalette GetDifficultyColor(DifficultyType type)
         {
             if(difficultyColors.TryGetValue(type, out ColorPalette value))
                 return value;

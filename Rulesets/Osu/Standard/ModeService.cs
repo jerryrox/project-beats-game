@@ -13,7 +13,7 @@ namespace PBGame.Rulesets.Osu.Standard
 
         public override string BaseIconName => "icon-mode-osu";
 
-        public override GameModes GameMode => GameModes.OsuStandard;
+        public override GameModeType GameMode => GameModeType.OsuStandard;
 
         // TODO:
         public override bool IsPlayable => false;

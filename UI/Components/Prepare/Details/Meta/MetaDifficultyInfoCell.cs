@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             label = CreateChild<Label>("label", 1);
             {
-                label.Pivot = Pivots.Left;
+                label.Pivot = PivotType.Left;
                 label.X = 0f;
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.FontSize = 18;

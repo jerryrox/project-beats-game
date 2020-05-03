@@ -25,12 +25,12 @@ namespace PBGame.Rulesets.Scoring
 		/// <summary>
 		/// Table of counters for each hit result type.
 		/// </summary>
-		protected Dictionary<HitResults, int> resultCounts = new Dictionary<HitResults, int>();
+		protected Dictionary<HitResultType, int> resultCounts = new Dictionary<HitResultType, int>();
 
 		/// <summary>
 		/// Table of cached health change factors for each hit result type.
 		/// </summary>
-        protected Dictionary<HitResults, float> healthChangeFactors = new Dictionary<HitResults, float>();
+        protected Dictionary<HitResultType, float> healthChangeFactors = new Dictionary<HitResultType, float>();
 
         /// <summary>
         /// List of all judgement results recorded for each hit object.
@@ -77,7 +77,7 @@ namespace PBGame.Rulesets.Scoring
 
         public BindableDouble Accuracy { get; private set; } = new BindableDouble(0f);
 
-        public Bindable<RankTypes> Ranking { get; private set; } = new Bindable<RankTypes>(RankTypes.F);
+        public Bindable<RankType> Ranking { get; private set; } = new Bindable<RankType>(RankType.F);
 
         public virtual bool IsFinished => results.Count == maxJudgements;
 
@@ -92,12 +92,12 @@ namespace PBGame.Rulesets.Scoring
             Accuracy.OnValueChanged += (acc, _) => Ranking.Value = CalculateRank(acc);
             OnFailConfirmation += (processor) => Health.Value <= 0f;
 
-			resultCounts[HitResults.Miss] = 0;
-			resultCounts[HitResults.Bad] = 0;
-			resultCounts[HitResults.Ok] = 0;
-			resultCounts[HitResults.Good] = 0;
-			resultCounts[HitResults.Great] = 0;
-			resultCounts[HitResults.Perfect] = 0;
+			resultCounts[HitResultType.Miss] = 0;
+			resultCounts[HitResultType.Bad] = 0;
+			resultCounts[HitResultType.Ok] = 0;
+			resultCounts[HitResultType.Good] = 0;
+			resultCounts[HitResultType.Great] = 0;
+			resultCounts[HitResultType.Perfect] = 0;
 
             curRawScore = 0;
             maxRawScore = 0;
@@ -112,7 +112,7 @@ namespace PBGame.Rulesets.Scoring
 			modMultiplier = 1f;
 
             // Cache health change factor
-            foreach (var hitResult in (HitResults[])Enum.GetValues(typeof(HitResults)))
+            foreach (var hitResult in (HitResultType[])Enum.GetValues(typeof(HitResultType)))
                 healthChangeFactors[hitResult] = GetHealthChangeFactor(hitResult);
         }
 
@@ -161,24 +161,24 @@ namespace PBGame.Rulesets.Scoring
 		/// <summary>
 		/// Returns the amount of health application factor for specified result.
 		/// </summary>
-        protected abstract float GetHealthChangeFactor(HitResults hitResult);
+        protected abstract float GetHealthChangeFactor(HitResultType hitResult);
 
         /// <summary>
         /// Calculate ranking type from current score progress.
         /// </summary>
-        protected RankTypes CalculateRank(double acc)
+        protected RankType CalculateRank(double acc)
 		{
 			if(acc == 1d)
-				return RankTypes.X;
+				return RankType.X;
 			else if(acc > 0.95)
-				return RankTypes.S;
+				return RankType.S;
 			else if(acc > 0.9)
-				return RankTypes.A;
+				return RankType.A;
 			else if(acc > 0.8)
-				return RankTypes.B;
+				return RankType.B;
 			else if(acc > 0.7)
-				return RankTypes.C;
-			return RankTypes.D;
+				return RankType.C;
+			return RankType.D;
 		}
 
 		/// <summary>
@@ -194,15 +194,15 @@ namespace PBGame.Rulesets.Scoring
             results.Add(result);
 
 			// Increase the counter for the type of hit achieved.
-			if(result.HitResult != HitResults.None)
+			if(result.HitResult != HitResultType.None)
                 resultCounts[result.HitResult] ++;
 
             // Change combo
             if (result.Judgement.AffectsCombo)
             {
-				if(result.HitResult == HitResults.Miss)
+				if(result.HitResult == HitResultType.Miss)
                     Combo.Value = 0;
-				else if(result.HitResult != HitResults.None)
+				else if(result.HitResult != HitResultType.None)
                     Combo.Value++;
             }
 

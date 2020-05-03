@@ -8,7 +8,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// The result type of the judgement.
 		/// </summary>
-		public HitResults HitResult { get; set; }
+		public HitResultType HitResult { get; set; }
 
 		/// <summary>
 		/// Returns the reference judgement information provided by the hit object.
@@ -34,18 +34,18 @@ namespace PBGame.Rulesets.Judgements
 		/// Returns whether judgement result has been evaluated for this object
 		/// (Hit or a miss)
 		/// </summary>
-		public bool HasResult { get { return HitResult != HitResults.None; } }
+		public bool HasResult { get { return HitResult != HitResultType.None; } }
 
 		/// <summary>
 		/// Returns whether this judgement result was a successful hit.
 		/// </summary>
-		public bool IsHit { get { return HitResult != HitResults.None && HitResult != HitResults.Miss; } }
+		public bool IsHit { get { return HitResult != HitResultType.None && HitResult != HitResultType.Miss; } }
 
 
 		public JudgementResult(JudgementInfo judegement)
 		{
 			Judgement = judegement;
-			HitResult = HitResults.None;
+			HitResult = HitResultType.None;
 		}
 	}
 }

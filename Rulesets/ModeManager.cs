@@ -6,20 +6,20 @@ namespace PBGame.Rulesets
 {
     public class ModeManager : IModeManager {
 
-        private Dictionary<GameModes, IModeService> services;
+        private Dictionary<GameModeType, IModeService> services;
 
 
         public ModeManager(IDependencyContainer dependencies)
         {
             // TODO: Register more game mode services
-            services = new Dictionary<GameModes, IModeService>()
+            services = new Dictionary<GameModeType, IModeService>()
             {
-                { GameModes.OsuStandard, new Osu.Standard.ModeService(dependencies) },
-                { GameModes.BeatsStandard, new Beats.Standard.ModeService(dependencies) },
+                { GameModeType.OsuStandard, new Osu.Standard.ModeService(dependencies) },
+                { GameModeType.BeatsStandard, new Beats.Standard.ModeService(dependencies) },
             };
         }
 
-        public IModeService GetService(GameModes mode)
+        public IModeService GetService(GameModeType mode)
         {
             services.TryGetValue(mode, out IModeService value);
             return value;

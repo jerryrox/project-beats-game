@@ -18,13 +18,13 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
     public class RankingTabButton : HighlightableTrigger, IHasLabel {
 
         private ILabel label;
-        private RankDisplayTypes rankDisplay;
+        private RankDisplayType rankDisplay;
 
 
         /// <summary>
         /// Type of rank data provision method.
         /// </summary>
-        public RankDisplayTypes RankDisplay
+        public RankDisplayType RankDisplay
         {
             get => rankDisplay;
             set
@@ -49,7 +49,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.RawSize = Vector2.zero;
                 label.IsBold = true;
                 label.FontSize = 18;
@@ -100,7 +100,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// <summary>
         /// Event called on rank display type change from configuration.
         /// </summary>
-        private void OnRankDisplayChange(RankDisplayTypes newType, RankDisplayTypes _ = RankDisplayTypes.Global)
+        private void OnRankDisplayChange(RankDisplayType newType, RankDisplayType _ = RankDisplayType.Global)
         {
             IsFocused = newType == rankDisplay;
         }

@@ -42,18 +42,18 @@ namespace PBGame.Rulesets.Beats.Standard.Scoring
             hpDrainRate = (float)map.Detail.Difficulty.HpDrainRate;
         }
 
-		protected override float GetHealthChangeFactor (HitResults hitResult)
+		protected override float GetHealthChangeFactor (HitResultType hitResult)
 		{
-            if(hitResult == HitResults.Miss) // Base: -0.02
+            if(hitResult == HitResultType.Miss) // Base: -0.02
 				return (hpDrainRate * 0.7f) + 1f; // 1~8
 
             // Base: 0.01
             var factor = 10f - (Mathf.Clamp(hpDrainRate, 0f, 10f) * 0.9975f); // 10~40;
             switch(hitResult)
 			{
-                case HitResults.Good: return factor;
-                case HitResults.Ok: return factor * 0.5f;
-                case HitResults.Bad: return factor * 0.25f;
+                case HitResultType.Good: return factor;
+                case HitResultType.Ok: return factor * 0.5f;
+                case HitResultType.Bad: return factor * 0.25f;
 			}
 			return 0;
 		}

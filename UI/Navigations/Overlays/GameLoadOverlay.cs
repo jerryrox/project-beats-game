@@ -42,12 +42,12 @@ namespace PBGame.UI.Navigations.Overlays
         {
             var blur = CreateChild<BlurDisplay>("blur", 0);
             {
-                blur.Anchor = Anchors.Fill;
+                blur.Anchor = AnchorType.Fill;
                 blur.Offset = Offset.Zero;
 
                 var dark = blur.CreateChild<UguiSprite>("dark", 0);
                 {
-                    dark.Anchor = Anchors.Fill;
+                    dark.Anchor = AnchorType.Fill;
                     dark.Offset = Offset.Zero;
                     dark.Color = new Color(0f, 0f, 0f, 0.75f);
                 }

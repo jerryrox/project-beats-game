@@ -65,23 +65,23 @@ namespace PBGame.UI.Navigations.Overlays
         {
             parallaxContainer = CreateChild<ParallaxContainer>("parallax", 0);
             {
-                parallaxContainer.Anchor = Anchors.Fill;
+                parallaxContainer.Anchor = AnchorType.Fill;
                 parallaxContainer.Offset = Offset.Zero;
 
                 EmptyBackground = parallaxContainer.Content.CreateChild<EmptyBackgroundDisplay>("empty", 0);
                 {
-                    EmptyBackground.Anchor = Anchors.Fill;
+                    EmptyBackground.Anchor = AnchorType.Fill;
                     EmptyBackground.Offset = Offset.Zero;
                 }
                 ImageBackground = parallaxContainer.Content.CreateChild<ImageBackgroundDisplay>("image", 1);
                 {
-                    ImageBackground.Anchor = Anchors.Fill;
+                    ImageBackground.Anchor = AnchorType.Fill;
                     ImageBackground.Offset = Offset.Zero;
                     ImageBackground.Active = false;
                 }
                 GradientBackground = parallaxContainer.Content.CreateChild<GradientBackgroundDisplay>("gradient", 2);
                 {
-                    GradientBackground.Anchor = Anchors.Fill;
+                    GradientBackground.Anchor = AnchorType.Fill;
                     GradientBackground.Offset = Offset.Zero;
                     GradientBackground.Active = false;
                 }

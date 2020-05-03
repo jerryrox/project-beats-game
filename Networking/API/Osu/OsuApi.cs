@@ -11,7 +11,7 @@ namespace PBGame.Networking.API.Osu
 
         public override string BaseUrl => "https://osu.ppy.sh";
 
-        public override API.ApiProviders ApiType => API.ApiProviders.Osu;
+        public override API.ApiProviderType ApiType => API.ApiProviderType.Osu;
 
         public override string Name => "osu!";
 
@@ -22,9 +22,9 @@ namespace PBGame.Networking.API.Osu
         public override IRequestFactory RequestFactory => factory;
 
 
-        public override IEnumerable<GameModes> GetGameModes()
+        public override IEnumerable<GameModeType> GetGameModes()
         {
-            yield return GameModes.OsuStandard;
+            yield return GameModeType.OsuStandard;
         }
     }
 }

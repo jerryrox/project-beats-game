@@ -49,7 +49,7 @@ namespace PBGame.Maps
         /// <summary>
         /// Sorts the displayed mapsets based on specified sorting method.
         /// </summary>
-        void Sort(MapsetSorts sort);
+        void Sort(MapsetSortType sort);
 
         /// <summary>
         /// Deletes the specified map from the current mapset.

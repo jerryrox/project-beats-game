@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.Download.Result
 
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.Offset = Offset.Zero;
                 label.Color = Color.black;
                 label.IsBold = true;

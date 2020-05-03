@@ -128,7 +128,7 @@ namespace PBGame.UI.Components.Songs
         private IListItem OnCreateListItem()
         {
             var item = container.CreateChild<SongListItem>("item");
-            item.Anchor = Anchors.MiddleStretch;
+            item.Anchor = AnchorType.MiddleStretch;
             item.Size = CellSize;
             item.SetOffsetHorizontal(0f);
             item.OnHold += () => OnItemHold(item);

@@ -15,7 +15,7 @@ namespace PBGame.Networking.API
 
         public abstract string BaseUrl { get; }
 
-        public abstract ApiProviders ApiType { get; }
+        public abstract ApiProviderType ApiType { get; }
 
         public abstract string Name { get; }
 
@@ -85,9 +85,9 @@ namespace PBGame.Networking.API
             User.Value = offlineUser;
         }
 
-        public abstract IEnumerable<GameModes> GetGameModes();
+        public abstract IEnumerable<GameModeType> GetGameModes();
 
-        public bool IsRelevantMode(GameModes gameMode) => GetGameModes().Any(m => m == gameMode);
+        public bool IsRelevantMode(GameModeType gameMode) => GetGameModes().Any(m => m == gameMode);
 
         public bool IsRelevantMap(IMap map) => map == null ? false : IsRelevantMode(map.Detail.GameMode);
     }

@@ -17,7 +17,7 @@ namespace PBGame.UI.Components.Common
         private void Init(IColorPreset colorPreset)
         {
             backgroundSprite.Sprite = null;
-            backgroundSprite.Anchor = Anchors.BottomStretch;
+            backgroundSprite.Anchor = AnchorType.BottomStretch;
             backgroundSprite.Y = 2f;
             backgroundSprite.Height = 4f;
             backgroundSprite.Alpha = 0.75f;
@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.Common
             hoverSprite.Tint = Color.white;
 
             focusSprite.SpriteName = "glow-bar";
-            focusSprite.Anchor = Anchors.BottomStretch;
+            focusSprite.Anchor = AnchorType.BottomStretch;
             focusSprite.SetOffsetHorizontal(-15f);
             focusSprite.Y = 2f;
             focusSprite.Height = 34f;

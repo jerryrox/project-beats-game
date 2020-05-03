@@ -16,7 +16,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// The sort type represented by this button.
         /// </summary>
-        public MapsetSorts SortType { get; set; }
+        public MapsetSortType SortType { get; set; }
 
         public string LabelText
         {
@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.Songs
         {
             label = CreateChild<Label>("label", 10);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.RawSize = Vector2.zero;
                 label.IsBold = true;
                 label.FontSize = 18;

@@ -28,7 +28,7 @@ namespace PBGame.UI.Components.Prepare.Details
 
             label = CreateChild<Label>("label", 2);
             {
-                label.Pivot = Pivots.Left;
+                label.Pivot = PivotType.Left;
                 label.Size = Vector2.zero;
                 label.X = 0f;
                 label.Alignment = TextAnchor.MiddleLeft;

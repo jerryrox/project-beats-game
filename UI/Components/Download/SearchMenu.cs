@@ -45,30 +45,30 @@ namespace PBGame.UI.Components.Download
         {
             container = CreateChild<UguiObject>("container", 0);
             {
-                container.Anchor = Anchors.TopStretch;
-                container.Pivot = Pivots.Top;
+                container.Anchor = AnchorType.TopStretch;
+                container.Pivot = PivotType.Top;
                 container.Y = 0f;
                 container.SetOffsetHorizontal(0f);
                 container.Height = FoldedHeight;
 
                 providerContainer = container.CreateChild<ProviderContainer>("provider", 1);
                 {
-                    providerContainer.Anchor = Anchors.TopStretch;
-                    providerContainer.Pivot = Pivots.Top;
+                    providerContainer.Anchor = AnchorType.TopStretch;
+                    providerContainer.Pivot = PivotType.Top;
                     providerContainer.SetOffsetHorizontal(0f);
                     providerContainer.Y = 0f;
                     providerContainer.Height = ProviderControllerHeight;
                 }
                 bannerContainer = container.CreateChild<BannerContainer>("banner", 0);
                 {
-                    bannerContainer.Anchor = Anchors.Fill;
+                    bannerContainer.Anchor = AnchorType.Fill;
                     bannerContainer.Offset = new Offset(0f, 54f, 0f, 96f);
                     bannerContainer.IsInteractible = false;
                 }
                 searchBarContainer = container.CreateChild<SearchBarContainer>("search-bar", 2);
                 {
-                    searchBarContainer.Anchor = Anchors.BottomStretch;
-                    searchBarContainer.Pivot = Pivots.Bottom;
+                    searchBarContainer.Anchor = AnchorType.BottomStretch;
+                    searchBarContainer.Pivot = PivotType.Bottom;
                     searchBarContainer.SetOffsetHorizontal(0f);
                     searchBarContainer.Y = 0f;
                     searchBarContainer.Height = SearchBarHeight;
@@ -78,7 +78,7 @@ namespace PBGame.UI.Components.Download
             }
             shadowButton = CreateChild<ShadowButton>("shadow", 1);
             {
-                shadowButton.Anchor = Anchors.Fill;
+                shadowButton.Anchor = AnchorType.Fill;
                 shadowButton.Offset = new Offset(0f, FoldedHeight, 0f, 0f);
                 shadowButton.Active = false;
                 shadowButton.Alpha = 0f;

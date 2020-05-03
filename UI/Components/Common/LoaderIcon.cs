@@ -39,7 +39,7 @@ namespace PBGame.UI.Components.Common
         {
             iconSprite = CreateChild<UguiSprite>("icon", 0);
             {
-                iconSprite.Anchor = Anchors.Fill;
+                iconSprite.Anchor = AnchorType.Fill;
                 iconSprite.Offset = Offset.Zero;
                 iconSprite.Color = colorPreset.PrimaryFocus;
                 iconSprite.SpriteName = "loader";

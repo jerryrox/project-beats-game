@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             detailButton = CreateChild<BoxButton>("detail", 0);
             {
-                detailButton.Anchor = Anchors.MiddleStretch;
+                detailButton.Anchor = AnchorType.MiddleStretch;
                 detailButton.RawWidth = -96f;
                 detailButton.Y = 50f;
                 detailButton.Height = 36f;
@@ -47,7 +47,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             visitButton = CreateChild<BoxButton>("visit", 1);
             {
-                visitButton.Anchor = Anchors.MiddleStretch;
+                visitButton.Anchor = AnchorType.MiddleStretch;
                 visitButton.RawWidth = -96f;
                 visitButton.Y = 10f;
                 visitButton.Height = 36f;
@@ -63,7 +63,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             logoutButton = CreateChild<BoxButton>("logout", 2);
             {
-                logoutButton.Anchor = Anchors.MiddleStretch;
+                logoutButton.Anchor = AnchorType.MiddleStretch;
                 logoutButton.RawWidth = -96f;
                 logoutButton.Y = -30f;
                 logoutButton.Height = 36f;
@@ -77,7 +77,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             accountLabel = CreateChild<Label>("account", 3);
             {
-                accountLabel.Anchor = Anchors.MiddleStretch;
+                accountLabel.Anchor = AnchorType.MiddleStretch;
                 accountLabel.RawWidth = 0f;
                 accountLabel.Y = -81f;
                 accountLabel.Height = 30;

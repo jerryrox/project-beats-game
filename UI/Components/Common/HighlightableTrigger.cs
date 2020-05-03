@@ -41,12 +41,12 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Anchoring of the highlight sprite.
         /// </summary>
-        protected virtual Anchors HighlightSpriteAnchor => Anchors.BottomStretch;
+        protected virtual AnchorType HighlightSpriteAnchor => AnchorType.BottomStretch;
 
         /// <summary>
         /// Returns the pivot of the highlight sprite based on the anchor.
         /// </summary>
-        protected Pivots HighlightSpritePivot { get; private set; }
+        protected PivotType HighlightSpritePivot { get; private set; }
 
         /// <summary>
         /// Returns whether the highlight sprite should be stretched vertically.
@@ -153,27 +153,27 @@ namespace PBGame.UI.Components.Common
             // Determin pivot of the highlight sprite.
             switch (HighlightSpriteAnchor)
             {
-                case Anchors.Top:
-                case Anchors.TopStretch:
-                    HighlightSpritePivot = Pivots.Top;
+                case AnchorType.Top:
+                case AnchorType.TopStretch:
+                    HighlightSpritePivot = PivotType.Top;
                     IsHighlightSpriteVertical = false;
                     return;
 
-                case Anchors.Left:
-                case Anchors.LeftStretch:
-                    HighlightSpritePivot = Pivots.Left;
+                case AnchorType.Left:
+                case AnchorType.LeftStretch:
+                    HighlightSpritePivot = PivotType.Left;
                     IsHighlightSpriteVertical = true;
                     return;
 
-                case Anchors.Right:
-                case Anchors.RightStretch:
-                    HighlightSpritePivot = Pivots.Right;
+                case AnchorType.Right:
+                case AnchorType.RightStretch:
+                    HighlightSpritePivot = PivotType.Right;
                     IsHighlightSpriteVertical = true;
                     return;
 
-                case Anchors.Bottom:
-                case Anchors.BottomStretch:
-                    HighlightSpritePivot = Pivots.Bottom;
+                case AnchorType.Bottom:
+                case AnchorType.BottomStretch:
+                    HighlightSpritePivot = PivotType.Bottom;
                     IsHighlightSpriteVertical = false;
                     return;
             }

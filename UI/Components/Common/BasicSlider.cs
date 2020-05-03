@@ -45,12 +45,12 @@ namespace PBGame.UI.Components.Common
 
             var blocker = CreateChild<UguiSprite>("blocker", -10);
             {
-                blocker.Anchor = Anchors.Fill;
+                blocker.Anchor = AnchorType.Fill;
                 blocker.Offset = Offset.Zero;
                 blocker.SpriteName = "null";
             }
 
-            background.Anchor = Anchors.MiddleStretch;
+            background.Anchor = AnchorType.MiddleStretch;
             background.Depth = -1;
             background.Height = 8f;
             background.SpriteName = "circle-8";
@@ -59,7 +59,7 @@ namespace PBGame.UI.Components.Common
 
             glowSprite = CreateChild<UguiSprite>("glow", 0);
             {
-                glowSprite.Anchor = Anchors.MiddleStretch;
+                glowSprite.Anchor = AnchorType.MiddleStretch;
                 glowSprite.SetOffsetHorizontal(-13.5f);
                 glowSprite.Height = 35f;
                 glowSprite.SpriteName = "glow-circle-8-x4";
@@ -68,14 +68,14 @@ namespace PBGame.UI.Components.Common
                 glowSprite.Alpha = 0f;
             }
 
-            foregroundArea.Anchor = Anchors.MiddleStretch;
+            foregroundArea.Anchor = AnchorType.MiddleStretch;
             foregroundArea.Height = 8f;
 
             foreground.SpriteName = "circle-8";
             foreground.ImageType = Image.Type.Sliced;
             foreground.Color = tint;
 
-            thumbArea.Anchor = Anchors.MiddleStretch;
+            thumbArea.Anchor = AnchorType.MiddleStretch;
             thumbArea.Height = 24f;
 
             thumb.SpriteName = "circle-32";
@@ -84,7 +84,7 @@ namespace PBGame.UI.Components.Common
 
             var thumbDark = thumb.CreateChild<UguiSprite>("dark", 0);
             {
-                thumbDark.Anchor = Anchors.Fill;
+                thumbDark.Anchor = AnchorType.Fill;
                 thumbDark.Offset = new Offset(2.5f);
                 thumbDark.Position = Vector2.zero;
                 thumbDark.SpriteName = "circle-32";

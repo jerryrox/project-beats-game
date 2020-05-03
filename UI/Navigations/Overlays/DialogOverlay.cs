@@ -34,12 +34,12 @@ namespace PBGame.UI.Navigations.Overlays
         {
             blurDisplay = CreateChild<BlurDisplay>("blur", 0);
             {
-                blurDisplay.Anchor = Anchors.Fill;
+                blurDisplay.Anchor = AnchorType.Fill;
                 blurDisplay.RawSize = Vector2.zero;
             }
             bgSprite = CreateChild<UguiSprite>("bg", 1);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.5f);
             }
@@ -47,7 +47,7 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 float horizontalOffset = root.Resolution.x / 4;
 
-                messageLabel.Anchor = Anchors.MiddleStretch;
+                messageLabel.Anchor = AnchorType.MiddleStretch;
                 messageLabel.SetOffsetHorizontal(horizontalOffset);
                 messageLabel.Alignment = TextAnchor.LowerCenter;
                 messageLabel.WrapText = true;
@@ -57,14 +57,14 @@ namespace PBGame.UI.Navigations.Overlays
             }
             selectionHolder = CreateChild<SelectionHolder>("selection", 3);
             {
-                selectionHolder.Anchor = Anchors.MiddleStretch;
-                selectionHolder.Pivot = Pivots.Top;
+                selectionHolder.Anchor = AnchorType.MiddleStretch;
+                selectionHolder.Pivot = PivotType.Top;
                 selectionHolder.SetOffsetHorizontal(0f);
                 selectionHolder.Y = 26f;
             }
             blocker = CreateChild<UguiSprite>("blocker", 4);
             {
-                blocker.Anchor = Anchors.Fill;
+                blocker.Anchor = AnchorType.Fill;
                 blocker.RawSize = Vector2.zero;
                 blocker.SpriteName = "null";
             }

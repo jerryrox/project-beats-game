@@ -17,13 +17,13 @@ namespace PBGame.Rulesets.UI
             StoryboardLayer = CreateStoryboardLayer();
             {
                 StoryboardLayer.Depth = 0;
-                StoryboardLayer.Anchor = Anchors.Fill;
+                StoryboardLayer.Anchor = AnchorType.Fill;
                 StoryboardLayer.RawSize = Vector2.zero;
             }
             GameplayLayer = CreateGameplayLayer();
             {
                 GameplayLayer.Depth = 1;
-                GameplayLayer.Anchor = Anchors.Fill;
+                GameplayLayer.Anchor = AnchorType.Fill;
                 GameplayLayer.RawSize = Vector2.zero;
             }
         }

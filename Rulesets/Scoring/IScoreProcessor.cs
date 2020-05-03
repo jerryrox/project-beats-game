@@ -69,7 +69,7 @@ namespace PBGame.Rulesets.Scoring
         /// <summary>
         /// Returns the bindable rank value.
         /// </summary>
-        Bindable<RankTypes> Ranking { get; }
+        Bindable<RankType> Ranking { get; }
 
         /// <summary>
         /// Returns whether all judgements have been made on all hit objects.

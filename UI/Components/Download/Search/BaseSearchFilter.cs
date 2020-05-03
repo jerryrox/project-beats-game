@@ -19,8 +19,8 @@ namespace PBGame.UI.Components.Download.Search
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.TopStretch;
-                label.Pivot = Pivots.Top;
+                label.Anchor = AnchorType.TopStretch;
+                label.Pivot = PivotType.Top;
                 label.SetOffsetHorizontal(8f);
                 label.Y = 0f;
                 label.IsBold = true;

@@ -14,7 +14,7 @@ namespace PBGame.Rulesets.Maps
     {
         public IOriginalMap OriginalMap { get; private set; }
 
-        public GameModes PlayableMode { get; set; }
+        public GameModeType PlayableMode { get; set; }
 
         public DifficultyInfo Difficulty { get; set; }
 

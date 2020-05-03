@@ -9,6 +9,8 @@ namespace PBGame.UI.Navigations
         // 3D root area
         // =======================================
         public const int BackgroundOverlay = -1000;
+        
+        public const int GameScreen = 0;
 
         // =======================================
         // Main root area

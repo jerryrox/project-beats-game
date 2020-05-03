@@ -14,7 +14,7 @@ namespace PBGame.Networking.API
         /// <summary>
         /// Returns the API instance for the specified provider type.
         /// </summary>
-        IApi GetApi(ApiProviders provider);
+        IApi GetApi(ApiProviderType provider);
 
         /// <summary>
         /// Returns the relevant API for the specified map.

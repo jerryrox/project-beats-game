@@ -45,30 +45,30 @@ namespace PBGame.IO.Decoding.Osu
 
 				Vector2 pos = new Vector2(ParseUtils.ParseFloat(splits[0]), ParseUtils.ParseFloat(splits[1]));
 				float startTime = ParseUtils.ParseFloat(splits[2]) + offset;
-				HitObjectTypes type = (HitObjectTypes)ParseUtils.ParseInt(splits[3]);
+				HitObjectType type = (HitObjectType)ParseUtils.ParseInt(splits[3]);
 
-				int comboOffset = (int)(type & HitObjectTypes.ComboOffset) >> 4;
-				type &= ~HitObjectTypes.ComboOffset;
+				int comboOffset = (int)(type & HitObjectType.ComboOffset) >> 4;
+				type &= ~HitObjectType.ComboOffset;
 
-				bool isNewCombo = (int)(type & HitObjectTypes.NewCombo) != 0;
-				type &= ~HitObjectTypes.NewCombo;
+				bool isNewCombo = (int)(type & HitObjectType.NewCombo) != 0;
+				type &= ~HitObjectType.NewCombo;
 
-				var soundType = (SoundTypes)ParseUtils.ParseInt(splits[4]);
+				var soundType = (SoundType)ParseUtils.ParseInt(splits[4]);
 				var customSample = new CustomSampleInfo();
 
 				// Now parse the actual hit objects.
 				HitObject result = null;
 				// If this object is a hit circle
-				if((type & HitObjectTypes.Circle) != 0)
+				if((type & HitObjectType.Circle) != 0)
 				{
 					result = CreateCircle(pos, isNewCombo, comboOffset);
 
 					if(splits.Length > 5)
 						ParseCustomSample(splits[5], customSample);
 				}
-				else if((type & HitObjectTypes.Slider) != 0)
+				else if((type & HitObjectType.Slider) != 0)
 				{
-					PathTypes pathType = PathTypes.Catmull;
+					PathType pathType = PathType.Catmull;
 					float length = 0;
 					string[] pointSplits = splits[5].Split('|');
 
@@ -93,16 +93,16 @@ namespace PBGame.IO.Decoding.Osu
 							switch(p)
 							{
 							case "C":
-								pathType = PathTypes.Catmull;
+								pathType = PathType.Catmull;
 								break;
 							case "B":
-								pathType = PathTypes.Bezier;
+								pathType = PathType.Bezier;
 								break;
 							case "L":
-								pathType = PathTypes.Linear;
+								pathType = PathType.Linear;
 								break;
 							case "P":
-								pathType = PathTypes.PerfectCurve;
+								pathType = PathType.PerfectCurve;
 								break;
 							}
 							continue;
@@ -113,8 +113,8 @@ namespace PBGame.IO.Decoding.Osu
 					}
 
 					// Change perfect curve to linear if certain conditions meet.
-					if(nodePoints.Length == 3 && pathType == PathTypes.PerfectCurve && IsLinearPerfectCurve(nodePoints))
-						pathType = PathTypes.Linear;
+					if(nodePoints.Length == 3 && pathType == PathType.PerfectCurve && IsLinearPerfectCurve(nodePoints))
+						pathType = PathType.Linear;
 
 					// Parse slider repeat count
 					int repeatCount = ParseUtils.ParseInt(splits[6]);
@@ -150,7 +150,7 @@ namespace PBGame.IO.Decoding.Osu
 					}
 
 					// Set all nodes' sample types to default.
-					var nodeSampleTypes = new List<SoundTypes>();
+					var nodeSampleTypes = new List<SoundType>();
 					for(int i=0; i<nodeCount; i++)
 						nodeSampleTypes.Add(soundType);
 
@@ -163,7 +163,7 @@ namespace PBGame.IO.Decoding.Osu
 							if(i > nodeSampleSplits.Length)
 								break;
 
-							nodeSampleTypes[i] = (SoundTypes)ParseUtils.ParseInt(nodeSampleSplits[i]);
+							nodeSampleTypes[i] = (SoundType)ParseUtils.ParseInt(nodeSampleSplits[i]);
 						}
 					}
 
@@ -176,14 +176,14 @@ namespace PBGame.IO.Decoding.Osu
 					// Hit sound for the root slider should be played at the end.
 					result.Samples = nodeSamples[nodeSamples.Count - 1];
 				}
-				else if((type & HitObjectTypes.Spinner) != 0)
+				else if((type & HitObjectType.Spinner) != 0)
 				{
 					float endTime = Math.Max(startTime, ParseUtils.ParseFloat(splits[5]) + offset);
 					result = CreateSpinner(pos, isNewCombo, comboOffset, endTime);
 					if(splits.Length > 6)
 						ParseCustomSample(splits[6], customSample);
 				}
-				else if((type & HitObjectTypes.Hold) != 0)
+				else if((type & HitObjectType.Hold) != 0)
 				{
 					float endTime = Math.Max(startTime, ParseUtils.ParseFloat(splits[2] + offset));
 
@@ -230,7 +230,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// Creates a new parsed slider object.
 		/// </summary>
 		protected abstract HitObject CreateSlider(Vector2 pos, bool isNewCombo, int comboOffset, Vector2[] controlPoints,
-			float length, PathTypes pathType, int repeatCount, List<List<SoundInfo>> nodeSamples);
+			float length, PathType pathType, int repeatCount, List<List<SoundInfo>> nodeSamples);
 
 		/// <summary>
 		/// Creates a new parsed spinner object.
@@ -256,7 +256,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Converts specified custom sample info into a list of sample infos that will be used in the game play.
 		/// </summary>
-		private List<SoundInfo> GetSamples(SoundTypes type, CustomSampleInfo customInfo)
+		private List<SoundInfo> GetSamples(SoundType type, CustomSampleInfo customInfo)
 		{
 			// Include normal sound as default
 			var samples = new List<SoundInfo>() {
@@ -268,7 +268,7 @@ namespace PBGame.IO.Decoding.Osu
 				}
 			};
 
-			if((type & SoundTypes.Finish) != 0)
+			if((type & SoundType.Finish) != 0)
 			{
 				samples.Add(new LegacySampleInfo() {
 					Sample = customInfo.AdditionalSample,
@@ -278,7 +278,7 @@ namespace PBGame.IO.Decoding.Osu
 				});
 			}
 
-			if((type & SoundTypes.Whistle) != 0)
+			if((type & SoundType.Whistle) != 0)
 			{
 				samples.Add(new LegacySampleInfo() {
 					Sample = customInfo.AdditionalSample,
@@ -288,7 +288,7 @@ namespace PBGame.IO.Decoding.Osu
 				});
 			}
 
-			if((type & SoundTypes.Clap) != 0)
+			if((type & SoundType.Clap) != 0)
 			{
 				samples.Add(new LegacySampleInfo() {
 					Sample = customInfo.AdditionalSample,
@@ -311,8 +311,8 @@ namespace PBGame.IO.Decoding.Osu
 
 			string[] splits = text.Split(':');
 
-			var normalType = (OsuBeatmapDecoder.SampleTypes)ParseUtils.ParseInt(splits[0]);
-			var additionalType = (OsuBeatmapDecoder.SampleTypes)ParseUtils.ParseInt(splits[1]);
+			var normalType = (OsuBeatmapDecoder.SampleType)ParseUtils.ParseInt(splits[0]);
+			var additionalType = (OsuBeatmapDecoder.SampleType)ParseUtils.ParseInt(splits[1]);
 
 			string normalTypeStr = normalType.ToString().ToLowerInvariant();
 			if(normalTypeStr == "none")

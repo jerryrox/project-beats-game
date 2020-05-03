@@ -14,6 +14,6 @@
         /// Returns the playable map variant for specified game mode.
         /// If specified mode is not supported, it will return the variant of the game mode the map was created for.
         /// </summary>
-        IPlayableMap GetPlayable(GameModes gamemode);
+        IPlayableMap GetPlayable(GameModeType gamemode);
     }
 }

@@ -18,11 +18,11 @@ namespace PBGame.Networking.API.Osu.Requests
 
         public int? Mode { get; set; } = null;
 
-        public MapCategories Category { get; set; } = MapCategories.Any;
+        public MapCategoryType Category { get; set; } = MapCategoryType.Any;
 
-        public MapGenres Genre { get; set; } = MapGenres.Any;
+        public MapGenreType Genre { get; set; } = MapGenreType.Any;
 
-        public MapLanguages Language { get; set; } = MapLanguages.Any;
+        public MapLanguageType Language { get; set; } = MapLanguageType.Any;
 
         public MapSortType Sort { get; set; } = MapSortType.Ranked;
 
@@ -46,11 +46,11 @@ namespace PBGame.Networking.API.Osu.Requests
                 request.AddQueryParam("cursor[_id]", CursorId.Value.ToString());
             if(Mode.HasValue)
                 request.AddQueryParam("m", Mode.Value.ToString());
-            if(Category != MapCategories.Any)
+            if(Category != MapCategoryType.Any)
                 request.AddQueryParam("s", Category.ToString().ToLower());
-            if(Genre != MapGenres.Any)
+            if(Genre != MapGenreType.Any)
                 request.AddQueryParam("g", ((int)Genre).ToString());
-            if(Language != MapLanguages.Any)
+            if(Language != MapLanguageType.Any)
                 request.AddQueryParam("l", ((int)Language).ToString());
             if(!string.IsNullOrWhiteSpace(SearchTerm))
                 request.AddQueryParam("q", SearchTerm.Trim());

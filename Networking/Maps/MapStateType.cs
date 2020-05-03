@@ -1,9 +1,9 @@
 namespace PBGame.Networking.Maps
 {
-    public enum MapCategories {
+    public enum MapStateType {
     
-        Any,
         Ranked,
+        Approved,
         Qualified,
         Loved,
         Pending,

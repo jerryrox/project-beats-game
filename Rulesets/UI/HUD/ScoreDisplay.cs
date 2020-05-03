@@ -17,7 +17,7 @@ namespace PBGame.Rulesets.UI.HUD
         {
             ScoreLabel = CreateChild<Label>("label");
             {
-                ScoreLabel.Anchor = Anchors.Fill;
+                ScoreLabel.Anchor = AnchorType.Fill;
                 ScoreLabel.RawSize = Vector2.zero;
                 ScoreLabel.Font = fontManager.DefaultFont;
             }

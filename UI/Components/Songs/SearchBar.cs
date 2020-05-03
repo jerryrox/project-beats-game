@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Songs
             OnSubmitted += OnSearchBarSubmitted;
 
             backgroundSprite.Color = new Color(1f, 1f, 1f, 0.0625f);
-            backgroundSprite.Anchor = Anchors.Fill;
+            backgroundSprite.Anchor = AnchorType.Fill;
             backgroundSprite.Offset = Offset.Zero;
 
             CreateIconSprite(spriteName: "icon-search");

@@ -27,26 +27,26 @@ namespace PBGame.UI.Navigations.Screens
         {
             Background = CreateChild<Background>("background", 0);
             {
-                Background.Anchor = Anchors.Fill;
+                Background.Anchor = AnchorType.Fill;
                 Background.RawSize = Vector2.zero;
             }
             SongList = CreateChild<SongList>("song-list", 1);
             {
-                SongList.Anchor = Anchors.Fill;
+                SongList.Anchor = AnchorType.Fill;
                 SongList.Offset = new Offset(0f, 120f, 0f, 72f);
             }
             SongMenu = CreateChild<SongMenu>("song-menu", 2);
             {
-                SongMenu.Anchor = Anchors.BottomStretch;
-                SongMenu.Pivot = Pivots.Bottom;
+                SongMenu.Anchor = AnchorType.BottomStretch;
+                SongMenu.Pivot = PivotType.Bottom;
                 SongMenu.SetOffsetHorizontal(0f);
                 SongMenu.Y = 0f;
                 SongMenu.Height = 72f;
             }
             SearchMenu = CreateChild<SearchMenu>("search-menu", 3);
             {
-                SearchMenu.Anchor = Anchors.TopStretch;
-                SearchMenu.Pivot = Pivots.Top;
+                SearchMenu.Anchor = AnchorType.TopStretch;
+                SearchMenu.Pivot = PivotType.Top;
                 SearchMenu.SetOffsetHorizontal(0f);
                 SearchMenu.Y = -MenuBarHeight;
                 SearchMenu.Height = 56;

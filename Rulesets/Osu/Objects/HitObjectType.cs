@@ -6,7 +6,7 @@ namespace PBGame.Rulesets.Osu.Objects
 	/// Types of hit objects defined in osu format.
 	/// </summary>
 	[Flags]
-	public enum HitObjectTypes {
+	public enum HitObjectType {
 		
 		Circle = 1 << 0,
 		Slider = 1 << 1,

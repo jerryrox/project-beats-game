@@ -12,7 +12,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 {
 	public class MapConverter : Rulesets.Maps.MapConverter<HitObject> {
 
-		public override GameModes TargetMode { get { return GameModes.BeatsStandard; } }
+		public override GameModeType TargetMode { get { return GameModeType.BeatsStandard; } }
 
 		protected override IEnumerable<Type> RequiredTypes { get { yield return typeof(IHasPositionX); } }
 
@@ -30,7 +30,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 
             float posAdjustment = 0f;
             // If the original map is an osu map, shift the hit object positions by -50% of the play area width.
-            if (Map.Detail.GameMode == GameModes.OsuStandard)
+            if (Map.Detail.GameMode == GameModeType.OsuStandard)
             {
                 // TODO: Refer to Osu playarea's static variable instead!!
                 posAdjustment = -512f / 2f;
@@ -59,7 +59,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 					RepeatCount = 0,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
-					Path = new SliderPath(PathTypes.Linear, new Vector2[] {
+					Path = new SliderPath(PathType.Linear, new Vector2[] {
 						new Vector2(0, 0),
 						new Vector2(0, 1)
 					}, null),

@@ -27,23 +27,23 @@ namespace PBGame.UI.Components.Prepare
 
             menuHolder = CreateChild<MenuHolder>("menu", 0);
             {
-                menuHolder.Anchor = Anchors.TopStretch;
-                menuHolder.Pivot = Pivots.Top;
+                menuHolder.Anchor = AnchorType.TopStretch;
+                menuHolder.Pivot = PivotType.Top;
                 menuHolder.RawWidth = 0f;
                 menuHolder.Y = 0f;
                 menuHolder.Height = 56f;
             }
             versionDisplay = CreateChild<VersionDisplay>("version", 1);
             {
-                versionDisplay.Anchor = Anchors.TopStretch;
-                versionDisplay.Pivot = Pivots.Top;
+                versionDisplay.Anchor = AnchorType.TopStretch;
+                versionDisplay.Pivot = PivotType.Top;
                 versionDisplay.RawWidth = 0f;
                 versionDisplay.Y = -56f;
                 versionDisplay.Height = 72f;
             }
             contentScroll = CreateChild<UguiScrollView>("content", 2);
             {
-                contentScroll.Anchor = Anchors.Fill;
+                contentScroll.Anchor = AnchorType.Fill;
                 contentScroll.RawWidth = -128f;
                 contentScroll.SetOffsetVertical(128f, 0f);
 
@@ -51,16 +51,16 @@ namespace PBGame.UI.Components.Prepare
 
                 metaContainer = contentScroll.Container.CreateChild<MetaContainer>("meta", 0);
                 {
-                    metaContainer.Anchor = Anchors.TopStretch;
-                    metaContainer.Pivot = Pivots.Top;
+                    metaContainer.Anchor = AnchorType.TopStretch;
+                    metaContainer.Pivot = PivotType.Top;
                     metaContainer.RawWidth = 0f;
                     metaContainer.Y = -32f;
                     metaContainer.Height = 360f;
                 }
                 rankingContainer = contentScroll.Container.CreateChild<RankingContainer>("ranking", 1);
                 {
-                    rankingContainer.Anchor = Anchors.TopStretch;
-                    rankingContainer.Pivot = Pivots.Top;
+                    rankingContainer.Anchor = AnchorType.TopStretch;
+                    rankingContainer.Pivot = PivotType.Top;
                     rankingContainer.RawWidth = 0f;
                     rankingContainer.Y = -424f;
                     rankingContainer.Height = 360f;

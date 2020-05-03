@@ -13,7 +13,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override string BaseIconName => "icon-mode-beats";
 
-        public override GameModes GameMode => GameModes.BeatsStandard;
+        public override GameModeType GameMode => GameModeType.BeatsStandard;
 
 
         public ModeService(IDependencyContainer dependencies) : base(dependencies)

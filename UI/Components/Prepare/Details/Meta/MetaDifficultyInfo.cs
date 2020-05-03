@@ -29,7 +29,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
             grid = CreateChild<UguiGrid>("grid");
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.RawSize = Vector2.zero;
                 grid.CellSize = new Vector2(118f, 36f);
 

@@ -3,7 +3,7 @@ namespace PBGame.Rulesets.Scoring
 	/// <summary>
 	/// Types of score rankings.
 	/// </summary>
-	public enum RankTypes {
+	public enum RankType {
 
 		F = 0,
 		D,

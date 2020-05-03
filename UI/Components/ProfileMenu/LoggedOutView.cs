@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.ProfileMenu
             set => canvasGroup.alpha = value;
         }
 
-        private IApi OsuApi => ApiManager.GetApi(ApiProviders.Osu);
+        private IApi OsuApi => ApiManager.GetApi(ApiProviderType.Osu);
 
         [ReceivesDependency]
         private IApiManager ApiManager { get; set; }
@@ -56,13 +56,13 @@ namespace PBGame.UI.Components.ProfileMenu
 
             bg = CreateChild<UguiSprite>("bg", 0);
             {
-                bg.Anchor = Anchors.Fill;
+                bg.Anchor = AnchorType.Fill;
                 bg.RawSize = Vector2.zero;
                 bg.Color = HexColor.Create("1D2126");
             }
             username = CreateChild<LoginInput>("username", 1);
             {
-                username.Anchor = Anchors.TopStretch;
+                username.Anchor = AnchorType.TopStretch;
                 username.SetOffsetHorizontal(32);
                 username.Y = -40f;
                 username.Height = 36f;
@@ -70,7 +70,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             password = CreateChild<LoginInput>("password", 2);
             {
-                password.Anchor = Anchors.TopStretch;
+                password.Anchor = AnchorType.TopStretch;
                 password.SetOffsetHorizontal(32f);
                 password.Y = -80f;
                 password.Height = 36f;
@@ -79,7 +79,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             remember = CreateChild<LabelledToggle>("remember", 3);
             {
-                remember.Anchor = Anchors.Top;
+                remember.Anchor = AnchorType.Top;
                 remember.Position = new Vector3(0f, -120f);
                 remember.Size = new Vector2(160f, 24f);
                 remember.LabelText = "Remember me";
@@ -97,7 +97,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             loginButton = CreateChild<BoxButton>("login", 4);
             {
-                loginButton.Anchor = Anchors.TopStretch;
+                loginButton.Anchor = AnchorType.TopStretch;
                 loginButton.SetOffsetHorizontal(48f);
                 loginButton.Y = -162f;
                 loginButton.Height = 36f;
@@ -111,7 +111,7 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             loader = CreateChild<Loader>("loader", 5);
             {
-                loader.Anchor = Anchors.Fill;
+                loader.Anchor = AnchorType.Fill;
                 loader.RawSize = Vector2.zero;
             }
 

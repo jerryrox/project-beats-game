@@ -30,12 +30,12 @@ namespace PBGame.UI.Components.Songs
         {
             blurDisplay = CreateChild<BlurDisplay>("blur", 0);
             {
-                blurDisplay.Anchor = Anchors.Fill;
+                blurDisplay.Anchor = AnchorType.Fill;
                 blurDisplay.RawSize = Vector2.zero;
             }
             darkSprite = CreateChild<UguiSprite>("dark", 1);
             {
-                darkSprite.Anchor = Anchors.Fill;
+                darkSprite.Anchor = AnchorType.Fill;
                 darkSprite.RawSize = Vector2.zero;
                 darkSprite.Color = new Color(0f, 0f, 0f, 0.75f);
             }
@@ -50,8 +50,8 @@ namespace PBGame.UI.Components.Songs
             }
             shadeSprite = CreateChild<UguiSprite>("shade", 3);
             {
-                shadeSprite.Anchor = Anchors.TopRight;
-                shadeSprite.Pivot = Pivots.TopRight;
+                shadeSprite.Anchor = AnchorType.TopRight;
+                shadeSprite.Pivot = PivotType.TopRight;
                 shadeSprite.RotationZ = -5f;
                 shadeSprite.Color = new Color(1f, 1f, 1f, 0.25f);
                 shadeSprite.X = -480f;

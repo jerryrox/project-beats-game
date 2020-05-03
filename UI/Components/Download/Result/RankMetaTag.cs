@@ -7,6 +7,6 @@ namespace PBGame.UI.Components.Download.Result
         /// <summary>
         /// Sets the map status (rank) to display.
         /// </summary>
-        public void SetRank(MapStatus mapRank) => label.Text = mapRank.ToString();
+        public void SetRank(MapStateType mapRank) => label.Text = mapRank.ToString();
     }
 }

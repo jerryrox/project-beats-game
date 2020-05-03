@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.Download.Search
         {
             container = CreateChild<UguiSprite>("container", 0);
             {
-                container.Anchor = Anchors.Fill;
+                container.Anchor = AnchorType.Fill;
                 container.Offset = new Offset(16f, 0f);
                 container.SpriteName = "circle-16";
                 container.ImageType = Image.Type.Sliced;
@@ -35,8 +35,8 @@ namespace PBGame.UI.Components.Download.Search
 
                 titleLabel = container.CreateChild<Label>("title", 0);
                 {
-                    titleLabel.Anchor = Anchors.LeftStretch;
-                    titleLabel.Pivot = Pivots.Left;
+                    titleLabel.Anchor = AnchorType.LeftStretch;
+                    titleLabel.Pivot = PivotType.Left;
                     titleLabel.SetOffsetVertical(0f);
                     titleLabel.X = 16f;
                     titleLabel.IsBold = true;

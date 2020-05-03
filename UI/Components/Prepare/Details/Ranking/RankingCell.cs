@@ -56,11 +56,11 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
             scoreHolder = CreateChild<UguiObject>("score-holder", 1);
             {
-                scoreHolder.Pivot = Pivots.Left;
+                scoreHolder.Pivot = PivotType.Left;
 
                 rankIcon = scoreHolder.CreateChild<UguiTexture>("icon", 0);
                 {
-                    rankIcon.Pivot = Pivots.Left;
+                    rankIcon.Pivot = PivotType.Left;
                     rankIcon.Scale = new Vector3(0.3f, 0.3f, 1f);
                 }
                 score = scoreHolder.CreateChild<Label>("score", 1);
@@ -83,11 +83,11 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
             judgementGrid = CreateChild<UguiGrid>("judgements", 5);
             {
-                judgementGrid.Pivot = Pivots.Right;
+                judgementGrid.Pivot = PivotType.Right;
                 judgementGrid.Width = 1000f;
                 judgementGrid.CellSize = new Vector2(70f, 36f);
 
-                foreach (var rank in (HitResults[])Enum.GetValues(typeof(HitResults)))
+                foreach (var rank in (HitResultType[])Enum.GetValues(typeof(HitResultType)))
                 {
                     int index = (int)rank;
                     var label = judgementGrid.CreateChild<Label>($"label{index}", index);
@@ -147,7 +147,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// </summary>
         private void SetupLabelStyle(ILabel label)
         {
-            label.Pivot = Pivots.Left;
+            label.Pivot = PivotType.Left;
             label.FontSize = 17;
             label.Alignment = TextAnchor.MiddleLeft;
         }

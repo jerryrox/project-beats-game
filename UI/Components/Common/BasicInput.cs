@@ -87,7 +87,7 @@ namespace PBGame.UI.Components.Common
             backgroundSprite.SpriteName = "null";
             backgroundSprite = CreateChild<UguiSprite>("bg", -10);
             {
-                backgroundSprite.Anchor = Anchors.Fill;
+                backgroundSprite.Anchor = AnchorType.Fill;
                 backgroundSprite.Offset = Offset.Zero;
                 backgroundSprite.SpriteName = "circle-16";
                 backgroundSprite.ImageType = Image.Type.Sliced;
@@ -101,7 +101,7 @@ namespace PBGame.UI.Components.Common
 
             hoverSprite = CreateChild<UguiSprite>("hover", 3);
             {
-                hoverSprite.Anchor = Anchors.Fill;
+                hoverSprite.Anchor = AnchorType.Fill;
                 hoverSprite.Offset = new Offset(-13.5f);
                 hoverSprite.SpriteName = "glow-circle-16-x2";
                 hoverSprite.ImageType = Image.Type.Sliced;
@@ -110,7 +110,7 @@ namespace PBGame.UI.Components.Common
             }
             focusSprite = CreateChild<UguiSprite>("focus", 4);
             {
-                focusSprite.Anchor = Anchors.Fill;
+                focusSprite.Anchor = AnchorType.Fill;
                 focusSprite.Offset = Offset.Zero;
                 focusSprite.SpriteName = "outline-circle-16";
                 focusSprite.ImageType = Image.Type.Sliced;
@@ -164,7 +164,7 @@ namespace PBGame.UI.Components.Common
                 return iconSprite;
 
             iconSprite = CreateChild<UguiSprite>("icon", depth);
-            iconSprite.Anchor = Anchors.Right;
+            iconSprite.Anchor = AnchorType.Right;
             iconSprite.Position = new Vector2(-24f, 0f);
             if (!string.IsNullOrEmpty(spriteName))
                 iconSprite.SpriteName = spriteName;

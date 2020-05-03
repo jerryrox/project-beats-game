@@ -3,7 +3,7 @@ namespace PBGame.Rulesets.Difficulty
     /// <summary>
     /// Types of difficulty categorizations.
     /// </summary>
-    public enum DifficultyTypes {
+    public enum DifficultyType {
     
         Easy = 0,
         Normal,

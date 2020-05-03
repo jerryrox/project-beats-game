@@ -43,7 +43,7 @@ namespace PBGame.UI.Components.Common.Dropdown
 
             label = CreateChild<Label>("label", 10);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.Offset = new Offset(16f, 0f);
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.FontSize = 16;
