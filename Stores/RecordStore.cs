@@ -24,6 +24,11 @@ namespace PBGame.Stores
             }
         }
 
+        public void SaveRecord(Record record)
+        {
+            Database.Edit().Write(record).Commit();
+        }
+
         public int GetPlayCount(IPlayableMap map, IUser user)
         {
             using (var results = Database.Query()
