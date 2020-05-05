@@ -12,10 +12,15 @@ namespace PBGame.Rulesets
     public abstract class GameSession<T> : IGameSession<T>
         where T : HitObject
     {
-        public event Action OnGameInit;
-        public event Action OnGameClear;
-        public event Action OnGameFail;
-        public event Action OnGameDispose;
+        public event Action OnHardInit;
+        public event Action OnSoftInit;
+        public event Action OnSoftDispose;
+        public event Action OnHardDispose;
+        public event Action OnPause;
+        public event Action OnResume;
+        public event Action OnForceQuit;
+        public event Action OnCompletion;
+        public event Action OnFailure;
 
         private IGraphicObject containerObject;
 
@@ -45,6 +50,7 @@ namespace PBGame.Rulesets
         {
             this.Dependencies = dependencies.Clone();
             this.Dependencies.CacheAs<IGameSession<T>>(this);
+            this.Dependencies.CacheAs<IGameSession>(this);
 
             // Create game gui.
             GameGui = CreateGameGui(containerObject, this.Dependencies);
@@ -59,22 +65,68 @@ namespace PBGame.Rulesets
             CurrentMap = map;
         }
 
-        public void InitSession()
+        public void InvokeHardInit()
+        {
+            OnHardInit?.Invoke();
+        }
+
+        public void InvokeSoftInit()
         {
             // Initialize score processor
             ScoreProcessor = CreateScoreProcessor();
-            // TODO: Listen to events
 
-            OnGameInit?.Invoke();
+            OnSoftInit?.Invoke();
         }
 
-        public void DisposeSession()
+        public void InvokeSoftDispose()
         {
-            // Dispose score processor
-            // TODO: Remove events
+            // TODO: Record score if at least one judgement has been made.
+
+            // Dispose score processor.
             ScoreProcessor = null;
 
-            OnGameDispose?.Invoke();
+            OnSoftDispose?.Invoke();
+        }
+
+        public void InvokeHardDispose()
+        {
+            OnHardDispose?.Invoke();
+        }
+
+        public void InvokePause()
+        {
+            // TODO: Pause music
+
+            OnPause?.Invoke();
+        }
+
+        public void InvokeResume()
+        {
+            // TODO: Unpause music
+
+            OnResume?.Invoke();
+        }
+
+        public void InvokeForceQuit()
+        {
+
+
+            InvokeSoftDispose();
+            OnForceQuit?.Invoke();
+        }
+
+        public void InvokeCompletion()
+        {
+            // TODO: 
+
+            OnCompletion?.Invoke();
+        }
+
+        public void InvokeFailure()
+        {
+            // TODO: Display failure overlay
+
+            OnFailure?.Invoke();
         }
 
         /// <summary>
