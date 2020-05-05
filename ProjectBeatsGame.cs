@@ -301,16 +301,10 @@ namespace PBGame
         /// </summary>
         private void ApplyMenuBarOverlay()
         {
-            Action showMenuBar = () =>
-            {
-                if(!overlayNavigator.IsActive(typeof(MenuBarOverlay)))
-                    overlayNavigator.Show<MenuBarOverlay>();
-            };
-
             if (screenNavigator.CurrentScreen is HomeScreen)
             {
                 if(overlayNavigator.IsShowing(typeof(HomeMenuOverlay)))
-                    showMenuBar.Invoke();
+                    overlayNavigator.Show<MenuBarOverlay>(true);
                 else
                     overlayNavigator.Hide<MenuBarOverlay>();
                 return;
@@ -326,7 +320,7 @@ namespace PBGame
             }
 
             // Show menu ber by default.
-            showMenuBar.Invoke();
+            overlayNavigator.Show<MenuBarOverlay>(true);
         }
 
         /// <summary>
