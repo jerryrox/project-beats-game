@@ -50,8 +50,6 @@ namespace PBGame.UI.Navigations.Screens
             base.OnEnableInited();
 
             isHiding = false;
-            // Always hide menubar in home on enter.
-            OverlayNavigator.Hide<MenuBarOverlay>();
         }
 
         protected override void OnPreHide()
@@ -69,9 +67,6 @@ namespace PBGame.UI.Navigations.Screens
             LogoDisplay.SetZoom(true);
             BackgroundOverlay.Color = Color.gray;
 
-            // Show menu bar
-            OverlayNavigator.Show<MenuBarOverlay>();
-
             // Show home menu
             var homeMenuOverlay = OverlayNavigator.Show<HomeMenuOverlay>();
             if (!didHookEventToOverlay)
@@ -79,9 +74,6 @@ namespace PBGame.UI.Navigations.Screens
                 didHookEventToOverlay = true;
                 homeMenuOverlay.OnHide += () =>
                 {
-                    if (!isHiding)
-                        OverlayNavigator.Hide<MenuBarOverlay>();
-
                     LogoDisplay.SetZoom(false);
                     BackgroundOverlay.Color = Color.white;
                 };
