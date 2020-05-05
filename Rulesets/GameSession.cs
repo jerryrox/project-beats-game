@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using PBGame.UI.Navigations.Screens;
 using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
@@ -9,6 +11,7 @@ using UnityEngine;
 
 namespace PBGame.Rulesets
 {
+    // TODO: Integrate music controller.
     public abstract class GameSession<T> : IGameSession<T>
         where T : HitObject
     {
@@ -18,6 +21,7 @@ namespace PBGame.Rulesets
         public event Action OnHardDispose;
         public event Action OnPause;
         public event Action OnResume;
+        public event Action OnRetry;
         public event Action OnForceQuit;
         public event Action OnCompletion;
         public event Action OnFailure;
@@ -36,6 +40,9 @@ namespace PBGame.Rulesets
         /// Inject this dependency instead when creating the game gui to gain access to this game session instance.
         /// </summary>
         protected IDependencyContainer Dependencies { get; private set; }
+
+        [ReceivesDependency]
+        private IGameScreen GameScreen { get; set; }
 
 
         protected GameSession(IGraphicObject container)
@@ -80,22 +87,35 @@ namespace PBGame.Rulesets
 
         public void InvokeSoftDispose()
         {
-            // TODO: Record score if at least one judgement has been made.
+            int playTime = 0; // TODO: Replace with MusicController time.
+            if (ScoreProcessor.JudgeCount > 0)
+            {
+                // playTime -= (int)(CurrentMap.HitObjects.First().StartTime / 1000f);
+                // TODO: Modify play time if using time shift mods.
+            }
 
-            // Dispose score processor.
-            ScoreProcessor = null;
+            // Record score.
+            var recordPromise = GameScreen?.RecordScore(ScoreProcessor, playTime);
+            recordPromise.OnFinished += () =>
+            {
+                // Dispose score processor.
+                ScoreProcessor = null;
 
-            OnSoftDispose?.Invoke();
+                OnSoftDispose?.Invoke();
+            };
+            recordPromise.Start();
         }
 
         public void InvokeHardDispose()
         {
+            CurrentMap = null;
+
             OnHardDispose?.Invoke();
         }
 
         public void InvokePause()
         {
-            // TODO: Pause music
+            // TODO: Pause music, show pause overlay.
 
             OnPause?.Invoke();
         }
@@ -107,26 +127,33 @@ namespace PBGame.Rulesets
             OnResume?.Invoke();
         }
 
+        public void InvokeRetry()
+        {
+            // TODO: Game GUI fade out
+            // TODO: OnRetry event emit & Soft dispose -> Soft init
+            // TODO: Game GUI fade in
+        }
+
         public void InvokeForceQuit()
         {
-
-
+            // TODO: SoftDispose -> GameScreen.ExitGame<PrepareScreen>() & OnForceQuit event emit;
             InvokeSoftDispose();
-            OnForceQuit?.Invoke();
         }
 
         public void InvokeCompletion()
         {
-            // TODO: 
-
-            OnCompletion?.Invoke();
+            // TODO: SoftDispose -> Game GUI fade out & OnCompletion event emit
+            // TODO: Either wait for 3 seconds or listen to escape key trigger.
+            // TODO: GameScreen.ExitGame<ResultScreen>()
         }
 
         public void InvokeFailure()
         {
-            // TODO: Display failure overlay
-
             OnFailure?.Invoke();
+
+            // TODO: Failure effect -> Failure overlay
+            // TODO: If retry, SotDispose -> SoftInit
+            // TODO: If exit, SoftDispose -> GameScreen.ExitGame<PrepareScreen>()
         }
 
         /// <summary>
@@ -138,5 +165,16 @@ namespace PBGame.Rulesets
         /// Creates a new instance of the score processor.
         /// </summary>
         protected abstract IScoreProcessor CreateScoreProcessor();
+
+
+        /// <summary>
+        /// Types of game disposal action.
+        /// </summary>
+        protected enum DisposeType
+        {
+            ForceQuit = 0,
+            Complete,
+            Retry,
+        }
     }
 }

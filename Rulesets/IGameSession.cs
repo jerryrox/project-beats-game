@@ -39,6 +39,11 @@ namespace PBGame.Rulesets
         event Action OnResume;
 
         /// <summary>
+        /// Event called on retrying the game.
+        /// </summary>
+        event Action OnRetry;
+
+        /// <summary>
         /// Event called on forcibly resetting the game.
         /// </summary>
         event Action OnForceQuit;
@@ -104,6 +109,11 @@ namespace PBGame.Rulesets
         /// Invokes resume event.
         /// </summary>
         void InvokeResume();
+
+        /// <summary>
+        /// Invokes retry event.
+        /// </summary>
+        void InvokeRetry();
 
         /// <summary>
         /// Invokes force quit event.

@@ -22,7 +22,7 @@ namespace PBGame.Rulesets.Objects
 
 
 		/// <summary>
-		/// The starting time of this hit object.
+		/// The starting time of this hit object in milliseconds.
 		/// </summary>
 		public float StartTime { get; set; }
 
