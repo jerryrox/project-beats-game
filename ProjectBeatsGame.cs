@@ -36,6 +36,7 @@ namespace PBGame
             HookEngine();
             HookMusicController();
             HookScreenNavigator();
+            HookOverlayNavigator();
             HookMapSelection();
             HookConfigurations();
             HookDownloadStore();
@@ -153,6 +154,25 @@ namespace PBGame
                     else
                         musicController.LoopTime = mapSelection.Map.Metadata.PreviewTime;
                 }
+
+                ApplyMenuBarOverlay();
+            };
+        }
+
+        /// <summary>
+        /// Triggers actions on cerain overlay navigator events.
+        /// </summary>
+        private void HookOverlayNavigator()
+        {
+            overlayNavigator.OnShowView += (view) =>
+            {
+                if(!(view is MenuBarOverlay))
+                    ApplyMenuBarOverlay();
+            };
+            overlayNavigator.OnHideView += (view) =>
+            {
+                if (!(view is MenuBarOverlay))
+                    ApplyMenuBarOverlay();
             };
         }
 
@@ -274,6 +294,39 @@ namespace PBGame
                     Message = $"Imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
                 });
             };
+        }
+
+        /// <summary>
+        /// Applies menu bar overlay where necessary.
+        /// </summary>
+        private void ApplyMenuBarOverlay()
+        {
+            Action showMenuBar = () =>
+            {
+                if(!overlayNavigator.IsActive(typeof(MenuBarOverlay)))
+                    overlayNavigator.Show<MenuBarOverlay>();
+            };
+
+            if (screenNavigator.CurrentScreen is HomeScreen)
+            {
+                if(overlayNavigator.IsShowing(typeof(HomeMenuOverlay)))
+                    showMenuBar.Invoke();
+                else
+                    overlayNavigator.Hide<MenuBarOverlay>();
+                return;
+            }
+
+            if (overlayNavigator.IsShowing(typeof(GameLoadOverlay)) ||
+                screenNavigator.CurrentScreen is GameScreen ||
+                screenNavigator.CurrentScreen is InitializeScreen ||
+                screenNavigator.CurrentScreen is SplashScreen)
+            {
+                overlayNavigator.Hide<MenuBarOverlay>();
+                return;
+            }
+
+            // Show menu ber by default.
+            showMenuBar.Invoke();
         }
 
         /// <summary>
