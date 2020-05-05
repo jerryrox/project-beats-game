@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.GameLoad;
 using PBGame.UI.Navigations.Screens;
+using PBGame.Maps;
+using PBGame.Rulesets;
+using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
@@ -21,6 +24,11 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private const float ShowAniEndDelay = 1.5f;
 
+        /// <summary>
+        /// Callback to be invoked on component hide ani finish.
+        /// </summary>
+        private Action onHideNavigation;
+
         private InfoDisplayer infoDisplayer;
         private LoadIndicator loadIndicator;
 
@@ -30,11 +38,25 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override int OverlayDepth => ViewDepths.GameLoadOverlay;
 
+        /// <summary>
+        /// Returns the game screen instance.
+        /// </summary>
+        private GameScreen GameScreen => ScreenNavigator.Get<GameScreen>();
+
+        [ReceivesDependency]
+        private IModeManager ModeManager { get; set; }
+
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IMapSelection MapSelection { get; set; }
+
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
 
 
         [InitWithDependency]
@@ -83,17 +105,33 @@ namespace PBGame.UI.Navigations.Overlays
             base.OnPreShow();
 
             componentShowAni.PlayFromStart();
-            // TODO: Start loading map assets
+
+            var modeServicer = ModeManager.GetService(GameConfiguration.RulesetMode.Value);
+            var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
+
+            // Receive an event when the loading is complete.
+            gameScreen.OnPreInit += OnGameLoadEnd;
+
+            // Start loading the game.
+            gameScreen.PreInitialize(MapSelection.Map, modeServicer);
         }
 
         /// <summary>
-        /// Start hiding the screen and navigate to game screen.
+        /// Start hiding the screen and navigate to the next screen based on whether loading was successful.
         /// </summary>
-        private void StartHide()
+        private void HideToNextScreen(bool navigateToGame)
         {
             // If the hide animation is playing, the player must've navigated out before this was executed.
             if(HideAnime.IsPlaying)
                 return;
+
+            onHideNavigation = () =>
+            {
+                if(navigateToGame)
+                    ScreenNavigator.Show<GameScreen>();
+                else
+                    ScreenNavigator.Show<PrepareScreen>();
+            };
             componentHideAni.PlayFromStart();
         }
 
@@ -102,8 +140,9 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnShowAniEnd()
         {
-            // TODO: If loading is finished, start navigating to game.
-            StartHide();
+            // If loading is finished, start navigating to game.
+            if(GameScreen.IsGameLoaded)
+                HideToNextScreen(GameScreen.IsLoadSuccess);
         }
 
         /// <summary>
@@ -111,19 +150,23 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void OnHideAniEnd()
         {
-            // TODO: Move on to game screen.
+            // Move on to game screen.
             OverlayNavigator.Hide(this);
-            ScreenNavigator.Show<PrepareScreen>();
+            onHideNavigation?.Invoke();
         }
 
         /// <summary>
         /// Event called when the game has been loaded and is ready to play.
         /// </summary>
-        private void OnGameLoadEnd()
+        private void OnGameLoadEnd(bool isSuccess)
         {
-            // If show animation is not playing, go straight to navigating to game..
-            if(!componentShowAni.IsPlaying)
-                StartHide();
+            // Unbind from game screen.
+            GameScreen.OnPreInit -= OnGameLoadEnd;
+
+            if(isSuccess && !componentShowAni.IsPlaying)
+                HideToNextScreen(true);
+            else if(!isSuccess)
+                HideToNextScreen(false);
         }
     }
 }
