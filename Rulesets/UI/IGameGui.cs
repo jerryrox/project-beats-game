@@ -3,7 +3,7 @@ using PBFramework.Graphics;
 namespace PBGame.Rulesets.UI
 {
     public interface IGameGui : IGraphicObject {
-    
+
         /// <summary>
         /// Returns the storyboard layer object.
         /// </summary>
