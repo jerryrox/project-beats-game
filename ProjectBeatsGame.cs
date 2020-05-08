@@ -8,6 +8,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBGame.Notifications;
+using PBFramework.Data;
 using UnityEngine;
 
 namespace PBGame
@@ -18,6 +19,8 @@ namespace PBGame
         /// Holds the original screen size before modifying with game configurations.
         /// </summary>
         private Vector2 originalScreenSize;
+
+        private Cached<MenuBarOverlay> cachedMenuBar = new Cached<MenuBarOverlay>();
 
 
         /// <summary>
@@ -156,6 +159,7 @@ namespace PBGame
                 }
 
                 ApplyMenuBarOverlay();
+                ApplyMenuBarProperties();
             };
         }
 
@@ -168,6 +172,14 @@ namespace PBGame
             {
                 if(!(view is MenuBarOverlay))
                     ApplyMenuBarOverlay();
+                else
+                {
+                    if (!cachedMenuBar.IsValid)
+                    {
+                        cachedMenuBar.Value = view as MenuBarOverlay;
+                        ApplyMenuBarProperties();
+                    }
+                }
             };
             overlayNavigator.OnHideView += (view) =>
             {
@@ -321,6 +333,21 @@ namespace PBGame
 
             // Show menu ber by default.
             overlayNavigator.Show<MenuBarOverlay>(true);
+        }
+
+        /// <summary>
+        /// Applies menu bar properties on screen change.
+        /// </summary>
+        private void ApplyMenuBarProperties()
+        {
+            if (!cachedMenuBar.IsValid)
+                return;
+
+            var menuBar = cachedMenuBar.Value;
+            bool isHomeActive = screenNavigator.CurrentScreen is HomeScreen;
+
+            menuBar.MusicButton.Active = isHomeActive;
+            menuBar.BackgroundSprite.Color = new Color(0f, 0f, 0f, 0f);
         }
 
         /// <summary>

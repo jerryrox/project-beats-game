@@ -15,16 +15,6 @@ namespace PBGame.UI.Navigations.Overlays
 
         private BaseMenuButton[] menuButtons;
 
-        // TODO: Register more entries for more screen types.
-        /// <summary>
-        /// Table of colors mapped to screen types for automatic color adjustment.
-        /// </summary>
-        private Dictionary<Type, Color> backgroundColors = new Dictionary<Type, Color>()
-        {
-            { typeof(HomeScreen), new Color(0f, 0f, 0f, 0f) },
-            { typeof(SongsScreen), new Color(0f, 0f, 0f, 0f) }
-        };
-
 
         public float ContainerHeight => 64f;
 
@@ -107,22 +97,6 @@ namespace PBGame.UI.Navigations.Overlays
 
             menuButtons = GetComponentsInChildren<BaseMenuButton>(true);
             HookMenuButtonFocus();
-
-            OnEnableInited();
-        }
-
-        protected override void OnEnableInited()
-        {
-            base.OnEnableInited();
-
-            BindEvents();
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            UnbindEvents();
         }
 
         /// <summary>
@@ -151,35 +125,6 @@ namespace PBGame.UI.Navigations.Overlays
                 if(menuButtons[i] != exception)
                     menuButtons[i].IsFocused = false;
             }
-        }
-
-        /// <summary>
-        /// Binds to screen change events.
-        /// </summary>
-        private void BindEvents()
-        {
-            ScreenNavigator.OnShowView += OnScreenChange;
-
-            OnScreenChange(ScreenNavigator.CurrentScreen);
-        }
-
-        /// <summary>
-        /// Unbinds from screen change events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            ScreenNavigator.OnShowView -= OnScreenChange;
-        }
-
-        /// <summary>
-        /// Event called when current screen has changed.
-        /// </summary>
-        private void OnScreenChange(INavigationView screen)
-        {
-            MusicButton.Active = screen is HomeScreen;
-
-            if (backgroundColors.TryGetValue(screen.GetType(), out Color color))
-                BackgroundSprite.Color = color;
         }
     }
 }
