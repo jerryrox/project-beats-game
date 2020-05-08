@@ -24,11 +24,6 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private const float ShowAniEndDelay = 1.5f;
 
-        /// <summary>
-        /// Callback to be invoked on component hide ani finish.
-        /// </summary>
-        private Action onHideNavigation;
-
         private InfoDisplayer infoDisplayer;
         private LoadIndicator loadIndicator;
 
@@ -117,43 +112,42 @@ namespace PBGame.UI.Navigations.Overlays
         }
 
         /// <summary>
-        /// Start hiding the screen and navigate to the next screen based on whether loading was successful.
+        /// Changes to the next screen based on specified flag.
         /// </summary>
-        private void HideToNextScreen(bool navigateToGame)
+        private void ChangeScreen(bool toGame)
         {
-            // If the hide animation is playing, the player must've navigated out before this was executed.
-            if(HideAnime.IsPlaying)
-                return;
-
-            onHideNavigation = () =>
+            if (toGame)
             {
-                if(navigateToGame)
-                    ScreenNavigator.Show<GameScreen>();
-                else
-                    ScreenNavigator.Show<PrepareScreen>();
-            };
-            componentHideAni.PlayFromStart();
+                // If the hide animation is playing, the player must've navigated out before this was executed.
+                if (HideAnime.IsPlaying)
+                    return;
+                componentHideAni.PlayFromStart();
+            }
+            else
+            {
+                NavigateToScreen<PrepareScreen>();
+            }
+        }
+
+        /// <summary>
+        /// Navigates the specified screen while hiding this overlay.
+        /// </summary>
+        private void NavigateToScreen<T>()
+            where T : BaseScreen
+        {
+            OverlayNavigator.Hide(this);
+            ScreenNavigator.Show<T>();
         }
 
         /// <summary>
         /// Event called from component show ani when it has finished animating.
         /// </summary>
-        private void OnShowAniEnd()
-        {
-            // If loading is finished, start navigating to game.
-            if(GameScreen.IsGameLoaded)
-                HideToNextScreen(GameScreen.IsLoadSuccess);
-        }
+        private void OnShowAniEnd() => ChangeScreen(GameScreen.IsGameLoaded);
 
         /// <summary>
         /// Event called from component hide ani when it has finished animating.
         /// </summary>
-        private void OnHideAniEnd()
-        {
-            // Move on to game screen.
-            OverlayNavigator.Hide(this);
-            onHideNavigation?.Invoke();
-        }
+        private void OnHideAniEnd() => NavigateToScreen<GameScreen>();
 
         /// <summary>
         /// Event called when the game has been loaded and is ready to play.
@@ -163,10 +157,9 @@ namespace PBGame.UI.Navigations.Overlays
             // Unbind from game screen.
             GameScreen.OnPreInit -= OnGameLoadEnd;
 
-            if(isSuccess && !componentShowAni.IsPlaying)
-                HideToNextScreen(true);
-            else if(!isSuccess)
-                HideToNextScreen(false);
+            if(componentShowAni.IsPlaying)
+                return;
+            ChangeScreen(isSuccess);
         }
     }
 }
