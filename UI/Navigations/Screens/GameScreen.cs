@@ -14,6 +14,7 @@ using PBFramework;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
+using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
@@ -26,16 +27,23 @@ namespace PBGame.UI.Navigations.Screens
 
         public event Action<bool> OnPreInit;
 
+        public event Action OnEscape;
+
         private GameState gameState;
         private IPlayableMap curMap;
         private IModeService curMode;
         private IGameSession curSession;
         private IRecord newRecord;
+        private IExplicitPromise gameLoader;
+
+        private IKey escapeKey;
 
 
         public bool IsGameLoaded { get; private set; }
 
-        public bool IsLoadSuccess { get; private set; }
+        public bool IsLoading => gameLoader != null;
+
+        public override int InputLayer => InputLayers.GameScreen;
 
         protected override int ScreenDepth => ViewDepths.GameScreen;
 
@@ -59,6 +67,13 @@ namespace PBGame.UI.Navigations.Screens
         {
             Dependencies = Dependencies.Clone();
             Dependencies.Cache(gameState = new GameState());
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            SetBindEscape(false);
         }
 
         public void PreInitialize(IPlayableMap map, IModeService modeService)
@@ -90,20 +105,25 @@ namespace PBGame.UI.Navigations.Screens
             curMode = modeService;
 
             SetSession(modeService.GetSession(this));
+            SetBindEscape(true);
 
             // Wait for pending initial loaders.
-            var promise = gameState.GetInitialLoadPromise();
-            promise.OnFinished += () =>
+            gameLoader = gameState.GetInitialLoadPromise();
+            gameLoader.OnFinished += () =>
             {
-                IsGameLoaded = true;
-                IsLoadSuccess = true;
-                OnPreInit?.Invoke(true);
+                if (gameLoader != null)
+                {
+                    gameLoader = null;
+                    EmitInitResult(true);
+                }
             };
-            promise.Start();
+            gameLoader.Start();
         }
 
         public void StartInitialGame()
         {
+            SetBindEscape(false);
+
             curSession.InvokeSoftInit();
         }
 
@@ -112,7 +132,7 @@ namespace PBGame.UI.Navigations.Screens
         {
             var screen = ScreenNavigator.Show<T>();
             // TODO: If Result screen, pass the newRecord object to ResultScreen.
-            // if(screen is re
+            // if(screen is ResultScreen)
         }
 
         public IExplicitPromise RecordScore(IScoreProcessor scoreProcessor, int playTime)
@@ -151,6 +171,28 @@ namespace PBGame.UI.Navigations.Screens
             });
         }
 
+        /// <summary>
+        /// Makes the game loading process stop and return a false result for OnPreInit event.
+        /// </summary>
+        public void CancelLoad()
+        {
+            if (gameLoader != null)
+            {
+                gameLoader.Revoke();
+                gameLoader = null;
+            }
+            EmitInitResult(false);
+        }
+
+        public override bool ProcessInput()
+        {
+            if (escapeKey.State.Value == InputState.Press)
+            {
+                CancelLoad();
+            }
+            return false;
+        }
+
         protected override void OnPostHide()
         {
             base.OnPostHide();
@@ -160,14 +202,24 @@ namespace PBGame.UI.Navigations.Screens
         }
 
         /// <summary>
+        /// Emits initialization result via OnPreInit event along with some state changes.
+        /// </summary>
+        private void EmitInitResult(bool isSuccess)
+        {
+            gameLoader = null;
+            IsGameLoaded = isSuccess;
+            OnPreInit?.Invoke(isSuccess);
+        }
+
+        /// <summary>
         /// Cleans state for clean setup next initialization.
         /// </summary>
         private void CleanupState()
         {
             gameState.Reset();
             IsGameLoaded = false;
-            IsLoadSuccess = false;
             newRecord = null;
+            gameLoader = null;
         }
 
         /// <summary>
@@ -191,6 +243,30 @@ namespace PBGame.UI.Navigations.Screens
 
             curSession.InvokeHardDispose();
             curSession = null;
+        }
+
+        /// <summary>
+        /// Binds binding of escape key event.
+        /// </summary>
+        private void SetBindEscape(bool bind)
+        {
+            if (bind)
+            {
+                if (escapeKey == null)
+                {
+                    escapeKey = InputManager.AddKey(KeyCode.Escape);
+                    SetReceiveInputs(true);
+                }
+            }
+            else
+            {
+                if (escapeKey != null)
+                {
+                    InputManager.RemoveKey(KeyCode.Escape);
+                    SetReceiveInputs(false);
+                }
+                escapeKey = null;
+            }
         }
     }
 }

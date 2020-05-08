@@ -16,16 +16,16 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         event Action<bool> OnPreInit;
 
+        /// <summary>
+        /// Event called on escape key or gesture.
+        /// </summary>
+        event Action OnEscape;
+
 
         /// <summary>
         /// Returns whether the game session is fully loaded.
         /// </summary>
         bool IsGameLoaded { get; }
-
-        /// <summary>
-        /// Returns whether the last game loading ended up successful.
-        /// </summary>
-        bool IsLoadSuccess { get; }
 
 
         /// <summary>
