@@ -8,17 +8,12 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 	/// <summary>
 	/// Base hit object in Beats game mode.
 	/// </summary>
-	public abstract class HitObject : Rulesets.Objects.HitObject, IHasCombo, IHasPositionX {
+	public abstract class HitObject : Rulesets.Objects.BaseHitObject, IHasCombo, IHasPositionX {
 
 		/// <summary>
 		/// The base radius of the hit object at circle size 0.
 		/// </summary>
-		public const float BaseRadius = 108;
-
-		/// <summary>
-		/// Amount of time to fall before reaching a perfect timing for hit.
-		/// </summary>
-		public float FallTime { get; set; } = 1800;
+		public const float BaseRadius = 125f;
 
 		/// <summary>
 		/// Returns the radius of the object.
@@ -38,10 +33,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		{
 			base.ApplyMapPropertiesSelf (controlPoints, difficulty);
 
-			// Angle 50: 1800, 1200, 600);
-			// Angle 55: 2400, 1800, 900);
-			FallTime = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
-
+			ApproachDuration = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
 			Scale = MapDifficulty.GetDifficultyValue(difficulty.CircleSize, 1, 0.85f, 0.7f);
 		}
 
