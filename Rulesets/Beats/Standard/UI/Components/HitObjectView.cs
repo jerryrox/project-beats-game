@@ -1,0 +1,76 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using PBGame.Rulesets.UI.Components;
+using PBGame.Rulesets.Beats.Standard.Objects;
+using PBGame.Rulesets.Objects;
+using PBGame.Rulesets.Judgements;
+using PBFramework.UI;
+using PBFramework.Inputs;
+using PBFramework.Graphics;
+using PBFramework.Dependencies;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace PBGame.Rulesets.Beats.Standard.UI.Components
+{
+    public abstract class HitObjectView : BaseHitObjectView
+    {
+        protected float xPos;
+        protected float radius;
+
+
+        /// <summary>
+        /// Sets the specified hit object to be represented by this view.
+        /// </summary>
+        public virtual void SetHitObject(HitObject hitObject)
+        {
+            base.SetBaseHitObject(hitObject);
+
+            this.xPos = hitObject.X;
+            this.radius = hitObject.Radius;
+
+            this.X = xPos;
+            this.Size = new Vector2(radius * 2f, radius * 2f);
+        }
+
+        /// <summary>
+        /// Returns whether the specified cursor position X is within the hit object range.
+        /// </summary>
+        public virtual bool IsCursorInRange(float x)
+        {
+            return x > xPos - radius && x < xPos + radius;
+        }
+
+        /// <summary>
+        /// Feeds the specified input to the object to try evaluating a judgement result under given time.
+        /// May return a judgement result if it has been made.
+        /// </summary>
+        public abstract JudgementResult JudgeInput(float curTime, IInput input);
+    }
+
+    public abstract class HitObjectView<T> : HitObjectView
+        where T : HitObject
+    {
+        protected T hitObject;
+
+
+        /// <summary>
+        /// Sets the specific type of hit object to be represented by this view.
+        /// </summary>
+        public virtual void SetHitObject(T hitObject)
+        {
+            base.SetHitObject(hitObject);
+
+            this.hitObject = hitObject;
+        }
+
+        /// <summary>
+        /// Adds the specified object view as nested object under this object.
+        /// </summary>
+        public virtual void AddNestedObject(HitObjectView hitObject)
+        {
+            base.AddBaseNestedObject(hitObject);
+        }
+    }
+}
