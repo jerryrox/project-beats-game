@@ -10,12 +10,12 @@ namespace PBGame.Rulesets.Difficulty.Objects
         /// <summary>
         /// The HitObject this refers to.
         /// </summary>
-        public HitObject BaseObject { get; private set; }
+        public BaseHitObject BaseObject { get; private set; }
 
         /// <summary>
         /// Previous hit object that appears before the BaseObject.
         /// </summary>
-        public HitObject PrevObject { get; private set; }
+        public BaseHitObject PrevObject { get; private set; }
 
 		/// <summary>
 		/// The actual time between current object and previous object after applying clock rate.
@@ -23,7 +23,7 @@ namespace PBGame.Rulesets.Difficulty.Objects
 		public float DeltaTime { get; protected set; }
 
 
-        public DifficultyHitObject(HitObject hitObject, HitObject prevObject, float clockRate)
+        public DifficultyHitObject(BaseHitObject hitObject, BaseHitObject prevObject, float clockRate)
         {
             BaseObject = hitObject;
             PrevObject = prevObject;

@@ -9,7 +9,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         {
         }
 
-        protected override Rulesets.UI.IGameplayLayer CreateGameplayLayer()
+        protected override Rulesets.UI.GameplayLayer CreateGameplayLayer()
             => CreateChild<GameplayLayer>("gameplay-layer");
     }
 }

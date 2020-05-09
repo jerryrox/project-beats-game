@@ -72,7 +72,7 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns the gui part of the game.
         /// </summary>
-        IGameGui GameGui { get; }
+        GameGui GameGui { get; }
 
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace PBGame.Rulesets
     }
 
     public interface IGameSession<T> : IGameSession
-        where T : HitObject
+        where T : BaseHitObject
     {
     }
 }

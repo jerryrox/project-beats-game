@@ -10,7 +10,7 @@ using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.Rulesets.Maps
 {
-    public class OriginalMap : Map<HitObject>, IOriginalMap {
+    public class OriginalMap : Map<BaseHitObject>, IOriginalMap {
 
         /// <summary>
         /// Table of playable map variants for each supported game mode.

@@ -6,7 +6,7 @@ using PBGame.Audio;
 using UnityEngine;
 
 using HitObject = PBGame.Rulesets.Beats.Standard.Objects.HitObject;
-using BaseHitObject = PBGame.Rulesets.Objects.HitObject;
+using BaseHitObject = PBGame.Rulesets.Objects.BaseHitObject;
 
 namespace PBGame.Rulesets.Beats.Standard.Maps
 {

@@ -37,7 +37,7 @@ namespace PBGame.IO.Decoding.Osu
 			this.formatVersion = formatVersion;
 		}
 
-		public HitObject Parse (string text)
+		public BaseHitObject Parse (string text)
 		{
 			try
 			{
@@ -57,7 +57,7 @@ namespace PBGame.IO.Decoding.Osu
 				var customSample = new CustomSampleInfo();
 
 				// Now parse the actual hit objects.
-				HitObject result = null;
+				BaseHitObject result = null;
 				// If this object is a hit circle
 				if((type & HitObjectType.Circle) != 0)
 				{
@@ -224,23 +224,23 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Creates a new parsed circle object.
 		/// </summary>
-		protected abstract HitObject CreateCircle(Vector2 pos, bool isNewCombo, int comboOffset);
+		protected abstract BaseHitObject CreateCircle(Vector2 pos, bool isNewCombo, int comboOffset);
 
 		/// <summary>
 		/// Creates a new parsed slider object.
 		/// </summary>
-		protected abstract HitObject CreateSlider(Vector2 pos, bool isNewCombo, int comboOffset, Vector2[] controlPoints,
+		protected abstract BaseHitObject CreateSlider(Vector2 pos, bool isNewCombo, int comboOffset, Vector2[] controlPoints,
 			float length, PathType pathType, int repeatCount, List<List<SoundInfo>> nodeSamples);
 
 		/// <summary>
 		/// Creates a new parsed spinner object.
 		/// </summary>
-		protected abstract HitObject CreateSpinner(Vector2 pos, bool isNewCombo, int comboOffset, float endTime);
+		protected abstract BaseHitObject CreateSpinner(Vector2 pos, bool isNewCombo, int comboOffset, float endTime);
 
 		/// <summary>
 		/// Creates a new parsed hold object.
 		/// </summary>
-		protected abstract HitObject CreateHold(Vector2 pos, bool isNewCombo, int comboOffset, float endTime);
+		protected abstract BaseHitObject CreateHold(Vector2 pos, bool isNewCombo, int comboOffset, float endTime);
 
 		/// <summary>
 		/// Whether specified control points are labelled PerfectCurve path type but it's actually linear in terms of coordinates.

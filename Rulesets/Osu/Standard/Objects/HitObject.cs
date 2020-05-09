@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace PBGame.Rulesets.Osu.Standard.Objects
 {
-    public abstract class HitObject : Rulesets.Objects.HitObject, IHasComboExtended, IHasPosition {
+    public abstract class HitObject : Rulesets.Objects.BaseHitObject, IHasComboExtended, IHasPosition {
 
         /// <summary>
         /// The base radius of the hit object at cs 0.

@@ -3,7 +3,7 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.UI
 {
-    public class StoryboardLayer : UguiObject, IStoryboardLayer {
+    public class StoryboardLayer : UguiObject {
 
         [InitWithDependency]
         private void Init()

@@ -4,12 +4,21 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.UI
 {
-    public abstract class HudContainer : UguiObject, IHudContainer {
+    public abstract class HudContainer : UguiObject {
 
+        /// <summary>
+        /// Returns the accuracy displayer object.
+        /// </summary>
         public IAccuracyDisplay AccuracyDisplay { get; private set; }
 
+        /// <summary>
+        /// Returns the health displayer object.
+        /// </summary>
         public IHealthDisplay HealthDisplay { get; private set; }
 
+        /// <summary>
+        /// Returns the score displayer object.
+        /// </summary>
         public IScoreDisplay ScoreDisplay { get; private set; }
 
 

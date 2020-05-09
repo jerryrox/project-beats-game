@@ -12,7 +12,7 @@ namespace PBGame.Rulesets.Beats.Standard
         {
         }
 
-        protected override IGameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies)
+        protected override GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies)
         {
             container.CreateChild<GameGui>("beats-standard-gui", dependencies: dependencies);
             return null;

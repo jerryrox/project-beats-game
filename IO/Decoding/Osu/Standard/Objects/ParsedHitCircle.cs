@@ -7,7 +7,7 @@ namespace PBGame.IO.Decoding.Osu.Standard.Objects
 	/// <summary>
 	/// Hit object variant used for parsing hit circles
 	/// </summary>
-	public class ParsedHitCircle : HitObject, IHasPosition, IHasCombo {
+	public class ParsedHitCircle : BaseHitObject, IHasPosition, IHasCombo {
 
 		public Vector2 Position { get; set; }
 

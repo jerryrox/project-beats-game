@@ -8,7 +8,7 @@ using UnityEngine;
 namespace PBGame.Rulesets.Maps
 {
     public abstract class Map<T> : IMap
-        where T : HitObject
+        where T : BaseHitObject
     {
         public abstract MapDetail Detail { get; }
 
@@ -20,7 +20,7 @@ namespace PBGame.Rulesets.Maps
 
         public List<T> HitObjects { get; set; } = new List<T>();
 
-        IEnumerable<HitObject> IMap.HitObjects
+        IEnumerable<BaseHitObject> IMap.HitObjects
         {
             get
             {

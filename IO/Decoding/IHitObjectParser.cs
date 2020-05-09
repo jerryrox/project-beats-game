@@ -7,6 +7,6 @@ namespace PBGame.IO.Decoding
         /// <summary>
         /// Parses the specified line of text into a hit object.
         /// </summary>
-        HitObject Parse(string data);
+        BaseHitObject Parse(string data);
     }
 }

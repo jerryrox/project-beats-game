@@ -8,7 +8,7 @@ using PBGame.Rulesets.Judgements;
 
 namespace PBGame.Rulesets.Objects
 {
-    public class HitObject {
+    public class BaseHitObject {
     
 		/// <summary>
 		/// Offset applied when querying control point using the object's time.
@@ -18,13 +18,18 @@ namespace PBGame.Rulesets.Objects
 
 		private List<SoundInfo> samples;
 
-		private List<HitObject> nestedObjects = new List<HitObject>();
+		private List<BaseHitObject> nestedObjects = new List<BaseHitObject>();
 
 
-		/// <summary>
-		/// The starting time of this hit object in milliseconds.
-		/// </summary>
-		public float StartTime { get; set; }
+        /// <summary>
+        /// The duration of the approach since appearance.
+        /// </summary>
+        public float ApproachDuration { get; set; } = 1000f;
+
+        /// <summary>
+        /// The starting time of this hit object in milliseconds.
+        /// </summary>
+        public float StartTime { get; set; }
 
 		/// <summary>
 		/// The sample control point which this hit object is grouped in.
@@ -53,7 +58,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Returns the list of hit objects nested inside this object.
 		/// </summary>
-		public List<HitObject> NestedObjects { get { return nestedObjects; } }
+		public List<BaseHitObject> NestedObjects { get { return nestedObjects; } }
 
 
 		/// <summary>
@@ -94,7 +99,9 @@ namespace PBGame.Rulesets.Objects
 		{
 			IsHighlight = controlPoints.EffectPointAt(StartTime + ControlPointOffset).IsHighlight;
 
-			if(Timing == null)
+            ApproachDuration = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1000f, 750f, 500f);
+
+            if(Timing == null)
 				Timing = CreateHitTiming();
 			if(Timing != null)
 				Timing.SetDifficulty(difficulty.OverallDifficulty);
@@ -113,7 +120,7 @@ namespace PBGame.Rulesets.Objects
 		/// <summary>
 		/// Adds specified hit object as nested object.
 		/// </summary>
-		protected void AddNestedObject(HitObject obj) { NestedObjects.Add(obj); }
+		protected void AddNestedObject(BaseHitObject obj) { NestedObjects.Add(obj); }
 
     }
 }

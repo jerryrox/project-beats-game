@@ -10,7 +10,7 @@ using UnityEngine;
 namespace PBGame.Rulesets.Maps
 {
     public class PlayableMap<T> : Map<T>, IPlayableMap
-        where T : HitObject
+        where T : BaseHitObject
     {
         public IOriginalMap OriginalMap { get; private set; }
 

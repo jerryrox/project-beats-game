@@ -5,6 +5,8 @@ using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
+using PBFramework.Data;
+using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace PBGame.Rulesets
 {
     // TODO: Integrate music controller.
     public abstract class GameSession<T> : IGameSession<T>
-        where T : HitObject
+        where T : BaseHitObject
     {
         public event Action OnHardInit;
         public event Action OnSoftInit;
@@ -33,7 +35,7 @@ namespace PBGame.Rulesets
 
         public IScoreProcessor ScoreProcessor { get; private set; }
 
-        public IGameGui GameGui { get; private set; }
+        public GameGui GameGui { get; private set; }
 
         /// <summary>
         /// Dependencies of the game session.
@@ -159,22 +161,11 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Creates a new instance of the game gui under the specified container object.
         /// </summary>
-        protected abstract IGameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies);
+        protected abstract GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies);
 
         /// <summary>
         /// Creates a new instance of the score processor.
         /// </summary>
         protected abstract IScoreProcessor CreateScoreProcessor();
-
-
-        /// <summary>
-        /// Types of game disposal action.
-        /// </summary>
-        protected enum DisposeType
-        {
-            ForceQuit = 0,
-            Complete,
-            Retry,
-        }
     }
 }

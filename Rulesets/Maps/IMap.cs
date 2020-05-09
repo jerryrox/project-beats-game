@@ -31,7 +31,7 @@ namespace PBGame.Rulesets.Maps
 		/// <summary>
 		/// Returns the list of hit objects in the map.
 		/// </summary>
-		IEnumerable<HitObject> HitObjects { get; }
+		IEnumerable<BaseHitObject> HitObjects { get; }
 
         /// <summary>
         /// Returns the number of hit objects.

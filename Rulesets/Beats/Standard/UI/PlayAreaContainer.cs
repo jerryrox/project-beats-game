@@ -6,7 +6,7 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
-    public class PlayAreaContainer : UguiObject, Rulesets.UI.IPlayAreaContainer {
+    public class PlayAreaContainer : Rulesets.UI.PlayAreaContainer {
 
         [InitWithDependency]
         private void Init()

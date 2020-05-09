@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using PBGame.Rulesets.Objects;
 
 using HitObject = PBGame.Rulesets.Osu.Standard.Objects.HitObject;
-using BaseHitObject = PBGame.Rulesets.Objects.HitObject;
+using BaseHitObject = PBGame.Rulesets.Objects.BaseHitObject;
 
 namespace PBGame.Rulesets.Osu.Standard.Maps
 {

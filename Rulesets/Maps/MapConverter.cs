@@ -7,7 +7,7 @@ using PBGame.Rulesets.Objects;
 namespace PBGame.Rulesets.Maps
 {
 	public abstract class MapConverter<T> : IMapConverter
-        where T : HitObject
+        where T : BaseHitObject
     {
 		public IOriginalMap Map { get; private set; }
 
@@ -47,12 +47,12 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// Converts specified hit object in to game-specific variant of the object.
         /// </summary>
-        protected abstract IEnumerable<T> ConvertHitObjects(HitObject hitObject);
+        protected abstract IEnumerable<T> ConvertHitObjects(BaseHitObject hitObject);
 
 		/// <summary>
 		/// Converts the specified hit objects in to game-specific variant of hit objects.
 		/// </summary>
-		private List<T> ConvertHitObjects(IEnumerable<HitObject> objects)
+		private List<T> ConvertHitObjects(IEnumerable<BaseHitObject> objects)
 		{
 			List<T> newObjects = new List<T>();
 
