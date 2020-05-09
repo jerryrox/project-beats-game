@@ -49,14 +49,9 @@ namespace PBGame.Rulesets
         event Action OnForceQuit;
 
         /// <summary>
-        /// Event called on a successful completion of the game.
+        /// Event called on a full completion of the game.
         /// </summary>
         event Action OnCompletion;
-
-        /// <summary>
-        /// Event called on meeting the failure condition of current game.
-        /// </summary>
-        event Action OnFailure;
 
 
         /// <summary>
@@ -74,6 +69,16 @@ namespace PBGame.Rulesets
         /// </summary>
         GameGui GameGui { get; }
 
+        /// <summary>
+        /// Returns the amount of time in MS to delay before playing the music.
+        /// </summary>
+        float LeadInTime { get; }
+
+
+        /// <summary>
+        /// Returns the duration of play in seconds.
+        /// </summary>
+        int GetPlayTime();
 
         /// <summary>
         /// Sets the map to play.
@@ -124,11 +129,6 @@ namespace PBGame.Rulesets
         /// Invokes play completion event.
         /// </summary>
         void InvokeCompletion();
-
-        /// <summary>
-        /// Invokes game failure event.
-        /// </summary>
-        void InvokeFailure();
     }
 
     public interface IGameSession<T> : IGameSession

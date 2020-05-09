@@ -26,7 +26,6 @@ namespace PBGame.Rulesets
         public event Action OnRetry;
         public event Action OnForceQuit;
         public event Action OnCompletion;
-        public event Action OnFailure;
 
         private IGraphicObject containerObject;
 
@@ -37,11 +36,16 @@ namespace PBGame.Rulesets
 
         public GameGui GameGui { get; private set; }
 
+        public float LeadInTime => Mathf.Max(2000f, CurrentMap.Detail.AudioLeadIn);
+
         /// <summary>
         /// Dependencies of the game session.
         /// Inject this dependency instead when creating the game gui to gain access to this game session instance.
         /// </summary>
         protected IDependencyContainer Dependencies { get; private set; }
+
+        [ReceivesDependency]
+        protected IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
         private IGameScreen GameScreen { get; set; }
@@ -74,6 +78,17 @@ namespace PBGame.Rulesets
             CurrentMap = map;
         }
 
+        public int GetPlayTime()
+        {
+            int playTime = (int)MusicController.Clock.CurrentTime;
+            if (ScoreProcessor.JudgeCount > 0)
+            {
+                playTime -= (int)(CurrentMap.HitObjects.First().StartTime / 1000f);
+                // TODO: Modify play time if using time shift mods.
+            }
+            return playTime;
+        }
+
         public void InvokeHardInit()
         {
             OnHardInit?.Invoke();
@@ -84,17 +99,21 @@ namespace PBGame.Rulesets
             // Initialize score processor
             ScoreProcessor = CreateScoreProcessor();
 
-            OnSoftInit?.Invoke();
+            // Show game gui.
+            GameGui.ShowGame(() =>
+            {
+                // Stop and replay music.
+                MusicController.Stop();
+                MusicController.SetFade(1f);
+                MusicController.Play(LeadInTime);
+
+                OnSoftInit?.Invoke();
+            });
         }
 
         public void InvokeSoftDispose()
         {
-            int playTime = 0; // TODO: Replace with MusicController time.
-            if (ScoreProcessor.JudgeCount > 0)
-            {
-                // playTime -= (int)(CurrentMap.HitObjects.First().StartTime / 1000f);
-                // TODO: Modify play time if using time shift mods.
-            }
+            int playTime = GetPlayTime();
 
             // Record score.
             var recordPromise = GameScreen?.RecordScore(ScoreProcessor, playTime);
@@ -103,7 +122,8 @@ namespace PBGame.Rulesets
                 // Dispose score processor.
                 ScoreProcessor = null;
 
-                OnSoftDispose?.Invoke();
+                // Hide game gui
+                GameGui.HideGame(() => OnSoftDispose?.Invoke());
             };
             recordPromise.Start();
         }
@@ -117,45 +137,59 @@ namespace PBGame.Rulesets
 
         public void InvokePause()
         {
-            // TODO: Pause music, show pause overlay.
+            if(MusicController.IsPlaying)
+                MusicController.Pause();
+
+            // TODO: show pause overlay.
 
             OnPause?.Invoke();
         }
 
         public void InvokeResume()
         {
-            // TODO: Unpause music
+            if(MusicController.IsPaused)
+                MusicController.Play();
 
             OnResume?.Invoke();
         }
 
         public void InvokeRetry()
         {
-            // TODO: Game GUI fade out
-            // TODO: OnRetry event emit & Soft dispose -> Soft init
-            // TODO: Game GUI fade in
+            EventBinder<Action> onDispose = new EventBinder<Action>(e => OnSoftDispose += e, e => OnSoftDispose -= e);
+            onDispose.IsOneTime = true;
+            onDispose.SetHandler(() =>
+            {
+                OnRetry?.Invoke();
+                InvokeSoftInit();
+            });
+            InvokeSoftDispose();
         }
 
         public void InvokeForceQuit()
         {
-            // TODO: SoftDispose -> GameScreen.ExitGame<PrepareScreen>() & OnForceQuit event emit;
+            EventBinder<Action> onDispose = new EventBinder<Action>(e => OnSoftDispose += e, e => OnSoftDispose -= e);
+            onDispose.IsOneTime = true;
+            onDispose.SetHandler(() =>
+            {
+                OnForceQuit?.Invoke();
+                GameScreen.ExitGame<PrepareScreen>();
+            });
             InvokeSoftDispose();
         }
 
         public void InvokeCompletion()
         {
-            // TODO: SoftDispose -> Game GUI fade out & OnCompletion event emit
-            // TODO: Either wait for 3 seconds or listen to escape key trigger.
-            // TODO: GameScreen.ExitGame<ResultScreen>()
-        }
+            EventBinder<Action> onDispose = new EventBinder<Action>(e => OnSoftDispose += e, e => OnSoftDispose -= e);
+            onDispose.IsOneTime = true;
+            onDispose.SetHandler(() =>
+            {
+                OnCompletion?.Invoke();
 
-        public void InvokeFailure()
-        {
-            OnFailure?.Invoke();
-
-            // TODO: Failure effect -> Failure overlay
-            // TODO: If retry, SotDispose -> SoftInit
-            // TODO: If exit, SoftDispose -> GameScreen.ExitGame<PrepareScreen>()
+                // TODO: Wait for completion timeout to auto navigate to results.
+                // TODO: Navigate to ResultScreen.
+                GameScreen.ExitGame<PrepareScreen>(); // GameScreen.ExitGame<ResultScreen>();
+            });
+            InvokeSoftDispose();
         }
 
         /// <summary>

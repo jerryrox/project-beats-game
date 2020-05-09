@@ -17,10 +17,6 @@ namespace PBGame.Rulesets.Scoring
 
 		public event Action<JudgementResult> OnNewJudgement;
 
-		public event Action OnFailed;
-
-        public event Func<IScoreProcessor, bool> OnFailConfirmation;
-
 
 		/// <summary>
 		/// Table of counters for each hit result type.
@@ -73,7 +69,7 @@ namespace PBGame.Rulesets.Scoring
 
         public BindableInt Score { get; private set; } = new BindableInt(0);
 
-        public BindableFloat Health { get; private set; } = new BindableFloat(1f);
+        public BindableFloat Health { get; private set; } = new BindableFloat(0f);
 
         public BindableDouble Accuracy { get; private set; } = new BindableDouble(0f);
 
@@ -81,16 +77,15 @@ namespace PBGame.Rulesets.Scoring
 
         public virtual bool IsFinished => results.Count == maxJudgements;
 
-        public virtual bool IsFailed { get; protected set; }
+        public virtual bool IsFailed { get; protected set; } = false;
 
-		public int JudgeCount => results.Count;
+        public int JudgeCount => results.Count;
 
 
 		protected ScoreProcessor()
 		{
             Combo.OnValueChanged += (combo, _) => HighestCombo.Value = Math.Max(combo, HighestCombo.Value);
             Accuracy.OnValueChanged += (acc, _) => Ranking.Value = CalculateRank(acc);
-            OnFailConfirmation += (processor) => Health.Value <= 0f;
 
 			resultCounts[HitResultType.Miss] = 0;
 			resultCounts[HitResultType.Bad] = 0;
@@ -119,7 +114,6 @@ namespace PBGame.Rulesets.Scoring
         public virtual void ProcessJudgement(JudgementResult result)
         {
             ApplyResult(result);
-            CheckFail();
             InvokeNewJudgement(result);
         }
 
@@ -131,23 +125,6 @@ namespace PBGame.Rulesets.Scoring
 
             OnLastJudgement = null;
             OnNewJudgement = null;
-            OnFailed = null;
-            OnFailConfirmation = null;
-        }
-
-		/// <summary>
-		/// Checks for fail condition.
-		/// </summary>
-        protected void CheckFail()
-        {
-			if(IsFailed || OnFailConfirmation == null)
-				return;
-			if(!OnFailConfirmation.Invoke(this))
-				return;
-				
-			IsFailed = true;
-			if(OnFailed != null)
-				OnFailed();
         }
 
 		/// <summary>
