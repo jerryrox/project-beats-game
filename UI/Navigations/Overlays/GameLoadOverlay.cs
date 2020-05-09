@@ -9,6 +9,8 @@ using PBGame.Rulesets;
 using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
+using PBFramework.Audio;
+using PBFramework.Utils;
 using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -55,6 +57,9 @@ namespace PBGame.UI.Navigations.Overlays
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
 
+        [ReceivesDependency]
+        private IMusicController MusicController { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -80,21 +85,35 @@ namespace PBGame.UI.Navigations.Overlays
                 loadIndicator.Size = new Vector2(88f, 88f);
             }
 
+            float showDur = Mathf.Max(infoDisplayer.ShowAniDuration, loadIndicator.ShowAniDuration);
             componentShowAni = new Anime();
             componentShowAni.AddEvent(0f, () =>
             {
                 infoDisplayer.Show();
                 loadIndicator.Show();
             });
-            componentShowAni.AddEvent(Mathf.Max(infoDisplayer.ShowAniDuration, loadIndicator.ShowAniDuration) + ShowAniEndDelay, OnShowAniEnd);
+            componentShowAni.AnimateFloat(v => MusicController.SetFade(v))
+                .AddTime(0f, 1f, EaseType.QuadEaseOut)
+                .AddTime(showDur, 0.5f)
+                .Build();
+            componentShowAni.AddEvent(showDur + ShowAniEndDelay, OnShowAniEnd);
 
+            float hideDur = Mathf.Max(infoDisplayer.HideAniDuration, loadIndicator.HideAniDuration);
             componentHideAni = new Anime();
             componentHideAni.AddEvent(0f, () =>
             {
                 infoDisplayer.Hide();
                 loadIndicator.Hide();
             });
-            componentHideAni.AddEvent(Mathf.Max(infoDisplayer.HideAniDuration, loadIndicator.HideAniDuration), OnHideAniEnd);
+            componentHideAni.AnimateFloat(v => MusicController.SetFade(v))
+                .AddTime(0f, 0.5f, EaseType.QuadEaseOut)
+                .AddTime(hideDur, 0f)
+                .Build();
+            componentHideAni.AddEvent(hideDur, () =>
+            {
+                MusicController.SetFade(1f);
+                OnHideAniEnd();
+            });
         }
 
         protected override void OnDisable()
@@ -154,6 +173,9 @@ namespace PBGame.UI.Navigations.Overlays
                 componentShowAni.Stop();
                 componentHideAni.Stop();
 
+                // Revert volume fade.
+                MusicController.SetFade(1f);
+
                 NavigateToScreen<PrepareScreen>();
             }
         }
@@ -166,6 +188,10 @@ namespace PBGame.UI.Navigations.Overlays
         {
             OverlayNavigator.Hide(this);
             ScreenNavigator.Show<T>();
+
+            // Start the game straight away.
+            if(typeof(T) == typeof(GameScreen))
+                GameScreen.StartInitialGame();
         }
 
         /// <summary>
