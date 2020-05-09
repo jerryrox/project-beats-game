@@ -18,7 +18,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Amount of offset from a perfect hit timing.
 		/// </summary>
-		public double HitOffset { get; set; }
+		public float HitOffset { get; set; }
 
 		/// <summary>
 		/// The combo before this judgement.
