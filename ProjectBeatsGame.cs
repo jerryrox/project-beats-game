@@ -110,8 +110,8 @@ namespace PBGame
         {
             musicController.OnEnd += () =>
             {
-                // TODO: Loop the music when not in game screen.
-                // if(!(screenNavigator.CurrentScreen is GameScreen))
+                // Loop the music when not in game screen.
+                if(!(screenNavigator.CurrentScreen is GameScreen))
                 {
                     // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
                     // Check whether menu bar exists and try letting the music menu handle music switching.
@@ -151,8 +151,7 @@ namespace PBGame
                 if (mapSelection.Map != null)
                 {
                     // Change loop time based on the screens.
-                    // TODO: Uncomment when game screen is implemented.
-                    if (view is HomeScreen || view is DownloadScreen)// || view is GameScreen)
+                    if (view is HomeScreen || view is DownloadScreen || view is GameScreen)
                         musicController.LoopTime = 0f;
                     else
                         musicController.LoopTime = mapSelection.Map.Metadata.PreviewTime;
