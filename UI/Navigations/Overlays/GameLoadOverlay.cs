@@ -9,8 +9,8 @@ using PBGame.Rulesets;
 using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
+using PBFramework.Inputs;
 using PBFramework.Graphics;
-using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -29,6 +29,8 @@ namespace PBGame.UI.Navigations.Overlays
 
         private IAnime componentShowAni;
         private IAnime componentHideAni;
+
+        private IKey escapeKey;
 
 
         protected override int OverlayDepth => ViewDepths.GameLoadOverlay;
@@ -95,6 +97,22 @@ namespace PBGame.UI.Navigations.Overlays
             componentHideAni.AddEvent(Mathf.Max(infoDisplayer.HideAniDuration, loadIndicator.HideAniDuration), OnHideAniEnd);
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            SetBindEscape(false);
+        }
+
+        public override bool ProcessInput()
+        {
+            if (escapeKey.State.Value == InputState.Press)
+            {
+                ChangeScreen(false);
+            }
+            return false;
+        }
+
         protected override void OnPreShow()
         {
             base.OnPreShow();
@@ -105,10 +123,13 @@ namespace PBGame.UI.Navigations.Overlays
             var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
 
             // Receive an event when the loading is complete.
-            gameScreen.OnPreInit += OnGameLoadEnd;
+            SetBindGameScreen(true);
 
             // Start loading the game.
             gameScreen.PreInitialize(MapSelection.Map, modeServicer);
+
+            // User may escape out of the game at any time.
+            SetBindEscape(true);
         }
 
         /// <summary>
@@ -116,6 +137,9 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void ChangeScreen(bool toGame)
         {
+            // Don't listen to escape key anymore.
+            SetBindEscape(false);
+
             if (toGame)
             {
                 // If the hide animation is playing, the player must've navigated out before this was executed.
@@ -125,6 +149,11 @@ namespace PBGame.UI.Navigations.Overlays
             }
             else
             {
+                // Stop everything related to game load.
+                GameScreen.CancelLoad();
+                componentShowAni.Stop();
+                componentHideAni.Stop();
+
                 NavigateToScreen<PrepareScreen>();
             }
         }
@@ -137,6 +166,41 @@ namespace PBGame.UI.Navigations.Overlays
         {
             OverlayNavigator.Hide(this);
             ScreenNavigator.Show<T>();
+        }
+
+        /// <summary>
+        /// Binds escape key event.
+        /// </summary>
+        private void SetBindEscape(bool bind)
+        {
+            if (bind)
+            {
+                if (escapeKey == null)
+                {
+                    escapeKey = InputManager.AddKey(KeyCode.Escape);
+                    SetReceiveInputs(true);
+                }
+            }
+            else
+            {
+                if (escapeKey != null)
+                {
+                    InputManager.RemoveKey(KeyCode.Escape);
+                    SetReceiveInputs(false);
+                }
+                escapeKey = null;
+            }
+        }
+
+        /// <summary>
+        /// Sets binding to game screen.
+        /// </summary>
+        private void SetBindGameScreen(bool bind)
+        {
+            if(bind)
+                GameScreen.OnPreInit += OnGameLoadEnd;
+            else
+                GameScreen.OnPreInit -= OnGameLoadEnd;
         }
 
         /// <summary>
@@ -155,7 +219,7 @@ namespace PBGame.UI.Navigations.Overlays
         private void OnGameLoadEnd(bool isSuccess)
         {
             // Unbind from game screen.
-            GameScreen.OnPreInit -= OnGameLoadEnd;
+            SetBindGameScreen(false);
 
             if(componentShowAni.IsPlaying)
                 return;

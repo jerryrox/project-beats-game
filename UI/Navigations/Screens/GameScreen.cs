@@ -14,7 +14,6 @@ using PBFramework;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
-using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
@@ -35,8 +34,6 @@ namespace PBGame.UI.Navigations.Screens
         private IGameSession curSession;
         private IRecord newRecord;
         private IExplicitPromise gameLoader;
-
-        private IKey escapeKey;
 
 
         public bool IsGameLoaded { get; private set; }
@@ -69,13 +66,6 @@ namespace PBGame.UI.Navigations.Screens
             Dependencies.Cache(gameState = new GameState());
         }
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            SetBindEscape(false);
-        }
-
         public void PreInitialize(IPlayableMap map, IModeService modeService)
         {
             CleanupState();
@@ -105,7 +95,6 @@ namespace PBGame.UI.Navigations.Screens
             curMode = modeService;
 
             SetSession(modeService.GetSession(this));
-            SetBindEscape(true);
 
             // Wait for pending initial loaders.
             gameLoader = gameState.GetInitialLoadPromise();
@@ -122,8 +111,6 @@ namespace PBGame.UI.Navigations.Screens
 
         public void StartInitialGame()
         {
-            SetBindEscape(false);
-
             curSession.InvokeSoftInit();
         }
 
@@ -181,16 +168,6 @@ namespace PBGame.UI.Navigations.Screens
                 gameLoader.Revoke();
                 gameLoader = null;
             }
-            EmitInitResult(false);
-        }
-
-        public override bool ProcessInput()
-        {
-            if (escapeKey.State.Value == InputState.Press)
-            {
-                CancelLoad();
-            }
-            return false;
         }
 
         protected override void OnPostHide()
@@ -243,30 +220,6 @@ namespace PBGame.UI.Navigations.Screens
 
             curSession.InvokeHardDispose();
             curSession = null;
-        }
-
-        /// <summary>
-        /// Binds binding of escape key event.
-        /// </summary>
-        private void SetBindEscape(bool bind)
-        {
-            if (bind)
-            {
-                if (escapeKey == null)
-                {
-                    escapeKey = InputManager.AddKey(KeyCode.Escape);
-                    SetReceiveInputs(true);
-                }
-            }
-            else
-            {
-                if (escapeKey != null)
-                {
-                    InputManager.RemoveKey(KeyCode.Escape);
-                    SetReceiveInputs(false);
-                }
-                escapeKey = null;
-            }
         }
     }
 }
