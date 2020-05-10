@@ -36,10 +36,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         private float releaseTime;
 
-        private DraggerView dragger;
+        private DraggerView draggerView;
+        private Dragger dragger;
 
 
-        public DraggerView Dragger => dragger;
+        public DraggerView DraggerView => draggerView;
+
+
 
         IRecycler<DraggerCircleView> IRecyclable<DraggerCircleView>.Recycler { get; set; }
 
@@ -77,8 +80,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             hitAni.AddEvent(hitAni.Duration, () =>
             {
-                if(dragger != null)
-                    dragger.Active = false;
+                if(draggerView != null)
+                    draggerView.Active = false;
             });
         }
 
@@ -89,14 +92,17 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             holdSprite.Scale = Vector3.one;
         }
 
-        public void SetDragger(DraggerView dragger)
+        public void SetDragger(DraggerView draggerView)
         {
             RemoveDragger();
-            if(dragger == null)
+            if(draggerView == null)
                 return;
 
             this.dragger = dragger;
             SetParent(dragger);
+            this.draggerView = draggerView;
+            this.dragger = draggerView.HitObject;
+            SetParent(draggerView);
         }
 
         public void RemoveDragger()
@@ -105,6 +111,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 return;
 
             SetParent(dragger.Parent);
+            SetParent(draggerView.Parent);
+            draggerView = null;
             dragger = null;
         }
 

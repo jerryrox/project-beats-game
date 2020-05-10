@@ -8,14 +8,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// <summary>
         /// Returns the parent dragger view.
         /// </summary>
-        DraggerView Dragger { get; }
+        DraggerView DraggerView { get; }
 
 
         /// <summary>
         /// Sets the parent dragger view.
         /// Specifying a null dragger should be equivalent to calling RemoveDragger.
         /// </summary>
-        void SetDragger(DraggerView dragger);
+        void SetDragger(DraggerView draggerView);
 
         /// <summary>
         /// Disassociates this object from parent dragger.

@@ -21,10 +21,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected IAnime hitAni;
 
-        private DraggerView dragger;
+        private DraggerView draggerView;
 
 
-        public DraggerView Dragger => dragger;
+        public DraggerView DraggerView => draggerView;
 
         IRecycler<DraggerTickView> IRecyclable<DraggerTickView>.Recycler { get; set; }
 
@@ -63,14 +63,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// Sets the parent dragger view.
         /// Specifying a null dragger should be equivalent to calling RemoveDragger.
         /// </summary>
-        public void SetDragger(DraggerView dragger)
+        public void SetDragger(DraggerView draggerView)
         {
             RemoveDragger();
-            if(dragger == null)
+            if(draggerView == null)
                 return;
 
-            this.dragger = dragger;
-            SetParent(dragger);
+            this.draggerView = draggerView;
+            SetParent(draggerView);
         }
 
         /// <summary>
@@ -78,11 +78,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         public void RemoveDragger()
         {
-            if(dragger == null)
+            if(draggerView == null)
                 return;
 
-            SetParent(dragger.Parent);
-            dragger = null;
+            SetParent(draggerView.Parent);
+            draggerView = null;
         }
 
         public override void HardDispose()
@@ -93,9 +93,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected override void EvalPassiveJudgement()
         {
-            if (dragger != null && dragger.StartCircle != null)
+            if (draggerView != null && draggerView.StartCircle != null)
             {
-                SetResult(dragger.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
+                SetResult(draggerView.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
                 if(Result.IsHit)
                     hitAni.PlayFromStart();
             }
