@@ -13,7 +13,9 @@ using UnityEngine.UI;
 
 namespace PBGame.Rulesets.UI.Components
 {
-    public abstract class BaseHitObjectView : UguiObject, IRecyclable<BaseHitObjectView> {
+    public abstract class BaseHitObjectView : UguiObject, IRecyclable<BaseHitObjectView>, IHasAlpha {
+
+        protected CanvasGroup canvasGroup;
 
         protected float startTime;
         protected float endTime;
@@ -81,6 +83,12 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public virtual bool IsFullyJudged => IsJudged && (nestedObjects.Count > 0 ? IsNestedJudged : true);
 
+        public float Alpha
+        {
+            get => canvasGroup.alpha;
+            set => canvasGroup.alpha = value;
+        }
+
         /// <summary>
         /// List of nested objects returned as base hit object view type.
         /// If you'd like to retrieve a more specialized type of nested objects, they should be stored by the derived classes.
@@ -92,6 +100,14 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         IRecycler<BaseHitObjectView> IRecyclable<BaseHitObjectView>.Recycler { get; set; }
 
+
+        [InitWithDependency]
+        private void Init()
+        {
+            canvasGroup = RawObject.AddComponent<CanvasGroup>();
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
+        }
 
         /// <summary>
         /// Returns the judgement result instance after assigning the specified values.
