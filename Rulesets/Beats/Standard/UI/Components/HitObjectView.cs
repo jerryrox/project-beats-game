@@ -56,6 +56,12 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
 
         /// <summary>
+        /// Returns the hit object info this view is representing.
+        /// </summary>
+        public T HitObject => hitObject;
+
+
+        /// <summary>
         /// Sets the specific type of hit object to be represented by this view.
         /// </summary>
         public virtual void SetHitObject(T hitObject)
