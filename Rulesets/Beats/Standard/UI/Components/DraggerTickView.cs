@@ -102,5 +102,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             else
                 base.EvalPassiveJudgement();
         }
+
+        protected void Update()
+        {
+            this.Y = Mathf.Max(draggerView.StartCircle.Position.y, this.Y);
+        }
     }
 }

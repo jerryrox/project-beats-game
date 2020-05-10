@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Rulesets.Objects;
+using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
 using PBFramework.Inputs;
@@ -30,6 +32,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         private bool isHolding;
         private bool wasHolding;
+        private Vector3 myPosition = new Vector3();
 
         /// <summary>
         /// The time when the circle has been flagged release.
@@ -45,6 +48,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
 
         IRecycler<DraggerCircleView> IRecyclable<DraggerCircleView>.Recycler { get; set; }
+
+        [ReceivesDependency]
+        private HitObjectHolder ObjectHolder { get; set; }
 
 
         [InitWithDependency]
@@ -98,8 +104,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             if(draggerView == null)
                 return;
 
-            this.dragger = dragger;
-            SetParent(dragger);
             this.draggerView = draggerView;
             this.dragger = draggerView.HitObject;
             SetParent(draggerView);
@@ -107,10 +111,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         public void RemoveDragger()
         {
-            if(dragger == null)
+            if(draggerView == null)
                 return;
 
-            SetParent(dragger.Parent);
             SetParent(draggerView.Parent);
             draggerView = null;
             dragger = null;
@@ -189,12 +192,24 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             isHolding = false;
             wasHolding = false;
             releaseTime = 0f;
+            myPosition = Vector3.zero;
         }
 
         public override void HardDispose()
         {
             base.HardDispose();
             RemoveDragger();
+        }
+
+        protected void Update()
+        {
+            if(draggerView == null)
+                return;
+
+            float progress = Mathf.Clamp01(GetApproachProgress(ObjectHolder.CurrentTime));
+            myPosition.x = dragger.GetPosition(progress).x;
+            myPosition.y = draggerView.DistUnderHitPos;
+            this.Position = myPosition;
         }
     }
 }
