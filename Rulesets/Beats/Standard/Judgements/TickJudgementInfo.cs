@@ -11,9 +11,9 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 		{
 			switch(result)
 			{
+			case HitResultType.Perfect:
+			case HitResultType.Great:
 			case HitResultType.Good:
-			case HitResultType.Ok:
-			case HitResultType.Bad:
 				return 20;
 			}
 			return 0;
