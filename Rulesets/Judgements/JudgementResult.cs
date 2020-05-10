@@ -5,15 +5,15 @@ namespace PBGame.Rulesets.Judgements
 	/// </summary>
 	public class JudgementResult {
 
-		/// <summary>
-		/// The result type of the judgement.
-		/// </summary>
-		public HitResultType HitResult { get; set; }
+        /// <summary>
+        /// The result type of the judgement.
+        /// </summary>
+        public HitResultType HitResult { get; set; }
 
-		/// <summary>
-		/// Returns the reference judgement information provided by the hit object.
-		/// </summary>
-		public JudgementInfo Judgement { get; }
+        /// <summary>
+        /// Returns the reference judgement information provided by the hit object.
+        /// </summary>
+        public JudgementInfo Judgement { get; }
 
 		/// <summary>
 		/// Amount of offset from a perfect hit timing.
@@ -46,7 +46,20 @@ namespace PBGame.Rulesets.Judgements
 		{
 			Judgement = judegement;
 			HitResult = HitResultType.None;
-		}
-	}
+
+            Reset();
+        }
+
+		/// <summary>
+		/// Resets the properties to inital values.
+		/// </summary>
+        public void Reset()
+        {
+            HitResult = HitResultType.None;
+            HitOffset = 0f;
+            ComboAtJudgement = 0;
+            HighestComboAtJudgement = 0;
+        }
+    }
 }
 

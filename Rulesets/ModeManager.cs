@@ -9,13 +9,13 @@ namespace PBGame.Rulesets
         private Dictionary<GameModeType, IModeService> services;
 
 
-        public ModeManager(IDependencyContainer dependencies)
+        public ModeManager()
         {
             // TODO: Register more game mode services
             services = new Dictionary<GameModeType, IModeService>()
             {
-                { GameModeType.OsuStandard, new Osu.Standard.ModeService(dependencies) },
-                { GameModeType.BeatsStandard, new Beats.Standard.ModeService(dependencies) },
+                { GameModeType.OsuStandard, new Osu.Standard.ModeService() },
+                { GameModeType.BeatsStandard, new Beats.Standard.ModeService() },
             };
         }
 

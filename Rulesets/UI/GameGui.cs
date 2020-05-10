@@ -33,10 +33,14 @@ namespace PBGame.Rulesets.UI
             StoryboardLayer = CreateStoryboardLayer();
             {
                 StoryboardLayer.Depth = 0;
+                StoryboardLayer.Anchor = AnchorType.Fill;
+                StoryboardLayer.Offset = Offset.Zero;
             }
             GameplayLayer = CreateGameplayLayer();
             {
                 GameplayLayer.Depth = 1;
+                GameplayLayer.Anchor = AnchorType.Fill;
+                GameplayLayer.Offset = Offset.Zero;
 
                 GameplayLayer.ShowAni.AddEvent(GameplayLayer.ShowAni.Duration, () =>
                 {
@@ -73,7 +77,7 @@ namespace PBGame.Rulesets.UI
             GameplayLayer.HideAni.PlayFromStart();
         }
 
-        protected virtual StoryboardLayer CreateStoryboardLayer() => new StoryboardLayer();
+        protected virtual StoryboardLayer CreateStoryboardLayer() => CreateChild<StoryboardLayer>("sb-layer");
 
         protected abstract GameplayLayer CreateGameplayLayer();
 
@@ -84,8 +88,11 @@ namespace PBGame.Rulesets.UI
         {
             onShowAction = null;
             onHideAction = null;
-            GameplayLayer.ShowAni.Stop();
-            GameplayLayer.HideAni.Stop();
+            if (GameplayLayer != null)
+            {
+                GameplayLayer.ShowAni.Stop();
+                GameplayLayer.HideAni.Stop();
+            }
         }
     }
 }

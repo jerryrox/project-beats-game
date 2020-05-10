@@ -16,10 +16,6 @@ namespace PBGame.Rulesets.Beats.Standard
         public override GameModeType GameMode => GameModeType.BeatsStandard;
 
 
-        public ModeService(IDependencyContainer dependencies) : base(dependencies)
-        {
-        }
-
         public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => new MapConverter(map);
 
         public override Rulesets.Maps.IMapProcessor CreateProcessor(IPlayableMap map) => new Standard.Maps.MapProcessor(map);
@@ -28,6 +24,11 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override Rulesets.Judgements.HitTiming CreateTiming() => new HitTiming();
 
-        protected override IGameSession CreateSession(IGraphicObject container) => new GameSession(container);
+        protected override IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency)
+        {
+            var session = new GameSession(container);
+            dependency.Inject(session);
+            return session;
+        }
     }
 }

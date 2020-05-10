@@ -105,7 +105,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IGame>(this);
 
-            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager(Dependencies));
+            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
             Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
 

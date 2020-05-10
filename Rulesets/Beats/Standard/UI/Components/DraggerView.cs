@@ -57,10 +57,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             startCircle = DragCircleRecycler.GetNext();
             {
+                startCircle.Active = true;
                 startCircle.Depth = 1000;
                 startCircle.Position = Vector3.zero;
                 startCircle.SetDragger(this);
                 startCircle.SetHitObject(hitObject.NestedObjects[0] as DraggerStartCircle);
+
+                AddNestedObject(startCircle);
             }
 
             // Skip first index because it's a dragger circle.
@@ -70,12 +73,15 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 var tick = hitObject.NestedObjects[i] as DraggerTick;
                 var tickView = TickRecyler.GetNext();
                 {
+                    tickView.Active = true;
                     tickView.SetDragger(this);
                     tickView.SetHitObject(tick);
                     tickView.Position = new Vector3(
                         tick.X,
                         (tick.StartTime - hitObject.StartTime) * distPerTime
                     );
+
+                    AddNestedObject(tickView);
                 }
             }
         }
@@ -114,6 +120,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             if(resultType != HitResultType.Miss)
                 startCircle.PlayHit();
+            else
+                Active = false;
         }
     }
 }

@@ -75,7 +75,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected override void OnDisable()
         {
             base.OnDisable();
-            hitAni.Stop();
+            if(hitAni != null)
+                hitAni.Stop();
         }
 
         public override JudgementResult JudgeInput(float curTime, IInput input)
@@ -96,16 +97,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             return null;
         }
 
-        public override void SoftDispose()
+        protected override void EvalPassiveJudgement()
         {
-            base.SoftDispose();
-            // TODO:
-        }
-
-        public override void HardDispose()
-        {
-            base.HardDispose();
-            // TODO:
+            SetResult(HitResultType.Miss, judgeEndTime);
+            Active = false;
         }
     }
 }

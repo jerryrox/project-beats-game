@@ -1,4 +1,4 @@
-using PBGame.Rulesets.UI;
+using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Beats.Standard.Scoring;
 using PBFramework.Graphics;
@@ -12,10 +12,9 @@ namespace PBGame.Rulesets.Beats.Standard
         {
         }
 
-        protected override GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies)
+        protected override Rulesets.UI.GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies)
         {
-            container.CreateChild<GameGui>("beats-standard-gui", dependencies: dependencies);
-            return null;
+            return container.CreateChild<GameGui>("beats-standard-gui", dependencies: dependencies);
         }
 
         protected override Rulesets.Scoring.IScoreProcessor CreateScoreProcessor() => new ScoreProcessor();

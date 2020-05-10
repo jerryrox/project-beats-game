@@ -23,7 +23,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// <summary>
         /// Sets the specified hit object to be represented by this view.
         /// </summary>
-        public virtual void SetHitObject(HitObject hitObject)
+        public void SetHitObject(HitObject hitObject)
         {
             base.SetBaseHitObject(hitObject);
 
@@ -47,6 +47,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// May return a judgement result if it has been made.
         /// </summary>
         public abstract JudgementResult JudgeInput(float curTime, IInput input);
+
+        public override void HardDispose()
+        {
+            base.HardDispose();
+            xPos = 0f;
+            radius = 0f;
+        }
     }
 
     public abstract class HitObjectView<T> : HitObjectView
@@ -77,6 +84,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public virtual void AddNestedObject(HitObjectView hitObject)
         {
             base.AddBaseNestedObject(hitObject);
+        }
+
+        public override void HardDispose()
+        {
+            base.HardDispose();
+
+            hitObject = null;
         }
     }
 }

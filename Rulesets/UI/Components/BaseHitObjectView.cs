@@ -34,6 +34,11 @@ namespace PBGame.Rulesets.UI.Components
 
 
         /// <summary>
+        /// Returns the base hit object info this view is representing.
+        /// </summary>
+        public BaseHitObject BaseHitObject => hitObject;
+
+        /// <summary>
         /// Returns the hit start time of the object.
         /// </summary>
         public float StartTime => startTime;
@@ -76,12 +81,12 @@ namespace PBGame.Rulesets.UI.Components
         /// <summary>
         /// Returns whether all nested objects have been judged.
         /// </summary>
-        public virtual bool IsNestedJudged => nestedObjects.TrueForAll(o => o.IsJudged);
+        public virtual bool IsNestedJudged => nestedObjects.Count > 0 ? nestedObjects.TrueForAll(o => o.IsJudged) : true;
 
         /// <summary>
         /// Returns whether this object has been fully judged.
         /// </summary>
-        public virtual bool IsFullyJudged => IsJudged && (nestedObjects.Count > 0 ? IsNestedJudged : true);
+        public virtual bool IsFullyJudged => IsJudged && IsNestedJudged;
 
         public float Alpha
         {
@@ -134,8 +139,8 @@ namespace PBGame.Rulesets.UI.Components
                 }
             }
 
-            // Judge self
-            if (!IsJudged)
+            // Judge self only after all nested objects are judged.
+            if (!IsJudged && IsNestedJudged)
             {
                 if (IsPastJudgeEnd(curTime))
                 {
@@ -152,11 +157,12 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public virtual void SoftDispose()
         {
-            if (!Active)
-                return;
-
             Active = false;
-            // TODO:
+
+            if (Result != null)
+            {
+                Result.Reset();
+            }
         }
 
         /// <summary>
@@ -204,6 +210,16 @@ namespace PBGame.Rulesets.UI.Components
             return (curTime - approachTime) / approachDuration;
         }
 
+        /// <summary>
+        /// Returns the progress of the hit object since start time at specified time.
+        /// </summary>
+        public float GetHitProgress(float curTime)
+        {
+            if(hasEndTime == null)
+                return 0f;
+            return (curTime - startTime) / duration;
+        }
+
         public virtual void OnRecycleNew() => HardDispose();
 
         public virtual void OnRecycleDestroy() => HardDispose();
@@ -238,9 +254,6 @@ namespace PBGame.Rulesets.UI.Components
         /// Evaluates the judgement of this object in passive context.
         /// It is expected that this method MUST assign judgement result manualy or via SetResult method.
         /// </summary>
-        protected virtual void EvalPassiveJudgement()
-        {
-            SetResult(HitResultType.Miss, judgeEndTime);
-        }
+        protected abstract void EvalPassiveJudgement();
     }
 }

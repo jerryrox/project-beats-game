@@ -94,7 +94,7 @@ namespace PBGame.UI.Navigations.Screens
             curMap = map;
             curMode = modeService;
 
-            SetSession(modeService.GetSession(this));
+            SetSession(modeService.GetSession(this, Dependencies));
 
             // Wait for pending initial loaders.
             gameLoader = gameState.GetInitialLoadPromise();
@@ -207,6 +207,7 @@ namespace PBGame.UI.Navigations.Screens
             ClearSession();
 
             curSession = gameSession;
+            curSession.SetMap(curMap);
             curSession.InvokeHardInit();
         }
 

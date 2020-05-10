@@ -27,7 +27,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             component.CurveAngle = 10f;
             component.UseSmoothEnds = true;
-            component.color = new Color(1f, 1f, 1f, 0.25f);
+            component.color = new Color(1f, 1f, 1f, 0.5f);
 
             var effect = AddEffect(new DefaultShaderEffect());
             effect.StencilOperation = StencilOp.IncrementSaturate;
@@ -63,13 +63,15 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             for (float t = startTime; t < endTime; t += interval)
             {
                 nextTimeSpent = Math.Min(lastTimeSpent + interval, duration);
-                nextPathPos = dragger.GetPosition(nextTimeSpent);
+                nextPathPos = dragger.GetPosition(nextTimeSpent / duration);
                 var line = new Line(
                     new Vector2(lastPathPos.x, lastTimeSpent * distPerTime),
                     new Vector2(nextPathPos.x, nextTimeSpent * distPerTime)
                 );
                 lastTimeSpent = nextTimeSpent;
                 lastPathPos = nextPathPos;
+
+                component.AddLine(line);
             }
         }
 

@@ -17,6 +17,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
     public class PlayAreaContainer : Rulesets.UI.PlayAreaContainer {
 
         private const float DraggerBodyQuality = 2f;
+        private const float DefaultBodyInterval = 0.1f;
 
 
         private ISprite bgSprite;
@@ -25,7 +26,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private PlayAreaFader playAreaFader;
 
         private float distancePerTime;
-        private float draggerBodyInterval;
+        private float draggerBodyInterval = DefaultBodyInterval;
 
 
         /// <summary>
@@ -65,6 +66,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         {
             Dependencies = Dependencies.Clone();
             Dependencies.Cache(this);
+
+            GameSession.OnHardInit += OnHardInit;
+            GameSession.OnHardDispose += OnHardDispose;
 
             bgSprite = CreateChild<UguiSprite>("bg", 0);
             {
@@ -109,9 +113,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 playAreaFader.Y = FadeStartPos;
                 playAreaFader.Height = 10000f;
             }
-
-            GameSession.OnHardInit += OnHardInit;
-            GameSession.OnHardDispose += OnHardDispose;
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private void OnHardDispose()
         {
             distancePerTime = 0f;
-            draggerBodyInterval = 0f;
+            draggerBodyInterval = DefaultBodyInterval;
         }
     }
 }

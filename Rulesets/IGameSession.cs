@@ -74,6 +74,11 @@ namespace PBGame.Rulesets
         /// </summary>
         float LeadInTime { get; }
 
+        /// <summary>
+        /// Returns whether the game session is currently playing.
+        /// </summary>
+        bool IsPlaying { get; }
+
 
         /// <summary>
         /// Returns the duration of play in seconds.

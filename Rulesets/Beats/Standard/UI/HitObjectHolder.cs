@@ -40,12 +40,22 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         [ReceivesDependency]
         private IMusicController MusicController { get; set; }
 
+        [ReceivesDependency]
+        private PlayAreaContainer PlayArea { get; set; }
+
 
         [InitWithDependency]
         private void Init()
         {
             Dependencies = Dependencies.Clone();
             Dependencies.Cache(this);
+
+            if (GameSession != null)
+            {
+                GameSession.OnHardInit += OnHardInit;
+                GameSession.OnSoftDispose += OnSoftDispose;
+                GameSession.OnHardDispose += OnHardDispose;
+            }
 
             hitCircleRecycler = new ManagedRecycler<HitCircleView>(CreateHitCircle);
             draggerCircleRecycler = new ManagedRecycler<DraggerCircleView>(CreateDraggerCircle);
@@ -57,17 +67,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
             // Add tick and drag circle as dependencies for dragger view to draw its nested objects.
             Dependencies.CacheAs<IRecycler<DraggerCircleView>>(draggerCircleRecycler);
             Dependencies.CacheAs<IRecycler<DraggerTickView>>(tickRecycler);
-
-            if (GameSession != null)
-            {
-                GameSession.OnHardInit += OnHardInit;
-                GameSession.OnSoftDispose += OnSoftDispose;
-                GameSession.OnHardDispose += OnHardDispose;
-            }
         }
 
         protected void Update()
         {
+            if(!GameSession.IsPlaying)
+                return;
+                
             float curTime = CurrentTime;
             bool advanceLowIndex = true;
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
@@ -80,6 +86,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
                 if (view.IsFullyJudged)
                 {
+                    // Clamp position
+                    view.Y = PlayArea.HitPosition;
+
                     // Advance low index?
                     if (advanceLowIndex)
                         hitObjectViews.AdvanceLowIndex(true);
@@ -88,11 +97,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     advanceLowIndex = false;
 
+                    float approachProgress = view.GetApproachProgress(curTime);
+
                     // If not fully judged and disabled, this should be an upcoming hit object.
                     if (!view.Active)
                     {
                         // If should show, make it active and increase high index.
-                        if (view.GetApproachProgress(curTime) >= 0f)
+                        if (approachProgress >= 0f)
                         {
                             view.Active = true;
                             hitObjectViews.AdvanceHighIndex(true);
@@ -101,6 +112,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                         else
                             break;
                     }
+                    // Move object.
+                    view.Y = Mathf.LerpUnclamped(PlayArea.FallStartPos, PlayArea.HitPosition, approachProgress);
                 }
             }
         }

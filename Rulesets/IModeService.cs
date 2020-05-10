@@ -2,6 +2,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Graphics;
+using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets
 {
@@ -54,6 +55,6 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns a new or existing session of this game mode.
         /// </summary>
-        IGameSession GetSession(IGraphicObject container);
+        IGameSession GetSession(IGraphicObject container, IDependencyContainer dependency = null);
     }
 }

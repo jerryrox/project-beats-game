@@ -33,7 +33,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		{
 			base.ApplyMapPropertiesSelf (controlPoints, difficulty);
 
-			ApproachDuration = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 1800, 1200, 600);
+			ApproachDuration = MapDifficulty.GetDifficultyValue(difficulty.ApproachRate, 2000, 1400, 700);
 			Scale = MapDifficulty.GetDifficultyValue(difficulty.CircleSize, 1, 0.85f, 0.7f);
 		}
 

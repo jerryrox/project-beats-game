@@ -30,6 +30,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected IAnime holdAni;
         protected IAnime releaseAni;
 
+        private DraggerView draggerView;
+        private Dragger dragger;
+
         private bool isHolding;
         private bool wasHolding;
         private Vector3 myPosition = new Vector3();
@@ -39,13 +42,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         private float releaseTime;
 
-        private DraggerView draggerView;
-        private Dragger dragger;
-
 
         public DraggerView DraggerView => draggerView;
-
-
 
         IRecycler<DraggerCircleView> IRecyclable<DraggerCircleView>.Recycler { get; set; }
 
@@ -94,8 +92,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected override void OnDisable()
         {
             base.OnDisable();
-            holdSprite.Alpha = 0f;
-            holdSprite.Scale = Vector3.one;
+            if (holdSprite != null)
+            {
+                holdSprite.Alpha = 0f;
+                holdSprite.Scale = Vector3.one;
+            }
         }
 
         public void SetDragger(DraggerView draggerView)
@@ -107,6 +108,15 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             this.draggerView = draggerView;
             this.dragger = draggerView.HitObject;
             SetParent(draggerView);
+
+            // Override judgement end time so it doesn't go over any other nested object's start time
+            // nor the dragger's end time.
+            judgeEndTime = Mathf.Min(judgeEndTime, dragger.EndTime);
+            foreach (var o in dragger.NestedObjects)
+            {
+                if(o != hitObject)
+                    judgeEndTime = Mathf.Min(judgeEndTime, o.StartTime);
+            }
         }
 
         public void RemoveDragger()
@@ -191,8 +201,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             isHolding = false;
             wasHolding = false;
-            releaseTime = 0f;
             myPosition = Vector3.zero;
+            releaseTime = 0f;
         }
 
         public override void HardDispose()
@@ -201,12 +211,21 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             RemoveDragger();
         }
 
+        protected override void EvalPassiveJudgement()
+        {
+            SetResult(HitResultType.Miss, judgeEndTime);
+        }
+
         protected void Update()
         {
             if(draggerView == null)
                 return;
 
-            float progress = Mathf.Clamp01(GetApproachProgress(ObjectHolder.CurrentTime));
+            float progress = draggerView.GetHitProgress(ObjectHolder.CurrentTime);
+            if(progress < 0f)
+                return;
+            else if(progress > 1f)
+                progress = 1f;
             myPosition.x = dragger.GetPosition(progress).x;
             myPosition.y = draggerView.DistUnderHitPos;
             this.Position = myPosition;

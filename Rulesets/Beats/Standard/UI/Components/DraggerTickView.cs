@@ -53,7 +53,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected override void OnDisable()
         {
             base.OnDisable();
-            hitAni.Stop();
+            if (hitAni != null)
+            {
+                hitAni.Stop();
+            }
         }
 
         // Ticks shouldn't be judged by direct input.
@@ -98,9 +101,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 SetResult(draggerView.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
                 if(Result.IsHit)
                     hitAni.PlayFromStart();
+                else
+                    Active = false;
             }
             else
-                base.EvalPassiveJudgement();
+            {
+                SetResult(HitResultType.Miss, 0f);
+                Active = false;
+            }
         }
 
         protected void Update()

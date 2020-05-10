@@ -5,9 +5,11 @@ using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
+using PBFramework.UI.Navigations;
 using PBFramework.Data;
 using PBFramework.Audio;
 using PBFramework.Graphics;
+using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -38,17 +40,24 @@ namespace PBGame.Rulesets
 
         public float LeadInTime => Mathf.Max(2000f, CurrentMap.Detail.AudioLeadIn);
 
+        public bool IsPlaying { get; private set; }
+
         /// <summary>
         /// Dependencies of the game session.
         /// Inject this dependency instead when creating the game gui to gain access to this game session instance.
         /// </summary>
         protected IDependencyContainer Dependencies { get; private set; }
 
+        /// <summary>
+        /// Returns the game screen instance.
+        /// </summary>
+        private GameScreen GameScreen => ScreenNavigator.Get<GameScreen>();
+
         [ReceivesDependency]
         protected IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
-        private IGameScreen GameScreen { get; set; }
+        private IScreenNavigator ScreenNavigator { get; set; }
 
 
         protected GameSession(IGraphicObject container)
@@ -69,7 +78,7 @@ namespace PBGame.Rulesets
             GameGui = CreateGameGui(containerObject, this.Dependencies);
             {
                 GameGui.Anchor = AnchorType.Fill;
-                GameGui.RawSize = Vector2.zero;
+                GameGui.Offset = Offset.Zero;
             }
         }
 
@@ -91,6 +100,8 @@ namespace PBGame.Rulesets
 
         public void InvokeHardInit()
         {
+            IsPlaying = false;
+            
             OnHardInit?.Invoke();
         }
 
@@ -98,14 +109,18 @@ namespace PBGame.Rulesets
         {
             // Initialize score processor
             ScoreProcessor = CreateScoreProcessor();
+            ScoreProcessor.ApplyMap(CurrentMap);
+            ScoreProcessor.OnLastJudgement += InvokeCompletion;
+
+            MusicController.Stop();
+            MusicController.SetFade(1f);
 
             // Show game gui.
             GameGui.ShowGame(() =>
             {
-                // Stop and replay music.
-                MusicController.Stop();
-                MusicController.SetFade(1f);
                 MusicController.Play(LeadInTime);
+
+                IsPlaying = true;
 
                 OnSoftInit?.Invoke();
             });
@@ -113,6 +128,8 @@ namespace PBGame.Rulesets
 
         public void InvokeSoftDispose()
         {
+            IsPlaying = false;
+
             int playTime = GetPlayTime();
 
             // Record score.
@@ -130,6 +147,7 @@ namespace PBGame.Rulesets
 
         public void InvokeHardDispose()
         {
+            IsPlaying = false;
             CurrentMap = null;
 
             OnHardDispose?.Invoke();
@@ -186,8 +204,15 @@ namespace PBGame.Rulesets
                 OnCompletion?.Invoke();
 
                 // TODO: Wait for completion timeout to auto navigate to results.
+                SynchronizedTimer timer = new SynchronizedTimer()
+                {
+                    Limit = 2f,
+                };
+                timer.OnFinished += delegate { GameScreen.ExitGame<PrepareScreen>(); };
+                timer.Start();
+
                 // TODO: Navigate to ResultScreen.
-                GameScreen.ExitGame<PrepareScreen>(); // GameScreen.ExitGame<ResultScreen>();
+                // GameScreen.ExitGame<ResultScreen>();
             });
             InvokeSoftDispose();
         }
