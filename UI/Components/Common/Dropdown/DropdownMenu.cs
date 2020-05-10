@@ -203,9 +203,9 @@ namespace PBGame.UI.Components.Common.Dropdown
             hideAni.PlayFromStart();
         }
 
-        void IRecyclable<DropdownMenu>.OnRecycleNew() {}
+        void IRecyclable.OnRecycleNew() {}
 
-        void IRecyclable<DropdownMenu>.OnRecycleDestroy() {}
+        void IRecyclable.OnRecycleDestroy() {}
 
         /// <summary>
         /// Makes sure the menu does not go outside of the view boundary.
