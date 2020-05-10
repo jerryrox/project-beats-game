@@ -15,7 +15,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
     public class DraggerBody : UguiObject<CurvedLineDrawable>
     {
         private Dragger dragger;
-        private SliderPath path;
 
 
         [ReceivesDependency]
@@ -41,8 +40,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public void SetDragger(Dragger dragger)
         {
             this.dragger = dragger;
-            this.path = dragger.Path;
-
             component.CurveRadius = dragger.Radius;
         }
 
