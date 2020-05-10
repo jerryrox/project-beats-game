@@ -26,6 +26,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private RangedList<HitObjectView> hitObjectViews;
 
 
+        /// <summary>
+        /// Returns the current music play time.
+        /// </summary>
+        public float CurrentTime => MusicController.CurrentTime;
+
         [ReceivesDependency]
         private IGameSession GameSession { get; set; }
 
@@ -63,7 +68,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
         protected void Update()
         {
-            float curTime = MusicController.CurrentTime;
+            float curTime = CurrentTime;
             bool advanceLowIndex = true;
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
             {
