@@ -85,6 +85,12 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             dragger = null;
         }
 
+        public override void HardDispose()
+        {
+            base.HardDispose();
+            RemoveDragger();
+        }
+
         protected override void EvalPassiveJudgement()
         {
             if (dragger != null && dragger.StartCircle != null)
