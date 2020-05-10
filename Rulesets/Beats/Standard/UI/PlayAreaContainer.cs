@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Rulesets.Beats.Standard.Maps;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Graphics;
 using PBFramework.UI;
@@ -15,10 +16,16 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 {
     public class PlayAreaContainer : Rulesets.UI.PlayAreaContainer {
 
+        private const float DraggerBodyQuality = 2f;
+
+
         private ISprite bgSprite;
         private ISprite hitBarSprite;
         private HitObjectHolder hitObjectHolder;
         private PlayAreaFader playAreaFader;
+
+        private float distancePerTime;
+        private float draggerBodyInterval;
 
 
         /// <summary>
@@ -29,15 +36,36 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// <summary>
         /// Returns the Y position which the hit object fade starts from.
         /// </summary>
-        public float FadeStartPos = 2000f;
+        public float FadeStartPos => 2000f;
+
+        /// <summary>
+        /// Returns the position where hit objects spawn and approach from.
+        /// </summary>
+        public float FallStartPos => FadeStartPos + playAreaFader.FadeSize;
+
+        /// <summary>
+        /// Returns the amount of Y position approached per millisecond.
+        /// </summary>
+        public float DistancePerTime => distancePerTime;
+
+        /// <summary>
+        /// Returns the interval at which the dragger body is sampled from path.
+        /// </summary>
+        public float DraggerBodyInterval => draggerBodyInterval;
 
         [ReceivesDependency]
         private IRoot3D Root3D { get; set; }
+
+        [ReceivesDependency]
+        private IGameSession GameSession { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
+            Dependencies = Dependencies.Clone();
+            Dependencies.Cache(this);
+
             bgSprite = CreateChild<UguiSprite>("bg", 0);
             {
                 bgSprite.Anchor = AnchorType.Fill;
@@ -81,6 +109,30 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 playAreaFader.Y = FadeStartPos;
                 playAreaFader.Height = 10000f;
             }
+
+            GameSession.OnHardInit += OnHardInit;
+            GameSession.OnHardDispose += OnHardDispose;
+        }
+
+        /// <summary>
+        /// Event called on session hard init.
+        /// </summary>
+        private void OnHardInit()
+        {
+            var map = GameSession.CurrentMap as Map;
+            var dummyObj = map.HitObjects[0];
+
+            distancePerTime = (FallStartPos - HitPosition) / dummyObj.ApproachDuration;
+            draggerBodyInterval = dummyObj.Radius / (distancePerTime * DraggerBodyQuality);
+        }
+
+        /// <summary>
+        /// Event called on session hard dispose.
+        /// </summary>
+        private void OnHardDispose()
+        {
+            distancePerTime = 0f;
+            draggerBodyInterval = 0f;
         }
     }
 }
