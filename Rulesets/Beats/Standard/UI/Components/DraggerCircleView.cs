@@ -25,6 +25,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected ISprite holdSprite;
 
+        protected IAnime holdAni;
+        protected IAnime releaseAni;
+
         private bool isHolding;
         private bool wasHolding;
 
@@ -49,7 +52,35 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 holdSprite.Anchor = AnchorType.Fill;
                 holdSprite.Offset = Offset.Zero;
                 holdSprite.SpriteName = "circle-320";
+                holdSprite.Alpha = 0f;
             }
+
+            holdAni = new Anime();
+            holdAni.AnimateFloat(a => holdSprite.Alpha = a)
+                .AddTime(0f, () => holdSprite.Alpha)
+                .AddTime(0.35f, 0.25f)
+                .Build();
+            holdAni.AnimateVector3(s => holdSprite.Scale = s)
+                .AddTime(0f, () => holdSprite.Scale)
+                .AddTime(0.35f, new Vector3(2f, 2f, 2f))
+                .Build();
+
+            releaseAni = new Anime();
+            releaseAni.AnimateFloat(a => holdSprite.Alpha = a)
+                .AddTime(0f, () => holdSprite.Alpha)
+                .AddTime(0.35f, 0f)
+                .Build();
+            releaseAni.AnimateVector3(s => holdSprite.Scale = s)
+                .AddTime(0f, () => holdSprite.Scale)
+                .AddTime(0.35f, Vector3.one)
+                .Build();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            holdSprite.Alpha = 0f;
+            holdSprite.Scale = Vector3.one;
         }
 
         public void SetDragger(DraggerView dragger)
@@ -76,18 +107,22 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         public void SetHold(bool holding, float curTime)
         {
-            // TODO: Animation feedback
-
             // Held down
             if (holding && wasHolding)
             {
                 isHolding = true;
+
+                releaseAni.Stop();
+                holdAni.PlayFromStart();
             }
             // Released
             else if(!holding && wasHolding)
             {
                 isHolding = false;
                 releaseTime = curTime;
+
+                holdAni.Stop();
+                releaseAni.PlayFromStart();
             }
 
             wasHolding = isHolding;
