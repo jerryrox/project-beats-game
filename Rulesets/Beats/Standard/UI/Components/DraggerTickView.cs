@@ -47,6 +47,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .AddTime(0f, Vector3.one, EaseType.CubicEaseOut)
                 .AddTime(0.5f, new Vector3(2f, 2f, 2f))
                 .Build();
+            hitAni.AddEvent(hitAni.Duration, () => Active = false);
         }
 
         protected override void OnDisable()
