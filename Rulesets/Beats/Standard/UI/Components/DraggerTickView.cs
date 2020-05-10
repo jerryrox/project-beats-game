@@ -88,7 +88,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected override void EvalPassiveJudgement()
         {
             if (dragger != null && dragger.StartCircle != null)
+            {
                 SetResult(dragger.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
+                if(Result.IsHit)
+                    hitAni.PlayFromStart();
+            }
             else
                 base.EvalPassiveJudgement();
         }

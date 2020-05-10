@@ -87,8 +87,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             {
                 float offset = GetHitOffset(curTime);
                 var resultType = hitObject.Timing.GetHitResult(offset);
-                if(resultType != HitResultType.None)
+                if (resultType != HitResultType.None)
+                {
+                    hitAni.PlayFromStart();
                     return SetResult(resultType, offset);
+                }
             }
             return null;
         }

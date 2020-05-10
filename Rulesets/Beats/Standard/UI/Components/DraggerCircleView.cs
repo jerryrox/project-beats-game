@@ -103,6 +103,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         }
 
         /// <summary>
+        /// Plays the hit animation.
+        /// </summary>
+        public void PlayHit() => hitAni.PlayFromStart();
+
+        /// <summary>
         /// Sets whether dragger is holding.
         /// </summary>
         public void SetHold(bool holding, float curTime)
@@ -142,6 +147,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public override JudgementResult JudgeInput(float curTime, IInput input)
         {
             JudgementResult result = base.JudgeInput(curTime, input);
+            if (result != null)
+            {
+                // Don't play hit animation just yet.
+                hitAni.Stop();
+            }
 
             switch (input.State.Value)
             {
