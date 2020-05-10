@@ -42,7 +42,22 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected override void EvalPassiveJudgement()
         {
+            var judgementsCount = BaseNestedObjects.Count;
+            var judgementsHit = BaseNestedObjects.Count(o => o.Result.IsHit);
+            var hitRatio = (float)judgementsHit / judgementsCount;
 
+            HitResultType resultType = HitResultType.Miss;
+            if (hitRatio == 1f && startCircle.Result.HitResult == HitResultType.Perfect)
+                resultType = HitResultType.Perfect;
+            else if (hitRatio >= 0.5f && startCircle.Result.HitResult <= HitResultType.Good)
+                resultType = HitResultType.Great;
+            else if (hitRatio > 0f)
+                resultType = HitResultType.Good;
+
+            SetResult(resultType, judgeEndTime);
+
+            if(resultType != HitResultType.Miss)
+                startCircle.PlayHit();
         }
     }
 }
