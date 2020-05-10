@@ -74,6 +74,12 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .AddTime(0f, () => holdSprite.Scale)
                 .AddTime(0.35f, Vector3.one)
                 .Build();
+
+            hitAni.AddEvent(hitAni.Duration, () =>
+            {
+                if(dragger != null)
+                    dragger.Active = false;
+            });
         }
 
         protected override void OnDisable()
@@ -166,6 +172,15 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                     break;
             }
             return result;
+        }
+
+        public override void SoftDispose()
+        {
+            base.SoftDispose();
+
+            isHolding = false;
+            wasHolding = false;
+            releaseTime = 0f;
         }
 
         public override void HardDispose()
