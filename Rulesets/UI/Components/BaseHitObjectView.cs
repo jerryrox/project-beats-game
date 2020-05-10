@@ -15,15 +15,15 @@ namespace PBGame.Rulesets.UI.Components
 {
     public abstract class BaseHitObjectView : UguiObject, IRecyclable<BaseHitObjectView> {
 
-        private BaseHitObject hitObject;
-        private IHasEndTime hasEndTime;
-
         protected float startTime;
         protected float endTime;
         protected float duration;
         protected float approachDuration;
         protected float approachTime;
         protected float judgeEndTime;
+
+        private BaseHitObject hitObject;
+        private IHasEndTime hasEndTime;
 
         /// <summary>
         /// List of nested objects under this object.
@@ -72,9 +72,20 @@ namespace PBGame.Rulesets.UI.Components
         public virtual bool HasEndTime => hasEndTime != null;
 
         /// <summary>
+        /// Returns whether all nested objects have been judged.
+        /// </summary>
+        public virtual bool IsNestedJudged => nestedObjects.TrueForAll(o => o.IsJudged);
+
+        /// <summary>
         /// Returns whether this object has been fully judged.
         /// </summary>
-        public virtual bool IsFullyJudged => IsJudged && (nestedObjects.Count > 0 ? nestedObjects.TrueForAll(o => o.IsJudged) : true);
+        public virtual bool IsFullyJudged => IsJudged && (nestedObjects.Count > 0 ? IsNestedJudged : true);
+
+        /// <summary>
+        /// List of nested objects returned as base hit object view type.
+        /// If you'd like to retrieve a more specialized type of nested objects, they should be stored by the derived classes.
+        /// </summary>
+        protected List<BaseHitObjectView> BaseNestedObjects => nestedObjects;
 
         /// <summary>
         /// Just a dummy implementation of IRecyclable, only to define the other interface methods virtual.
@@ -121,6 +132,39 @@ namespace PBGame.Rulesets.UI.Components
         }
 
         /// <summary>
+        /// Disposes object state in a way that can be reused immediately later.
+        /// </summary>
+        public virtual void SoftDispose()
+        {
+            if (!Active)
+                return;
+
+            Active = false;
+            // TODO:
+        }
+
+        /// <summary>
+        /// Disposes object state completely for a new session at later time.
+        /// </summary>
+        public virtual void HardDispose()
+        {
+            SoftDispose();
+
+            startTime = 0f;
+            endTime = 0f;
+            duration = 0f;
+            approachDuration = 0f;
+            approachTime = 0f;
+            judgeEndTime = 0f;
+
+            hitObject = null;
+            hasEndTime = null;
+
+            nestedObjects.Clear();
+            Result = null;
+        }
+
+        /// <summary>
         /// Returns the offset from perfect hit timing toward the specified time.
         /// </summary>
         public virtual float GetHitOffset(float curTime)
@@ -144,15 +188,9 @@ namespace PBGame.Rulesets.UI.Components
             return (curTime - approachTime) / approachDuration;
         }
 
-        public virtual void OnRecycleNew()
-        {
-            ClearStates();
-        }
+        public virtual void OnRecycleNew() => HardDispose();
 
-        public virtual void OnRecycleDestroy()
-        {
-            ClearStates();
-        }
+        public virtual void OnRecycleDestroy() => HardDispose();
 
         /// <summary>
         /// Sets the base hit object to be represented by this view.
@@ -168,6 +206,8 @@ namespace PBGame.Rulesets.UI.Components
             approachDuration = hitObject.ApproachDuration;
             approachTime = startTime - approachDuration;
             judgeEndTime = hasEndTime == null ? startTime + hitObject.Timing.LowestSuccessTiming() : endTime;
+
+            Result = new JudgementResult(hitObject.CreateJudgementInfo());
         }
 
         /// <summary>
@@ -185,18 +225,6 @@ namespace PBGame.Rulesets.UI.Components
         protected virtual void EvalPassiveJudgement()
         {
             SetResult(HitResultType.Miss, judgeEndTime);
-        }
-
-        /// <summary>
-        /// Clears all states so the object can be reused for another game.
-        /// </summary>
-        protected virtual void ClearStates()
-        {
-            if(!Active)
-                return;
-
-            Active = false;
-            // TODO:
         }
     }
 }
