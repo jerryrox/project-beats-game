@@ -137,11 +137,6 @@ namespace PBGame.Networking.API.Osu.Responses
             }
         }
 
-        public override void ApplyResponse(IApi api)
-        {
-            // Nothing to do!
-        }
-
         private Task ParseMapsets(JArray beatmapsets, int fromInx, int toInx)
         {
             return Task.Run(() =>
