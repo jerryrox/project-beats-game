@@ -12,12 +12,31 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 {
 	public class MapConverter : Rulesets.Maps.MapConverter<HitObject> {
 
-		public override GameModeType TargetMode { get { return GameModeType.BeatsStandard; } }
+		/// <summary>
+		/// Size of the area where the objects are spawned.
+		/// </summary>
+        public const float AreaSize = 1400f - HitObject.BaseRadius * 2f;
+
+        private Func<float, float> convertPosX;
+        private bool hasCustomPosConverter = false;
+
+
+        public override GameModeType TargetMode { get { return GameModeType.BeatsStandard; } }
 
 		protected override IEnumerable<Type> RequiredTypes { get { yield return typeof(IHasPositionX); } }
 
 
-		public MapConverter(Rulesets.Maps.IOriginalMap map) : base(map) {}
+		public MapConverter(Rulesets.Maps.IOriginalMap map) : base(map)
+		{
+            switch (map.Detail.GameMode)
+            {
+				case GameModeType.OsuStandard:
+					convertPosX = ConvertFromOsu;
+                    hasCustomPosConverter = true;
+                    break;
+				default: convertPosX = ConvertDefault; break;
+            }
+        }
 
 		protected override Rulesets.Maps.PlayableMap<HitObject> CreateMap(Rulesets.Maps.IOriginalMap map) => new Map(map);
 
@@ -28,24 +47,29 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 			IHasEndTime endTime = hitObject as IHasEndTime;
 			IHasCombo combo = hitObject as IHasCombo;
 
-            float posAdjustment = 0f;
-            // If the original map is an osu map, shift the hit object positions by -50% of the play area width.
-            if (Map.Detail.GameMode == GameModeType.OsuStandard)
-            {
-                // TODO: Refer to Osu playarea's static variable instead!!
-                posAdjustment = -512f / 2f;
-            }
-
             if(curve != null)
 			{
-				yield return new Dragger() {
+                // Regenerate path using conversion method.
+                SliderPath newPath = curve.Path;
+                if (hasCustomPosConverter)
+                {
+                    Vector2[] origPoints = newPath.Points;
+                    Vector2[] points = new Vector2[origPoints.Length];
+                    for (int i = 0; i < points.Length; i++)
+                    {
+                        points[i] = origPoints[i];
+                        points[i].x = convertPosX(points[i].x);
+                    }
+                }
+
+                yield return new Dragger() {
 					StartTime = hitObject.StartTime,
 					Samples = hitObject.Samples,
-					X = posX.X + posAdjustment,
+					X = convertPosX(posX.X),
 					RepeatCount = curve.RepeatCount,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
-					Path = curve.Path,
+					Path = newPath,
 					NodeSamples = curve.NodeSamples,
 					EndTime = curve.EndTime
 				};
@@ -55,7 +79,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 				yield return new Dragger() {
 					StartTime = hitObject.StartTime,
 					Samples = new List<SoundInfo>(),
-					X = posX.X + posAdjustment,
+					X = convertPosX(posX.X),
 					RepeatCount = 0,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
@@ -75,12 +99,28 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 				yield return new HitCircle() {
 					StartTime = hitObject.StartTime,
 					Samples = hitObject.Samples,
-					X = posX.X + posAdjustment,
+					X = convertPosX(posX.X),
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset)
 				};
 			}
 		}
-	}
+
+		/// <summary>
+		/// Converts the specified X position to Beats standard coordinate, assuming an osu coordinate.
+		/// </summary>
+        private float ConvertFromOsu(float x)
+        {
+			// TODO: Replace 512 with osu's play area size constant value.
+            x *= AreaSize / 512;
+            x -= AreaSize * 0.5f;
+            return x;
+        }
+
+		/// <summary>
+		/// Default conversion provider.
+		/// </summary>
+        private float ConvertDefault(float x) => x;
+    }
 }
 

@@ -37,7 +37,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// <summary>
         /// Returns the Y position which the hit object fade starts from.
         /// </summary>
-        public float FadeStartPos => 2000f;
+        public float FadeStartPos => 3000f;
 
         /// <summary>
         /// Returns the position where hit objects spawn and approach from.

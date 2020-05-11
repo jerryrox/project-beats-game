@@ -14,7 +14,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// <summary>
         /// Returns the height of the gradation.
         /// </summary>
-        public float FadeSize = 2200;
+        public float FadeSize = 2000;
 
 
         [InitWithDependency]
