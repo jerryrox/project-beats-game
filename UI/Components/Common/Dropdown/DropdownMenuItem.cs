@@ -41,6 +41,8 @@ namespace PBGame.UI.Components.Common.Dropdown
             focusSprite.ImageType = Image.Type.Sliced;
             focusSprite.Tint = colorPreset.Passive;
 
+            IsClickToTrigger = true;
+
             label = CreateChild<Label>("label", 10);
             {
                 label.Anchor = AnchorType.Fill;
