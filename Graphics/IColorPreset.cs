@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PBGame.Rulesets.Difficulty;
 using PBFramework.Graphics;
 using UnityEngine;
@@ -5,7 +6,9 @@ using UnityEngine;
 namespace PBGame.Graphics
 {
     public interface IColorPreset {
-    
+
+        List<Color> DefaultComboColors { get; }
+
         ColorPalette PrimaryFocus { get; }
 
         ColorPalette SecondaryFocus { get; }

@@ -27,7 +27,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             component.CurveAngle = 10f;
             component.UseSmoothEnds = true;
-            component.color = new Color(1f, 1f, 1f, 0.5f);
+            component.color = new Color(1f, 1f, 1f, 0.3334f);
 
             var effect = AddEffect(new DefaultShaderEffect());
             effect.StencilOperation = StencilOp.IncrementSaturate;

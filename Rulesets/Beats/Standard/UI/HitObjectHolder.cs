@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Game;
 using PBGame.Data;
+using PBGame.Graphics;
+using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
@@ -26,6 +28,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
         private RangedList<HitObjectView> hitObjectViews;
 
+        private int curComboOffset;
+        private List<Color> comboColors;
+
 
         /// <summary>
         /// Returns the current music play time.
@@ -43,6 +48,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
         [ReceivesDependency]
         private PlayAreaContainer PlayArea { get; set; }
+
+        [ReceivesDependency]
+        private IColorPreset ColorPreset { get; set; }
 
 
         [InitWithDependency]
@@ -148,20 +156,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private DraggerView CreateDragger() => CreateChild<DraggerView>();
 
         /// <summary>
-        /// Event called on game session hard initialization.
+        /// Returns the color for specified combo information.
         /// </summary>
-        private void OnHardInit()
+        private Color GetComboColor(IHasCombo combo)
         {
-            Coroutine loadRoutine = null;
-            IExplicitPromise promise = new ProxyPromise(
-                (p) => loadRoutine = UnityThreadService.StartCoroutine(LoadHitObjects(p)),
-                () =>
-                {
-                    if(loadRoutine != null)
-                        UnityThreadService.StopCoroutine(loadRoutine);
-                }
-            );
-            State.AddInitialLoader(promise);
+            if(combo.IsNewCombo)
+                curComboOffset += combo.ComboOffset + 1;
+            return comboColors[curComboOffset % comboColors.Count];
         }
 
         /// <summary>
@@ -183,6 +184,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 }
                 createCount--;
 
+                HitObjectView hitObjView = null;
                 if (obj is HitCircle hitCircle)
                 {
                     var hitCircleView = hitCircleRecycler.GetNext();
@@ -190,6 +192,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     hitCircleView.SetHitObject(hitCircle);
 
                     hitObjectViews.Add(hitCircleView);
+                    hitObjView = hitCircleView;
                 }
                 else if (obj is Dragger dragger)
                 {
@@ -198,9 +201,40 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     draggerView.SetHitObject(dragger);
 
                     hitObjectViews.Add(draggerView);
+                    hitObjView = draggerView;
+                }
+
+                if (hitObjView != null)
+                {
+                    // Apply combo color
+                    var combo = obj as IHasCombo;
+                    if (combo != null)
+                        hitObjView.Tint = GetComboColor(combo);
                 }
             }
             promise.Resolve(null);
+        }
+
+        /// <summary>
+        /// Event called on game session hard initialization.
+        /// </summary>
+        private void OnHardInit()
+        {
+            curComboOffset = 0;
+            comboColors = GameSession.CurrentMap.ComboColors;
+            if(comboColors == null || comboColors.Count == 0)
+                comboColors = ColorPreset.DefaultComboColors;
+
+            Coroutine loadRoutine = null;
+            IExplicitPromise promise = new ProxyPromise(
+                (p) => loadRoutine = UnityThreadService.StartCoroutine(LoadHitObjects(p)),
+                () =>
+                {
+                    if(loadRoutine != null)
+                        UnityThreadService.StopCoroutine(loadRoutine);
+                }
+            );
+            State.AddInitialLoader(promise);
         }
 
         /// <summary>
@@ -228,6 +262,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI
             draggerRecycler.ReturnAll();
             
             hitObjectViews.Clear();
+
+            comboColors = null;
         }
     }
 }

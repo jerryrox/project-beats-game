@@ -29,7 +29,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         /// <value></value>
         public float DistUnderHitPos => PlayArea.HitPosition - this.Y;
-        
+
+        public override Color Tint
+        {
+            get => startCircle.Tint;
+            set => startCircle.Tint = value;
+        }
+
         IRecycler<DraggerView> IRecyclable<DraggerView>.Recycler { get; set; }
 
         [ReceivesDependency]

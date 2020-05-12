@@ -13,7 +13,12 @@ using UnityEngine.UI;
 
 namespace PBGame.Rulesets.UI.Components
 {
-    public abstract class BaseHitObjectView : UguiObject, IRecyclable<BaseHitObjectView>, IHasAlpha {
+    public abstract class BaseHitObjectView :
+        UguiObject,
+        IRecyclable<BaseHitObjectView>,
+        IHasAlpha,
+        IHasTint
+    {
 
         protected CanvasGroup canvasGroup;
 
@@ -93,6 +98,8 @@ namespace PBGame.Rulesets.UI.Components
             get => canvasGroup.alpha;
             set => canvasGroup.alpha = value;
         }
+
+        public virtual Color Tint { get; set; }
 
         /// <summary>
         /// List of nested objects returned as base hit object view type.

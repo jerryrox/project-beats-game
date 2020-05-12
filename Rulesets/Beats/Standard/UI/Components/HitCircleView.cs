@@ -24,6 +24,19 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected IAnime hitAni;
 
+        private Color tint;
+
+
+        public override Color Tint
+        {
+            get => tint;
+            set
+            {
+                tint = value;
+                outerGlowSprite.Tint = value / 0.5f;
+                glowSprite.Tint = value;
+            }
+        }
 
         IRecycler<HitCircleView> IRecyclable<HitCircleView>.Recycler { get; set; }
 

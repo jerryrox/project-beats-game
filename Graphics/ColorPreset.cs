@@ -19,6 +19,12 @@ namespace PBGame.Graphics
             { DifficultyType.Extreme, new ColorPalette(HexColor.Create("B8AFFF")) },
         };
 
+        public List<Color> DefaultComboColors { get; private set; } = new List<Color>()
+        {
+            new Color(1f, 0.25f, 25f),
+            new Color(0.25f, 1f, 0.25f),
+            new Color(0.25f, 0.25f, 1f)
+        };
 
         public ColorPalette PrimaryFocus { get; private set; } = new ColorPalette(HexColor.Create("A7D7FFFF"));
 
