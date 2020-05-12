@@ -32,5 +32,7 @@ namespace PBGame.Assets.Caching
         {
             return new MapBackgroundRequest(key);
         }
+
+        protected override void DestroyData(IMapBackground data) => data.Dispose();
     }
 }

@@ -11,5 +11,11 @@ namespace PBGame.Assets.Caching
         {
             return new TextureRequest(key);
         }
+
+        protected override void DestroyData(Texture2D data)
+        {
+            if(data != null)
+                Object.Destroy(data);
+        }
     }
 }

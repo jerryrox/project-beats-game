@@ -33,5 +33,7 @@ namespace PBGame.Assets.Caching
         {
             return new MusicAudioRequest(key, true);
         }
+
+        protected override void DestroyData(IMusicAudio data) => data.Dispose();
     }
 }
