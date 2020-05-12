@@ -102,7 +102,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
             hitObjectHolder = CreateChild<HitObjectHolder>("obj-holder", 2);
             {
                 hitObjectHolder.Anchor = AnchorType.Bottom;
-                hitObjectHolder.Pivot = PivotType.Bottom;
                 hitObjectHolder.Y = 0f;
             }
             playAreaFader = CreateChild<PlayAreaFader>("fader", 3);

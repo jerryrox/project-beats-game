@@ -64,9 +64,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             startCircle = DragCircleRecycler.GetNext();
             {
                 startCircle.Active = true;
+                startCircle.SetDragger(this);
                 startCircle.Depth = 1000;
                 startCircle.Position = Vector3.zero;
-                startCircle.SetDragger(this);
                 startCircle.SetHitObject(hitObject.NestedObjects[0] as DraggerStartCircle);
 
                 AddNestedObject(startCircle);

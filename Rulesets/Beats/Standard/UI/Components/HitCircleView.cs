@@ -33,7 +33,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             set
             {
                 tint = value;
-                outerGlowSprite.Tint = value / 0.5f;
+                outerGlowSprite.Tint = Color.gray + value * 0.75f;
                 glowSprite.Tint = value;
             }
         }
