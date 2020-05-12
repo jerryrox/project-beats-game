@@ -18,6 +18,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
         public const float AreaSize = 1400f - HitObject.BaseRadius * 2f;
 
         private Func<float, float> convertPosX;
+        private Func<float, float> convertPathPosX;
         private bool hasCustomPosConverter = false;
 
 
@@ -32,9 +33,13 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
             {
 				case GameModeType.OsuStandard:
 					convertPosX = ConvertFromOsu;
+                    convertPathPosX = ConvertPathFromOsu;
                     hasCustomPosConverter = true;
                     break;
-				default: convertPosX = ConvertDefault; break;
+				default:
+					convertPosX = ConvertDefault;
+                    convertPathPosX = ConvertDefault;
+                    break;
             }
         }
 
@@ -58,8 +63,10 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
                     for (int i = 0; i < points.Length; i++)
                     {
                         points[i] = origPoints[i];
-                        points[i].x = convertPosX(points[i].x);
+                        points[i].x = convertPathPosX(points[i].x);
                     }
+					// Final path
+                    newPath = new SliderPath(newPath.PathType, points);
                 }
 
                 yield return new Dragger() {
@@ -107,14 +114,23 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 		}
 
 		/// <summary>
-		/// Converts the specified X position to Beats standard coordinate, assuming an osu coordinate.
+		/// Converts the specified X position to Beats standard coordinate, assuming an osu context.
 		/// </summary>
         private float ConvertFromOsu(float x)
         {
 			// TODO: Replace 512 with osu's play area size constant value.
-            x *= AreaSize / 512;
+            x *= AreaSize / 512f;
             x -= AreaSize * 0.5f;
             return x;
+        }
+
+		/// <summary>
+		/// Converts the specified path X posiiton to Beats standard coordinate, assuming an osu context.
+		/// </summary>
+		private float ConvertPathFromOsu(float x)
+        {
+            // TODO: Replace 512 with osu's play area size constant value.
+            return x * AreaSize / 512f;
         }
 
 		/// <summary>
