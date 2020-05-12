@@ -160,6 +160,24 @@ namespace PBGame
                 ApplyMenuBarOverlay();
                 ApplyMenuBarProperties();
             };
+            screenNavigator.OnScreenChange += (curScreen, prevScreen) =>
+            {
+                // If navigating out of game screen, play music if stopped.
+                if (prevScreen is GameScreen)
+                {
+                    if (!musicController.IsPlaying)
+                    {
+                        bool wasPaused = musicController.IsPaused;
+                        musicController.Play();
+                        // Play from beginning if music stopped at the end.
+                        if (!wasPaused)
+                        {
+                            musicController.Seek(0f);
+                            musicController.Fade(0f, 1f);
+                        }
+                    }
+                }
+            };
         }
 
         /// <summary>
