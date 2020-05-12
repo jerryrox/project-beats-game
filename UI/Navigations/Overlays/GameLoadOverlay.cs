@@ -232,7 +232,11 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called from component show ani when it has finished animating.
         /// </summary>
-        private void OnShowAniEnd() => ChangeScreen(GameScreen.IsGameLoaded);
+        private void OnShowAniEnd()
+        {
+            if(GameScreen.IsGameLoaded)
+                ChangeScreen(true);
+        }
 
         /// <summary>
         /// Event called from component hide ani when it has finished animating.

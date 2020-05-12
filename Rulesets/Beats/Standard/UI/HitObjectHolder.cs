@@ -6,9 +6,10 @@ using PBGame.Data;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
-using PBFramework.UI;
+using PBFramework;
 using PBFramework.Audio;
 using PBFramework.Graphics;
+using PBFramework.Services;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -151,8 +152,37 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// </summary>
         private void OnHardInit()
         {
+            Coroutine loadRoutine = null;
+            IExplicitPromise promise = new ProxyPromise(
+                (p) => loadRoutine = UnityThreadService.StartCoroutine(LoadHitObjects(p)),
+                () =>
+                {
+                    if(loadRoutine != null)
+                        UnityThreadService.StopCoroutine(loadRoutine);
+                }
+            );
+            State.AddInitialLoader(promise);
+        }
+
+        /// <summary>
+        /// Starts loading hit object to resolve for specified promise.
+        /// </summary>
+        private IEnumerator LoadHitObjects(ProxyPromise promise)
+        {
+            int createCount = 0;
+            int lastLoads = 0;
+
             foreach (var obj in GameSession.CurrentMap.HitObjects)
             {
+                // If create count reached 0, determine new creation count.
+                if (createCount <= 0)
+                {
+                    createCount = Mathf.Max((int)((1f / Time.deltaTime) + lastLoads) / 4, 1);
+                    lastLoads = createCount;
+                    yield return null;
+                }
+                createCount--;
+
                 if (obj is HitCircle hitCircle)
                 {
                     var hitCircleView = hitCircleRecycler.GetNext();
@@ -170,6 +200,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     hitObjectViews.Add(draggerView);
                 }
             }
+            promise.Resolve(null);
         }
 
         /// <summary>
