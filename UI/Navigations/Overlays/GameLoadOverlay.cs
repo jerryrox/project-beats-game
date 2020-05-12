@@ -186,8 +186,8 @@ namespace PBGame.UI.Navigations.Overlays
         private void NavigateToScreen<T>()
             where T : BaseScreen
         {
-            OverlayNavigator.Hide(this);
             ScreenNavigator.Show<T>();
+            OverlayNavigator.Hide(this);
 
             // Start the game straight away.
             if(typeof(T) == typeof(GameScreen))
