@@ -13,7 +13,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		/// <summary>
 		/// The base radius of the hit object at circle size 0.
 		/// </summary>
-		public const float BaseRadius = 125f;
+		public const float BaseRadius = 160f;
 
 		/// <summary>
 		/// Returns the radius of the object.
