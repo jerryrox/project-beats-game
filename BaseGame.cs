@@ -146,7 +146,7 @@ namespace PBGame
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
             Dependencies.CacheAs<IDropdownProvider>(dropdownProvider = new DropdownProvider(rootMain));
 
-            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution));
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
         }
 
         /// <summary>
