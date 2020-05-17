@@ -204,17 +204,23 @@ namespace PBGame.Rulesets
                 OnCompletion?.Invoke();
 
                 // TODO: Wait for completion timeout to auto navigate to results.
-                SynchronizedTimer timer = new SynchronizedTimer()
+                SynchronizedTimer autoExitTimer = new SynchronizedTimer()
                 {
                     Limit = 2f,
                 };
-                timer.OnFinished += delegate { GameScreen.ExitGame<PrepareScreen>(); };
-                timer.Start();
+                autoExitTimer.OnFinished += delegate { GameScreen.ExitGame<PrepareScreen>(); };
+                autoExitTimer.Start();
 
                 // TODO: Navigate to ResultScreen.
                 // GameScreen.ExitGame<ResultScreen>();
             });
-            InvokeSoftDispose();
+
+            SynchronizedTimer initialTimer = new SynchronizedTimer()
+            {
+                Limit = 0.5f
+            };
+            initialTimer.OnFinished += (t) => InvokeSoftDispose();
+            initialTimer.Start();
         }
 
         /// <summary>
