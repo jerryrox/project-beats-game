@@ -56,7 +56,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         [InitWithDependency]
         private void Init()
         {
-            Dependencies = Dependencies.Clone();
             Dependencies.Cache(this);
 
             if (GameSession != null)

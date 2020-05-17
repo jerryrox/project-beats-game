@@ -10,5 +10,6 @@ namespace PBGame.UI
     public static class InputLayers {
 
         public const int GameScreen = 10;
+        public const int GameScreenComponents = 11;
     }
 }

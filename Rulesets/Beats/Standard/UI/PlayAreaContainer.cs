@@ -21,8 +21,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
 
         private ISprite bgSprite;
-        private ISprite hitBarSprite;
         private HitObjectHolder hitObjectHolder;
+        private HitBarDisplay hitBarDisplay;
         private PlayAreaFader playAreaFader;
 
         private float distancePerTime;
@@ -54,6 +54,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// </summary>
         public float DraggerBodyInterval => draggerBodyInterval;
 
+        /// <summary>
+        /// Returns the hit bar displayer component.
+        /// </summary>
+        public HitBarDisplay HitBar => hitBarDisplay;
+
         [ReceivesDependency]
         private IRoot3D Root3D { get; set; }
 
@@ -64,7 +69,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         [InitWithDependency]
         private void Init()
         {
-            Dependencies = Dependencies.Clone();
             Dependencies.Cache(this);
 
             GameSession.OnHardInit += OnHardInit;
@@ -90,14 +94,12 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     gradient.color2 = Color.black;
                 }
             }
-            hitBarSprite = CreateChild<UguiSprite>("hit-bar", 1);
+            hitBarDisplay = CreateChild<HitBarDisplay>("hit-bar", 1);
             {
-                hitBarSprite.Anchor = AnchorType.BottomStretch;
-                hitBarSprite.SetOffsetHorizontal(0f);
-                hitBarSprite.Y = HitPosition;
-                hitBarSprite.Height = 34;
-                hitBarSprite.SpriteName = "glow-bar";
-                hitBarSprite.ImageType = Image.Type.Sliced;
+                hitBarDisplay.Anchor = AnchorType.BottomStretch;
+                hitBarDisplay.SetOffsetHorizontal(0f);
+                hitBarDisplay.Y = HitPosition;
+                hitBarDisplay.Height = HitPosition * 2f;
             }
             hitObjectHolder = CreateChild<HitObjectHolder>("obj-holder", 2);
             {
