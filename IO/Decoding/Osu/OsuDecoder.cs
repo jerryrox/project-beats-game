@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
-using PBGame.Skins;
+using PBGame.Graphics;
 using PBFramework.IO.Decoding;
 using UnityEngine;
 

@@ -34,7 +34,7 @@ namespace PBGame.UI.Components.HomeMenu
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init(ISoundPool soundPooler)
         {
             CreateIconSprite(depth: 2, size: 64f);
 

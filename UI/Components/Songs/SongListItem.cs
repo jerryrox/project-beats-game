@@ -79,7 +79,7 @@ namespace PBGame.UI.Components.Songs
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
             IsClickToTrigger = true;
 

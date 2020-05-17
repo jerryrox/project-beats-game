@@ -1,27 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using PBGame.Skins;
-using PBFramework;
 using PBFramework.Audio;
+using PBFramework.Assets.Atlasing;
+using PBFramework.Debugging;
 
-namespace PBGame.Stores
+namespace PBGame.Audio
 {
-    public class DefaultSkinAssetStore : SkinAssetStore {
+    public class DefaultSoundTable : ISoundTable {
 
-        private bool isLoaded = false;
+        private ResourceAudioAtlas audioAtlas;
+        private Dictionary<string, IEffectAudio> sounds = new Dictionary<string, IEffectAudio>();
 
 
-        public DefaultSkinAssetStore(ISkin skin) : base(skin)
+        public DefaultSoundTable(ResourceAudioAtlas audioAtlas)
         {
-        }
-
-        public override IExplicitPromise Load()
-        {
-            // Default assets are only loaded once.
-            if(isLoaded) return null;
-            isLoaded = true;
+            this.audioAtlas = audioAtlas;
 
             LoadAudio("applause");
             LoadAudio("combobreak");
@@ -64,52 +58,28 @@ namespace PBGame.Stores
             LoadAudio("toggle-on");
             LoadAudio("type");
             LoadAudio("warning");
-
-            return null;
         }
 
-        public override void Unload()
+        public IEffectAudio GetAudio(string lookupName)
         {
-            // Default assets will never be unloaded from the game.
+            if(sounds.TryGetValue(lookupName, out IEffectAudio value))
+                return value;
+            Logger.LogWarning($"SoundTable.GetAudio - Audio not found for name: {lookupName}");
+            return null;
         }
 
         /// <summary>
         /// Loads the audio asset with specified name.
         /// </summary>
-        private void LoadAudio(string name)
+        private void LoadAudio(string lookupName)
         {
-            var audio = Resources.Load(GetPath(name), typeof(AudioClip)) as AudioClip;
-            if(audio == null) return;
-
-            audios[name] = new SkinnableSound()
+            var audio = audioAtlas.Get(lookupName);
+            if (audio == null)
             {
-                File = null,
-                Element = new UnityAudio(audio),
-                LookupName = name,
-                IsDefaultAsset = true
-            };
+                Logger.LogWarning($"SoundTable.LoadAudio - Failed to load audio for name: {lookupName}");
+                return;
+            }
+            sounds[lookupName] = new UnityAudio(audio);
         }
-
-        /// <summary>
-        /// Returns the texture asset with specified name.
-        /// </summary>
-        private void LoadTexture(string name)
-        {
-            var texture = Resources.Load(GetPath(name), typeof(Texture2D)) as Texture2D;
-            if(texture == null) return;
-
-            textures[name] = new SkinnableTexture()
-            {
-                File = null,
-                Element = texture,
-                LookupName = name,
-                IsDefaultAsset = true
-            };
-        }
-
-        /// <summary>
-        /// Returns the resource path for the specified name.
-        /// </summary>
-        private string GetPath(string name) => $"DefaultSkin/{name}";
     }
 }

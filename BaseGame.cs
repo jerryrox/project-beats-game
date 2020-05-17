@@ -9,7 +9,6 @@ using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Audio;
-using PBGame.Skins;
 using PBGame.Stores;
 using PBGame.Assets.Fonts;
 using PBGame.Assets.Caching;
@@ -42,17 +41,18 @@ namespace PBGame
         protected MapsetConfiguration mapsetConfiguration;
 
         protected FontManager fontManager;
-        protected IAtlas<Sprite> spriteAtlas;
+        protected ResourceSpriteAtlas spriteAtlas;
+        protected ResourceAudioAtlas audioAtlas;
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
         protected WebImageCacher webImageCacher;
         protected WebMusicCacher webMusicCacher;
 
-        protected SkinManager skinManager;
-
         protected MusicController musicController;
-        protected SoundPooler soundPooler;
+
+        protected DefaultSoundTable soundTable;
+        protected SoundPool soundPool;
 
         protected MapsetStore mapsetStore;
         protected MapSelection mapSelection;
@@ -115,17 +115,17 @@ namespace PBGame
 
             Dependencies.CacheAs<IFontManager>(fontManager = new FontManager());
             Dependencies.CacheAs<IAtlas<Sprite>>(spriteAtlas = new ResourceSpriteAtlas());
+            Dependencies.CacheAs<IAtlas<AudioClip>>(audioAtlas = new ResourceAudioAtlas());
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
             Dependencies.CacheAs<IWebImageCacher>(webImageCacher = new WebImageCacher());
             Dependencies.CacheAs<IWebMusicCacher>(webMusicCacher = new WebMusicCacher());
 
-            Dependencies.CacheAs<ISkinManager>(skinManager = new SkinManager());
-            skinManager.DefaultSkin.AssetStore.Load();
-
             Dependencies.CacheAs<IMusicController>(musicController = MusicController.Create());
-            Dependencies.CacheAs<ISoundPooler>(soundPooler = new SoundPooler(skinManager.DefaultSkin));
+
+            Dependencies.CacheAs<ISoundTable>(soundTable = new DefaultSoundTable(audioAtlas));
+            Dependencies.CacheAs<ISoundPool>(soundPool = new SoundPool(soundTable));
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration));

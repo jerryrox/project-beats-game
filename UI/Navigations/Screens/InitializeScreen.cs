@@ -2,7 +2,6 @@ using PBGame.UI.Components.Initialize;
 using PBGame.UI.Navigations.Screens.Initialize;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
-using PBGame.Skins;
 using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Data.Rankings;
-using PBGame.Skins;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;

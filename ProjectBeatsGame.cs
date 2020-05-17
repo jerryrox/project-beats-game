@@ -252,7 +252,7 @@ namespace PBGame
             gameConfiguration.MasterVolume.OnValueChanged += (volume, _) =>
             {
                 musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
-                soundPooler.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
+                soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
             gameConfiguration.MusicVolume.OnValueChanged += (volume, _) =>
             {
@@ -260,7 +260,7 @@ namespace PBGame
             };
             gameConfiguration.EffectVolume.OnValueChanged += (volume, _) =>
             {
-                soundPooler.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
+                soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
 
             // Mapset sort change events

@@ -42,7 +42,7 @@ namespace PBGame.UI.Components.Home
         private IMetronome Metronome { get; set; }
 
         [ReceivesDependency]
-        private ISoundPooler SoundPooler { get; set; }
+        private ISoundPool SoundPool { get; set; }
 
 
         [InitWithDependency]
@@ -90,7 +90,7 @@ namespace PBGame.UI.Components.Home
                     pointerExitAni.Stop();
                     pointerEnterAni.PlayFromStart();
 
-                    SoundPooler.Play("menuhit");
+                    SoundPool.Play("menuhit");
                 };
                 trigger.OnPointerExit += () =>
                 {
@@ -101,7 +101,7 @@ namespace PBGame.UI.Components.Home
                 {
                     OnPress?.Invoke();
 
-                    SoundPooler.Play("menuclick");
+                    SoundPool.Play("menuclick");
                 };
             }
 

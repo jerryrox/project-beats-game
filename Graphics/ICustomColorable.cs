@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PBGame.Skins
+namespace PBGame.Graphics
 {
 	/// <summary>
 	/// Indicates that the default IComboColorable can be overridden with the colors defined in this interface.
