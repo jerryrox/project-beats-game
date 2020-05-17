@@ -103,9 +103,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             if (draggerView != null && draggerView.StartCircle != null)
             {
-                Debug.Log("Dragger view exists.");
                 SetResult(draggerView.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
-                Debug.Log("Is hit: " + Result.IsHit);
                 if(Result.IsHit)
                     hitAni.PlayFromStart();
                 else
@@ -113,7 +111,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             }
             else
             {
-                Debug.Log("?");
                 SetResult(HitResultType.Miss, 0f);
                 Active = false;
             }

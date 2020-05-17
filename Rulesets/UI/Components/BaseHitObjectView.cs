@@ -29,6 +29,7 @@ namespace PBGame.Rulesets.UI.Components
         protected float approachTime;
         protected float judgeEndTime;
 
+        private BaseHitObjectView parentObject;
         private BaseHitObject hitObject;
         private IHasEndTime hasEndTime;
 
@@ -37,6 +38,12 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         private List<BaseHitObjectView> nestedObjects = new List<BaseHitObjectView>();
 
+
+        /// <summary>
+        /// Returns the base hit object view containing this nested object.
+        /// May return null.
+        /// </summary>
+        public BaseHitObjectView BaseParentView => parentObject;
 
         /// <summary>
         /// Returns the base hit object info this view is representing.
@@ -254,6 +261,7 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         protected void AddBaseNestedObject(BaseHitObjectView objectView)
         {
+            objectView.parentObject = this;
             nestedObjects.Add(objectView);
         }
 

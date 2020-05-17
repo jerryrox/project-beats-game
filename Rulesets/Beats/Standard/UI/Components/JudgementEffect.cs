@@ -42,7 +42,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .AddTime(0.25f, () => new Vector2(targetWidth, targetWidth * 20f))
                 .Build();
             effectAni.AnimateFloat(a => this.Alpha = a)
-                .AddTime(0f, 1f, EaseType.QuadEaseOut)
+                .AddTime(0f, 1f, EaseType.Linear)
                 .AddTime(0.25f, 0f)
                 .Build();
             effectAni.AddEvent(effectAni.Duration, () => Recycler.Return(this));
@@ -58,10 +58,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// <summary>
         /// Starts showing the judgement effect.
         /// </summary>
-        public void ShowEffect(HitObjectView hitObjectView, HitResultType resultType)
+        public void ShowEffect(HitObjectView hitObjectView)
         {
             targetWidth = hitObjectView.Width;
-            Tint = ColorPreset.GetHitResultColor(resultType).Base;
+            Tint = ColorPreset.GetHitResultColor(hitObjectView.Result.HitResult).Base;
             effectAni.PlayFromStart();
         }
 

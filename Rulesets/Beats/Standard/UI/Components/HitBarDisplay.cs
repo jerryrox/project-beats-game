@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Rulesets.Beats.Standard.Inputs;
+using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -124,6 +125,16 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 holdAni.Stop();
                 releaseAni.PlayFromStart();
             }
+        }
+
+        /// <summary>
+        /// Shows a new judgement effect for specified hit object.
+        /// </summary>
+        public void ShowJudgementEffect(float x, HitObjectView hitObjectView)
+        {
+            var effect = effectRecycler.GetNext();
+            effect.X = x;
+            effect.ShowEffect(hitObjectView);
         }
 
         protected void Update()

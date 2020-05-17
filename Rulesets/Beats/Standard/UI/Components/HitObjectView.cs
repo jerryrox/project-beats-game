@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.Rulesets.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Objects;
-using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
 using PBFramework.Inputs;
@@ -19,6 +18,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected float xPos;
         protected float radius;
 
+        [ReceivesDependency]
+        private PlayAreaContainer PlayArea { get; set; }
+
 
         /// <summary>
         /// Sets the specified hit object to be represented by this view.
@@ -32,6 +34,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             this.X = xPos;
             this.Size = new Vector2(radius * 2f, radius * 2f);
+        }
+
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            base.SetResult(hitResult, offset);
+            PlayArea.HitBar.ShowJudgementEffect(GetPosOnJudgement(), this);
+            return Result;
         }
 
         /// <summary>
@@ -54,6 +63,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             xPos = 0f;
             radius = 0f;
         }
+
+        /// <summary>
+        /// Returns the desired position of the object upon judgement.
+        /// </summary>
+        protected virtual float GetPosOnJudgement() => BaseParentView == null ? X : BaseParentView.X + X;
     }
 
     public abstract class HitObjectView<T> : HitObjectView

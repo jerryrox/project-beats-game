@@ -204,6 +204,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         {
             if (key.HitObjectView == null)
                 return;
+
             AddJudgement(key.HitObjectView.JudgeInput(hitObjectHolder.CurrentTime, key.Input));
         }
 
@@ -212,7 +213,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void AddJudgement(JudgementResult result)
         {
-            if(result != null)
+            if (result != null)
                 GameSession?.ScoreProcessor.ProcessJudgement(result);
         }
 

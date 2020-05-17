@@ -110,6 +110,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             draggerBody.Active = false;
         }
 
+        protected override float GetPosOnJudgement() => hitObject.EndX;
+
         protected override void EvalPassiveJudgement()
         {
             var judgementsCount = BaseNestedObjects.Count;
