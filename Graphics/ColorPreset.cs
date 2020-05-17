@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PBGame.Rulesets.Difficulty;
+using PBGame.Rulesets.Judgements;
 using PBFramework.Utils;
 using PBFramework.Graphics;
 using UnityEngine;
@@ -17,6 +18,16 @@ namespace PBGame.Graphics
             { DifficultyType.Hard, new ColorPalette(HexColor.Create("FFCEA1")) },
             { DifficultyType.Insane, new ColorPalette(HexColor.Create("FFA1A1")) },
             { DifficultyType.Extreme, new ColorPalette(HexColor.Create("B8AFFF")) },
+        };
+
+        private Dictionary<HitResultType, ColorPalette> hitResultColors = new Dictionary<HitResultType, ColorPalette>()
+        {
+            { HitResultType.Perfect, new ColorPalette(HexColor.Create("1F77BC")) },
+            { HitResultType.Great, new ColorPalette(HexColor.Create("1FBBBC")) },
+            { HitResultType.Good, new ColorPalette(HexColor.Create("1FB972")) },
+            { HitResultType.Ok, new ColorPalette(HexColor.Create("8BB972")) },
+            { HitResultType.Bad, new ColorPalette(HexColor.Create("FFB972")) },
+            { HitResultType.Miss, new ColorPalette(HexColor.Create("FF271D")) },
         };
 
         public List<Color> DefaultComboColors { get; private set; } = new List<Color>()
@@ -47,6 +58,14 @@ namespace PBGame.Graphics
                 return value;
             Logger.LogWarning($"ColorPreset.GetDifficultyColor - Unknown type: {type}");
             return new ColorPalette(Color.black);
+        }
+
+        public ColorPalette GetHitResultColor(HitResultType type)
+        {
+            if (hitResultColors.TryGetValue(type, out ColorPalette value))
+                return value;
+            Logger.LogWarning($"ColorPreset.GetHitResultColor - Unknown type: {type}");
+            return new ColorPalette(Color.white);
         }
     }
 }

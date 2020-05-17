@@ -58,6 +58,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             base.SetHitObject(hitObject);
 
+            draggerBody.Active = true;
             draggerBody.SetDragger(hitObject);
             draggerBody.RenderPath();
 
@@ -106,6 +107,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             tickViews.Clear();
 
             draggerBody.ClearPath();
+            draggerBody.Active = false;
         }
 
         protected override void EvalPassiveJudgement()
@@ -124,8 +126,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             SetResult(resultType, judgeEndTime);
 
-            if(resultType != HitResultType.Miss)
+            if (resultType != HitResultType.Miss)
+            {
+                draggerBody.Active = false;
                 startCircle.PlayHit();
+            }
             else
                 Active = false;
         }

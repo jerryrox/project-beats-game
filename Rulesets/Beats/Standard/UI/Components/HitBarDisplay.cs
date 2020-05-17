@@ -5,6 +5,7 @@ using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 {
     public class HitBarDisplay : UguiSprite {
 
+        private IGraphicObject effectHolder;
         private ISprite hitBarSprite;
         private ISprite followSprite;
 
@@ -21,13 +23,23 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         private BeatsCursor cursor;
 
+        private ManagedRecycler<JudgementEffect> effectRecycler;
+
 
         [InitWithDependency]
         private void Init()
         {
             this.Alpha = 0f;
 
-            hitBarSprite = CreateChild<UguiSprite>("bar", 0);
+            effectRecycler = new ManagedRecycler<JudgementEffect>(CreateEffect);
+
+            effectHolder = CreateChild("effect-holder", 0);
+            {
+                effectHolder.Size = Vector2.zero;
+
+                effectRecycler.Precook(6);
+            }
+            hitBarSprite = CreateChild<UguiSprite>("bar", 1);
             {
                 hitBarSprite.Anchor = AnchorType.MiddleStretch;
                 hitBarSprite.SetOffsetHorizontal(0f);
@@ -36,7 +48,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 hitBarSprite.ImageType = Image.Type.Sliced;
                 hitBarSprite.Alpha = 0.5f;
             }
-            followSprite = CreateChild<UguiSprite>("follow", 1);
+            followSprite = CreateChild<UguiSprite>("follow", 2);
             {
                 followSprite.SpriteName = "glow-128";
                 followSprite.Size = new Vector2(500f, 500f);
@@ -123,6 +135,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             followSprite.X = cursor.HitBarPos;
         }
+
+        /// <summary>
+        /// Creates a new judgement effect object.
+        /// </summary>
+        private JudgementEffect CreateEffect() => effectHolder.CreateChild<JudgementEffect>(depth: effectRecycler.TotalCount);
 
         /// <summary>
         /// Event from cursor when hit bar hover state has changed.

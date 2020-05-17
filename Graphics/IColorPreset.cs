@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PBGame.Rulesets.Difficulty;
+using PBGame.Rulesets.Judgements;
 using PBFramework.Graphics;
 using UnityEngine;
 
@@ -28,5 +29,10 @@ namespace PBGame.Graphics
         /// Returns the color resembling the specified difficulty categorization type.
         /// </summary>
         ColorPalette GetDifficultyColor(DifficultyType type);
+
+        /// <summary>
+        /// Returns the color resembling the specified hit result type.
+        /// </summary>
+        ColorPalette GetHitResultColor(HitResultType type);
     }
 }

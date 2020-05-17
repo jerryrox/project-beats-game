@@ -3,7 +3,9 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI;
+using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
+using PBGame.Rulesets.Judgements;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Inputs;
@@ -21,10 +23,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         public event Action<BeatsKey> OnKeyPress;
         public event Action<BeatsKey> OnKeyRelease;
 
+        private HitBarDisplay hitBar;
+        private HitObjectHolder hitObjectHolder;
+
         private BeatsCursor hitBarCursor;
         private ManagedRecycler<BeatsKey> keyRecycler;
-
-        private HitBarDisplay hitBar;
         private PointerEventData pointerEvent;
         private List<RaycastResult> raycastResults = new List<RaycastResult>();
 
@@ -44,9 +47,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private IRoot3D Root3D { get; set; }
 
 
-        public LocalPlayerInputter(HitBarDisplay hitBar)
+        public LocalPlayerInputter(HitBarDisplay hitBar, HitObjectHolder hitObjectHolder)
         {
             this.hitBar = hitBar;
+            this.hitObjectHolder = hitObjectHolder;
 
             hitBarCursor = CreateCursor();
             hitBar.LinkCursor(hitBarCursor);
@@ -61,6 +65,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             GameSession.OnSoftInit += OnSoftInit;
             GameSession.OnSoftDispose += OnSoftDispose;
             GameSession.OnHardDispose += OnHardDispose;
+
+            OnKeyPress += JudgeKeyPress;
+            OnKeyRelease += JudgeKeyRelease;
 
             pointerEvent = new PointerEventData(Root3D.EventSystem);
         }
@@ -89,7 +96,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 if (cursor.State.Value == InputState.Press)
                 {
                     // If hit on the hit bar, register this as a new BeatsCursor.
-                    if (IsOnHitBar(cursor, out float pos))
+                    if (!hitBarCursor.IsActive && IsOnHitBar(cursor, out float pos))
                         TriggerCursorPress(cursor, pos);
                     // If not hit on hit bar, this is treated as a key stoke.
                     else
@@ -112,6 +119,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             hitBarCursor.Input = cursor;
             hitBarCursor.HitBarPos = pos;
             OnCursorPress?.Invoke(hitBarCursor);
+
+            // Cursor press should be treated as key stroke
+            // TODO: This can be overridden by configurations.
+            TriggerKeyPress(cursor);
         }
 
         /// <summary>
@@ -169,6 +180,43 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         }
 
         /// <summary>
+        /// Judges the specified key press against hit objects.
+        /// </summary>
+        private void JudgeKeyPress(BeatsKey key)
+        {
+            // Find the first hit object where the cursor is within the X range.
+            foreach (var objView in hitObjectHolder.GetActiveObjects())
+            {
+                if (objView.IsCursorInRange(hitBarCursor.HitBarPos))
+                {
+                    // Associate the hit object view with the key stroke.
+                    key.HitObjectView = objView;
+                    AddJudgement(objView.JudgeInput(hitObjectHolder.CurrentTime, key.Input));
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Judges the specified key release against hit objects.
+        /// </summary>
+        private void JudgeKeyRelease(BeatsKey key)
+        {
+            if (key.HitObjectView == null)
+                return;
+            AddJudgement(key.HitObjectView.JudgeInput(hitObjectHolder.CurrentTime, key.Input));
+        }
+
+        /// <summary>
+        /// Adds the specified judgement result to the score processor.
+        /// </summary>
+        private void AddJudgement(JudgementResult result)
+        {
+            if(result != null)
+                GameSession?.ScoreProcessor.ProcessJudgement(result);
+        }
+
+        /// <summary>
         /// Event called on cursor release state.
         /// </summary>
         private void OnCursorStateRelease(BeatsCursor cursor)
@@ -210,12 +258,14 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void OnHardDispose()
         {
+            hitBar.UnlinkCursor();
+            
             hitBar = null;
+            hitObjectHolder = null;
             hitBarCursor = null;
             keyRecycler = null;
             pointerEvent = null;
             raycastResults = null;
-            hitBar.UnlinkCursor();
 
             GameSession.OnSoftInit -= OnSoftInit;
             GameSession.OnSoftDispose -= OnSoftDispose;

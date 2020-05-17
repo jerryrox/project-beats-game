@@ -77,6 +77,15 @@ namespace PBGame.Rulesets.Beats.Standard.UI
             Dependencies.CacheAs<IRecycler<DraggerTickView>>(tickRecycler);
         }
 
+        /// <summary>
+        /// Returns all active hit object views in the holder.
+        /// </summary>
+        public IEnumerable<HitObjectView> GetActiveObjects()
+        {
+            for (int i = hitObjectViews.LowIndex; i < hitObjectViews.HighIndex; i++)
+                yield return hitObjectViews[i];
+        }
+
         protected void Update()
         {
             if(!GameSession.IsPlaying)

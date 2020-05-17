@@ -20,12 +20,12 @@ namespace PBGame.Rulesets.Beats.Standard
         [InitWithDependency]
         private void Init()
         {
-
             base.OnHardInit += () =>
             {
                 // TODO: Determine whether it's a player-controlled session.
                 var playArea = Dependencies.Get<PlayAreaContainer>();
-                var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar);
+                var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
+                var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
                 Dependencies.Inject(localPlayerInputter);
                 gameInputter = localPlayerInputter;
             };
