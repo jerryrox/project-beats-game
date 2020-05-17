@@ -42,7 +42,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .AddTime(0.25f, () => new Vector2(targetWidth, targetWidth * 20f))
                 .Build();
             effectAni.AnimateFloat(a => this.Alpha = a)
-                .AddTime(0f, 1f, EaseType.Linear)
+                .AddTime(0f, 1f, EaseType.QuadEaseIn)
                 .AddTime(0.25f, 0f)
                 .Build();
             effectAni.AddEvent(effectAni.Duration, () => Recycler.Return(this));
