@@ -12,14 +12,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 {
 	public class MapConverter : Rulesets.Maps.MapConverter<HitObject> {
 
-		/// <summary>
-		/// Size of the area where the objects are spawned.
-		/// </summary>
-        public const float AreaSize = 1400f - HitObject.BaseRadius * 2f;
-
-        private Func<float, float> convertPosX;
-        private Func<float, float> convertPathPosX;
-        private bool hasCustomPosConverter = false;
+        private PixelDefinition pixelDefinition;
 
 
         public override GameModeType TargetMode { get { return GameModeType.BeatsStandard; } }
@@ -29,18 +22,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 
 		public MapConverter(Rulesets.Maps.IOriginalMap map) : base(map)
 		{
-            switch (map.Detail.GameMode)
-            {
-				case GameModeType.OsuStandard:
-					convertPosX = ConvertFromOsu;
-                    convertPathPosX = ConvertPathFromOsu;
-                    hasCustomPosConverter = true;
-                    break;
-				default:
-					convertPosX = ConvertDefault;
-                    convertPathPosX = ConvertDefault;
-                    break;
-            }
+            pixelDefinition = new PixelDefinition(map.Detail.GameMode);
         }
 
 		protected override Rulesets.Maps.PlayableMap<HitObject> CreateMap(Rulesets.Maps.IOriginalMap map) => new Map(map);
@@ -56,23 +38,23 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 			{
                 // Regenerate path using conversion method.
                 SliderPath newPath = curve.Path;
-                if (hasCustomPosConverter)
+                if (pixelDefinition.FromMode != GameModeType.BeatsStandard)
                 {
                     Vector2[] origPoints = newPath.Points;
                     Vector2[] points = new Vector2[origPoints.Length];
                     for (int i = 0; i < points.Length; i++)
                     {
                         points[i] = origPoints[i];
-                        points[i].x = convertPathPosX(points[i].x);
+                        points[i].x = points[i].x * pixelDefinition.Scale;
                     }
 					// Final path
-                    newPath = new SliderPath(newPath.PathType, points);
+                    newPath = new SliderPath(newPath.PathType, points, newPath.ExpectedDistance * pixelDefinition.Scale);
                 }
 
                 yield return new Dragger() {
 					StartTime = hitObject.StartTime,
 					Samples = hitObject.Samples,
-					X = convertPosX(posX.X),
+					X = pixelDefinition.GetX(posX.X),
 					RepeatCount = curve.RepeatCount,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
@@ -86,7 +68,7 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 				yield return new Dragger() {
 					StartTime = hitObject.StartTime,
 					Samples = new List<SoundInfo>(),
-					X = convertPosX(posX.X),
+					X = pixelDefinition.GetX(posX.X),
 					RepeatCount = 0,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
@@ -106,37 +88,12 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 				yield return new HitCircle() {
 					StartTime = hitObject.StartTime,
 					Samples = hitObject.Samples,
-					X = convertPosX(posX.X),
+					X = pixelDefinition.GetX(posX.X),
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset)
 				};
 			}
 		}
-
-		/// <summary>
-		/// Converts the specified X position to Beats standard coordinate, assuming an osu context.
-		/// </summary>
-        private float ConvertFromOsu(float x)
-        {
-			// TODO: Replace 512 with osu's play area size constant value.
-            x *= AreaSize / 512f;
-            x -= AreaSize * 0.5f;
-            return x;
-        }
-
-		/// <summary>
-		/// Converts the specified path X posiiton to Beats standard coordinate, assuming an osu context.
-		/// </summary>
-		private float ConvertPathFromOsu(float x)
-        {
-            // TODO: Replace 512 with osu's play area size constant value.
-            return x * AreaSize / 512f;
-        }
-
-		/// <summary>
-		/// Default conversion provider.
-		/// </summary>
-        private float ConvertDefault(float x) => x;
     }
 }
 
