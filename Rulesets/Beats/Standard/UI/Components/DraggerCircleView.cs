@@ -62,6 +62,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 holdSprite.Alpha = 0f;
             }
 
+            holdAni = new Anime();
             holdAni.AnimateFloat(a => holdSprite.Alpha = a)
                 .AddTime(0f, () => holdSprite.Alpha)
                 .AddTime(0.35f, 0.25f)
@@ -71,6 +72,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .AddTime(0.35f, new Vector3(2f, 2f, 2f))
                 .Build();
 
+            releaseAni = new Anime();
             releaseAni.AnimateFloat(a => holdSprite.Alpha = a)
                 .AddTime(0f, () => holdSprite.Alpha)
                 .AddTime(0.35f, 0f)
@@ -138,7 +140,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public void SetHold(bool holding, float curTime)
         {
             // Held down
-            if (holding && wasHolding)
+            if (holding && !wasHolding)
             {
                 isHolding = true;
 

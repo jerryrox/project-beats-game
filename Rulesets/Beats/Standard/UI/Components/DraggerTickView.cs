@@ -45,7 +45,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .Build();
             hitAni.AnimateVector3(s => this.Scale = s)
                 .AddTime(0f, Vector3.one, EaseType.CubicEaseOut)
-                .AddTime(0.5f, new Vector3(2f, 2f, 2f))
+                .AddTime(0.5f, new Vector3(2.5f, 2.5f, 1f))
                 .Build();
             hitAni.AddEvent(hitAni.Duration, () => Active = false);
         }
@@ -88,6 +88,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             draggerView = null;
         }
 
+        public override bool IsPastJudgeEnd(float curTime)
+        {
+            return curTime > hitObject.StartTime;
+        }
+
         public override void HardDispose()
         {
             base.HardDispose();
@@ -98,7 +103,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             if (draggerView != null && draggerView.StartCircle != null)
             {
+                Debug.Log("Dragger view exists.");
                 SetResult(draggerView.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
+                Debug.Log("Is hit: " + Result.IsHit);
                 if(Result.IsHit)
                     hitAni.PlayFromStart();
                 else
@@ -106,6 +113,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             }
             else
             {
+                Debug.Log("?");
                 SetResult(HitResultType.Miss, 0f);
                 Active = false;
             }
