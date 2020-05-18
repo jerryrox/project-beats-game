@@ -1,4 +1,5 @@
 using System;
+using PBGame.Stores;
 using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
@@ -53,6 +54,11 @@ namespace PBGame.Rulesets
         /// </summary>
         event Action OnCompletion;
 
+
+        /// <summary>
+        /// Returns the store for loading map assets.
+        /// </summary>
+        MapAssetStore MapAssetStore { get; }
 
         /// <summary>
         /// Returns the current map in play.

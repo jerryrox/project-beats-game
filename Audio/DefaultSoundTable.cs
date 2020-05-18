@@ -18,7 +18,6 @@ namespace PBGame.Audio
             this.audioAtlas = audioAtlas;
 
             LoadAudio("applause");
-            LoadAudio("combobreak");
             LoadAudio("count1");
             LoadAudio("count2");
             LoadAudio("count3");
@@ -67,6 +66,8 @@ namespace PBGame.Audio
             Logger.LogWarning($"SoundTable.GetAudio - Audio not found for name: {lookupName}");
             return null;
         }
+
+        public bool Contains(string lookupName) => sounds.ContainsKey(lookupName);
 
         /// <summary>
         /// Loads the audio asset with specified name.

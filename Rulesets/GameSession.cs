@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using PBGame.UI.Components.Game;
 using PBGame.UI.Navigations.Screens;
+using PBGame.Audio;
+using PBGame.Stores;
 using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
@@ -32,6 +35,8 @@ namespace PBGame.Rulesets
         private IGraphicObject containerObject;
 
 
+        public MapAssetStore MapAssetStore { get; private set; }
+
         public IPlayableMap CurrentMap { get; protected set; }
 
         public IScoreProcessor ScoreProcessor { get; private set; }
@@ -57,7 +62,13 @@ namespace PBGame.Rulesets
         protected IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
+        private GameState GameState { get; set; }
+
+        [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
+
+        [ReceivesDependency]
+        private ISoundTable SoundTable { get; set; }
 
 
         protected GameSession(IGraphicObject container)
@@ -85,6 +96,7 @@ namespace PBGame.Rulesets
         public void SetMap(IPlayableMap map)
         {
             CurrentMap = map;
+            MapAssetStore = new MapAssetStore(map, SoundTable);
         }
 
         public int GetPlayTime()
@@ -103,6 +115,9 @@ namespace PBGame.Rulesets
             IsPlaying = false;
             
             OnHardInit?.Invoke();
+
+            // Load map hitsounds.
+            GameState.AddInitialLoader(MapAssetStore.LoadHitsounds());
         }
 
         public void InvokeSoftInit()
@@ -149,6 +164,9 @@ namespace PBGame.Rulesets
         {
             IsPlaying = false;
             CurrentMap = null;
+
+            MapAssetStore.Dispose();
+            MapAssetStore = null;
 
             OnHardDispose?.Invoke();
         }

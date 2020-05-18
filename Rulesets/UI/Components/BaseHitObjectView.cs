@@ -30,6 +30,8 @@ namespace PBGame.Rulesets.UI.Components
         protected float approachTime;
         protected float judgeEndTime;
 
+        protected PlayableHitsound hitsound;
+
         private BaseHitObjectView parentObject;
         private BaseHitObject hitObject;
         private IHasEndTime hasEndTime;
@@ -120,6 +122,12 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         IRecycler<BaseHitObjectView> IRecyclable<BaseHitObjectView>.Recycler { get; set; }
 
+        [ReceivesDependency]
+        protected IGameSession GameSession { get; set; }
+
+        [ReceivesDependency]
+        protected ISoundPool SoundPool { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -136,6 +144,8 @@ namespace PBGame.Rulesets.UI.Components
         {
             Result.HitResult = hitResult;
             Result.HitOffset = offset;
+            if(Result.IsHit)
+                PlayHitsounds();
             return Result;
         }
 
@@ -168,6 +178,30 @@ namespace PBGame.Rulesets.UI.Components
         }
 
         /// <summary>
+        /// Plays the hitsounds of the object.
+        /// </summary>
+        public void PlayHitsounds()
+        {
+            if(hitsound != null)
+                hitsound.Play();
+        }
+
+        /// <summary>
+        /// Soft-initializes the object state.
+        /// This can also be used for initialization after game session's hard init event.
+        /// </summary>
+        public virtual void SoftInit()
+        {
+            var samples = hitObject.Samples;
+            if (hitsound == null)
+            {
+                if(hitObject.SamplePoint == null)
+                    throw new Exception("There must be a valid sample point in order to process hit sounds!");
+                hitsound = new PlayableHitsound(GameSession.MapAssetStore, hitObject.SamplePoint, samples, SoundPool);
+            }
+        }
+
+        /// <summary>
         /// Disposes object state in a way that can be reused immediately later.
         /// </summary>
         public virtual void SoftDispose()
@@ -196,6 +230,8 @@ namespace PBGame.Rulesets.UI.Components
 
             hitObject = null;
             hasEndTime = null;
+
+            hitsound = null;
 
             nestedObjects.Clear();
             Result = null;

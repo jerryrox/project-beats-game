@@ -16,8 +16,8 @@ namespace PBGame.Assets
         {
             textureRequest = new TextureRequest(url, false);
 
-            startAction = (promise) => textureRequest.Start();
-            revokeAction = textureRequest.Revoke;
+            StartAction = (promise) => textureRequest.Start();
+            RevokeAction = textureRequest.Revoke;
 
             textureRequest.OnProgress += SetProgress;
             textureRequest.OnFinishedResult += (texture) => Resolve(new MapBackground(texture));

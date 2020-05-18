@@ -61,6 +61,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
             if (GameSession != null)
             {
                 GameSession.OnHardInit += OnHardInit;
+                GameSession.OnSoftInit += OnSoftInit;
                 GameSession.OnSoftDispose += OnSoftDispose;
                 GameSession.OnHardDispose += OnHardDispose;
             }
@@ -243,6 +244,17 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 }
             );
             State.AddInitialLoader(promise);
+        }
+
+        /// <summary>
+        /// Event called on game session soft initialization.
+        /// </summary>
+        private void OnSoftInit()
+        {
+            hitCircleRecycler.ActiveObjects.ForEach(o => o.SoftInit());
+            draggerCircleRecycler.ActiveObjects.ForEach(o => o.SoftInit());
+            tickRecycler.ActiveObjects.ForEach(o => o.SoftInit());
+            draggerRecycler.ActiveObjects.ForEach(o => o.SoftInit());
         }
 
         /// <summary>
