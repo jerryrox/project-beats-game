@@ -12,25 +12,16 @@ using PBFramework.Networking;
 
 namespace PBGame.Stores
 {
-    public class MapAssetStore : AssetStore, IDisposable
+    public class MapAssetStore : AssetStore, IMapAssetStore, IDisposable
     {
         private Dictionary<string, HitsoundLoadInfo> hitsoundInfos = new Dictionary<string, HitsoundLoadInfo>();
         private MultiPromise hitsoundLoader;
 
 
-        /// <summary>
-        /// Whether the hitsounds are loaded for current map.
-        /// </summary>
         public bool IsHitsoundLoaded { get; private set; }
 
-        /// <summary>
-        /// The map currently being used in context.
-        /// </summary>
         public IPlayableMap Map { get; private set; }
 
-        /// <summary>
-        /// The alternative map sound table for map hitsounds.
-        /// </summary>
         public MapSoundTable SoundTable { get; private set; }
 
 
@@ -40,9 +31,6 @@ namespace PBGame.Stores
             SoundTable = new MapSoundTable(fallbackSoundTable);
         }
 
-        /// <summary>
-        /// Returns a promise which loads the hit sounds from the map.
-        /// </summary>
         public IExplicitPromise LoadHitsounds()
         {
             DisposeHitsoundLoader();
