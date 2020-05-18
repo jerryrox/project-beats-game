@@ -73,7 +73,7 @@ namespace PBGame.Rulesets.Scoring
 
         public virtual bool IsFinished => results.Count == maxJudgements;
 
-        public virtual bool IsFailed { get; protected set; } = false;
+        public virtual bool IsFailed => Health.Value < 0.5f;
 
         public int JudgeCount => results.Count;
 

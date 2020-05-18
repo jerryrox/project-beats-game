@@ -1,3 +1,4 @@
+using PBGame.Rulesets.Scoring;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -6,6 +7,10 @@ using PBFramework.Dependencies;
 namespace PBGame.Rulesets.UI.HUD
 {
     public class HealthDisplay : UguiObject {
+
+        private bool isFailing;
+        private IScoreProcessor scoreProcessor;
+
 
         /// <summary>
         /// The health progress bar.
@@ -26,7 +31,9 @@ namespace PBGame.Rulesets.UI.HUD
         {
             gameSession.OnSoftInit += () =>
             {
-                gameSession.ScoreProcessor.Health.BindAndTrigger(OnHealthChange);
+                scoreProcessor = gameSession.ScoreProcessor;
+                scoreProcessor.Health.BindAndTrigger(OnHealthChange);
+                SetFailing(false);
             };
 
             ProgressBar = CreateChild<UguiProgressBar>("progress", 0);
@@ -40,11 +47,24 @@ namespace PBGame.Rulesets.UI.HUD
         }
 
         /// <summary>
+        /// Visually changes the progress bar to indicate whether the player is failing or not.
+        /// </summary>
+        private void SetFailing(bool isFailing)
+        {
+            if(this.isFailing == isFailing)
+                return;
+
+            this.isFailing = isFailing;
+            ProgressBar.Foreground.Color = isFailing ? ColorPreset.Negative.Base : ColorPreset.PrimaryFocus.Base;
+        }
+
+        /// <summary>
         /// Event called on health change.
         /// </summary>
         private void OnHealthChange(float health, float prevHealth)
         {
             ProgressBar.Value = health;
+            SetFailing(scoreProcessor.IsFailed);
         }
     }
 }
