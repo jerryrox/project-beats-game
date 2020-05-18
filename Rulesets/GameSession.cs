@@ -8,6 +8,7 @@ using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
+using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data;
 using PBFramework.Audio;
@@ -73,6 +74,9 @@ namespace PBGame.Rulesets
         [ReceivesDependency]
         private ISoundPool SoundPool { get; set; }
 
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
+
 
         protected GameSession(IGraphicObject container)
         {
@@ -119,8 +123,9 @@ namespace PBGame.Rulesets
             
             OnHardInit?.Invoke();
 
-            // Load map hitsounds.
-            GameState.AddInitialLoader(MapAssetStore.LoadHitsounds());
+            // Load map hitsounds only if enabled in configuration.
+            if(GameConfiguration.UseBeatmapHitsounds.Value)
+                GameState.AddInitialLoader(MapAssetStore.LoadHitsounds());
         }
 
         public void InvokeSoftInit()
