@@ -44,7 +44,13 @@ namespace PBGame.Rulesets.UI
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
 
             PlayArea = CreatePlayArea();
+            {
+                PlayArea.Depth = 0;
+            }
             Hud = CreateHud();
+            {
+                Hud.Depth = 1;
+            }
 
             ShowAni = new Anime();
             ShowAni.AnimateFloat(a => this.Alpha = a)

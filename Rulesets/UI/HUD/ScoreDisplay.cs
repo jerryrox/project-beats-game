@@ -1,5 +1,4 @@
 using PBGame.UI;
-using PBGame.Assets.Fonts;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -7,20 +6,36 @@ using UnityEngine;
 
 namespace PBGame.Rulesets.UI.HUD
 {
-    public class ScoreDisplay : UguiObject, IScoreDisplay {
-
-        public ILabel ScoreLabel { get; private set; }
+    public class ScoreDisplay : UguiObject
+    {
+        /// <summary>
+        /// The label displaying the score.
+        /// </summary>
+        public ILabel Label { get; private set; }
 
 
         [InitWithDependency]
-        private void Init(IFontManager fontManager)
+        private void Init(IGameSession gameSession)
         {
-            ScoreLabel = CreateChild<Label>("label");
+            gameSession.OnSoftInit += () =>
             {
-                ScoreLabel.Anchor = AnchorType.Fill;
-                ScoreLabel.RawSize = Vector2.zero;
-                ScoreLabel.Font = fontManager.DefaultFont;
+                gameSession.ScoreProcessor.Score.BindAndTrigger(OnScoreChange);
+            };
+
+            this.Size = Vector2.zero;
+
+            Label = CreateChild<Label>("label");
+            {
+                Label.Size = Vector2.zero;
             }
+        }
+
+        /// <summary>
+        /// Event called when the score changes.
+        /// </summary>
+        private void OnScoreChange(int score, int prevScore)
+        {
+            Label.Text = score.ToString("N0");
         }
     }
 }

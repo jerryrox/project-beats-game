@@ -11,7 +11,12 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
         /// <summary>
         /// Width of the play area.
         /// </summary>
-        public const float PlayAreaWidth = 1400f - HitObject.BaseRadius * 2f;
+        public const float PlayAreaWidth = 1400f;
+
+        /// <summary>
+        /// Width which hit object are spawned within.
+        /// </summary>
+        public const float HitObjectRange = PlayAreaWidth - HitObject.BaseRadius * 2f;
 
 
         public GameModeType FromMode { get; private set; }
@@ -35,8 +40,8 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
             {
                 case GameModeType.OsuStandard:
                     // TODO: Refer from osu pixel definition.
-                    Scale = PlayAreaWidth / 512;
-                    Offset = -PlayAreaWidth * 0.5f;
+                    Scale = HitObjectRange / 512;
+                    Offset = -HitObjectRange * 0.5f;
                     break;
             }
         }

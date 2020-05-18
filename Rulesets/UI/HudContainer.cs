@@ -4,54 +4,26 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.UI
 {
-    public abstract class HudContainer : UguiObject {
-
+    public abstract class HudContainer : UguiObject
+    {
         /// <summary>
         /// Returns the accuracy displayer object.
         /// </summary>
-        public IAccuracyDisplay AccuracyDisplay { get; private set; }
-
-        /// <summary>
-        /// Returns the health displayer object.
-        /// </summary>
-        public IHealthDisplay HealthDisplay { get; private set; }
+        public AccuracyDisplay AccuracyDisplay { get; protected set; }
 
         /// <summary>
         /// Returns the score displayer object.
         /// </summary>
-        public IScoreDisplay ScoreDisplay { get; private set; }
-
-
-        [InitWithDependency]
-        private void Init()
-        {
-            AccuracyDisplay = CreateAccuracyDisplay();
-            {
-                Depth = 0;
-            }
-            HealthDisplay = CreateHealthDisplay();
-            {
-                Depth = 2;
-            }
-            ScoreDisplay = CreateScoreDisplay();
-            {
-                Depth = 1;
-            }
-        }
+        public ScoreDisplay ScoreDisplay { get; protected set; }
 
         /// <summary>
-        /// Creates a new accuracy displayer object.
+        /// Returns the combo displayer object.
         /// </summary>
-        protected abstract IAccuracyDisplay CreateAccuracyDisplay();
+        public ComboDisplay ComboDisplay { get; protected set; }
 
         /// <summary>
-        /// Creates a new helath displayer object.
+        /// Returns the health displayer object.
         /// </summary>
-        protected abstract IHealthDisplay CreateHealthDisplay();
-
-        /// <summary>
-        /// Creates a new score displayer object.
-        /// </summary>
-        protected abstract IScoreDisplay CreateScoreDisplay();
+        public HealthDisplay HealthDisplay { get; protected set; }
     }
 }
