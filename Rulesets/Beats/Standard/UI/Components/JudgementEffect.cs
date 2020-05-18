@@ -39,7 +39,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             effectAni = new Anime() { StopMode = StopModeType.None };
             effectAni.AnimateVector2(s => this.Size = s)
                 .AddTime(0f, Vector2.zero, EaseType.CubicEaseOut)
-                .AddTime(0.25f, () => new Vector2(targetWidth, targetWidth * 28f))
+                .AddTime(0.25f, () => new Vector2(targetWidth, 8000))
                 .Build();
             effectAni.AnimateFloat(a => this.Alpha = a)
                 .AddTime(0f, 1f, EaseType.QuadEaseIn)
@@ -60,7 +60,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         public void ShowEffect(HitObjectView hitObjectView)
         {
-            targetWidth = hitObjectView.Width;
+            targetWidth = hitObjectView.Width * 1.5f;
             Tint = ColorPreset.GetHitResultColor(hitObjectView.Result.HitResult).Base;
             effectAni.PlayFromStart();
         }

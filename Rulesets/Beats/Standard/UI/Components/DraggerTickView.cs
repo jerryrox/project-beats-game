@@ -34,8 +34,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             tickSprite = CreateChild<UguiSprite>("tick", 0);
             {
+                tickSprite.Anchor = AnchorType.Fill;
+                tickSprite.Offset = Offset.Zero;
                 tickSprite.SpriteName = "circle-32";
-                tickSprite.Size = new Vector2(32f, 32f);
             }
 
             hitAni = new Anime();
@@ -86,6 +87,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             SetParent(draggerView.Parent);
             draggerView = null;
+        }
+
+        public override void SetHitObject(DraggerTick hitObject)
+        {
+            base.SetHitObject(hitObject);
+
+            this.Size = new Vector2(32f, 32f);
         }
 
         public override bool IsPastJudgeEnd(float curTime)
