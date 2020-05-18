@@ -12,6 +12,11 @@ namespace PBGame.Rulesets.Beats.Standard.Scoring
         /// </summary>
         private float hpDrainRate;
 
+        private float healthPerPerfect;
+
+
+        protected override float HealthPerPerfect => healthPerPerfect;
+
 
         public ScoreProcessor() : base()
         {
@@ -39,23 +44,8 @@ namespace PBGame.Rulesets.Beats.Standard.Scoring
 
             // Get HP difficulty value.
             // TODO: Apply mod
-            hpDrainRate = (float)map.Detail.Difficulty.HpDrainRate;
+            hpDrainRate = map.Detail.Difficulty.HpDrainRate;
+            healthPerPerfect = 1f / Mathf.Min((int)(hpDrainRate * 15f + 25f), map.ObjectCount);
         }
-
-		protected override float GetHealthChangeFactor (HitResultType hitResult)
-		{
-            if(hitResult == HitResultType.Miss) // Base: -0.02
-				return (hpDrainRate * 0.7f) + 1f; // 1~8
-
-            // Base: 0.01
-            var factor = 10f - (Mathf.Clamp(hpDrainRate, 0f, 10f) * 0.9975f); // 10~40;
-            switch(hitResult)
-			{
-                case HitResultType.Good: return factor;
-                case HitResultType.Ok: return factor * 0.5f;
-                case HitResultType.Bad: return factor * 0.25f;
-			}
-			return 0;
-		}
     }
 }

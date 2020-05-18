@@ -53,7 +53,7 @@ namespace PBGame.Rulesets.Scoring
         /// <summary>
         /// Returns the bindable accuracy value.
         /// </summary>
-        BindableDouble Accuracy { get; }
+        BindableFloat Accuracy { get; }
 
         /// <summary>
         /// Returns the bindable rank value.

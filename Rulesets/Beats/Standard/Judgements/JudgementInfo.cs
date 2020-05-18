@@ -10,7 +10,7 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 		public override HitResultType MaxResult { get { return HitResultType.Perfect; } }
 
 
-		protected override int GetNumericResult (HitResultType result)
+		public override int GetNumericResult (HitResultType result)
 		{
 			switch(result)
 			{
@@ -21,16 +21,16 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 			return 0;
 		}
 
-		protected override float GetHealthIncrease (HitResultType result)
+		public override float GetHealthBonus (HitResultType result)
 		{
 			switch(result)
-			{
-			case HitResultType.Miss:
-				return -0.02f;
-			case HitResultType.Good:
-			case HitResultType.Great:
-			case HitResultType.Perfect:
-				return 0.01f;
+            {
+                case HitResultType.Perfect:
+                    return 1f;
+                case HitResultType.Great:
+                    return 0.5f;
+                case HitResultType.Good:
+                    return 0.25f;
 			}
 			return 0f;
 		}
