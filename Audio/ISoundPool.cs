@@ -29,5 +29,10 @@ namespace PBGame.Audio
         /// Sets the volume of the effect controllers.
         /// </summary>
         void SetVolume(float volume);
+
+        /// <summary>
+        /// Unmounts audio from all effect controllers.
+        /// </summary>
+        void UnmountAll();
     }
 }

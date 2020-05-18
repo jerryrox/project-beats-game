@@ -70,6 +70,9 @@ namespace PBGame.Rulesets
         [ReceivesDependency]
         private ISoundTable SoundTable { get; set; }
 
+        [ReceivesDependency]
+        private ISoundPool SoundPool { get; set; }
+
 
         protected GameSession(IGraphicObject container)
         {
@@ -165,6 +168,8 @@ namespace PBGame.Rulesets
             IsPlaying = false;
             CurrentMap = null;
 
+            // Before destroying custom hitsounds in the asset store, they must first be unmounted from the sound pool.
+            SoundPool.UnmountAll();
             MapAssetStore.Dispose();
             MapAssetStore = null;
 

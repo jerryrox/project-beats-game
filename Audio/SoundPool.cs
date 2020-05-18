@@ -77,6 +77,14 @@ namespace PBGame.Audio
                 controller.SetVolume(volume);
         }
 
+        public void UnmountAll()
+        {
+            foreach(var controller in pool)
+                controller.MountAudio(null);
+            foreach (var controller in persistentPool)
+                controller.MountAudio(null);
+        }
+
         /// <summary>
         /// Returns the effect controller.
         /// </summary>
