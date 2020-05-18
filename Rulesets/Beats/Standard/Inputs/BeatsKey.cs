@@ -7,9 +7,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
     public class BeatsKey : BaseBeatsInput<IInput>, IRecyclable<BeatsKey> {
 
         /// <summary>
-        /// The hit object view instance currently bound to this key.
+        /// The dragger view instance currently bound to this key.
         /// </summary>
-        public HitObjectView HitObjectView { get; set; }
+        public DraggerView DraggerView { get; set; }
 
         IRecycler<BeatsKey> IRecyclable<BeatsKey>.Recycler { get; set; }
 
@@ -17,7 +17,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         public override void OnRecycleDestroy()
         {
             base.OnRecycleDestroy();
-            HitObjectView = null;
+            DraggerView = null;
         }
     }
 }

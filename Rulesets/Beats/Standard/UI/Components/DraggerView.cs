@@ -100,6 +100,12 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             return startCircle.JudgeInput(curTime, input);
         }
 
+        public override bool IsCursorInRange(float x)
+        {
+            float curPos = xPos + startCircle.X;
+            return x > curPos - radius && x < curPos + radius;
+        }
+
         public override void HardDispose()
         {
             base.HardDispose();
@@ -114,8 +120,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected override void EvalPassiveJudgement()
         {
-            var judgementsCount = BaseNestedObjects.Count;
-            var judgementsHit = BaseNestedObjects.Count(o => o.Result.IsHit);
+            // Make the dragger circle released.
+            startCircle.SetHold(false, judgeEndTime);
+
+            var judgementsCount = BaseNestedObjects.Count + 1;
+            var judgementsHit = BaseNestedObjects.Count(o => o.Result.IsHit) + (startCircle.IsHolding(judgeEndTime) ? 1 : 0);
             var hitRatio = (float)judgementsHit / judgementsCount;
 
             HitResultType resultType = HitResultType.Miss;

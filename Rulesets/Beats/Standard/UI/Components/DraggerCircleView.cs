@@ -139,6 +139,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         public void SetHold(bool holding, float curTime)
         {
+            if(this.isHolding == holding)
+                return;
+
             // Held down
             if (holding && !wasHolding)
             {
@@ -168,7 +171,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             if(!curTime.HasValue)
                 return isHolding;
-            return isHolding && curTime.Value < releaseTime + BonusReleaseTime;
+            return isHolding || curTime.Value < releaseTime + BonusReleaseTime;
         }
 
         public override JudgementResult JudgeInput(float curTime, IInput input)

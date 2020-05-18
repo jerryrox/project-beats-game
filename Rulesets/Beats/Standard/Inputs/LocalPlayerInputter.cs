@@ -79,6 +79,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             // Process beats cursor aiming.
             if (hitBarCursor.IsActive)
             {
+                // Aiming on hit bar?
                 if (IsOnHitBar(hitBarCursor.Input, out float pos))
                 {
                     hitBarCursor.HitBarPos = pos;
@@ -87,6 +88,16 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 else
                 {
                     hitBarCursor.IsOnHitBar.Value = false;
+                }
+
+                // Check all key strokes whether the cursor is within the hit object boundary.
+                float curTime = hitObjectHolder.CurrentTime;
+                foreach (var key in keyRecycler.ActiveObjects)
+                {
+                    if (key.IsActive && key.DraggerView != null)
+                    {
+                        key.DraggerView.StartCircle.SetHold(key.DraggerView.IsCursorInRange(pos), curTime);
+                    }
                 }
             }
 
@@ -190,7 +201,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 if (objView.IsCursorInRange(hitBarCursor.HitBarPos))
                 {
                     // Associate the hit object view with the key stroke.
-                    key.HitObjectView = objView;
+                    if(objView is DraggerView draggerView)
+                        key.DraggerView = draggerView;
                     AddJudgement(objView.JudgeInput(hitObjectHolder.CurrentTime, key.Input));
                     break;
                 }
@@ -202,10 +214,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void JudgeKeyRelease(BeatsKey key)
         {
-            if (key.HitObjectView == null)
+            if (key.DraggerView == null)
                 return;
 
-            AddJudgement(key.HitObjectView.JudgeInput(hitObjectHolder.CurrentTime, key.Input));
+            key.DraggerView.StartCircle.SetHold(false, hitObjectHolder.CurrentTime);
         }
 
         /// <summary>
