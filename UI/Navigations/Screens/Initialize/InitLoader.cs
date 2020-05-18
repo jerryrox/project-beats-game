@@ -79,6 +79,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
             GameConfiguration.MasterVolume.Trigger();
             GameConfiguration.UseParallax.Trigger();
             GameConfiguration.ResolutionQuality.Trigger();
+            GameConfiguration.GlobalOffset.Trigger();
 
             LoadMapManager();
         }

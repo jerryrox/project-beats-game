@@ -284,6 +284,12 @@ namespace PBGame
             {
                 ApplyScreenResolution();
             };
+
+            // Offset settings
+            gameConfiguration.GlobalOffset.OnValueChanged += (offset, _) =>
+            {
+                musicController.Clock.Offset = offset;
+            };
         }
 
         /// <summary>

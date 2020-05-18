@@ -45,7 +45,7 @@ namespace PBGame.Rulesets.Beats.Standard.Scoring
             // Get HP difficulty value.
             // TODO: Apply mod
             hpDrainRate = map.Detail.Difficulty.HpDrainRate;
-            healthPerPerfect = 1f / Mathf.Min((int)(hpDrainRate * 15f + 25f), map.ObjectCount);
+            healthPerPerfect = 1f / Mathf.Min((int)(hpDrainRate * 25f + 40f), map.ObjectCount);
         }
     }
 }
