@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Audio;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
@@ -144,6 +145,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             }
             else
                 Active = false;
+        }
+
+        protected override PlayableHitsound CreatePlayableHitsound()
+        {
+            if (hitObject.SamplePoint == null)
+                throw new Exception("There must be a valid sample point in order to process hit sounds!");
+            return new PlayableHitsound(GameSession.MapAssetStore, hitObject.SamplePoint, hitObject.EndSamples, SoundPool);
         }
     }
 }

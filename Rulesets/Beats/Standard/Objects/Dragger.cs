@@ -19,6 +19,11 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		/// </summary>
 		public HitCircle StartCircle { get; set; }
 
+		/// <summary>
+		/// The list of samples to be played on dragger end.
+		/// </summary>
+		public List<SoundInfo> EndSamples { get; set; }
+
         public SliderPath Path { get; set; }
 
 		public int RepeatCount { get; set; }
@@ -47,7 +52,7 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 			base.ApplyMapPropertiesSelf (controlPoints, difficulty);
 
             // Set samples to be played on dragger end.
-            Samples = NodeSamples[NodeSamples.Count - 1];
+            EndSamples = NodeSamples[NodeSamples.Count - 1];
 
             // Set ending position
             EndX = this.GetPosition(1f).x;

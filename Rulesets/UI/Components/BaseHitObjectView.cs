@@ -180,7 +180,7 @@ namespace PBGame.Rulesets.UI.Components
         /// <summary>
         /// Plays the hitsounds of the object.
         /// </summary>
-        public void PlayHitsounds()
+        public virtual void PlayHitsounds()
         {
             if(hitsound != null)
                 hitsound.Play();
@@ -192,13 +192,8 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public virtual void SoftInit()
         {
-            var samples = hitObject.Samples;
-            if (hitsound == null)
-            {
-                if(hitObject.SamplePoint == null)
-                    throw new Exception("There must be a valid sample point in order to process hit sounds!");
-                hitsound = new PlayableHitsound(GameSession.MapAssetStore, hitObject.SamplePoint, samples, SoundPool);
-            }
+            if(hitsound == null)
+                hitsound = CreatePlayableHitsound();
         }
 
         /// <summary>
@@ -300,6 +295,16 @@ namespace PBGame.Rulesets.UI.Components
         {
             objectView.parentObject = this;
             nestedObjects.Add(objectView);
+        }
+
+        /// <summary>
+        /// Creates a new playable hitsound set.
+        /// </summary>
+        protected virtual PlayableHitsound CreatePlayableHitsound()
+        {
+            if (hitObject.SamplePoint == null)
+                throw new Exception("There must be a valid sample point in order to process hit sounds!");
+            return new PlayableHitsound(GameSession.MapAssetStore, hitObject.SamplePoint, hitObject.Samples, SoundPool);
         }
 
         /// <summary>
