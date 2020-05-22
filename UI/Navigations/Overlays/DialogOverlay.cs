@@ -5,7 +5,6 @@ using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
-using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -74,6 +73,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override void OnEnableInited()
         {
+            base.OnEnableInited();
             blocker.Active = false;
         }
 

@@ -50,6 +50,13 @@ namespace PBGame.UI.Components.Dialog
                 .Build();
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            Width = BaseWidth;
+            hoverSprite.Color = tint;
+        }
+
         public override void UseDefaultHoverAni()
         {
             hoverInAni = new Anime();
