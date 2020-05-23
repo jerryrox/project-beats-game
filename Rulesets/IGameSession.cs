@@ -85,6 +85,11 @@ namespace PBGame.Rulesets
         /// </summary>
         bool IsPlaying { get; }
 
+        /// <summary>
+        /// Returns whether the game is currently paused.
+        /// </summary>
+        bool IsPaused { get; }
+
 
         /// <summary>
         /// Returns the duration of play in seconds.

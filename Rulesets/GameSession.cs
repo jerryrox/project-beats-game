@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using PBGame.UI.Components.Game;
 using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Rulesets.UI;
@@ -48,6 +49,8 @@ namespace PBGame.Rulesets
 
         public bool IsPlaying { get; private set; }
 
+        public bool IsPaused { get; private set; }
+
         /// <summary>
         /// Dependencies of the game session.
         /// Inject this dependency instead when creating the game gui to gain access to this game session instance.
@@ -60,6 +63,9 @@ namespace PBGame.Rulesets
         private GameScreen GameScreen => ScreenNavigator.Get<GameScreen>();
 
         [ReceivesDependency]
+        protected IGame Game { get; set; }
+
+        [ReceivesDependency]
         protected IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
@@ -67,6 +73,9 @@ namespace PBGame.Rulesets
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
 
         [ReceivesDependency]
         private ISoundTable SoundTable { get; set; }
@@ -143,6 +152,10 @@ namespace PBGame.Rulesets
             {
                 MusicController.Play(LeadInTime);
 
+                // Start listening to application pause event.
+                Game.OnAppPause += OnAppPaused;
+                Game.OnAppFocus += OnAppFocused;
+
                 IsPlaying = true;
 
                 OnSoftInit?.Invoke();
@@ -154,6 +167,10 @@ namespace PBGame.Rulesets
             IsPlaying = false;
 
             int playTime = GetPlayTime();
+
+            // Stop listening to app pause event.
+            Game.OnAppPause -= OnAppPaused;
+            Game.OnAppFocus -= OnAppFocused;
 
             // Record score.
             var recordPromise = GameScreen?.RecordScore(ScoreProcessor, playTime);
@@ -183,11 +200,15 @@ namespace PBGame.Rulesets
 
         public void InvokePause()
         {
+            if(MusicController.CurrentTime < 0f)
+                return;
             if(MusicController.IsPlaying)
                 MusicController.Pause();
 
-            // TODO: show pause overlay.
+            var pauseOverlay = OverlayNavigator.Show<PauseOverlay>();
+            pauseOverlay.GameSession = this;
 
+            IsPaused = true;
             OnPause?.Invoke();
         }
 
@@ -196,6 +217,7 @@ namespace PBGame.Rulesets
             if(MusicController.IsPaused)
                 MusicController.Play();
 
+            IsPaused = false;
             OnResume?.Invoke();
         }
 
@@ -249,6 +271,24 @@ namespace PBGame.Rulesets
             };
             initialTimer.OnFinished += (t) => InvokeSoftDispose();
             initialTimer.Start();
+        }
+
+        /// <summary>
+        /// Event called on application pause.
+        /// </summary>
+        protected virtual void OnAppPaused(bool paused)
+        {
+            if (paused)
+                InvokePause();
+        }
+
+        /// <summary>
+        /// Event called on application focus.
+        /// </summary>
+        protected virtual void OnAppFocused(bool focused)
+        {
+            if (!focused)
+                InvokePause();
         }
 
         /// <summary>
