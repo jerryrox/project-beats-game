@@ -21,6 +21,10 @@ namespace PBGame.Rulesets.UI.HUD
             {
                 gameSession.ScoreProcessor.Accuracy.BindAndTrigger(OnAccuracyChange);
             };
+            gameSession.OnSoftDispose += () =>
+            {
+                Label.Text = "0%";
+            };
 
             this.Size = Vector2.zero;
 

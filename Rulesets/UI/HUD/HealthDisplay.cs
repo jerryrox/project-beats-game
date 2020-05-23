@@ -35,6 +35,10 @@ namespace PBGame.Rulesets.UI.HUD
                 scoreProcessor.Health.BindAndTrigger(OnHealthChange);
                 SetFailing(false);
             };
+            gameSession.OnSoftDispose += () =>
+            {
+                ProgressBar.Value = 0f;
+            };
 
             ProgressBar = CreateChild<UguiProgressBar>("progress", 0);
             {
