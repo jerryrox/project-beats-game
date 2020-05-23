@@ -169,10 +169,10 @@ namespace PBGame
                     {
                         bool wasPaused = musicController.IsPaused;
                         musicController.Play();
-                        // Play from beginning if music stopped at the end.
+                        // Play from preview point if music stopped at the end.
                         if (!wasPaused)
                         {
-                            musicController.Seek(0f);
+                            musicController.Seek(mapSelection.Map.Metadata.PreviewTime);
                             musicController.Fade(0f, 1f);
                         }
                     }
