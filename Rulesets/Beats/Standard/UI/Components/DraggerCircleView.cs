@@ -117,6 +117,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 if(o != hitObject)
                     judgeEndTime = Mathf.Min(judgeEndTime, o.StartTime);
             }
+
+            // Reset to initial position
+            Position = Vector3.zero;
         }
 
         public void RemoveDragger()
@@ -196,6 +199,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                     break;
             }
             return result;
+        }
+
+        public override void SoftInit()
+        {
+            base.SoftInit();
+
+            Active = true;
+            Position = Vector3.zero;
         }
 
         public override void SoftDispose()

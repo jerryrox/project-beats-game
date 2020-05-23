@@ -204,9 +204,7 @@ namespace PBGame.Rulesets.UI.Components
             Active = false;
 
             if (Result != null)
-            {
                 Result.Reset();
-            }
         }
 
         /// <summary>

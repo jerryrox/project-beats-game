@@ -28,6 +28,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         IRecycler<DraggerTickView> IRecyclable<DraggerTickView>.Recycler { get; set; }
 
+        [ReceivesDependency]
+        private PlayAreaContainer PlayArea { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -75,6 +78,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
             this.draggerView = draggerView;
             SetParent(draggerView);
+
+            // Reset to initial position
+            SetInitialPosition();
         }
 
         /// <summary>
@@ -99,6 +105,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public override bool IsPastJudgeEnd(float curTime)
         {
             return curTime > hitObject.StartTime;
+        }
+
+        public override void SoftInit()
+        {
+            base.SoftInit();
+
+            Active = true;
+            SetInitialPosition();
         }
 
         public override void HardDispose()
@@ -127,6 +141,19 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected void Update()
         {
             this.Y = Mathf.Max(draggerView.StartCircle.Position.y, this.Y);
+        }
+
+        /// <summary>
+        /// Sets the position of the tick to be at its initial position within the dragger.
+        /// </summary>
+        private void SetInitialPosition()
+        {
+            if(hitObject == null || draggerView == null)
+                return;
+            Position = new Vector3(
+                hitObject.X,
+                (hitObject.StartTime - draggerView.HitObject.StartTime) * PlayArea.DistancePerTime
+            );
         }
     }
 }

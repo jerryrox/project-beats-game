@@ -84,11 +84,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                     tickView.Active = true;
                     tickView.SetDragger(this);
                     tickView.SetHitObject(tick);
-                    tickView.Position = new Vector3(
-                        tick.X,
-                        (tick.StartTime - hitObject.StartTime) * distPerTime
-                    );
-
                     AddNestedObject(tickView);
                 }
             }
@@ -105,6 +100,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             float curPos = xPos + startCircle.X;
             return x > curPos - radius && x < curPos + radius;
+        }
+
+        public override void SoftDispose()
+        {
+            base.SoftDispose();
+
+            draggerBody.Active = true;
         }
 
         public override void HardDispose()
