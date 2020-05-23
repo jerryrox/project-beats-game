@@ -81,6 +81,8 @@ namespace PBGame
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
 
+        public string Version => Application.version;
+
 
         void Awake()
         {

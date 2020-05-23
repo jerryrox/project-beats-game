@@ -23,6 +23,11 @@ namespace PBGame
         /// </summary>
         IDependencyContainer Dependencies { get; }
 
+        /// <summary>
+        /// Returns the version of the game.
+        /// </summary>
+        string Version { get; }
+
 
         /// <summary>
         /// Gracefully quits the game.
