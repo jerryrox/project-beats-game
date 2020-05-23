@@ -115,9 +115,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
                 if (view.IsFullyJudged)
                 {
-                    // Clamp position
-                    view.Y = PlayArea.HitPosition;
-
                     // Advance low index?
                     if (advanceLowIndex)
                         hitObjectViews.AdvanceLowIndex(true);
