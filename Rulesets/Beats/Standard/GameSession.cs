@@ -25,9 +25,14 @@ namespace PBGame.Rulesets.Beats.Standard
                 // TODO: Determine whether it's a player-controlled session.
                 var playArea = Dependencies.Get<PlayAreaContainer>();
                 var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
+
+                // Initialize inputter
                 var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
                 Dependencies.Inject(localPlayerInputter);
                 gameInputter = localPlayerInputter;
+
+                // Pass inputter to hit object holder
+                hitObjectHolder.SetInputter(gameInputter);
             };
             base.OnHardDispose += () =>
             {

@@ -6,6 +6,7 @@ using PBGame.Data;
 using PBGame.Graphics;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
+using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
 using PBFramework;
@@ -30,6 +31,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
         private int curComboOffset;
         private List<Color> comboColors;
+
+        private IGameInputter gameInputter;
 
 
         /// <summary>
@@ -87,6 +90,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 yield return hitObjectViews[i];
         }
 
+        /// <summary>
+        /// Sets the inputter to use for handling passive judgements.
+        /// </summary>
+        public void SetInputter(IGameInputter gameInputter)
+        {
+            this.gameInputter = gameInputter;
+        }
+
         protected void Update()
         {
             if(!GameSession.IsPlaying)
@@ -99,7 +110,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 var view = hitObjectViews[i];
 
                 // Process any passive judgements to be made.
-                foreach(var judgement in view.JudgePassive(curTime))
+                foreach(var judgement in gameInputter.JudgePassive(curTime, view))
                     AddJudgement(judgement);
 
                 if (view.IsFullyJudged)

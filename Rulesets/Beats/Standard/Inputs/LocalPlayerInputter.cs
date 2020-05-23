@@ -117,6 +117,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             return true;
         }
 
+        public IEnumerable<JudgementResult> JudgePassive(float curTime, HitObjectView view)
+        {
+            return view.JudgePassive(curTime);
+        }
+
         int IComparable<IInputReceiver>.CompareTo(IInputReceiver other) => other.InputLayer.CompareTo(InputLayer);
 
         void IInputReceiver.PrepareInputSort() { }
