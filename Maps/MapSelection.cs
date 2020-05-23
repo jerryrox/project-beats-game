@@ -112,7 +112,11 @@ namespace PBGame.Maps
             }
 
             // Apply default map.
-            if (map == null) map = mapset.Maps[0].GetPlayable(currentMode);
+            if (map == null) {
+                // Make sure the maps are sorted for the current game mode.
+                mapset.SortMapsByMode(currentMode);
+                map = mapset.Maps[0].GetPlayable(currentMode);
+            }
 
             // Set mapset only if different.
             if (mapset != this.Mapset)
