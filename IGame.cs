@@ -1,9 +1,23 @@
-﻿using PBFramework.Dependencies;
+﻿using System;
+using PBFramework.Dependencies;
 
 namespace PBGame
 {
     public interface IGame {
-    
+
+        /// <summary>
+        /// Event called on application focus/unfocus.
+        /// Specifies whether the application is currently focused.
+        /// </summary>
+        event Action<bool> OnAppFocus;
+
+        /// <summary>
+        /// Event called on application pause/resume.
+        /// Specifies whether the application is currently paused.
+        /// </summary>
+        event Action<bool> OnAppPause;
+
+
         /// <summary>
         /// Returns the dependencies container initialized from the game context.
         /// </summary>

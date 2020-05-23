@@ -32,6 +32,9 @@ namespace PBGame
 {
     public abstract class BaseGame : MonoBehaviour, IGame {
 
+        public event Action<bool> OnAppFocus;
+        public event Action<bool> OnAppPause;
+
         protected ModeManager modeManager;
 
         protected NotificationBox notificationBox;
@@ -149,6 +152,10 @@ namespace PBGame
             Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
         }
 
+        protected virtual void OnApplicationPause(bool paused) => OnAppPause?.Invoke(paused);
+
+        protected virtual void OnApplicationFocus(bool focused) => OnAppFocus?.Invoke(focused);
+
         /// <summary>
         /// Handles final process after initialization.
         /// </summary>
@@ -176,5 +183,7 @@ namespace PBGame
         {
             metronome.Update();
         }
+
+
     }
 }
