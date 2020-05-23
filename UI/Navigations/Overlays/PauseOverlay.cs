@@ -19,6 +19,8 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         public IGameSession GameSession { get; set; }
 
+        protected override bool IsDerived => true;
+
         [ReceivesDependency]
         private IColorPreset ColorPreset { get; set; }
 
@@ -26,9 +28,18 @@ namespace PBGame.UI.Navigations.Overlays
         private IOverlayNavigator OverlayNavigator { get; set; }
 
 
+        [InitWithDependency]
+        private void Init()
+        {
+            OnEnableInited();
+        }
+
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
+
+            SetMessage("Game paused");
+
             AddSelection("Resume", ColorPreset.Positive, () =>
             {
                 OverlayNavigator.Hide(this);

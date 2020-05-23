@@ -19,6 +19,11 @@ namespace PBGame.UI.Navigations.Overlays
         private SelectionHolder selectionHolder;
 
 
+        /// <summary>
+        /// Returns whether the dialog overlay is derived to another overlay.
+        /// </summary>
+        protected virtual bool IsDerived => false;
+
         protected override int OverlayDepth => ViewDepths.DialogOverlay;
 
         [ReceivesDependency]
@@ -68,7 +73,8 @@ namespace PBGame.UI.Navigations.Overlays
                 blocker.SpriteName = "null";
             }
 
-            OnEnableInited();
+            if(!IsDerived)
+                OnEnableInited();
         }
 
         protected override void OnEnableInited()
