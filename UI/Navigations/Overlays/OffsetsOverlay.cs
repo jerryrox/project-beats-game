@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Offsets;
 using PBGame.Maps;
+using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBGame.Configurations.Maps;
 using PBFramework.UI;
@@ -45,22 +46,28 @@ namespace PBGame.UI.Navigations.Overlays
             }
             mapsetSlider = CreateChild<OffsetSlider>("mapset", 1);
             {
+                mapsetSlider.Anchor = AnchorType.Bottom;
+                mapsetSlider.Position = new Vector3(-240f, 56f);
+                mapsetSlider.Size = new Vector2(400f, 100f);
                 mapsetSlider.LabelText = "Mapset offset";
             }
             mapSlider = CreateChild<OffsetSlider>("map", 2);
             {
+                mapSlider.Anchor = AnchorType.Bottom;
+                mapSlider.Position = new Vector3(240f, 56f);
+                mapSlider.Size = new Vector2(400f, 100f);
                 mapSlider.LabelText = "Map offset";
             }
         }
+        
+        public void Setup() => Setup(MapSelection.Mapset, MapSelection.Map);
 
-        protected override void OnPreShow()
+        public void Setup(IMapset mapset, IMap map)
         {
-            base.OnPreShow();
-
-            var mapset = MapSelection.Mapset;
+            Dispose();
+            
             if(mapset != null)
                 mapsetSlider.SetSource(mapsetConfig = MapsetConfiguration.GetConfig(mapset));
-            var map = MapSelection.Map;
             if(map != null)
                 mapSlider.SetSource(mapConfig = MapConfiguration.GetConfig(map));
         }
@@ -68,6 +75,14 @@ namespace PBGame.UI.Navigations.Overlays
         protected override void OnPreHide()
         {
             base.OnPreHide();
+            Dispose();
+        }
+
+        /// <summary>
+        /// Disposes current mapset/map offset configuration.
+        /// </summary>
+        private void Dispose()
+        {
             if(mapsetConfig != null)
                 MapsetConfiguration.SetConfig(mapsetConfig);
             if(mapConfig != null)

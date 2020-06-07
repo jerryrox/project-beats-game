@@ -5,6 +5,7 @@ using PBGame.Rulesets;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
+using PBFramework.Data;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -47,7 +48,23 @@ namespace PBGame.UI.Navigations.Overlays
             });
             AddSelection("Offset", ColorPreset.Passive, () =>
             {
-                // TODO: Show offset settings overlay.
+                // Show the offset overlay.
+                OffsetsOverlay overlay = OverlayNavigator.Show<OffsetsOverlay>();
+                overlay.Setup();
+
+                // Bind temporary hide event listener to overlay.
+                EventBinder<Action> closeBinder = new EventBinder<Action>(
+                    e => overlay.OnHide += e,
+                    e => overlay.OnHide -= e
+                );
+                closeBinder.IsOneTime = true;
+                // Show pause overlay once the offset overlay has been closed.
+                IGameSession savedSession = GameSession;
+                closeBinder.SetHandler(() =>
+                {
+                    var pause = OverlayNavigator.Show<PauseOverlay>();
+                    pause.GameSession = savedSession;
+                });
             });
             AddSelection("Retry", ColorPreset.Warning, () =>
             {
