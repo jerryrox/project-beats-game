@@ -52,6 +52,6 @@ namespace PBGame.Configurations
             }
         }
 
-        public void Save() {}
+        public void Save() => Logger.LogWarning("MapsetConfiguration.Save - Unimplemented interface method 'Save()' called. Use SetConfig instaed.");
     }
 }
