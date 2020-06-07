@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Networking.API;
@@ -19,6 +20,16 @@ namespace PBGame
         /// Holds the original screen size before modifying with game configurations.
         /// </summary>
         private Vector2 originalScreenSize;
+
+        /// <summary>
+        /// The offset of the current mapset.
+        /// </summary>
+        private IMusicOffset mapsetOffset;
+
+        /// <summary>
+        /// The offset of the current map.
+        /// </summary>
+        private IMusicOffset mapOffset;
 
         private Cached<MenuBarOverlay> cachedMenuBar = new Cached<MenuBarOverlay>();
 
@@ -111,7 +122,7 @@ namespace PBGame
             musicController.OnEnd += () =>
             {
                 // Loop the music when not in game screen.
-                if(!(screenNavigator.CurrentScreen is GameScreen))
+                if (!(screenNavigator.CurrentScreen is GameScreen))
                 {
                     // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
                     // Check whether menu bar exists and try letting the music menu handle music switching.
@@ -187,7 +198,7 @@ namespace PBGame
         {
             overlayNavigator.OnShowView += (view) =>
             {
-                if(!(view is MenuBarOverlay))
+                if (!(view is MenuBarOverlay))
                     ApplyMenuBarOverlay();
                 else
                 {
@@ -210,6 +221,23 @@ namespace PBGame
         /// </summary>
         private void HookMapSelection()
         {
+            mapSelection.OnMapChange += (map) =>
+            {
+                // Observe offset changes in the map.
+                if(mapOffset != null)
+                    mapOffset.Offset.OnValueChanged -= OnMusicOffsetChange;
+                mapOffset = mapConfiguration.GetConfig(map);
+                mapOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+            };
+            mapSelection.OnMapsetChange += (mapset) =>
+            {
+                // Observe offset changes in the mapset.
+                if(mapsetOffset != null)
+                    mapsetOffset.Offset.OnValueChanged -= OnMusicOffsetChange;
+                mapsetOffset = mapsetConfiguration.GetConfig(mapset);
+                mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+            };
+
             mapSelection.OnMusicLoaded += (music) =>
             {
                 // Play music on load.
@@ -317,11 +345,11 @@ namespace PBGame
         {
             mapManager.OnImportMapset += (mapset) =>
             {
-                if(mapset == null)
+                if (mapset == null)
                     return;
-                    
+
                 // Select new map if in songs selection.
-                if(screenNavigator.CurrentScreen is SongsScreen)
+                if (screenNavigator.CurrentScreen is SongsScreen)
                     mapSelection.SelectMapset(mapset);
 
                 notificationBox.Add(new Notification()
@@ -338,7 +366,7 @@ namespace PBGame
         {
             if (screenNavigator.CurrentScreen is HomeScreen)
             {
-                if(overlayNavigator.IsShowing(typeof(HomeMenuOverlay)))
+                if (overlayNavigator.IsShowing(typeof(HomeMenuOverlay)))
                     overlayNavigator.Show<MenuBarOverlay>(true);
                 else
                     overlayNavigator.Hide<MenuBarOverlay>();
@@ -384,5 +412,26 @@ namespace PBGame
 
             Application.targetFrameRate = framerate;
         }
+
+        /// <summary>
+        /// Applies music offset to music controller.
+        /// </summary>
+        private void ApplyMusicOffset() => musicController.Clock.Offset = GetMusicOffset();
+
+        /// <summary>
+        /// Event called when the mapset/map's offset has been changed.
+        /// </summary>
+        private void OnMusicOffsetChange(int offset, int prevOffset) => ApplyMusicOffset();
+
+        /// <summary>
+        /// Returns the total music offset applied.
+        /// </summary>
+        private float GetMusicOffset()
+        {
+            return gameConfiguration.GlobalOffset.Value +
+                (mapOffset != null ? mapOffset.Offset.Value : 0) +
+                (mapsetOffset != null ? mapsetOffset.Offset.Value : 0);
+        }
+
     }
 }
