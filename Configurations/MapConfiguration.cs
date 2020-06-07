@@ -14,7 +14,7 @@ namespace PBGame.Configurations
         private Database<MapConfig> database;
 
 
-        public MapConfig GetConfig(IMap map) => GetConfig(map.Detail.Hash);
+        public MapConfig GetConfig(IMap map) => map == null ? null : GetConfig(map.Detail.Hash);
 
         public MapConfig GetConfig(string hash)
         {

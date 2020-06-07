@@ -60,22 +60,25 @@ namespace PBGame.UI.Navigations.Overlays
             }
         }
         
-        public void Setup() => Setup(MapSelection.Mapset, MapSelection.Map);
+        public void Setup() => Setup(MapSelection.Mapset, MapSelection.Map, MapSelection.MapsetConfig.Value, MapSelection.MapConfig.Value);
 
-        public void Setup(IMapset mapset, IMap map)
-        {
-            Dispose();
-            
-            if(mapset != null)
-                mapsetSlider.SetSource(mapsetConfig = MapsetConfiguration.GetConfig(mapset));
-            if(map != null)
-                mapSlider.SetSource(mapConfig = MapConfiguration.GetConfig(map));
-        }
+        public void Setup(IMapset mapset, IMap map) => Setup(mapset, map, MapsetConfiguration.GetConfig(mapset), MapConfiguration.GetConfig(map));
 
         protected override void OnPreHide()
         {
             base.OnPreHide();
             Dispose();
+        }
+
+        /// <summary>
+        /// Internally handles setup actions.
+        /// </summary>
+        private void Setup(IMapset mapset, IMap map, MapsetConfig mapsetConfig, MapConfig mapConfig)
+        {
+            Dispose();
+            
+            mapsetSlider.SetSource(this.mapsetConfig = mapsetConfig);
+            mapSlider.SetSource(this.mapConfig = mapConfig);
         }
 
         /// <summary>

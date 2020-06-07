@@ -14,7 +14,7 @@ namespace PBGame.Configurations
         private Database<MapsetConfig> database;
 
 
-        public MapsetConfig GetConfig(IMapset mapset) => GetConfig(mapset.HashCode);
+        public MapsetConfig GetConfig(IMapset mapset) => mapset == null ? null : GetConfig(mapset.HashCode);
 
         public MapsetConfig GetConfig(int hash)
         {

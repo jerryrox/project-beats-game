@@ -221,21 +221,23 @@ namespace PBGame
         /// </summary>
         private void HookMapSelection()
         {
-            mapSelection.OnMapChange += (map) =>
+            mapSelection.MapConfig.OnValueChanged += (config, prevConfig) =>
             {
                 // Observe offset changes in the map.
+                if(prevConfig != null)
+                    prevConfig.Offset.OnValueChanged -= OnMusicOffsetChange;
+                mapOffset = config;
                 if(mapOffset != null)
-                    mapOffset.Offset.OnValueChanged -= OnMusicOffsetChange;
-                mapOffset = mapConfiguration.GetConfig(map);
-                mapOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+                    mapOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
             };
-            mapSelection.OnMapsetChange += (mapset) =>
+            mapSelection.MapsetConfig.OnValueChanged += (config, prevConfig) =>
             {
                 // Observe offset changes in the mapset.
+                if(prevConfig != null)
+                    prevConfig.Offset.OnValueChanged -= OnMusicOffsetChange;
+                mapsetOffset = config;
                 if(mapsetOffset != null)
-                    mapsetOffset.Offset.OnValueChanged -= OnMusicOffsetChange;
-                mapsetOffset = mapsetConfiguration.GetConfig(mapset);
-                mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+                    mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
             };
 
             mapSelection.OnMusicLoaded += (music) =>

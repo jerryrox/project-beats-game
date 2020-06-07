@@ -3,6 +3,8 @@ using PBGame.Assets.Caching;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
+using PBGame.Configurations.Maps;
+using PBFramework.Data.Bindables;
 using PBFramework.Audio;
 using PBFramework.Allocation.Caching;
 
@@ -26,6 +28,8 @@ namespace PBGame.Maps
         private IBackgroundCacher backgroundCacher;
         private ICacherAgent<IMap, IMusicAudio> musicAgent;
         private ICacherAgent<IMap, IMapBackground> backgroundAgent;
+        private IMapsetConfiguration mapsetConfiguration;
+        private IMapConfiguration mapConfiguration;
 
         private IMapBackground emptyBackground;
 
@@ -36,6 +40,10 @@ namespace PBGame.Maps
 
         public IPlayableMap Map { get; private set; }
 
+        public Bindable<MapsetConfig> MapsetConfig { get; private set; } = new Bindable<MapsetConfig>();
+
+        public Bindable<MapConfig> MapConfig { get; private set; } = new Bindable<MapConfig>();
+
         public IMusicAudio Music { get; private set; }
 
         public IMapBackground Background { get; private set; }
@@ -45,7 +53,9 @@ namespace PBGame.Maps
 
         public MapSelection(IMusicCacher musicCacher,
             IBackgroundCacher backgroundCacher,
-            IGameConfiguration gameConfiguration)
+            IGameConfiguration gameConfiguration,
+            IMapsetConfiguration mapsetConfiguration,
+            IMapConfiguration mapConfiguration)
         {
             if(musicCacher == null) throw new ArgumentNullException(nameof(musicCacher));
             if(backgroundCacher == null) throw new ArgumentNullException(nameof(backgroundCacher));
@@ -53,6 +63,8 @@ namespace PBGame.Maps
 
             this.musicCacher = musicCacher;
             this.backgroundCacher = backgroundCacher;
+            this.mapsetConfiguration = mapsetConfiguration;
+            this.mapConfiguration = mapConfiguration;
 
             // Initial background.
             Background = emptyBackground = new MapBackground(null);
@@ -122,6 +134,7 @@ namespace PBGame.Maps
             if (mapset != this.Mapset)
             {
                 this.Mapset = mapset;
+                this.MapsetConfig.Value = mapsetConfiguration?.GetConfig(mapset);
                 OnMapsetChange?.Invoke(mapset);
             }
 
@@ -144,6 +157,7 @@ namespace PBGame.Maps
             {
                 IPlayableMap prevMap = this.Map;
                 this.Map = map;
+                this.MapConfig.Value = mapConfiguration?.GetConfig(map);
                 OnMapChange?.Invoke(map);
 
                 // Change background / audio assets when necessary.
