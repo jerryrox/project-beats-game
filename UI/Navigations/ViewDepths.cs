@@ -33,6 +33,8 @@ namespace PBGame.UI.Navigations
         public const int MusicMenuOverlay = 103;
         public const int SettingsMenuOverlay = 104;
 
+        public const int OffsetOverlay = 110;
+
         public const int DialogOverlay = 200;
 
         public const int SystemOverlay = 1000;

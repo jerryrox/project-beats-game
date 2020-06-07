@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using PBGame.UI.Components.Common.Dropdown;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Graphics;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
+using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
@@ -14,7 +16,8 @@ namespace PBGame.UI.Components.Songs
 {
     public class SongList : UguiListView, IListView {
 
-        private const int DeleteActionCode = 0;
+        private const int SongDeleteAction = 0;
+        private const int SongOffsetAction = 1;
 
 
         private List<IMapset> mapsets;
@@ -36,6 +39,9 @@ namespace PBGame.UI.Components.Songs
         [ReceivesDependency]
         private IDropdownProvider DropdownProvider { get; set; }
 
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
 
         [InitWithDependency]
         private void Init(IRootMain rootMain)
@@ -43,7 +49,8 @@ namespace PBGame.UI.Components.Songs
             // Init dropdown context.
             dropdownContext = new DropdownContext() { IsSelectionMenu = false };
             dropdownContext.OnSelection += OnDropdownSelection;
-            dropdownContext.Datas.Add(new DropdownData("Delete", DeleteActionCode));
+            dropdownContext.Datas.Add(new DropdownData("Offset", SongOffsetAction));
+            dropdownContext.Datas.Add(new DropdownData("Delete", SongDeleteAction));
 
             // Init the list view.
             Initialize(OnCreateListItem, OnUpdateListItem);
@@ -104,8 +111,15 @@ namespace PBGame.UI.Components.Songs
             int action = (int)data.ExtraData;
             switch (action)
             {
-                case DeleteActionCode:
+                case SongDeleteAction:
                     Debug.LogWarning("Delete mapset: " + heldMapset.Metadata.Title);
+                    break;
+                case SongOffsetAction:
+                    // If not the selected mapset, make it selected.
+                    if(heldMapset != MapSelection.Mapset)
+                        MapSelection.SelectMapset(heldMapset);
+                        
+                    OverlayNavigator.Show<OffsetsOverlay>().Setup();
                     break;
             }
         }

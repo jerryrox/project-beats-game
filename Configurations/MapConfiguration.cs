@@ -27,6 +27,7 @@ namespace PBGame.Configurations
                 {
                     config = new MapConfig(hash);
                     config.InitializeAsNew();
+                    SetConfig(config);
                 }
                 return config;
             }
@@ -51,6 +52,6 @@ namespace PBGame.Configurations
             }
         }
 
-        public void Save() {}
+        public void Save() => Logger.LogWarning("MapConfiguration.Save - Unimplemented interface method 'Save()' called. Use SetConfig instaed.");
     }
 }
