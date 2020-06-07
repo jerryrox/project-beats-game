@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.Audio;
 using PBFramework.DB.Entities;
+using PBFramework.Data.Bindables;
 
 namespace PBGame.Configurations.Maps
 {
@@ -14,7 +15,7 @@ namespace PBGame.Configurations.Maps
         [Indexed]
         public int MapsetHash { get; set; }
 
-        public int Offset { get; set; } = 0;
+        public BindableInt Offset { get; set; } = new BindableInt(0);
 
 
         public MapsetConfig() : this(0) {}

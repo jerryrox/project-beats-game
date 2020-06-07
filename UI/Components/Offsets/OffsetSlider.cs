@@ -72,7 +72,7 @@ namespace PBGame.UI.Components.Offsets
         {
             this.offset = null;
             if(offset != null)
-                offsetSlider.Value = offset.Offset;
+                offsetSlider.Value = offset.Offset.Value;
             this.offset = offset;
         }
 
@@ -83,7 +83,7 @@ namespace PBGame.UI.Components.Offsets
         {
             offsetLabel.Text = (value >= 0 ? $"+{value}" : value.ToString());
             if(offset != null)
-                offset.Offset = (int)value;
+                offset.Offset.Value = (int)value;
         }
     }
 }

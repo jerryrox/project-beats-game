@@ -1,3 +1,5 @@
+using PBFramework.Data.Bindables;
+
 namespace PBGame.Audio
 {
     /// <summary>
@@ -8,6 +10,6 @@ namespace PBGame.Audio
         /// <summary>
         /// The offset applied to the music.
         /// </summary>
-        int Offset { get; set; }
+        BindableInt Offset { get; set; }
     }
 }
