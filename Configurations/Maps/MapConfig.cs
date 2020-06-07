@@ -1,22 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Audio;
 using PBFramework.DB.Entities;
 
 namespace PBGame.Configurations.Maps
 {
-    public class MapConfig : DatabaseEntity {
+    public class MapConfig : DatabaseEntity, IMusicOffset {
 
         /// <summary>
         /// MD5 hash of the map for identification.
         /// </summary>
         [Indexed]
         public string MapHash { get; set; }
-
-        /// <summary>
-        /// Offset of this map.
-        /// </summary>
-        public int Offset { get; set; } = 0;
 
         /// <summary>
         /// Whether this configuration should override the global configuration.
@@ -37,6 +33,8 @@ namespace PBGame.Configurations.Maps
         /// Overriding background dim.
         /// </summary>
         public float BackgroundDim { get; set; } = 0.5f;
+
+        public int Offset { get; set; } = 0;
 
 
         public MapConfig() : this("")

@@ -1,22 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.Audio;
 using PBFramework.DB.Entities;
 
 namespace PBGame.Configurations.Maps
 {
-    public class MapsetConfig : DatabaseEntity {
+    public class MapsetConfig : DatabaseEntity, IMusicOffset {
 
         /// <summary>
         /// Hashcode of the mapset for identification.
         /// </summary>
         [Indexed]
-        int MapsetHash { get; set; }
+        public int MapsetHash { get; set; }
 
-        /// <summary>
-        /// Music offset in the mapset context.
-        /// </summary>
-        int Offset { get; set; } = 0;
+        public int Offset { get; set; } = 0;
 
 
         public MapsetConfig() : this(0) {}
