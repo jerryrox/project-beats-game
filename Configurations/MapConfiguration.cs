@@ -27,6 +27,7 @@ namespace PBGame.Configurations
                 {
                     config = new MapConfig(hash);
                     config.InitializeAsNew();
+                    SetConfig(config);
                 }
                 return config;
             }
