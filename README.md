@@ -16,7 +16,10 @@ Slowly making progress 🧩
 ## Versions
 ### 0.9.1 (In progress)
 #### New features
-- Implementation of Beats Standard game mode.
+- Implementation of Beats Standard game mode. (Still WIP)
+- Offset settings overlay
+#### Improvements
+- When selecting a mapset, select the first map that appears when sorted for the current game mode, and prioritize the maps that support the mode.
 #### Changes
 #### Fixes
 #### Others
