@@ -11,11 +11,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingContainer : UguiSprite, IRankingContainer {
+    public class RankingContainer : UguiSprite {
 
-        private IRankingTabDisplay tabDisplay;
-        private IRankingColumn column;
-        private IRankingList rankingList;
+        private RankingTabDisplay tabDisplay;
+        private RankingColumn column;
+        private RankingList rankingList;
 
 
         [ReceivesDependency]
@@ -32,24 +32,23 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
             tabDisplay = CreateChild<RankingTabDisplay>("tab", 0);
             {
-                tabDisplay.Anchor = Anchors.TopStretch;
-                tabDisplay.Pivot = Pivots.Top;
+                tabDisplay.Anchor = AnchorType.TopStretch;
+                tabDisplay.Pivot = PivotType.Top;
                 tabDisplay.RawWidth = 0f;
                 tabDisplay.Height = 0f;
                 tabDisplay.Y = 0f;
             }
             column = CreateChild<RankingColumn>("column", 1);
             {
-                column.Anchor = Anchors.TopStretch;
-                column.Pivot = Pivots.Top;
+                column.Anchor = AnchorType.TopStretch;
+                column.Pivot = PivotType.Top;
                 column.Height = 36f;
                 column.Y = -52f;
             }
             rankingList = CreateChild<RankingList>("list", 2);
             {
-                rankingList.Anchor = Anchors.Fill;
-                rankingList.OffsetLeft = rankingList.OffsetRight = rankingList.OffsetBottom = 0;
-                rankingList.OffsetTop = 88f;
+                rankingList.Anchor = AnchorType.Fill;
+                rankingList.Offset = new Offset(0f, 88f, 0f, 0f);
             }
 
             OnEnableInited();
@@ -101,13 +100,13 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// <summary>
         /// Event called on game mode configuration change.
         /// </summary>
-        private void OnGameModeChange(GameModes newMode, GameModes oldMode = GameModes.BeatsStandard)
+        private void OnGameModeChange(GameModeType newMode, GameModeType oldMode = GameModeType.BeatsStandard)
         {
             column.RefreshColumns(ModeManager.GetService(newMode));
             ReloadRankInfos();
         }
 
-        private void OnRankDisplayChange(RankDisplayTypes newType, RankDisplayTypes oldType = RankDisplayTypes.Local)
+        private void OnRankDisplayChange(RankDisplayType newType, RankDisplayType oldType = RankDisplayType.Local)
         {
             ReloadRankInfos();
         }

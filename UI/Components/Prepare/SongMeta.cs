@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class SongMeta : UguiObject, ISongMeta {
+    public class SongMeta : UguiObject {
 
         private ISprite gradient;
         private ILabel title;
@@ -35,14 +35,14 @@ namespace PBGame.UI.Components.Prepare
         {
             gradient = CreateChild<UguiSprite>("gradient", 0);
             {
-                gradient.Anchor = Anchors.Fill;
+                gradient.Anchor = AnchorType.Fill;
                 gradient.RawSize = Vector2.zero;
                 gradient.SpriteName = "gradation-bottom";
                 gradient.Color = Color.black;
             }
             title = CreateChild<Label>("title", 1);
             {
-                title.Anchor = Anchors.BottomStretch;
+                title.Anchor = AnchorType.BottomStretch;
                 title.RawWidth = -84f;
                 title.Y = 56f;
                 title.IsBold = true;
@@ -51,10 +51,9 @@ namespace PBGame.UI.Components.Prepare
             }
             artist = CreateChild<Label>("artist", 2);
             {
-                artist.Anchor = Anchors.BottomStretch;
-                artist.Pivot = Pivots.BottomLeft;
-                artist.OffsetLeft = 42f;
-                artist.OffsetRight = 402f;
+                artist.Anchor = AnchorType.BottomStretch;
+                artist.Pivot = PivotType.BottomLeft;
+                artist.SetOffsetHorizontal(42f, 402f);
                 artist.Y = 12f;
                 artist.Height = 34f;
                 artist.FontSize = 22;
@@ -62,8 +61,8 @@ namespace PBGame.UI.Components.Prepare
             }
             creator = CreateChild<Label>("creator", 3);
             {
-                creator.Anchor = Anchors.BottomStretch;
-                creator.Pivot = Pivots.BottomRight;
+                creator.Anchor = AnchorType.BottomStretch;
+                creator.Pivot = PivotType.BottomRight;
                 creator.Alignment = TextAnchor.MiddleRight;
                 creator.FontSize = 22;
                 creator.Position = new Vector2(-42f, 12f);

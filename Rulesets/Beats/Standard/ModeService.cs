@@ -11,14 +11,10 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override string Name => "Beats Standard";
 
-        public override string IconName => "icon-mode-beats";
+        public override string BaseIconName => "icon-mode-beats";
 
-        public override GameModes GameMode => GameModes.BeatsStandard;
+        public override GameModeType GameMode => GameModeType.BeatsStandard;
 
-
-        public ModeService(IDependencyContainer dependencies) : base(dependencies)
-        {
-        }
 
         public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => new MapConverter(map);
 
@@ -28,6 +24,11 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override Rulesets.Judgements.HitTiming CreateTiming() => new HitTiming();
 
-        protected override IGameSession CreateSession(IGraphicObject container) => new GameSession(container);
+        protected override IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency)
+        {
+            var session = new GameSession(container);
+            dependency.Inject(session);
+            return session;
+        }
     }
 }

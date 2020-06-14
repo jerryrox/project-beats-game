@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Rankings;
 using PBGame.Audio;
 using PBGame.Graphics;
@@ -14,29 +15,52 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingTabButton : HighlightTrigger, IRankingTabButton {
+    public class RankingTabButton : HighlightableTrigger, IHasLabel {
 
-        private RankDisplayTypes rankDisplay;
+        private ILabel label;
+        private RankDisplayType rankDisplay;
 
 
-        public RankDisplayTypes RankDisplay
+        /// <summary>
+        /// Type of rank data provision method.
+        /// </summary>
+        public RankDisplayType RankDisplay
         {
             get => rankDisplay;
             set
             {
                 rankDisplay = value;
-                SetFocus(GameConfiguration.RankDisplay.Value == value, false);
+                SetFocused(GameConfiguration.RankDisplay.Value == value, false);
             }
         }
 
-        protected override float HighlightWidth => 162f;
+        public string LabelText
+        {
+            get => label.Text;
+            set => label.Text = value;
+        }
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
 
 
         [InitWithDependency]
-        private void Init() => OnEnableInited();
+        private void Init()
+        {
+            label = CreateChild<Label>("label", 0);
+            {
+                label.Anchor = AnchorType.Fill;
+                label.RawSize = Vector2.zero;
+                label.IsBold = true;
+                label.FontSize = 18;
+            }
+
+            UseDefaultFocusAni();
+            UseDefaultHighlightAni();
+            UseDefaultHoverAni();
+
+            OnEnableInited();
+        }
 
         protected override void OnEnableInited()
         {
@@ -62,7 +86,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         private void BindEvents()
         {
             GameConfiguration.RankDisplay.OnValueChanged += OnRankDisplayChange;
-            SetFocus(rankDisplay == GameConfiguration.RankDisplay.Value, false);
+            SetFocused(rankDisplay == GameConfiguration.RankDisplay.Value, false);
         }
         
         /// <summary>
@@ -76,9 +100,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// <summary>
         /// Event called on rank display type change from configuration.
         /// </summary>
-        private void OnRankDisplayChange(RankDisplayTypes newType, RankDisplayTypes _ = RankDisplayTypes.Global)
+        private void OnRankDisplayChange(RankDisplayType newType, RankDisplayType _ = RankDisplayType.Global)
         {
-            SetFocus(newType == rankDisplay);
+            IsFocused = newType == rankDisplay;
         }
     }
 }

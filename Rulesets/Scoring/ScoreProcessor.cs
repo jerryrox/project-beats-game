@@ -5,6 +5,7 @@ using PBGame.Rulesets.Judgements;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBFramework.Data.Bindables;
+using UnityEngine;
 
 namespace PBGame.Rulesets.Scoring
 {
@@ -17,20 +18,11 @@ namespace PBGame.Rulesets.Scoring
 
 		public event Action<JudgementResult> OnNewJudgement;
 
-		public event Action OnFailed;
-
-        public event Func<IScoreProcessor, bool> OnFailConfirmation;
-
 
 		/// <summary>
 		/// Table of counters for each hit result type.
 		/// </summary>
-		protected Dictionary<HitResults, int> resultCounts = new Dictionary<HitResults, int>();
-
-		/// <summary>
-		/// Table of cached health change factors for each hit result type.
-		/// </summary>
-        protected Dictionary<HitResults, float> healthChangeFactors = new Dictionary<HitResults, float>();
+		protected Dictionary<HitResultType, int> resultCounts = new Dictionary<HitResultType, int>();
 
         /// <summary>
         /// List of all judgement results recorded for each hit object.
@@ -45,22 +37,22 @@ namespace PBGame.Rulesets.Scoring
 		/// <summary>
 		/// Amount of bonus multiplier applied to score based on the map difficulty.
 		/// </summary>
-        protected double difficultyMultiplier;
+        protected float difficultyMultiplier;
 
 		/// <summary>
 		/// Amoutn of bonus multiplier applied to score based on the mod usage.
 		/// </summary>
-        protected double modMultiplier;
+        protected float modMultiplier;
 
         /// <summary>
         /// Current amount of raw score achieved.
         /// </summary>
-        protected double curRawScore;
+        protected float curRawScore;
 
 		/// <summary>
 		/// Max amount of raw score that can be achieved at certain point of the map.
 		/// </summary>
-        protected double maxRawScore;
+        protected float maxRawScore;
 
 
         public IPlayableMap Map { get; private set; }
@@ -73,31 +65,40 @@ namespace PBGame.Rulesets.Scoring
 
         public BindableInt Score { get; private set; } = new BindableInt(0);
 
-        public BindableFloat Health { get; private set; } = new BindableFloat(1f);
+        public BindableFloat Health { get; private set; } = new BindableFloat(0.5f);
 
-        public BindableDouble Accuracy { get; private set; } = new BindableDouble(0f);
+        public BindableFloat Accuracy { get; private set; } = new BindableFloat(0f);
 
-        public Bindable<RankTypes> Ranking { get; private set; } = new Bindable<RankTypes>(RankTypes.F);
+        public Bindable<RankType> Ranking { get; private set; } = new Bindable<RankType>(RankType.F);
 
         public virtual bool IsFinished => results.Count == maxJudgements;
 
-        public virtual bool IsFailed { get; protected set; }
+        public virtual bool IsFailed => Health.Value < 0.5f;
 
-		public int JudgeCount => results.Count;
+        public int JudgeCount => results.Count;
+
+        /// <summary>
+        /// Returns the amount of health increased per perfect hit with health bonus scale of 1.
+        /// </summary>
+        protected abstract float HealthPerPerfect { get; }
+
+        /// <summary>
+        /// Returns the percentage of health decreased on missing a hit object.
+        /// </summary>
+        protected virtual float HealthDecreaseRatio { get; } = 0.10f;
 
 
-		protected ScoreProcessor()
+        protected ScoreProcessor()
 		{
             Combo.OnValueChanged += (combo, _) => HighestCombo.Value = Math.Max(combo, HighestCombo.Value);
             Accuracy.OnValueChanged += (acc, _) => Ranking.Value = CalculateRank(acc);
-            OnFailConfirmation += (processor) => Health.Value <= 0f;
 
-			resultCounts[HitResults.Miss] = 0;
-			resultCounts[HitResults.Bad] = 0;
-			resultCounts[HitResults.Ok] = 0;
-			resultCounts[HitResults.Good] = 0;
-			resultCounts[HitResults.Great] = 0;
-			resultCounts[HitResults.Perfect] = 0;
+			resultCounts[HitResultType.Miss] = 0;
+			resultCounts[HitResultType.Bad] = 0;
+			resultCounts[HitResultType.Ok] = 0;
+			resultCounts[HitResultType.Good] = 0;
+			resultCounts[HitResultType.Great] = 0;
+			resultCounts[HitResultType.Perfect] = 0;
 
             curRawScore = 0;
             maxRawScore = 0;
@@ -110,44 +111,20 @@ namespace PBGame.Rulesets.Scoring
 
 			// TODO: Apply mod multiplier.
 			modMultiplier = 1f;
-
-            // Cache health change factor
-            foreach (var hitResult in (HitResults[])Enum.GetValues(typeof(HitResults)))
-                healthChangeFactors[hitResult] = GetHealthChangeFactor(hitResult);
         }
 
         public virtual void ProcessJudgement(JudgementResult result)
         {
             ApplyResult(result);
-            CheckFail();
             InvokeNewJudgement(result);
         }
 
         public virtual void Dispose()
         {
             resultCounts = null;
-            healthChangeFactors = null;
             results = null;
 
             OnLastJudgement = null;
-            OnNewJudgement = null;
-            OnFailed = null;
-            OnFailConfirmation = null;
-        }
-
-		/// <summary>
-		/// Checks for fail condition.
-		/// </summary>
-        protected void CheckFail()
-        {
-			if(IsFailed || OnFailConfirmation == null)
-				return;
-			if(!OnFailConfirmation.Invoke(this))
-				return;
-				
-			IsFailed = true;
-			if(OnFailed != null)
-				OnFailed();
         }
 
 		/// <summary>
@@ -158,27 +135,22 @@ namespace PBGame.Rulesets.Scoring
             return rawScore + (int)(rawScore * Math.Max(0, Combo.Value) * difficultyMultiplier * modMultiplier * 0.04f);
         }
 
-		/// <summary>
-		/// Returns the amount of health application factor for specified result.
-		/// </summary>
-        protected abstract float GetHealthChangeFactor(HitResults hitResult);
-
         /// <summary>
         /// Calculate ranking type from current score progress.
         /// </summary>
-        protected RankTypes CalculateRank(double acc)
+        protected RankType CalculateRank(float acc)
 		{
 			if(acc == 1d)
-				return RankTypes.X;
+				return RankType.X;
 			else if(acc > 0.95)
-				return RankTypes.S;
+				return RankType.S;
 			else if(acc > 0.9)
-				return RankTypes.A;
+				return RankType.A;
 			else if(acc > 0.8)
-				return RankTypes.B;
+				return RankType.B;
 			else if(acc > 0.7)
-				return RankTypes.C;
-			return RankTypes.D;
+				return RankType.C;
+			return RankType.D;
 		}
 
 		/// <summary>
@@ -194,15 +166,15 @@ namespace PBGame.Rulesets.Scoring
             results.Add(result);
 
 			// Increase the counter for the type of hit achieved.
-			if(result.HitResult != HitResults.None)
+			if(result.HitResult != HitResultType.None)
                 resultCounts[result.HitResult] ++;
 
             // Change combo
             if (result.Judgement.AffectsCombo)
             {
-				if(result.HitResult == HitResults.Miss)
+				if(result.HitResult == HitResultType.Miss)
                     Combo.Value = 0;
-				else if(result.HitResult != HitResults.None)
+				else if(result.HitResult != HitResultType.None)
                     Combo.Value++;
             }
 
@@ -218,7 +190,12 @@ namespace PBGame.Rulesets.Scoring
             Accuracy.Value = curRawScore / maxRawScore;
 
             // Change health
-            Health.Value = healthChangeFactors[result.HitResult] * result.Judgement.GetHealthIncrease(result);
+            float health = Health.Value;
+            if(result.HitResult == HitResultType.Miss)
+                health -= HealthDecreaseRatio * result.Judgement.GetHealthBonus(HitResultType.Perfect);
+            else
+                health += HealthPerPerfect * result.Judgement.GetHealthBonus(result);
+            Health.Value = Mathf.Clamp01(health);
         }
 
         /// <summary>

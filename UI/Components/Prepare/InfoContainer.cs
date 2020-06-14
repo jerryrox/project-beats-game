@@ -8,10 +8,16 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class InfoContainer : UguiObject, IInfoContainer {
+    public class InfoContainer : UguiObject {
 
-        private ISongMeta songMeta;
-        private IDetailContainer detailContainer;
+        private SongMeta songMeta;
+        private DetailContainer detailContainer;
+
+
+        /// <summary>
+        /// Returns the full height of the detail container.
+        /// </summary>
+        public float FullDetailHeight => detailContainer.TotalChildrenHeight;
 
 
         [InitWithDependency]
@@ -19,17 +25,17 @@ namespace PBGame.UI.Components.Prepare
         {
             songMeta = CreateChild<SongMeta>("song", 0);
             {
-                songMeta.Anchor = Anchors.TopStretch;
-                songMeta.Pivot = Pivots.Top;
+                songMeta.Anchor = AnchorType.TopStretch;
+                songMeta.Pivot = PivotType.Top;
                 songMeta.RawWidth = 0f;
                 songMeta.Y = 0f;
                 songMeta.Height = 120f;
             }
             detailContainer = CreateChild<DetailContainer>("detail", 1);
             {
-                detailContainer.Anchor = Anchors.Fill;
-                detailContainer.RawWidth = detailContainer.OffsetBottom = 0f;
-                detailContainer.OffsetTop = 120f;
+                detailContainer.Anchor = AnchorType.Fill;
+                detailContainer.RawWidth = 0f;
+                detailContainer.SetOffsetVertical(120f, 0f);
             }
         }
     }

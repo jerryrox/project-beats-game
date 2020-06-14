@@ -9,8 +9,26 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public abstract class BaseOverlay : UguiNavigationView, INavigationView {
 
-        public override HideActions HideAction => HideActions.Recycle;
+        private float? menuBarHeight = null;
 
+
+        public override HideActionType HideAction => HideActionType.Recycle;
+
+        /// <summary>
+        /// Returns the height of the menu bar overlay's container.
+        /// </summary>
+        public float MenuBarHeight
+        {
+            get
+            {
+                if (menuBarHeight.HasValue)
+                    return menuBarHeight.Value;
+                var overlay = OverlayNavigator?.Get<MenuBarOverlay>();
+                if (overlay == null)
+                    return 0f;
+                return (menuBarHeight = overlay.ContainerHeight).Value;
+            }
+        }
         /// <summary>
         /// Returns the depth of the overlay.
         /// </summary>
@@ -20,6 +38,9 @@ namespace PBGame.UI.Navigations.Overlays
         /// Returns whether the overlay should be displayed on 3D root.
         /// </summary>
         protected virtual bool IsRoot3D { get; } = false;
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
 
 
         [InitWithDependency]

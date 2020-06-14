@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -11,14 +12,14 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class Loader : UguiObject, ILoader {
+    public class Loader : UguiObject, IHasAlpha {
 
         private const float RotationSpeed = -150f;
 
         private CanvasGroup canvasGroup;
 
         private ISprite dark;
-        private ISprite loader;
+        private LoaderIcon loader;
         private IRaycastable pointerBlocker;
 
         private IAnime showAni;
@@ -39,20 +40,15 @@ namespace PBGame.UI.Components.ProfileMenu
 
             dark = CreateChild<UguiSprite>("dark", 0);
             {
-                dark.Anchor = Anchors.Fill;
+                dark.Anchor = AnchorType.Fill;
                 dark.RawSize = Vector2.zero;
                 dark.Color = new Color(0f, 0f, 0f, 0.5f);
 
                 pointerBlocker = dark as IRaycastable;
 
-                loader = dark.CreateChild<UguiSprite>("loader", 1);
+                loader = dark.CreateChild<LoaderIcon>("loader", 1);
                 {
                     loader.Size = new Vector2(72f, 72f);
-                    loader.SpriteName = "loader";
-                    loader.Color = colorPreset.PrimaryFocus;
-
-                    if(loader is IRaycastable raycastable)
-                        raycastable.IsRaycastTarget = false;
                 }
             }
 
@@ -76,6 +72,9 @@ namespace PBGame.UI.Components.ProfileMenu
                 hideAni.AddEvent(0.25f, () => pointerBlocker.IsRaycastTarget = false);
         }
 
+        /// <summary>
+        /// Shows the loader display.
+        /// </summary>
         public void Show()
         {
             if(pointerBlocker != null)
@@ -85,13 +84,16 @@ namespace PBGame.UI.Components.ProfileMenu
             showAni.PlayFromStart();
         }
 
+        /// <summary>
+        /// Hides the loader display.
+        /// </summary>
         public void Hide()
         {
             showAni.Stop();
             hideAni.PlayFromStart();
         }
 
-        private void Update()
+        protected void Update()
         {
             if(pointerBlocker == null || pointerBlocker.IsRaycastTarget)
                 loader.RotationZ += Time.deltaTime * RotationSpeed;

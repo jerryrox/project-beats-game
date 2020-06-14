@@ -13,7 +13,7 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class ProfileMenuOverlay : BaseSubMenuOverlay, IProfileMenuOverlay {
 
-        private IContentHolder content;
+        private ContentHolder content;
 
 
         protected override int OverlayDepth => ViewDepths.ProfileMenuOverlay;
@@ -22,30 +22,21 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init()
         {
-            container.Anchor = Anchors.TopLeft;
-            container.Pivot = Pivots.TopLeft;
+            container.Anchor = AnchorType.TopLeft;
+            container.Pivot = PivotType.TopLeft;
             container.X = 16f;
             container.Y = -16f;
 
             content = container.CreateChild<ContentHolder>("content", 0);
             {
-                content.Anchor = Anchors.TopLeft;
-                content.Pivot = Pivots.TopLeft;
+                content.Anchor = AnchorType.TopLeft;
+                content.Pivot = PivotType.TopLeft;
                 content.Position = Vector2.zero;
                 content.Width = 320f;
+
+                glowSprite.SetParent(content);
+                glowSprite.Offset = new Offset(-15f);
             }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => content.GlowSprite.Color = color)
-                .AddTime(0f, () => content.GlowSprite.Color)
-                .AddTime(0.25f, Color.gray)
-                .Build();
-
-            outAni = new Anime();
-            outAni.AnimateColor(color => content.GlowSprite.Color = color)
-                .AddTime(0f, () => content.GlowSprite.Color)
-                .AddTime(0.25f, Color.black)
-                .Build();
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)

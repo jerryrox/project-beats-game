@@ -11,18 +11,13 @@ namespace PBGame.Rulesets.Osu.Standard
 
         public override string Name => "Osu Standard";
 
-        public override string IconName => "icon-mode-osu";
+        public override string BaseIconName => "icon-mode-osu";
 
-        public override GameModes GameMode => GameModes.OsuStandard;
+        public override GameModeType GameMode => GameModeType.OsuStandard;
 
         // TODO:
         public override bool IsPlayable => false;
 
-
-        public ModeService(IDependencyContainer dependency) : base(dependency)
-        {
-            
-        }
 
         // TODO:
         public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => null;
@@ -36,6 +31,9 @@ namespace PBGame.Rulesets.Osu.Standard
         public override Rulesets.Judgements.HitTiming CreateTiming() => null;
 
         // TODO:
-        protected override IGameSession CreateSession(IGraphicObject container) => null;
+        protected override IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency)
+        {
+            return null;
+        }
     }
 }

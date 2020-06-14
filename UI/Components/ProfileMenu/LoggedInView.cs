@@ -6,20 +6,19 @@ using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class LoggedInView : UguiObject, ILoggedInView {
+    public class LoggedInView : UguiObject, IHasAlpha {
 
         private CanvasGroup canvasGroup;
 
-        private ICoverDisplay coverDisplay;
+        private CoverDisplay coverDisplay;
         private ISprite background;
         private ISprite shadow;
-        private IHeader header;
-        private IStatHolder statHolder;
-        private IMenuHolder menuHolder;
+        private Header header;
+        private StatHolder statHolder;
+        private MenuHolder menuHolder;
 
 
         public float Alpha
@@ -36,26 +35,26 @@ namespace PBGame.UI.Components.ProfileMenu
 
             coverDisplay = CreateChild<CoverDisplay>("cover", 0);
             {
-                coverDisplay.Anchor = Anchors.TopStretch;
-                coverDisplay.Pivot = Pivots.Top;
-                coverDisplay.OffsetLeft = coverDisplay.OffsetRight = 0f;
+                coverDisplay.Anchor = AnchorType.TopStretch;
+                coverDisplay.Pivot = PivotType.Top;
+                coverDisplay.SetOffsetHorizontal(0f);
                 coverDisplay.Y = 0f;
                 coverDisplay.Height = 106f;
             }
             background = CreateChild<UguiSprite>("bg", 1);
             {
-                background.Anchor = Anchors.BottomStretch;
-                background.Pivot = Pivots.Bottom;
-                background.OffsetLeft = background.OffsetRight = 0f;
+                background.Anchor = AnchorType.BottomStretch;
+                background.Pivot = PivotType.Bottom;
+                background.SetOffsetHorizontal(0f);
                 background.Y = 0f;
                 background.Height = 374f;
                 background.Color = HexColor.Create("1D2126");
 
                 shadow = background.CreateChild<UguiSprite>("shadow");
                 {
-                    shadow.Anchor = Anchors.TopStretch;
-                    shadow.Pivot = Pivots.Bottom;
-                    shadow.OffsetLeft = shadow.OffsetRight = 0f;
+                    shadow.Anchor = AnchorType.TopStretch;
+                    shadow.Pivot = PivotType.Bottom;
+                    shadow.SetOffsetHorizontal(0f);
                     shadow.Y = 0f;
                     shadow.Height = 32f;
                     shadow.Color = new Color(0f, 0f, 0f, 0.5f);
@@ -64,24 +63,24 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             header = CreateChild<Header>("header", 2);
             {
-                header.Anchor = Anchors.TopStretch;
-                header.Pivot = Pivots.Top;
+                header.Anchor = AnchorType.TopStretch;
+                header.Pivot = PivotType.Top;
                 header.RawWidth = 0f;
                 header.Y = 0f;
                 header.Height = 178f;
             }
             statHolder = CreateChild<StatHolder>("stat", 3);
             {
-                statHolder.Anchor = Anchors.TopStretch;
-                statHolder.Pivot = Pivots.Top;
+                statHolder.Anchor = AnchorType.TopStretch;
+                statHolder.Pivot = PivotType.Top;
                 statHolder.RawWidth = 0f;
                 statHolder.Y = -178f;
                 statHolder.Height = 110f;
             }
             menuHolder = CreateChild<MenuHolder>("menu", 4);
             {
-                menuHolder.Anchor = Anchors.TopStretch;
-                menuHolder.Pivot = Pivots.Top;
+                menuHolder.Anchor = AnchorType.TopStretch;
+                menuHolder.Pivot = PivotType.Top;
                 menuHolder.RawWidth = 0f;
                 menuHolder.Y = -288f;
                 menuHolder.Height = 192f;

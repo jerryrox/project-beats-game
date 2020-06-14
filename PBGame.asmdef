@@ -2,7 +2,6 @@
     "name": "PBGame",
     "references": [
         "GUID:10b2629f775cc431490006156dcdf7c5",
-        "GUID:8ed0b5b07f2cc47cf9f48cfec9b27d8c",
         "GUID:d887b8dfe42c842bea5f3aa6de3b60a2"
     ],
     "includePlatforms": [],

@@ -2,6 +2,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Graphics;
+using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets
 {
@@ -16,20 +17,20 @@ namespace PBGame.Rulesets
         string Name { get; }
 
         /// <summary>
-        /// Returns the sprite name of the icon which represents this mode.
-        /// </summary>
-        string IconName { get; }
-
-        /// <summary>
         /// Returns the type of the game mode.
         /// </summary>
-        GameModes GameMode { get; }
+        GameModeType GameMode { get; }
 
         /// <summary>
         /// Returns whether this game mode is available for play.
         /// </summary>
         bool IsPlayable { get; }
 
+
+        /// <summary>
+        /// Returns the icon name suitable for specified size.
+        /// </summary>
+        string GetIconName(int size);
 
         /// <summary>
         /// Creates a new map converter instance for this game mode.
@@ -54,6 +55,6 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns a new or existing session of this game mode.
         /// </summary>
-        IGameSession GetSession(IGraphicObject container);
+        IGameSession GetSession(IGraphicObject container, IDependencyContainer dependency = null);
     }
 }

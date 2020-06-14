@@ -7,7 +7,7 @@ namespace PBGame.Networking.API
 {
     public class ApiManager : IApiManager {
 
-        private Dictionary<ApiProviders, IApi> apis;
+        private Dictionary<ApiProviderType, IApi> apis;
 
 
         public IOnlineUser OfflineUser { get; private set; } = new OfflineUser();
@@ -15,14 +15,16 @@ namespace PBGame.Networking.API
 
         public ApiManager()
         {
-            apis = new Dictionary<ApiProviders, IApi>()
+            apis = new Dictionary<ApiProviderType, IApi>()
             {
-                { ApiProviders.Osu, new OsuApi() }
+                { ApiProviderType.Osu, new OsuApi() }
             };
         }
 
-        public IApi GetApi(ApiProviders provider) => apis[provider];
+        public IApi GetApi(ApiProviderType provider) => apis[provider];
 
         public IApi GetRelevantApi(IMap map) => apis.Values.FirstOrDefault(api => api.IsRelevantMap(map));
+
+        public IEnumerable<IApi> GetAllApi() => apis.Values;
     }
 }

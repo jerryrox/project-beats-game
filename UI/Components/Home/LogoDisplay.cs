@@ -3,6 +3,7 @@ using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Animations;
 using PBFramework.UI;
+using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -10,8 +11,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Home
 {
-    public class LogoDisplay : Components.LogoDisplay, ILogoDisplay {
+    public class LogoDisplay : Components.LogoDisplay {
 
+        /// <summary>
+        /// Event caled on logo press.
+        /// </summary>
         public event Action OnPress;
 
         private IAnime pulseAni;
@@ -22,6 +26,9 @@ namespace PBGame.UI.Components.Home
 
         private UguiTrigger trigger;
 
+        /// <summary>
+        /// The duration of a single pulse.
+        /// </summary>
         public float PulseDuration
         {
             get => 1f / pulseAni.Speed;
@@ -35,23 +42,47 @@ namespace PBGame.UI.Components.Home
         private IMetronome Metronome { get; set; }
 
         [ReceivesDependency]
-        private ISoundPooler SoundPooler { get; set; }
+        private ISoundPool SoundPool { get; set; }
 
 
         [InitWithDependency]
         private void Init(IAnimePreset animePreset)
         {
-            pulseAni = animePreset.GetHomeLogoPulse(this);
-            pointerEnterAni = animePreset.GetHomeLogoHover(this);
-            pointerExitAni = animePreset.GetHomeLogoExit(this);
-            zoomInAni = animePreset.GetHomeLogoZoomIn(this);
-            zoomOutAni = animePreset.GetHomeLogoZoomOut(this);
+            pulseAni = new Anime();
+            pulseAni.AnimateVector3((scale) => this.Scale = scale)
+                .AddTime(0f, new Vector3(1.1f, 1.1f, 1f), EaseType.SineEaseOut)
+                .AddTime(1.5f, Vector3.one)
+                .Build();
+
+            pointerEnterAni = new Anime();
+            pointerEnterAni.AnimateFloat((alpha) => this.Alpha = alpha)
+                .AddTime(0f, () => this.Alpha)
+                .AddTime(0.5f, 0.5f)
+                .Build();
+
+            pointerExitAni = new Anime();
+            pointerExitAni.AnimateFloat((alpha) => this.Alpha = alpha)
+                .AddTime(0f, () => this.Alpha)
+                .AddTime(0.5f, 1f)
+                .Build();
+
+            zoomInAni = new Anime();
+            zoomInAni.AnimateVector2((size) => this.Size = size)
+                .AddTime(0f, () => this.Size, EaseType.QuartEaseIn)
+                .AddTime(0.35f, new Vector2(700f, 700f))
+                .Build();
+
+            zoomOutAni = new Anime();
+            zoomOutAni.AnimateVector2((size) => this.Size = size)
+                .AddTime(0f, () => this.Size, EaseType.QuartEaseIn)
+                .AddTime(0.5f, new Vector2(352f, 352f))
+                .Build();
 
             pointerExitAni.PlayFromStart();
 
             trigger = CreateChild<UguiTrigger>("trigger", 1000);
             {
-                trigger.Anchor = Anchors.Fill;
+                trigger.Anchor = AnchorType.Fill;
                 trigger.RawSize = Vector2.zero;
 
                 trigger.OnPointerEnter += () =>
@@ -59,7 +90,7 @@ namespace PBGame.UI.Components.Home
                     pointerExitAni.Stop();
                     pointerEnterAni.PlayFromStart();
 
-                    SoundPooler.Play("menuhit");
+                    SoundPool.Play("menuhit");
                 };
                 trigger.OnPointerExit += () =>
                 {
@@ -70,7 +101,7 @@ namespace PBGame.UI.Components.Home
                 {
                     OnPress?.Invoke();
 
-                    SoundPooler.Play("menuclick");
+                    SoundPool.Play("menuclick");
                 };
             }
 
@@ -79,23 +110,40 @@ namespace PBGame.UI.Components.Home
 
         protected override void OnEnableInited()
         {
+            base.OnEnableInited();
             BindEvents();
         }
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             UnbindEvents();
+
+            // The logo should be shrunk to its original size on disable.
+            zoomOutAni.Seek(zoomOutAni.Duration);
         }
 
+        /// <summary>
+        /// Sets the progress of the pulse.
+        /// </summary>
         public void SetPulseProgress(float progress)
         {
             pulseAni.Seek(progress);
         }
 
+        /// <summary>
+        /// Starts playing the pulsating animation.
+        /// </summary>
         public void PlayPulse() => pulseAni.PlayFromStart();
 
+        /// <summary>
+        /// Stops playing the pulsating animation.
+        /// </summary>
         public void StopPulse() => pulseAni.Stop();
 
+        /// <summary>
+        /// Sets zoom effect on the logo.
+        /// </summary>
         public void SetZoom(bool isZoom)
         {
             if (isZoom)

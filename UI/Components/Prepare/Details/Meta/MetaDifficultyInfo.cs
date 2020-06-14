@@ -11,11 +11,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDifficultyInfo : UguiSprite, IMetaDifficultyInfo {
+    public class MetaDifficultyInfo : UguiSprite {
 
         private IGrid grid;
-        private IMetaDifficultyInfoCell timeInfo;
-        private IMetaDifficultyInfoCell objectsInfo;
+        private MetaDifficultyInfoCell timeInfo;
+        private MetaDifficultyInfoCell objectsInfo;
 
 
         [ReceivesDependency]
@@ -29,19 +29,19 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
             grid = CreateChild<UguiGrid>("grid");
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.RawSize = Vector2.zero;
                 grid.CellSize = new Vector2(118f, 36f);
 
                 timeInfo = grid.CreateChild<MetaDifficultyInfoCell>("time", 0);
                 {
                     timeInfo.IconName = "icon-time";
-                    timeInfo.IconTint = colorPreset.SecondaryFocus;
+                    timeInfo.Tint = colorPreset.SecondaryFocus;
                 }
                 objectsInfo = grid.CreateChild<MetaDifficultyInfoCell>("objects", 1);
                 {
-                    objectsInfo.IconName = "icon-mode-osu";
-                    objectsInfo.IconTint = colorPreset.SecondaryFocus;
+                    objectsInfo.IconName = "icon-mode-osu-32";
+                    objectsInfo.Tint = colorPreset.SecondaryFocus;
                 }
             }
 

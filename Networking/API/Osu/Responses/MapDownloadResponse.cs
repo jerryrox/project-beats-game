@@ -1,10 +1,11 @@
 using System;
 using PBGame.Stores;
+using PBGame.Networking.API.Responses;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Osu.Responses
 {
-    public class MapDownloadResponse : BaseResponse {
+    public class MapDownloadResponse : BaseResponse, IMapDownloadResponse {
 
         private IDownloadStore downloadStore;
         private int mapsetId;

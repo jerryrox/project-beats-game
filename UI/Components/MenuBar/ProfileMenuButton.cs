@@ -24,6 +24,8 @@ namespace PBGame.UI.Components.MenuBar
         private CacherAgent<Texture2D> cacherAgent;
 
 
+        protected override string IconSpritename => "";
+
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
 
@@ -40,21 +42,24 @@ namespace PBGame.UI.Components.MenuBar
         [InitWithDependency]
         private void Init(IApiManager apiManager)
         {
-            OnToggleOn += () =>
+            OnFocused += (isFocused) =>
             {
-                var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
-                overlay.OnClose += () =>
+                if (isFocused)
                 {
+                    var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
+                    overlay.OnClose += () =>
+                    {
+                        hasOverlay = false;
+                        IsFocused = false;
+                    };
+                    hasOverlay = true;
+                }
+                else
+                {
+                    if (hasOverlay)
+                        OverlayNavigator.Hide<ProfileMenuOverlay>();
                     hasOverlay = false;
-                    SetToggle(false);
-                };
-                hasOverlay = true;
-            };
-            OnToggleOff += () =>
-            {
-                if (hasOverlay)
-                    OverlayNavigator.Hide<ProfileMenuOverlay>();
-                hasOverlay = false;
+                }
             };
 
             cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);
@@ -62,21 +67,21 @@ namespace PBGame.UI.Components.MenuBar
 
             background = CreateChild<UguiSprite>("background", -1);
             {
-                background.Anchor = Anchors.Fill;
+                background.Anchor = AnchorType.Fill;
                 background.RawSize = Vector2.zero;
                 background.Color = new Color(0f, 0f, 0f, 0.125f);
             }
             imageBackground = CreateChild<UguiSprite>("image-bg", 5);
             {
-                imageBackground.Anchor = Anchors.Left;
-                imageBackground.Pivot = Pivots.Left;
+                imageBackground.Anchor = AnchorType.Left;
+                imageBackground.Pivot = PivotType.Left;
                 imageBackground.X = 8f;
                 imageBackground.Size = new Vector2(48f, 48f);
                 imageBackground.Color = new Color(0f, 0f, 0f, 0.125f);
 
                 imageTexture = imageBackground.CreateChild<UguiTexture>("image", 5);
                 {
-                    imageTexture.Anchor = Anchors.Fill;
+                    imageTexture.Anchor = AnchorType.Fill;
                     imageTexture.RawSize = Vector2.zero;
                     imageTexture.Position = Vector2.zero;
                     imageTexture.Active = false;
@@ -84,23 +89,17 @@ namespace PBGame.UI.Components.MenuBar
             }
             nicknameLabel = CreateChild<Label>("nickname", 6);
             {
-                nicknameLabel.Anchor = Anchors.Fill;
+                nicknameLabel.Anchor = AnchorType.Fill;
                 nicknameLabel.Alignment = TextAnchor.MiddleLeft;
-                nicknameLabel.OffsetLeft = 66f;
-                nicknameLabel.OffsetRight = 10f;
-                nicknameLabel.OffsetTop = 8f;
-                nicknameLabel.OffsetBottom = 8f;
+                nicknameLabel.Offset = new Offset(66f, 8f, 10f, 8f);
                 nicknameLabel.WrapText = true;
 
             }
             levelLabel = CreateChild<Label>("level", 7);
             {
-                levelLabel.Anchor = Anchors.Fill;
+                levelLabel.Anchor = AnchorType.Fill;
                 levelLabel.Alignment = TextAnchor.LowerRight;
-                levelLabel.OffsetLeft = 66f;
-                levelLabel.OffsetRight = 10f;
-                levelLabel.OffsetTop = 8f;
-                levelLabel.OffsetBottom = 8f;
+                levelLabel.Offset = new Offset(66f, 8f, 10f, 8f);
                 levelLabel.FontSize = 14;
                 levelLabel.WrapText = true;
             }

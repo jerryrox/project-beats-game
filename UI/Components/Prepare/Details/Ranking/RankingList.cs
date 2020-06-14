@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingList : UguiListView, IRankingList {
+    public class RankingList : UguiListView, IListView {
 
         private List<IRankInfo> ranks = new List<IRankInfo>();
 
@@ -26,6 +26,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             Axis = GridLayoutGroup.Axis.Vertical;
         }
 
+        /// <summary>
+        /// Displays the specified list of rank information.
+        /// </summary>
         public void Setup(IEnumerable<IRankInfo> ranks)
         {
             foreach(var rank in ranks)
@@ -35,6 +38,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             ResetPosition();
         }
 
+        /// <summary>
+        /// Clears all cells from the list.
+        /// </summary>
         public void Clear()
         {
             ranks.Clear();
@@ -50,7 +56,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
         private void UpdateCell(IListItem item)
         {
-            var cell = item as IRankingCell;
+            var cell = item as RankingCell;
             if(cell == null)
                 return;
 

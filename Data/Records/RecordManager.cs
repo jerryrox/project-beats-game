@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -67,8 +68,29 @@ namespace PBGame.Data.Records
 
         public int GetPlayCount(IPlayableMap map, IUser user) => recordStore.GetPlayCount(map, user);
 
+        public void SaveRecord(IRecord record)
+        {
+            if(!(record is Record r))
+                return;
+            recordStore.SaveRecord(r);
+        }
+
         // TODO: Implement when replay store is implemented.
         public bool HasReplay(IRecord record) => false;
+
+        public IRecord GetBestRecord(IEnumerable<IRecord> records)
+        {
+            return records.Aggregate((x, y) =>
+            {
+                int scoreComp = x.Score.CompareTo(y.Score);
+                if(scoreComp != 0)
+                    return scoreComp > 0 ? x : y;
+                int accComp = x.Accuracy.CompareTo(y.Accuracy);
+                if(accComp != 0)
+                    return accComp > 0 ? x : y;
+                return x.Date.CompareTo(y.Date) <= 0 ? x : y;
+            });
+        }
 
         /// <summary>
         /// Injects dependencies to specified records and returns them.

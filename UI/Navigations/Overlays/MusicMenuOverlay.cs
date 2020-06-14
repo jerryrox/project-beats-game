@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components;
+using PBGame.UI.Components.MenuBar;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -16,26 +17,23 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-using IMusicButton = PBGame.UI.Components.MenuBar.IMusicButton;
-
 namespace PBGame.UI.Navigations.Overlays
 {
     public class MusicMenuOverlay : BaseSubMenuOverlay, IMusicMenuOverlay {
 
         private new ISprite mask;
-        private ISprite glow;
-        private IMapImageDisplay imageDisplay;
+        private MapImageDisplay imageDisplay;
         private ISprite gradient;
         private ILabel title;
         private ILabel artist;
-        private IControlButton randomButton;
-        private IControlButton prevButton;
-        private IControlButton playButton;
-        private IControlButton nextButton;
-        private ITimeBar timeBar;
+        private ControlButton randomButton;
+        private ControlButton prevButton;
+        private ControlButton playButton;
+        private ControlButton nextButton;
+        private TimeBar timeBar;
 
 
-        public IMusicButton MusicButton { get; set; }
+        public MusicButton MusicButton { get; set; }
 
         protected override int OverlayDepth => ViewDepths.MusicMenuOverlay;
 
@@ -52,8 +50,8 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            container.Anchor = Anchors.TopRight;
-            container.Pivot = Pivots.TopRight;
+            container.Anchor = AnchorType.TopRight;
+            container.Pivot = PivotType.TopRight;
             container.X = -16f;
             container.Y = -16f;
             container.Width = 400f;
@@ -61,7 +59,7 @@ namespace PBGame.UI.Navigations.Overlays
 
             mask = container.CreateChild<UguiSprite>("mask", 0);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Position = Vector2.zero;
                 mask.SpriteName = "box";
@@ -69,75 +67,72 @@ namespace PBGame.UI.Navigations.Overlays
 
                 imageDisplay = mask.CreateChild<MapImageDisplay>("imageDisplay", 0);
                 {
-                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.Anchor = AnchorType.Fill;
                     imageDisplay.RawSize = Vector2.zero;
                 }
                 gradient = mask.CreateChild<UguiSprite>("gradient", 1);
                 {
-                    gradient.Anchor = Anchors.Fill;
-                    gradient.OffsetTop = -22f;
-                    gradient.OffsetLeft = 0f;
-                    gradient.OffsetRight = 0f;
-                    gradient.OffsetBottom = 0f;
+                    gradient.Anchor = AnchorType.Fill;
+                    gradient.Offset = new Offset(0f, -22f, 0f, 0f);
                     gradient.SpriteName = "gradation-bottom";
                     gradient.Color = new Color(0f, 0f, 0f, 0.9f);
                 }
                 title = mask.CreateChild<Label>("title", 2);
                 {
-                    title.Anchor = Anchors.BottomStretch;
-                    title.OffsetLeft = title.OffsetRight = 16f;
+                    title.Anchor = AnchorType.BottomStretch;
+                    title.SetOffsetHorizontal(16f);
                     title.Y = 92f;
                     title.Height = 30f;
                     title.IsBold = true;
-                    title.WrapText = false;
+                    title.WrapText = true;
                     title.FontSize = 18;
                 }
                 artist = mask.CreateChild<Label>("artist", 3);
                 {
-                    artist.Anchor = Anchors.BottomStretch;
-                    artist.OffsetLeft = artist.OffsetRight = 16f;
+                    artist.Anchor = AnchorType.BottomStretch;
+                    artist.SetOffsetHorizontal(16f);
                     artist.Y = 70f;
                     artist.Height = 30f;
-                    artist.WrapText = false;
+                    artist.WrapText = true;
                     artist.FontSize = 16;
                 }
                 randomButton = mask.CreateChild<ControlButton>("random", 4);
                 {
-                    randomButton.Anchor = Anchors.BottomLeft;
+                    randomButton.Anchor = AnchorType.BottomLeft;
                     randomButton.X = 36f;
                     randomButton.Y = 36f;
                     randomButton.Size = new Vector2(48f, 48f);
                     randomButton.IconName = "icon-random";
                     randomButton.IconSize = 24f;
 
-                    randomButton.OnPointerDown += () =>
+                    randomButton.OnTriggered += () =>
                     {
                         MusicButton.SetRandomMusic();
                     };
                 }
                 prevButton = mask.CreateChild<ControlButton>("prev", 5);
                 {
-                    prevButton.Anchor = Anchors.Bottom;
+                    prevButton.Anchor = AnchorType.Bottom;
                     prevButton.X = -56f;
                     prevButton.Y = 36f;
                     prevButton.Size = new Vector2(48f, 48f);
                     prevButton.IconName = "icon-backward";
                     prevButton.IconSize = 24f;
 
-                    prevButton.OnPointerDown += () =>
+                    prevButton.OnTriggered += () =>
                     {
                         MusicButton.SetPrevMusic();
                     };
                 }
                 playButton = mask.CreateChild<ControlButton>("play", 6);
                 {
-                    playButton.Anchor = Anchors.Bottom;
+                    playButton.Anchor = AnchorType.Bottom;
                     playButton.Y = 36f;
                     playButton.Size = new Vector2(48f, 48f);
                     playButton.IconName = "icon-play";
                     playButton.IconSize = 32f;
 
-                    playButton.OnPointerDown += () =>
+                    playButton.OnTriggered += () =>
                     {
                         if(MusicController.IsPlaying)
                             MusicController.Pause();
@@ -147,49 +142,28 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 nextButton = mask.CreateChild<ControlButton>("next", 7);
                 {
-                    nextButton.Anchor = Anchors.Bottom;
+                    nextButton.Anchor = AnchorType.Bottom;
                     nextButton.X = 56f;
                     nextButton.Y = 36f;
                     nextButton.Size = new Vector2(48f, 48f);
                     nextButton.IconName = "icon-forward";
                     nextButton.IconSize = 24f;
 
-                    nextButton.OnPointerDown += () =>
+                    nextButton.OnTriggered += () =>
                     {
                         MusicButton.SetNextMusic();
                     };
                 }
                 timeBar = mask.CreateChild<TimeBar>("timebar", 8);
                 {
-                    timeBar.Anchor = Anchors.BottomStretch;
-                    timeBar.Pivot = Pivots.Bottom;
-                    timeBar.OffsetLeft = timeBar.OffsetRight = 0f;
+                    timeBar.Anchor = AnchorType.BottomStretch;
+                    timeBar.Pivot = PivotType.Bottom;
+                    timeBar.SetOffsetHorizontal(0f);
                     timeBar.Y = 0f;
                     timeBar.Height = 8f;
                 }
             }
-            glow = container.CreateChild<UguiSprite>("glow", -1);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.RawSize = new Vector2(30f, 30f);
-                glow.Position = Vector2.zero;
-                glow.SpriteName = "square-32-glow";
-                glow.ImageType = Image.Type.Sliced;
-                glow.Color = Color.black;
-            }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
-                .AddTime(0.25f, Color.gray)
-                .Build();
-
-            outAni = new Anime();
-            outAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
-                .AddTime(0.25f, Color.black)
-                .Build();
-
+            
             OnEnableInited();
         }
 

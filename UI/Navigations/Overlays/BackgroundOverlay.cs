@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Components.Background;
 using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
@@ -12,6 +13,8 @@ using UnityEngine;
 namespace PBGame.UI.Navigations.Overlays
 {
     public class BackgroundOverlay : BaseOverlay, IBackgroundOverlay {
+
+        private ParallaxContainer parallaxContainer;
 
         private Color backgroundTint = Color.white;
 
@@ -60,22 +63,28 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IRoot3D root3D)
         {
-            EmptyBackground = CreateChild<EmptyBackgroundDisplay>("empty", 0);
+            parallaxContainer = CreateChild<ParallaxContainer>("parallax", 0);
             {
-                EmptyBackground.Anchor = Anchors.Fill;
-                EmptyBackground.RawSize = Vector2.zero;
-            }
-            ImageBackground = CreateChild<ImageBackgroundDisplay>("image", 1);
-            {
-                ImageBackground.Anchor = Anchors.Fill;
-                ImageBackground.RawSize = Vector2.zero;
-                ImageBackground.Active = false;
-            }
-            GradientBackground = CreateChild<GradientBackgroundDisplay>("gradient", 2);
-            {
-                GradientBackground.Anchor = Anchors.Fill;
-                GradientBackground.RawSize = Vector2.zero;
-                GradientBackground.Active = false;
+                parallaxContainer.Anchor = AnchorType.Fill;
+                parallaxContainer.Offset = Offset.Zero;
+
+                EmptyBackground = parallaxContainer.Content.CreateChild<EmptyBackgroundDisplay>("empty", 0);
+                {
+                    EmptyBackground.Anchor = AnchorType.Fill;
+                    EmptyBackground.Offset = Offset.Zero;
+                }
+                ImageBackground = parallaxContainer.Content.CreateChild<ImageBackgroundDisplay>("image", 1);
+                {
+                    ImageBackground.Anchor = AnchorType.Fill;
+                    ImageBackground.Offset = Offset.Zero;
+                    ImageBackground.Active = false;
+                }
+                GradientBackground = parallaxContainer.Content.CreateChild<GradientBackgroundDisplay>("gradient", 2);
+                {
+                    GradientBackground.Anchor = AnchorType.Fill;
+                    GradientBackground.Offset = Offset.Zero;
+                    GradientBackground.Active = false;
+                }
             }
 
             OnEnableInited();
@@ -83,11 +92,13 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override void OnEnableInited()
         {
+            base.OnEnableInited();
             BindEvents();
         }
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             UnbindEvents();
         }
 

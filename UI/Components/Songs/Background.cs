@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -12,9 +13,9 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class Background : UguiObject, IBackground {
+    public class Background : UguiObject {
 
-        private ISprite blurSprite;
+        private BlurDisplay blurDisplay;
         private ISprite darkSprite;
         private ISprite brightenSprite;
         private ISprite shadeSprite;
@@ -27,17 +28,14 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
-            blurSprite = CreateChild<UguiSprite>("blur", 0);
+            blurDisplay = CreateChild<BlurDisplay>("blur", 0);
             {
-                blurSprite.Anchor = Anchors.Fill;
-                blurSprite.RawSize = Vector2.zero;
-                blurSprite.SpriteName = "null";
-
-                blurSprite.AddEffect(new BlurShaderEffect());
+                blurDisplay.Anchor = AnchorType.Fill;
+                blurDisplay.RawSize = Vector2.zero;
             }
             darkSprite = CreateChild<UguiSprite>("dark", 1);
             {
-                darkSprite.Anchor = Anchors.Fill;
+                darkSprite.Anchor = AnchorType.Fill;
                 darkSprite.RawSize = Vector2.zero;
                 darkSprite.Color = new Color(0f, 0f, 0f, 0.75f);
             }
@@ -52,8 +50,8 @@ namespace PBGame.UI.Components.Songs
             }
             shadeSprite = CreateChild<UguiSprite>("shade", 3);
             {
-                shadeSprite.Anchor = Anchors.TopRight;
-                shadeSprite.Pivot = Pivots.TopRight;
+                shadeSprite.Anchor = AnchorType.TopRight;
+                shadeSprite.Pivot = PivotType.TopRight;
                 shadeSprite.RotationZ = -5f;
                 shadeSprite.Color = new Color(1f, 1f, 1f, 0.25f);
                 shadeSprite.X = -480f;

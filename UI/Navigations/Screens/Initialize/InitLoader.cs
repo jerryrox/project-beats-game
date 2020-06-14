@@ -2,8 +2,8 @@ using System;
 using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
-using PBGame.Skins;
 using PBGame.Audio;
+using PBGame.Stores;
 using PBGame.Configurations;
 using PBFramework.Services;
 using PBFramework.Threading;
@@ -28,10 +28,10 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         private IMapManager MapManager { get; set; }
 
         [ReceivesDependency]
-        private ISkinManager SkinManager { get; set; }
+        private ISoundTable SkinManager { get; set; }
 
         [ReceivesDependency]
-        private ISoundPooler SoundPooler { get; set; }
+        private ISoundPool SoundPooler { get; set; }
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
@@ -47,6 +47,9 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 
         [ReceivesDependency]
         private IRecordManager RecordManager { get; set; }
+
+        [ReceivesDependency]
+        private IDownloadStore DownloadStore { get; set; }
 
 
         public InitLoader(IDependencyContainer dependencies)
@@ -72,8 +75,11 @@ namespace PBGame.UI.Navigations.Screens.Initialize
             MapConfiguration.Load();
             MapsetConfiguration.Load();
 
-            // Apply volume changes.
+            // Trigger options which must be applied on entering the game.
             GameConfiguration.MasterVolume.Trigger();
+            GameConfiguration.UseParallax.Trigger();
+            GameConfiguration.ResolutionQuality.Trigger();
+            GameConfiguration.GlobalOffset.Trigger();
 
             LoadMapManager();
         }
@@ -87,44 +93,14 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 
             IEventProgress progress = new EventProgress();
             progress.OnProgress += SetProgress;
-            progress.OnFinished += LoadSkinManager;
-            MapManager.Reload(progress);
-        }
-
-        /// <summary>
-        /// Starts loading the skin manager.
-        /// </summary>
-        private void LoadSkinManager()
-        {
-            SetState("Loading skins");
-
-            IEventProgress progress = new EventProgress();
-            progress.OnProgress += SetProgress;
-            progress.OnFinished += LoadSkin;
-            SkinManager.Reload(progress);
-        }
-
-        /// <summary>
-        /// Starts loading the player's current skin.
-        /// </summary>
-        private void LoadSkin()
-        {
-            SetState("Loading player skin");
-
-            // TODO: Check configuration for the selected skin.
-            var promise = SkinManager.SelectSkin(SkinManager.DefaultSkin, SoundPooler);
-            // Null promise would mean default skin load.
-            if (promise == null)
+            progress.OnFinished += () =>
             {
-                SetProgress(1f);
+                // Load any downloaded mapset files that weren't imported concurrently.
+                foreach(var archive in DownloadStore.MapStorage.GetAllFiles())
+                    MapManager.Import(archive);
                 LoadUserData();
-            }
-            else
-            {
-                promise.OnProgress += SetProgress;
-                promise.OnFinished += LoadUserData;
-                promise.Start();
-            }
+            };
+            MapManager.Reload(progress);
         }
 
         /// <summary>

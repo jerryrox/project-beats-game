@@ -42,7 +42,7 @@ namespace PBGame.Rulesets.Maps
         public DirectoryInfo Directory { get; set; }
 
 
-        public void SortMapsByMode(GameModes gameMode)
+        public void SortMapsByMode(GameModeType gameMode)
         {
             Maps.Sort((x, y) => {
 				var diffX = x.GetPlayable(gameMode).Difficulty;

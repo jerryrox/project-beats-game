@@ -10,7 +10,7 @@ using UnityEngine;
 namespace PBGame.UI.Components.ProfileMenu
 {
     // TODO: Support for logging in using other API providers.
-    public class CoverDisplay : UguiObject, ICoverDisplay
+    public class CoverDisplay : UguiObject
     {
         private ITexture image;
 
@@ -36,7 +36,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             image = CreateChild<UguiTexture>("image", 0);
             {
-                image.Anchor = Anchors.Fill;
+                image.Anchor = AnchorType.Fill;
                 image.RawSize = Vector2.zero;
             }
 

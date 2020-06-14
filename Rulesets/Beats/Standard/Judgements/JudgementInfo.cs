@@ -7,30 +7,30 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 	/// </summary>
 	public class JudgementInfo : Rulesets.Judgements.JudgementInfo {
 
-		public override HitResults MaxResult { get { return HitResults.Good; } }
+		public override HitResultType MaxResult { get { return HitResultType.Perfect; } }
 
 
-		protected override int GetNumericResult (HitResults result)
+		public override int GetNumericResult (HitResultType result)
 		{
 			switch(result)
 			{
-			case HitResults.Good: return 150;
-			case HitResults.Ok: return 50;
-			case HitResults.Bad: return 25;
+			case HitResultType.Perfect: return 150;
+			case HitResultType.Great: return 50;
+			case HitResultType.Good: return 25;
 			}
 			return 0;
 		}
 
-		protected override float GetHealthIncrease (HitResults result)
+		public override float GetHealthBonus (HitResultType result)
 		{
 			switch(result)
-			{
-			case HitResults.Miss:
-				return -0.02f;
-			case HitResults.Bad:
-			case HitResults.Ok:
-			case HitResults.Good:
-				return 0.01f;
+            {
+                case HitResultType.Perfect:
+                    return 1f;
+                case HitResultType.Great:
+                    return 0.5f;
+                case HitResultType.Good:
+                    return 0.25f;
 			}
 			return 0f;
 		}

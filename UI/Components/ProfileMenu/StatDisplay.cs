@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class StatDisplay : UguiObject, IStatDisplay {
+    public class StatDisplay : UguiObject, IHasLabel {
 
         private ILabel label;
         private ISprite bg;
@@ -20,6 +20,9 @@ namespace PBGame.UI.Components.ProfileMenu
         private ILabel centerLabel;
 
 
+        /// <summary>
+        /// Progress displayed on the display.
+        /// </summary>
         public float Progress
         {
             get => fg.FillAmount;
@@ -32,6 +35,9 @@ namespace PBGame.UI.Components.ProfileMenu
             set => label.Text = value;
         }
 
+        /// <summary>
+        /// Text on the center of the display.
+        /// </summary>
         public string CenterText
         {
             get => centerLabel.Text;
@@ -44,22 +50,22 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.Bottom;
-                label.Pivot = Pivots.Top;
+                label.Anchor = AnchorType.Bottom;
+                label.Pivot = PivotType.Top;
                 label.Y = -4f;
                 label.Alignment = TextAnchor.UpperCenter;
                 label.FontSize = 17;
             }
             bg = CreateChild<UguiSprite>("bg", 1);
             {
-                bg.Anchor = Anchors.Fill;
+                bg.Anchor = AnchorType.Fill;
                 bg.RawSize = Vector2.zero;
                 bg.SpriteName = "circle-320";
                 bg.Color = Color.black;
             }
             fg = CreateChild<UguiSprite>("fg", 2);
             {
-                fg.Anchor = Anchors.Fill;
+                fg.Anchor = AnchorType.Fill;
                 fg.RawSize = Vector2.zero;
                 fg.SpriteName = "circle-320";
                 fg.Color = colorPreset.PrimaryFocus;
@@ -70,14 +76,14 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             center = CreateChild<UguiSprite>("center", 3);
             {
-                center.Anchor = Anchors.Fill;
+                center.Anchor = AnchorType.Fill;
                 center.RawSize = new Vector2(-8f, -8f);
                 center.SpriteName = "circle-320";
                 center.Color = HexColor.Create("1D2126");
 
                 centerLabel = center.CreateChild<Label>("label");
                 {
-                    centerLabel.Anchor = Anchors.Fill;
+                    centerLabel.Anchor = AnchorType.Fill;
                     centerLabel.RawSize = Vector2.zero;
                     centerLabel.IsBold = true;
                     centerLabel.FontSize = 18;

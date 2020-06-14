@@ -10,14 +10,14 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class Sorter : UguiObject, ISorter {
+    public class Sorter : UguiObject {
 
         private const float ButtonSize = 80f;
 
         private ILabel label;
 
         private IGrid grid;
-        private List<ISortButton> sortButtons = new List<ISortButton>();
+        private List<SortButton> sortButtons = new List<SortButton>();
 
 
         [ReceivesDependency]
@@ -29,11 +29,12 @@ namespace PBGame.UI.Components.Songs
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.LeftStretch;
-                label.Pivot = Pivots.Left;
+                label.Anchor = AnchorType.LeftStretch;
+                label.Pivot = PivotType.Left;
                 label.X = 24;
-                label.OffsetTop = 0f;
-                label.OffsetBottom = 0f;
+                var offset = label.Offset;
+                offset.Vertical = 0f;
+                label.Offset = offset;
                 label.IsBold = true;
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.WrapText = false;
@@ -41,23 +42,22 @@ namespace PBGame.UI.Components.Songs
             }
             grid = CreateChild<UguiGrid>("grid", 1);
             {
-                grid.Anchor = Anchors.LeftStretch;
-                grid.Pivot = Pivots.Left;
-                grid.OffsetTop = 0f;
-                grid.OffsetBottom = 0f;
-                grid.X = 100f;
-                grid.Width = ButtonSize * Enum.GetNames(typeof(MapsetSorts)).Length;
+                grid.Anchor = AnchorType.LeftStretch;
+                grid.Pivot = PivotType.Left;
+                grid.SetOffsetVertical(0f);
+                grid.X = label.X * 2f + label.PreferredWidth;
+                grid.Width = ButtonSize * Enum.GetNames(typeof(MapsetSortType)).Length;
                 grid.CellSize = new Vector2(ButtonSize, 56f);
             }
 
-            foreach (var sortType in (MapsetSorts[])Enum.GetValues(typeof(MapsetSorts)))
+            foreach (var sortType in (MapsetSortType[])Enum.GetValues(typeof(MapsetSortType)))
             {
                 var button = grid.CreateChild<SortButton>(sortType.ToString(), sortButtons.Count);
                 {
                     button.SortType = sortType;
                     button.LabelText = sortType.ToString();
 
-                    button.OnPointerDown += () => SetSort(button.SortType);
+                    button.OnTriggered += () => SetSort(button.SortType);
                 }
                 sortButtons.Add(button);
             }
@@ -66,13 +66,14 @@ namespace PBGame.UI.Components.Songs
             SetSort(GameConfiguration.MapsetSort.Value);
         }
 
-        public void SetSort(MapsetSorts sort)
+        /// <summary>
+        /// Sets the sorting method of the mapsets.
+        /// </summary>
+        public void SetSort(MapsetSortType sort)
         {
             // Apply on button.
             for (int i = 0; i < sortButtons.Count; i++)
-            {
-                sortButtons[i].SetFocus(sortButtons[i].SortType == sort);
-            }
+                sortButtons[i].IsFocused = sortButtons[i].SortType == sort;
 
             // Notify change
             OnSortChange(sort);
@@ -81,10 +82,13 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Event called when the current sort type has been changed.
         /// </summary>
-        private void OnSortChange(MapsetSorts sort)
+        private void OnSortChange(MapsetSortType sort)
         {
-            if(GameConfiguration.MapsetSort.Value != sort)
+            if (GameConfiguration.MapsetSort.Value != sort)
+            {
                 GameConfiguration.MapsetSort.Value = sort;
+                GameConfiguration.Save();
+            }
         }
     }
 }

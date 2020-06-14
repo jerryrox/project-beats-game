@@ -9,7 +9,12 @@ namespace PBGame.UI.Navigations.Screens
 {
     public class HomeScreen : BaseScreen, IHomeScreen {
 
-        public ILogoDisplay LogoDisplay { get; private set; }
+        private bool didHookEventToOverlay = false;
+
+        private bool isHiding;
+
+
+        public LogoDisplay LogoDisplay { get; private set; }
 
         protected override int ScreenDepth => ViewDepths.HomeScreen;
 
@@ -44,31 +49,35 @@ namespace PBGame.UI.Navigations.Screens
         {
             base.OnEnableInited();
 
-            // Always hide menubar in home on enter.
-            OverlayNavigator.Hide<MenuBarOverlay>();
+            isHiding = false;
+        }
+
+        protected override void OnPreHide()
+        {
+            base.OnPreHide();
+            isHiding = true;
+            OverlayNavigator.Hide<HomeMenuOverlay>();
         }
 
         /// <summary>
-        /// Event called on logo button press.
+        /// /// Event called on logo button press.
         /// </summary>
         private void OnLogoButton()
         {
             LogoDisplay.SetZoom(true);
             BackgroundOverlay.Color = Color.gray;
 
-            // Show menu bar
-            OverlayNavigator.Show<MenuBarOverlay>();
-
             // Show home menu
             var homeMenuOverlay = OverlayNavigator.Show<HomeMenuOverlay>();
-            homeMenuOverlay.OnViewHide += (isTransitioning) =>
+            if (!didHookEventToOverlay)
             {
-                if(!isTransitioning)
-                    OverlayNavigator.Hide<MenuBarOverlay>();
-
-                LogoDisplay.SetZoom(false);
-                BackgroundOverlay.Color = Color.white;
-            };
+                didHookEventToOverlay = true;
+                homeMenuOverlay.OnHide += () =>
+                {
+                    LogoDisplay.SetZoom(false);
+                    BackgroundOverlay.Color = Color.white;
+                };
+            }
         }
 
         /// <summary>

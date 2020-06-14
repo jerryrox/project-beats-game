@@ -10,10 +10,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaMisc : UguiSprite, IMetaMisc {
+    public class MetaMisc : UguiSprite {
 
-        private IMetaMiscEntry source;
-        private IMetaMiscEntry tags;
+        private MetaMiscEntry source;
+        private MetaMiscEntry tags;
 
 
         [ReceivesDependency]
@@ -27,9 +27,9 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
             source = CreateChild<MetaMiscEntry>("source", 0);
             {
-                source.Anchor = Anchors.TopStretch;
-                source.Pivot = Pivots.Top;
-                source.OffsetLeft = source.OffsetRight = 0f;
+                source.Anchor = AnchorType.TopStretch;
+                source.Pivot = PivotType.Top;
+                source.SetOffsetHorizontal(0f);
                 source.Y = 0f;
                 source.Height = 120f;
 
@@ -37,9 +37,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             tags = CreateChild<MetaMiscEntry>("tags", 1);
             {
-                tags.Anchor = Anchors.Fill;
-                tags.OffsetLeft = tags.OffsetRight = tags.OffsetBottom = 0f;
-                tags.OffsetTop = 120f;
+                tags.Anchor = AnchorType.Fill;
+                tags.Offset = new Offset(0f, 120f, 0f, 0f);
 
                 tags.LabelText = "Tags";
             }

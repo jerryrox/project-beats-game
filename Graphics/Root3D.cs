@@ -26,7 +26,7 @@ namespace PBGame.Graphics
         {
             base.Awake();
 
-            Resolution = new Vector2(1280f, 720f);
+            BaseResolution = new Vector2(1280f, 720f);
             SetCameraRender(Camera.main);
         }
     }

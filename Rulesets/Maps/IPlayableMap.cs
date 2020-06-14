@@ -15,7 +15,7 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// Returns the actual playable game mode of this map.
         /// </summary>
-        GameModes PlayableMode { get; set; }
+        GameModeType PlayableMode { get; set; }
 
         /// <summary>
         /// Returns the difficulty information of this map.

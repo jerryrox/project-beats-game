@@ -33,7 +33,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// The default sample type defined in metadata.
 		/// </summary>
-		private SampleTypes defaultSampleType;
+		private SampleType defaultSampleType;
 
 		/// <summary>
 		/// The default sample volume defined in metadata.
@@ -89,28 +89,28 @@ namespace PBGame.IO.Decoding.Osu
 				line.StartsWith(" ", StringComparison.Ordinal) || line.StartsWith("_", StringComparison.Ordinal);
 		}
 
-		protected override void DecodeLine (OriginalMap result, Sections section, string line)
+		protected override void DecodeLine (OriginalMap result, SectionType section, string line)
 		{
 			var l = TrimLine(line);
 
 			switch(section)
 			{
-			case Sections.General:
+			case SectionType.General:
 				DecodeGeneral(line);
 				break;
-			case Sections.Metadata:
+			case SectionType.Metadata:
 				DecodeMetadata(line);
 				break;
-			case Sections.Difficulty:
+			case SectionType.Difficulty:
 				DecodeDifficulty(line);
 				break;
-			case Sections.Events:
+			case SectionType.Events:
 				DecodeEvents(line);
 				break;
-			case Sections.TimingPoints:
+			case SectionType.TimingPoints:
 				DecodeTimingPoints(line);
 				break;
-			case Sections.HitObjects:
+			case SectionType.HitObjects:
 				DecodeHitObjects(line);
 				break;
 			}
@@ -142,7 +142,7 @@ namespace PBGame.IO.Decoding.Osu
 				detail.Countdown = ParseUtils.ParseInt(data.Value) == 1;
 				break;
 			case "SampleSet":
-				defaultSampleType = (SampleTypes)Enum.Parse(typeof(SampleTypes), data.Value);
+				defaultSampleType = (SampleType)Enum.Parse(typeof(SampleType), data.Value);
 				break;
 			case "SampleVolume":
 				defaultSampleVolume = ParseUtils.ParseFloat(data.Value, 100) / 100f;
@@ -151,12 +151,12 @@ namespace PBGame.IO.Decoding.Osu
 				detail.StackLeniency = ParseUtils.ParseFloat(data.Value);
 				break;
 			case "Mode":
-				detail.GameMode = (GameModes)(ParseUtils.ParseInt(data.Value) + GameProviders.Osu);
+				detail.GameMode = (GameModeType)(ParseUtils.ParseInt(data.Value) + GameProviderType.Osu);
 
 				switch(detail.GameMode)
 				{
 						// Osu Standard mode
-					case GameModes.OsuStandard:
+					case GameModeType.OsuStandard:
 						objectParser = new Standard.HitObjectParser(offset, formatVersion);
 						break;
 						// TODO: Osu Taiko mode
@@ -265,16 +265,16 @@ namespace PBGame.IO.Decoding.Osu
 		{
 			var splits = line.Split(',');
 
-			EventTypes type = (EventTypes)Enum.Parse(typeof(EventTypes), splits[0]);
+			EventType type = (EventType)Enum.Parse(typeof(EventType), splits[0]);
 
 			// Only two event types will be checked, as the rest should be decoded by storyboard decoder.
 			switch(type)
 			{
-			case EventTypes.Background:
+			case EventType.Background:
 				string fileName = splits[2].Trim('"');
 				map.Detail.Metadata.BackgroundFile = PathUtils.StandardPath(fileName);
 				break;
-			case EventTypes.Break:
+			case EventType.Break:
 				float start = ParseUtils.ParseFloat(splits[1]) + offset;
 				float end = Math.Max(start, ParseUtils.ParseFloat(splits[2]) + offset);
 
@@ -302,13 +302,13 @@ namespace PBGame.IO.Decoding.Osu
 				float beatLength = ParseUtils.ParseFloat(splits[1].Trim());
 				float speedMultiplier = beatLength < 0 ? 100 / -beatLength : 1;
 
-				TimeSignatures timeSignature = TimeSignatures.Quadruple;
+				TimeSignatureType timeSignature = TimeSignatureType.Quadruple;
 				if(splits.Length >= 3)
-					timeSignature = splits[2][0] == '0' ? TimeSignatures.Quadruple : (TimeSignatures)ParseUtils.ParseInt(splits[2]);
+					timeSignature = splits[2][0] == '0' ? TimeSignatureType.Quadruple : (TimeSignatureType)ParseUtils.ParseInt(splits[2]);
 
-				SampleTypes sampleType = defaultSampleType;
+				SampleType sampleType = defaultSampleType;
 				if(splits.Length >= 4)
-					sampleType = (SampleTypes)ParseUtils.ParseInt(splits[3]);
+					sampleType = (SampleType)ParseUtils.ParseInt(splits[3]);
 				
 				string sampleTypeString = sampleType.ToString().ToLowerInvariant();
 				if(sampleTypeString.Equals("none", StringComparison.Ordinal))
@@ -330,7 +330,7 @@ namespace PBGame.IO.Decoding.Osu
 				if(splits.Length >= 8)
 				{
 					int flags = ParseUtils.ParseInt(splits[7]);
-					isHighlight = (flags & (int)EffectFlags.IsHighlight) != 0;
+					isHighlight = (flags & (int)EffectFlagType.IsHighlight) != 0;
 				}
 
 				if(isTimingChange)
@@ -442,7 +442,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// Types of flags included in effect control point.
 		/// </summary>
 		[Flags]
-		private enum EffectFlags {
+		private enum EffectFlagType {
 
 			None = 0,
 			IsHighlight = 1,

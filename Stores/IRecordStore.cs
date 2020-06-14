@@ -14,6 +14,11 @@ namespace PBGame.Stores
         IEnumerable<IRecord> GetRecords(IPlayableMap map);
 
         /// <summary>
+        /// Saves the specified record to the store.
+        /// </summary>
+        void SaveRecord(Record record);
+
+        /// <summary>
         /// Returns the number of records made for the specified map and the user.
         /// </summary>
         int GetPlayCount(IPlayableMap map, IUser user);

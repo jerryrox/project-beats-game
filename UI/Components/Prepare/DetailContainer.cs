@@ -1,4 +1,5 @@
 using System.Linq;
+using PBGame.Graphics;
 using PBGame.UI.Components.Prepare.Details;
 using PBGame.UI.Components.Prepare.Details.Meta;
 using PBGame.UI.Components.Prepare.Details.Ranking;
@@ -9,58 +10,71 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class DetailContainer : UguiSprite, IDetailContainer {
+    public class DetailContainer : UguiSprite {
 
-        private IMenuHolder menuHolder;
-        private IVersionDisplay versionDisplay;
+        private MenuHolder menuHolder;
+        private VersionDisplay versionDisplay;
 
         private IScrollView contentScroll;
-        private IMetaContainer metaContainer;
-        private IRankingContainer rankingContainer;
+        private MetaContainer metaContainer;
+        private RankingContainer rankingContainer;
+
+
+        /// <summary>
+        /// Returns the total height of all children.
+        /// </summary>
+        public float TotalChildrenHeight
+        {
+            get
+            {
+                return menuHolder.Height +
+                    versionDisplay.Height +
+                    contentScroll.Container.Height;
+            }
+        }
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IColorPreset colorPreset)
         {
-            Color = HexColor.Create("0E1216");
+            Color = colorPreset.DarkBackground;
 
             menuHolder = CreateChild<MenuHolder>("menu", 0);
             {
-                menuHolder.Anchor = Anchors.TopStretch;
-                menuHolder.Pivot = Pivots.Top;
+                menuHolder.Anchor = AnchorType.TopStretch;
+                menuHolder.Pivot = PivotType.Top;
                 menuHolder.RawWidth = 0f;
                 menuHolder.Y = 0f;
                 menuHolder.Height = 56f;
             }
             versionDisplay = CreateChild<VersionDisplay>("version", 1);
             {
-                versionDisplay.Anchor = Anchors.TopStretch;
-                versionDisplay.Pivot = Pivots.Top;
+                versionDisplay.Anchor = AnchorType.TopStretch;
+                versionDisplay.Pivot = PivotType.Top;
                 versionDisplay.RawWidth = 0f;
                 versionDisplay.Y = -56f;
                 versionDisplay.Height = 72f;
             }
             contentScroll = CreateChild<UguiScrollView>("content", 2);
             {
-                contentScroll.Anchor = Anchors.Fill;
+                contentScroll.Anchor = AnchorType.Fill;
                 contentScroll.RawWidth = -128f;
-                contentScroll.OffsetTop = 128f;
-                contentScroll.OffsetBottom = 0f;
+                contentScroll.SetOffsetVertical(128f, 0f);
 
                 contentScroll.Background.Alpha = 0f;
 
                 metaContainer = contentScroll.Container.CreateChild<MetaContainer>("meta", 0);
                 {
-                    metaContainer.Anchor = Anchors.TopStretch;
-                    metaContainer.Pivot = Pivots.Top;
+                    metaContainer.Anchor = AnchorType.TopStretch;
+                    metaContainer.Pivot = PivotType.Top;
                     metaContainer.RawWidth = 0f;
                     metaContainer.Y = -32f;
                     metaContainer.Height = 360f;
                 }
                 rankingContainer = contentScroll.Container.CreateChild<RankingContainer>("ranking", 1);
                 {
-                    rankingContainer.Anchor = Anchors.TopStretch;
-                    rankingContainer.Pivot = Pivots.Top;
+                    rankingContainer.Anchor = AnchorType.TopStretch;
+                    rankingContainer.Pivot = PivotType.Top;
                     rankingContainer.RawWidth = 0f;
                     rankingContainer.Y = -424f;
                     rankingContainer.Height = 360f;

@@ -1,10 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Rulesets.Maps;
+using PBGame.Notifications;
 using PBFramework.Services;
 using PBFramework.Threading;
 
@@ -23,6 +25,8 @@ namespace PBGame.Maps
 
         private string lastSearch = null;
 
+        private INotificationBox notificationBox;
+
 
         public IMapsetList AllMapsets => allMapsets;
 
@@ -31,29 +35,67 @@ namespace PBGame.Maps
         public string LastSearch => lastSearch;
 
 
-        public MapManager(IMapsetStore store)
+        public MapManager(IMapsetStore store, INotificationBox notificationBox)
         {
             if(store == null) throw new ArgumentNullException(nameof(store));
 
             this.store = store;
+            this.notificationBox = notificationBox;
         }
 
         public Task<bool> Import(FileInfo file)
         {
             return Task.Run(async () =>
             {
-                var returnableProgress = new ReturnableProgress<Mapset>();
-                // Start importing the file
-                Mapset mapset = await store.Import(file, progress: returnableProgress);
-                // Dispatch mapset imported event on main thread.
-                if (mapset != null)
+                try
                 {
-                    UnityThreadService.Dispatch(() =>
+                    var returnableProgress = new ReturnableProgress<Mapset>();
+                    // Start importing the file
+                    Mapset mapset = await store.Import(file, progress: returnableProgress);
+                    if (mapset != null)
                     {
-                        OnImportMapset?.Invoke(mapset);
-                        return null;
+                        // Mapset must be fully loaded.
+                        Mapset loadedMapset = store.LoadData(mapset);
+                        if (loadedMapset != null)
+                        {
+                            // Dispatch mapset imported event on main thread.
+                            UnityThreadService.Dispatch(() =>
+                            {
+                                // Add to all mapsets
+                                allMapsets.AddOrReplace(loadedMapset);
+                                // Reapply filter
+                                Search(lastSearch);
+                                OnImportMapset?.Invoke(loadedMapset);
+                                return null;
+                            });
+                            return true;
+                        }
+                        else
+                        {
+                            notificationBox?.Add(new Notification()
+                            {
+                                Message = $"Failed to load imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
+                                Type = NotificationType.Negative
+                            });
+                        }
+                    }
+                    else
+                    {
+                        notificationBox?.Add(new Notification()
+                        {
+                            Message = $"Failed to import mapset at ({file.FullName})",
+                            Type = NotificationType.Negative
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogError(e);
+                    notificationBox?.Add(new Notification()
+                    {
+                        Message = $"Error while importing mapset: ({e.Message})\n{e.StackTrace}",
+                        Type = NotificationType.Negative
                     });
-                    return true;
                 }
                 return false;
             });
@@ -86,17 +128,19 @@ namespace PBGame.Maps
 
         public Task Load(Guid id, IReturnableProgress<IMapset> progress)
         {
-            return Task.Run(async() =>
+            return Task.Run(() =>
             {
-                IMapset mapset = await store.Load(id, progress);
+                progress?.Report(0f);
+                IMapset mapset = store.Load(id);
 
                 UnityThreadService.DispatchUnattended(() =>
                 {
                     // If already loaded within all mapsets, replace it.
                     allMapsets.AddOrReplace(mapset);
-                    displayedMapsets.AddOrReplace(mapset);
-
+                    // Search again.
+                    Search(lastSearch);
                     // Finished.
+                    progress?.Report(1f);
                     progress.InvokeFinished(mapset);
                     return null;
                 });
@@ -110,7 +154,7 @@ namespace PBGame.Maps
             displayedMapsets.AddRange(allMapsets.Search(filter));
         }
 
-        public void Sort(MapsetSorts sort) => displayedMapsets.Sort(sort);
+        public void Sort(MapsetSortType sort) => displayedMapsets.Sort(sort);
 
         public void DeleteMap(IOriginalMap map)
         {

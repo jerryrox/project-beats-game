@@ -24,11 +24,7 @@ namespace PBGame.Networking.API
         public T Response { get; private set; }
         IApiResponse IApiRequest.Response => Response;
 
-        public virtual bool IsNotified => false;
-
-        public virtual string RequestTitle => null;
-
-        public virtual string ResponseTitle => null;
+        public abstract bool RequiresLogin { get; }
 
         protected IHttpRequest Requester { get; private set; }
 
@@ -48,6 +44,12 @@ namespace PBGame.Networking.API
 
         public virtual void Request()
         {
+            if (RequiresLogin && !Api.IsOnline.Value)
+            {
+                Response.SetLoginRequired();
+                InvokeRequestEnd();
+                return;
+            }
             Requester.Request();
         }
 

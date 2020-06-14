@@ -5,35 +5,40 @@ using PBFramework.Graphics;
 namespace PBGame.UI.Navigations.Overlays
 {
     public interface IMenuBarOverlay : INavigationView {
-    
+
+        /// <summary>
+        /// Returns the height of the container.
+        /// </summary>
+        float ContainerHeight { get; }
+
         /// <summary>
         /// Returns the background sprite of the menu bar.
         /// </summary>
-        IBackgroundSprite BackgroundSprite { get; }
+        BackgroundSprite BackgroundSprite { get; }
 
         /// <summary>
         /// Returns the combo menu button.
         /// </summary>
-        IMenuButton ComboMenuButton { get; }
+        BaseMenuButton ComboMenuButton { get; }
 
         /// <summary>
         /// Returns the profile info button.
         /// </summary>
-        IMenuButton ProfileButton { get; }
+        BaseMenuButton ProfileButton { get; }
 
         /// <summary>
         /// Returns the music player button.
         /// </summary>
-        IMusicButton MusicButton { get; }
+        MusicButton MusicButton { get; }
 
         /// <summary>
         /// Returns the settings menu button.
         /// </summary>
-        IMenuButton SettingsMenuButton { get; }
+        BaseMenuButton SettingsMenuButton { get; }
 
         /// <summary>
         /// Returns the notification menu button.
         /// </summary>
-        IMenuButton NotificationMenuButton { get; }
+        BaseMenuButton NotificationMenuButton { get; }
     }
 }

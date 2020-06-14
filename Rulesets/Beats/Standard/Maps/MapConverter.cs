@@ -6,18 +6,24 @@ using PBGame.Audio;
 using UnityEngine;
 
 using HitObject = PBGame.Rulesets.Beats.Standard.Objects.HitObject;
-using BaseHitObject = PBGame.Rulesets.Objects.HitObject;
+using BaseHitObject = PBGame.Rulesets.Objects.BaseHitObject;
 
 namespace PBGame.Rulesets.Beats.Standard.Maps
 {
 	public class MapConverter : Rulesets.Maps.MapConverter<HitObject> {
 
-		public override GameModes TargetMode { get { return GameModes.BeatsStandard; } }
+        private PixelDefinition pixelDefinition;
+
+
+        public override GameModeType TargetMode { get { return GameModeType.BeatsStandard; } }
 
 		protected override IEnumerable<Type> RequiredTypes { get { yield return typeof(IHasPositionX); } }
 
 
-		public MapConverter(Rulesets.Maps.IOriginalMap map) : base(map) {}
+		public MapConverter(Rulesets.Maps.IOriginalMap map) : base(map)
+		{
+            pixelDefinition = new PixelDefinition(map.Detail.GameMode);
+        }
 
 		protected override Rulesets.Maps.PlayableMap<HitObject> CreateMap(Rulesets.Maps.IOriginalMap map) => new Map(map);
 
@@ -28,24 +34,31 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 			IHasEndTime endTime = hitObject as IHasEndTime;
 			IHasCombo combo = hitObject as IHasCombo;
 
-            float posAdjustment = 0f;
-            // If the original map is an osu map, shift the hit object positions by -50% of the play area width.
-            if (Map.Detail.GameMode == GameModes.OsuStandard)
-            {
-                // TODO: Refer to Osu playarea's static variable instead!!
-                posAdjustment = -512f / 2f;
-            }
-
             if(curve != null)
 			{
-				yield return new Dragger() {
+                // Regenerate path using conversion method.
+                SliderPath newPath = curve.Path;
+                if (pixelDefinition.FromMode != GameModeType.BeatsStandard)
+                {
+                    Vector2[] origPoints = newPath.Points;
+                    Vector2[] points = new Vector2[origPoints.Length];
+                    for (int i = 0; i < points.Length; i++)
+                    {
+                        points[i] = origPoints[i];
+                        points[i].x = points[i].x * pixelDefinition.Scale;
+                    }
+					// Final path
+                    newPath = new SliderPath(newPath.PathType, points, newPath.ExpectedDistance * pixelDefinition.Scale);
+                }
+
+                yield return new Dragger() {
 					StartTime = hitObject.StartTime,
 					Samples = hitObject.Samples,
-					X = posX.X + posAdjustment,
+					X = pixelDefinition.GetX(posX.X),
 					RepeatCount = curve.RepeatCount,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
-					Path = curve.Path,
+					Path = newPath,
 					NodeSamples = curve.NodeSamples,
 					EndTime = curve.EndTime
 				};
@@ -55,11 +68,11 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 				yield return new Dragger() {
 					StartTime = hitObject.StartTime,
 					Samples = new List<SoundInfo>(),
-					X = posX.X + posAdjustment,
+					X = pixelDefinition.GetX(posX.X),
 					RepeatCount = 0,
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset),
-					Path = new SliderPath(PathTypes.Linear, new Vector2[] {
+					Path = new SliderPath(PathType.Linear, new Vector2[] {
 						new Vector2(0, 0),
 						new Vector2(0, 1)
 					}, null),
@@ -75,12 +88,12 @@ namespace PBGame.Rulesets.Beats.Standard.Maps
 				yield return new HitCircle() {
 					StartTime = hitObject.StartTime,
 					Samples = hitObject.Samples,
-					X = posX.X + posAdjustment,
+					X = pixelDefinition.GetX(posX.X),
 					IsNewCombo = (combo == null ? false : combo.IsNewCombo),
 					ComboOffset = (combo == null ? 0 : combo.ComboOffset)
 				};
 			}
 		}
-	}
+    }
 }
 

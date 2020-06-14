@@ -1,26 +1,32 @@
 using PBGame.Networking.API.Osu.Responses;
+using PBGame.Networking.API.Requests;
+using PBGame.Networking.API.Responses;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Osu.Requests
 {
-    public class LoginRequest : BaseRequest<LoginResponse> {
+    public class LoginRequest : BaseRequest<ILoginResponse>, ILoginRequest {
 
         private FormPostData form = new FormPostData();
 
 
-        public LoginRequest(string username, string password)
-        {
-            form.AddField("username", username);
-            form.AddField("password", password);
-        }
+        public string Username { get; set; }
+
+        public string Password { get; set; }
+
+        public override bool RequiresLogin => false;
+
 
         protected override IHttpRequest CreateRequest()
         {
+            form.AddField("username", Username);
+            form.AddField("password", Password);
+
             var request = new HttpPostRequest(Api.GetUrl("session"), retryCount: 0);
             request.SetPostData(form);
             return request;
         }
 
-        protected override LoginResponse CreateResponse(IHttpRequest request) => new LoginResponse(request);
+        protected override ILoginResponse CreateResponse(IHttpRequest request) => new LoginResponse(request);
     }
 }

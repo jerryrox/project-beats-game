@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
@@ -11,13 +12,13 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details
 {
-    public class MenuHolder : UguiSprite, IMenuHolder {
+    public class MenuHolder : UguiSprite {
 
         private IGrid grid;
 
-        private IMenuButton backButton;
-        private IMenuButton infoButton;
-        private IMenuButton playButton;
+        private MenuButton backButton;
+        private MenuButton infoButton;
+        private MenuButton playButton;
 
 
         [ReceivesDependency]
@@ -35,20 +36,18 @@ namespace PBGame.UI.Components.Prepare.Details
         {
             Color = new Color(1f, 1f, 1f, 0.25f);
 
-            var resolution = rootMain.Resolution;
-
             grid = CreateChild<UguiGrid>("grid", 0);
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.RawSize = Vector2.zero;
-                grid.CellSize = new Vector2(resolution.x / 3f, 56f);
+                InvokeAfterTransformed(1, () => grid.CellSize = new Vector2(Width / 3f, 56f));
 
                 backButton = grid.CreateChild<MenuButton>("back", 0);
                 {
                     backButton.IconName = "icon-arrow-left";
                     backButton.LabelText = "Back";
 
-                    backButton.OnPointerDown += () =>
+                    backButton.OnTriggered += () =>
                     {
                         ScreenNavigator.Show<SongsScreen>();
                     };
@@ -58,7 +57,7 @@ namespace PBGame.UI.Components.Prepare.Details
                     infoButton.IconName = "icon-info";
                     infoButton.LabelText = "Details";
 
-                    infoButton.OnPointerDown += () =>
+                    infoButton.OnTriggered += () =>
                     {
                         // Toggle detail display via info container.
                         PrepareScreen.ToggleInfoDetail();
@@ -69,11 +68,11 @@ namespace PBGame.UI.Components.Prepare.Details
                     playButton.IconName = "icon-play";
                     playButton.LabelText = "Play";
 
-                    playButton.OnPointerDown += () =>
+                    playButton.OnTriggered += () =>
                     {
                         // TODO: Show GameLoadOverlay
                         ScreenNavigator.Hide<PrepareScreen>();
-                        // OverlayNavigator.Show<GameLoadOverlay>();
+                        OverlayNavigator.Show<GameLoadOverlay>();
                     };
                 }
             }

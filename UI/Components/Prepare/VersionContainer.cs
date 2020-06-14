@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
@@ -12,7 +13,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare
 {
-    public class VersionContainer : UguiObject, IVersionContainer {
+    public class VersionContainer : UguiObject {
 
         private ISprite gradient;
         private IGraphicObject listContainer;
@@ -37,28 +38,28 @@ namespace PBGame.UI.Components.Prepare
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IPrepareScreen prepareScreen)
         {
             gradient = CreateChild<UguiSprite>("gradient", 0);
             {
-                gradient.Anchor = Anchors.Fill;
+                gradient.Anchor = AnchorType.Fill;
                 gradient.RawSize = Vector2.zero;
                 gradient.SpriteName = "gradation-top";
                 gradient.Color = new Color(0f, 0f, 0f, 0.75f);
             }
             listContainer = CreateChild<UguiObject>("list-container", 1);
             {
-                listContainer.Anchor = Anchors.TopStretch;
-                listContainer.Pivot = Pivots.Top;
+                listContainer.Anchor = AnchorType.TopStretch;
+                listContainer.Pivot = PivotType.Top;
                 listContainer.RawWidth = 0f;
-                listContainer.Y = -64f;
                 listContainer.Height = 64f;
+                listContainer.Y = -(prepareScreen as PrepareScreen).MenuBarHeight;
 
                 versionList = listContainer.CreateChild<UguiListView>("version-list", 0);
                 {
-                    versionList.Anchor = Anchors.Fill;
+                    versionList.Anchor = AnchorType.Fill;
                     versionList.RawSize = new Vector2(-64f, 0f);
-                    versionList.OffsetTop = versionList.OffsetBottom = 0f;
+                    versionList.SetOffsetVertical(0f);
 
                     versionList.Background.Alpha = 0f;
                     versionList.UseMask = false;
@@ -125,7 +126,7 @@ namespace PBGame.UI.Components.Prepare
         private void SetupVersionCell(IListItem item)
         {
             var maps = MapList;
-            var cell = item as IVersionButton;
+            var cell = item as VersionButton;
             var gameMode = GameConfiguration.RulesetMode.Value;
 
             cell.Setup(maps[cell.ItemIndex].GetPlayable(gameMode));
@@ -152,6 +153,6 @@ namespace PBGame.UI.Components.Prepare
         /// <summary>
         /// Event called on game mode configuration change.
         /// </summary>
-        private void OnModeChange(GameModes gameMode, GameModes _ = GameModes.BeatsStandard) => RefreshList();
+        private void OnModeChange(GameModeType gameMode, GameModeType _ = GameModeType.BeatsStandard) => RefreshList();
     }
 }

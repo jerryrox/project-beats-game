@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.MusicMenu
 {
-    public class TimeBar : UguiSlider, ITimeBar {
+    public class TimeBar : UguiSlider {
 
         private bool isControlling;
 
@@ -62,7 +62,7 @@ namespace PBGame.UI.Components.MusicMenu
                 .Build();
         }
 
-        private void Update()
+        protected void Update()
         {
             if (isControlling) return;
 

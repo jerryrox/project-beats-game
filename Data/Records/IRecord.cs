@@ -23,7 +23,7 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns the game mode this record was made in.
         /// </summary>
-        GameModes GameMode { get; }
+        GameModeType GameMode { get; }
 
         /// <summary>
         /// Returns the name of the user that achieved the record.
@@ -33,7 +33,7 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns the rank achieved.
         /// </summary>
-        RankTypes Rank { get; }
+        RankType Rank { get; }
 
         /// <summary>
         /// Returns the score achieved.
@@ -58,7 +58,7 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns the number of hiss recorded for each hit result types.
         /// </summary>
-        IReadOnlyDictionary<HitResults, int> HitResultCounts { get; }
+        IReadOnlyDictionary<HitResultType, int> HitResultCounts { get; }
 
         /// <summary>
         /// Returns the number of hit judgements made.
@@ -94,6 +94,6 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns the number of hits made for specified hit result.
         /// </summary>
-        int GetHitCount(HitResults result);
+        int GetHitCount(HitResultType result);
     }
 }

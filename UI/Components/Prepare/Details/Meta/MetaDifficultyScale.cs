@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDifficultyScale : UguiObject, IMetaDifficultyScale {
+    public class MetaDifficultyScale : UguiObject, IHasTint {
 
         private ILabel label;
         private ILabel valueLabel;
@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Pivot = Pivots.Right;
+                label.Pivot = PivotType.Right;
                 label.X = -5f;
                 label.IsBold = true;
                 label.FontSize = 18;
@@ -35,16 +35,16 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             valueLabel = CreateChild<Label>("value", 1);
             {
-                valueLabel.Pivot = Pivots.Left;
+                valueLabel.Pivot = PivotType.Left;
                 valueLabel.X = 5f;
                 valueLabel.FontSize = 18;
                 valueLabel.Alignment = TextAnchor.MiddleLeft;
             }
             progress = CreateChild<UguiProgressBar>("progress", 2);
             {
-                progress.Anchor = Anchors.BottomStretch;
-                progress.Pivot = Pivots.Bottom;
-                progress.OffsetLeft = progress.OffsetRight = 0f;
+                progress.Anchor = AnchorType.BottomStretch;
+                progress.Pivot = PivotType.Bottom;
+                progress.SetOffsetHorizontal(0f);
                 progress.Y = 0f;
                 progress.Height = 2f;
 
@@ -52,6 +52,9 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
         }
 
+        /// <summary>
+        /// Sets specified values for display.
+        /// </summary>
         public void Setup(string label, float value, float maxValue)
         {
             this.label.Text = label;

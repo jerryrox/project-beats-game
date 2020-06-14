@@ -1,10 +1,10 @@
 using System;
 using PBGame.UI.Components.Dialog;
+using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
-using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -12,12 +12,17 @@ namespace PBGame.UI.Navigations.Overlays
 {
     public class DialogOverlay : BaseOverlay, IDialogOverlay {
 
-        private ISprite blurSprite;
+        private BlurDisplay blurDisplay;
         private ISprite bgSprite;
         private ISprite blocker;
         private ILabel messageLabel;
-        private ISelectionHolder selectionHolder;
+        private SelectionHolder selectionHolder;
 
+
+        /// <summary>
+        /// Returns whether the dialog overlay is derived to another overlay.
+        /// </summary>
+        protected virtual bool IsDerived => false;
 
         protected override int OverlayDepth => ViewDepths.DialogOverlay;
 
@@ -31,17 +36,14 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IRootMain root)
         {
-            blurSprite = CreateChild<UguiSprite>("blur", 0);
+            blurDisplay = CreateChild<BlurDisplay>("blur", 0);
             {
-                blurSprite.Anchor = Anchors.Fill;
-                blurSprite.RawSize = Vector2.zero;
-                blurSprite.SpriteName = "null";
-
-                blurSprite.AddEffect(new BlurShaderEffect());
+                blurDisplay.Anchor = AnchorType.Fill;
+                blurDisplay.RawSize = Vector2.zero;
             }
             bgSprite = CreateChild<UguiSprite>("bg", 1);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.5f);
             }
@@ -49,9 +51,8 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 float horizontalOffset = root.Resolution.x / 4;
 
-                messageLabel.Anchor = Anchors.MiddleStretch;
-                messageLabel.OffsetLeft = horizontalOffset;
-                messageLabel.OffsetRight = horizontalOffset;
+                messageLabel.Anchor = AnchorType.MiddleStretch;
+                messageLabel.SetOffsetHorizontal(horizontalOffset);
                 messageLabel.Alignment = TextAnchor.LowerCenter;
                 messageLabel.WrapText = true;
                 messageLabel.FontSize = 26;
@@ -60,24 +61,25 @@ namespace PBGame.UI.Navigations.Overlays
             }
             selectionHolder = CreateChild<SelectionHolder>("selection", 3);
             {
-                selectionHolder.Anchor = Anchors.MiddleStretch;
-                selectionHolder.Pivot = Pivots.Top;
-                selectionHolder.OffsetLeft = 0;
-                selectionHolder.OffsetRight = 0;
+                selectionHolder.Anchor = AnchorType.MiddleStretch;
+                selectionHolder.Pivot = PivotType.Top;
+                selectionHolder.SetOffsetHorizontal(0f);
                 selectionHolder.Y = 26f;
             }
             blocker = CreateChild<UguiSprite>("blocker", 4);
             {
-                blocker.Anchor = Anchors.Fill;
+                blocker.Anchor = AnchorType.Fill;
                 blocker.RawSize = Vector2.zero;
                 blocker.SpriteName = "null";
             }
 
-            OnEnableInited();
+            if(!IsDerived)
+                OnEnableInited();
         }
 
         protected override void OnEnableInited()
         {
+            base.OnEnableInited();
             blocker.Active = false;
         }
 

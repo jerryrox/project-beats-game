@@ -1,12 +1,13 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using PBFramework.IO;
 using PBFramework.Data.Queries;
 using PBFramework.Stores;
 
 namespace PBGame.Rulesets.Maps
 {
-    public interface IMapset : IDirectoryIndex, IQueryableData {
+    public interface IMapset : IHasFiles, IDirectoryIndex, IQueryableData {
     
         /// <summary>
         /// Identifier of the mapset, if exists.
@@ -33,16 +34,11 @@ namespace PBGame.Rulesets.Maps
         /// </summary>
         MapMetadata Metadata { get; }
 
-        /// <summary>
-        /// Returns the list of files contained in this mapset.
-        /// </summary>
-        List<FileInfo> Files { get; }
-
 
         /// <summary>
         /// Sorts the bundled maps by difficulty for specified game mode.
         /// If the given mode cannot be evaluated for, it will be pushed to the back.
         /// </summary>
-        void SortMapsByMode(GameModes gameMode);
+        void SortMapsByMode(GameModeType gameMode);
     }
 }

@@ -8,9 +8,19 @@ namespace PBGame.Networking.API
         protected readonly IHttpRequest request;
 
 
+        /// <summary>
+        /// Whether the response error should be sent to the notification box.
+        /// </summary>
+        public bool ShouldNotifyError { get; protected set; } = true;
+
         public bool IsSuccess { get; protected set; }
 
         public string ErrorMessage { get; protected set; }
+
+        /// <summary>
+        /// Returns whether the response should store incoming cookies.
+        /// </summary>
+        protected virtual bool StoresCookies => false;
 
 
         protected BaseResponse(IHttpRequest request)
@@ -33,15 +43,24 @@ namespace PBGame.Networking.API
             if (headers != null)
             {
                 // Set cookies
-                foreach (var key in headers.Keys)
+                if (StoresCookies)
                 {
-                    if (key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
+                    foreach (var key in headers.Keys)
                     {
-                        api.Cookies.SetCookie(headers[key]);
-                        break;
+                        if (key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
+                        {
+                            api.Cookies.SetCookie(headers[key]);
+                            break;
+                        }
                     }
                 }
             }
+        }
+
+        public virtual void SetLoginRequired()
+        {
+            IsSuccess = false;
+            ErrorMessage = "You must be logged in first.";
         }
     }
 }

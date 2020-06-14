@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Audio;
 using PBGame.Assets.Caching;
@@ -9,7 +10,6 @@ using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Shaders;
-using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Graphics.Effects.Components;
 using PBFramework.Allocation.Caching;
 using PBFramework.Dependencies;
@@ -17,9 +17,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Coffee.UIExtensions;
 
+using ShadowEffect = PBFramework.Graphics.Effects.CoffeeUI.ShadowEffect;
+
 namespace PBGame.UI.Components.Songs
 {
-    public class SongListItem : UguiTrigger, ISongListItem {
+    public class SongListItem : BasicTrigger, IListItem {
 
         private const float AnimationSpeed = 4f;
 
@@ -61,6 +63,9 @@ namespace PBGame.UI.Components.Songs
 
         public int ItemIndex { get; set; }
 
+        /// <summary>
+        /// Returns the mapset currently being represented by this item.
+        /// </summary>
         public IMapset Mapset { get; private set; }
 
         [ReceivesDependency]
@@ -74,29 +79,20 @@ namespace PBGame.UI.Components.Songs
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
-            OnPointerEnter += () =>
-            {
-                soundPooler.Play("menuhit");
-            };
-            OnPointerExit += () =>
-            {
+            IsClickToTrigger = true;
 
-            };
-            OnPointerClick += () =>
+            OnTriggered += () =>
             {
-                soundPooler.Play("menuclick");
-
                 if(Active && Mapset != null)
                     MapSelection.SelectMapset(Mapset);
             };
 
             container = CreateChild<UguiObject>("container", 0);
             {
-                container.Anchor = Anchors.CenterStretch;
-                container.OffsetTop = 5f;
-                container.OffsetBottom = 5f;
+                container.Anchor = AnchorType.CenterStretch;
+                container.SetOffsetVertical(5f);
                 container.Width = UnfocusedWidth;
 
                 highlight = container.CreateChild<UguiSprite>("highlight", 0);
@@ -112,7 +108,7 @@ namespace PBGame.UI.Components.Songs
                 }
                 glow = container.CreateChild<UguiSprite>("glow", 1);
                 {
-                    glow.Anchor = Anchors.Fill;
+                    glow.Anchor = AnchorType.Fill;
                     glow.RawSize = new Vector2(30f, 30f);
                     glow.SpriteName = "glow-circle-32";
                     glow.ImageType = Image.Type.Sliced;
@@ -120,7 +116,7 @@ namespace PBGame.UI.Components.Songs
                 }
                 thumbContainer = container.CreateChild<UguiSprite>("thumb", 2);
                 {
-                    thumbContainer.Anchor = Anchors.Fill;
+                    thumbContainer.Anchor = AnchorType.Fill;
                     thumbContainer.RawSize = Vector2.zero;
                     thumbContainer.SpriteName = "circle-32";
                     thumbContainer.ImageType = Image.Type.Sliced;
@@ -130,19 +126,18 @@ namespace PBGame.UI.Components.Songs
 
                     thumbImage = thumbContainer.CreateChild<UguiTexture>("image");
                     {
-                        thumbImage.Anchor = Anchors.Fill;
+                        thumbImage.Anchor = AnchorType.Fill;
                         thumbImage.RawSize = Vector2.zero;
                         thumbImage.Color = UnfocusedThumbColor;
                     }
                 }
                 titleLabel = container.CreateChild<Label>("title", 3);
                 {
-                    titleLabel.Anchor = Anchors.TopStretch;
-                    titleLabel.Pivot = Pivots.Top;
+                    titleLabel.Anchor = AnchorType.TopStretch;
+                    titleLabel.Pivot = PivotType.Top;
                     titleLabel.Y = -8f;
                     titleLabel.Height = 32f;
-                    titleLabel.OffsetLeft = 20f;
-                    titleLabel.OffsetRight = 20f;
+                    titleLabel.SetOffsetHorizontal(20f);
                     titleLabel.IsItalic = true;
                     titleLabel.IsBold = true;
                     titleLabel.WrapText = true;
@@ -156,12 +151,11 @@ namespace PBGame.UI.Components.Songs
                 }
                 artistLabel = container.CreateChild<Label>("artist", 4);
                 {
-                    artistLabel.Anchor = Anchors.BottomStretch;
-                    artistLabel.Pivot = Pivots.Bottom;
+                    artistLabel.Anchor = AnchorType.BottomStretch;
+                    artistLabel.Pivot = PivotType.Bottom;
                     artistLabel.Y = 8f;
                     artistLabel.Height = 24f;
-                    artistLabel.OffsetLeft = 20f;
-                    artistLabel.OffsetRight = 20f;
+                    artistLabel.SetOffsetHorizontal(20f);
                     artistLabel.WrapText = true;
                     artistLabel.Alignment = TextAnchor.MiddleLeft;
                     artistLabel.FontSize = 18;
@@ -173,12 +167,11 @@ namespace PBGame.UI.Components.Songs
                 }
                 creatorLabel = container.CreateChild<Label>("creator", 5);
                 {
-                    creatorLabel.Anchor = Anchors.BottomStretch;
-                    creatorLabel.Pivot = Pivots.Bottom;
+                    creatorLabel.Anchor = AnchorType.BottomStretch;
+                    creatorLabel.Pivot = PivotType.Bottom;
                     creatorLabel.Y = 8f;
                     creatorLabel.Height = 24f;
-                    creatorLabel.OffsetLeft = 20f;
-                    creatorLabel.OffsetRight = 20f;
+                    creatorLabel.SetOffsetHorizontal(20f);
                     creatorLabel.WrapText = true;
                     creatorLabel.Alignment = TextAnchor.MiddleRight;
                     creatorLabel.FontSize = 18;
@@ -215,6 +208,9 @@ namespace PBGame.UI.Components.Songs
             UnbindEvents();
         }
 
+        /// <summary>
+        /// Sets the mapset which the item should represent.
+        /// </summary>
         public void SetMapset(IMapset mapset)
         {
             this.Mapset = mapset;
@@ -340,6 +336,8 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnBackgroundLoaded(IMapBackground background)
         {
+            if(Mapset == null)
+                return;
             if (backgroundAgent.CurrentKey != Mapset.Maps[0])
             {
                 LoadBackground();
@@ -358,8 +356,10 @@ namespace PBGame.UI.Components.Songs
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+            
             // Load background.
             if (isBackgroundWait)
             {
@@ -418,6 +418,10 @@ namespace PBGame.UI.Components.Songs
             container.Width = Mathf.Lerp(container.Width, containerWidth, aniTime);
             glow.Color = Color.Lerp(glow.Color, glowColor, aniTime);
             thumbImage.Color = Color.Lerp(thumbImage.Color, thumbColor, aniTime);
+
+            // Keep position at 0.
+            // TODO: This seems more of a hack. This should be handled in a better way in future.
+            X = 0f;
         }
     }
 }

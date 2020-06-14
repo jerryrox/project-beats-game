@@ -75,6 +75,6 @@ namespace PBGame.Maps
         /// <summary>
         /// Sorts the mapsets by specified sorting method.
         /// </summary>
-        void Sort(MapsetSorts sort);
+        void Sort(MapsetSortType sort);
     }
 }

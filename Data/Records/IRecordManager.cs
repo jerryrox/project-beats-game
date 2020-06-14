@@ -24,9 +24,19 @@ namespace PBGame.Data.Records
         int GetPlayCount(IPlayableMap map, IUser user);
 
         /// <summary>
+        /// Saves the specified record to the database.
+        /// </summary>
+        void SaveRecord(IRecord record);
+
+        /// <summary>
         /// Returns whether there is a replay data for specified record.
         /// </summary>
         bool HasReplay(IRecord record);
+
+        /// <summary>
+        /// Returns the best record among the specified series of records.
+        /// </summary>
+        IRecord GetBestRecord(IEnumerable<IRecord> records);
 
         // TODO: Create a method for retrieving replay.
     }

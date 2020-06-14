@@ -28,9 +28,11 @@ namespace PBGame.Assets.Caching
             return base.IsCached(key.Detail.GetFullBackgroundPath());
         }
 
-        protected override IPromise<IMapBackground> CreateRequest(string key)
+        protected override IExplicitPromise<IMapBackground> CreateRequest(string key)
         {
             return new MapBackgroundRequest(key);
         }
+
+        protected override void DestroyData(IMapBackground data) => data.Dispose();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using PBGame.Stores;
 using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
@@ -9,25 +10,55 @@ namespace PBGame.Rulesets
     public interface IGameSession
     {
         /// <summary>
-        /// Event called when the game session is initializing.
+        /// Event called when a new game session is about to be loaded.
         /// </summary>
-        event Action OnGameInit;
+        event Action OnHardInit;
 
         /// <summary>
-        /// Event called when the game is about to be disposed.
+        /// Event called every time when the game needs to be reset to initial values for a play within session.
         /// </summary>
-        event Action OnGameDispose;
+        event Action OnSoftInit;
 
         /// <summary>
-        /// Event called when the user has successfully cleared the map.
+        /// Event called every time when the game is stopped forcibly or gracefully for a cleanup.
         /// </summary>
-        event Action OnGameClear;
+        event Action OnSoftDispose;
 
         /// <summary>
-        /// Event called when the user has failed the map.
+        /// Event called when current game session is about to be unloaded completely.
         /// </summary>
-        event Action OnGameFail;
+        event Action OnHardDispose;
 
+        /// <summary>
+        /// Event called on game pause due to player triggering pause.
+        /// </summary>
+        event Action OnPause;
+
+        /// <summary>
+        /// Event called on game resume after unpausing the game.
+        /// </summary>
+        event Action OnResume;
+
+        /// <summary>
+        /// Event called on retrying the game.
+        /// </summary>
+        event Action OnRetry;
+
+        /// <summary>
+        /// Event called on forcibly resetting the game.
+        /// </summary>
+        event Action OnForceQuit;
+
+        /// <summary>
+        /// Event called on a full completion of the game.
+        /// </summary>
+        event Action OnCompletion;
+
+
+        /// <summary>
+        /// Returns the store for loading map assets.
+        /// </summary>
+        MapAssetStore MapAssetStore { get; }
 
         /// <summary>
         /// Returns the current map in play.
@@ -42,8 +73,28 @@ namespace PBGame.Rulesets
         /// <summary>
         /// Returns the gui part of the game.
         /// </summary>
-        IGameGui GameGui { get; }
+        GameGui GameGui { get; }
 
+        /// <summary>
+        /// Returns the amount of time in MS to delay before playing the music.
+        /// </summary>
+        float LeadInTime { get; }
+
+        /// <summary>
+        /// Returns whether the game session is currently playing.
+        /// </summary>
+        bool IsPlaying { get; }
+
+        /// <summary>
+        /// Returns whether the game is currently paused.
+        /// </summary>
+        bool IsPaused { get; }
+
+
+        /// <summary>
+        /// Returns the duration of play in seconds.
+        /// </summary>
+        int GetPlayTime();
 
         /// <summary>
         /// Sets the map to play.
@@ -51,18 +102,53 @@ namespace PBGame.Rulesets
         void SetMap(IPlayableMap map);
 
         /// <summary>
-        /// Initializes the session for a new game.
+        /// Invokes hard initialization event.
         /// </summary>
-        void InitSession();
+        void InvokeHardInit();
 
         /// <summary>
-        /// Disposes current session.
+        /// Invokes soft initialization event.
         /// </summary>
-        void DisposeSession();
+        void InvokeSoftInit();
+
+        /// <summary>
+        /// Invokes soft disposal event.
+        /// </summary>
+        void InvokeSoftDispose();
+
+        /// <summary>
+        /// Invokes hard disposal event.
+        /// </summary>
+        void InvokeHardDispose();
+
+        /// <summary>
+        /// Invokes pause event.
+        /// </summary>
+        void InvokePause();
+
+        /// <summary>
+        /// Invokes resume event.
+        /// </summary>
+        void InvokeResume();
+
+        /// <summary>
+        /// Invokes retry event.
+        /// </summary>
+        void InvokeRetry();
+
+        /// <summary>
+        /// Invokes force quit event.
+        /// </summary>
+        void InvokeForceQuit();
+
+        /// <summary>
+        /// Invokes play completion event.
+        /// </summary>
+        void InvokeCompletion();
     }
 
     public interface IGameSession<T> : IGameSession
-        where T : HitObject
+        where T : BaseHitObject
     {
     }
 }

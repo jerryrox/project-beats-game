@@ -15,24 +15,20 @@ using UnityEngine.UI;
 namespace PBGame.UI.Components.ProfileMenu
 {
     // TODO: Support for logging in using other API providers.
-    public class ContentHolder : UguiObject, IContentHolder {
+    public class ContentHolder : UguiObject {
 
         private const float LoggedInHeight = 480f;
         private const float LoggedOutHeight = 204f;
 
-        private ISprite glow;
         private ISprite background;
 
         private ISprite mask;
-        private ILoggedInView loggedInView;
-        private ILoggedOutView loggedOutView;
+        private LoggedInView loggedInView;
+        private LoggedOutView loggedOutView;
         private ISprite pointerBlocker;
 
         private IAnime loggedInAni;
         private IAnime loggedOutAni;
-
-
-        public ISprite GlowSprite => glow;
 
 
         [ReceivesDependency]
@@ -44,24 +40,16 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             Height = LoggedOutHeight;
 
-            glow = CreateChild<UguiSprite>("glow", 0);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.RawSize = new Vector2(30f, 30f);
-                glow.SpriteName = "square-32-glow";
-                glow.ImageType = Image.Type.Sliced;
-                glow.Color = Color.black;
-            }
             background = CreateChild<UguiSprite>("background", 1);
             {
-                background.Anchor = Anchors.Fill;
+                background.Anchor = AnchorType.Fill;
                 background.RawSize = Vector2.zero;
                 background.Position = Vector2.zero;
                 background.Color = new Color(0f, 0f, 0f, 0.25f);
             }
             mask = CreateChild<UguiSprite>("mask", 3);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Position = Vector2.zero;
                 mask.SpriteName = "box";
@@ -70,24 +58,24 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 loggedInView = mask.CreateChild<LoggedInView>("logged-in", 0);
                 {
-                    loggedInView.Anchor = Anchors.BottomStretch;
-                    loggedInView.Pivot = Pivots.Bottom;
-                    loggedInView.OffsetLeft = loggedInView.OffsetRight = 0f;
+                    loggedInView.Anchor = AnchorType.BottomStretch;
+                    loggedInView.Pivot = PivotType.Bottom;
+                    loggedInView.SetOffsetHorizontal(0f);
                     loggedInView.Y = 0f;
                     loggedInView.Height = LoggedInHeight;
                 }
                 loggedOutView = mask.CreateChild<LoggedOutView>("logged-out", 0);
                 {
-                    loggedOutView.Anchor = Anchors.BottomStretch;
-                    loggedOutView.Pivot = Pivots.Bottom;
-                    loggedOutView.OffsetLeft = loggedOutView.OffsetRight = 0f;
+                    loggedOutView.Anchor = AnchorType.BottomStretch;
+                    loggedOutView.Pivot = PivotType.Bottom;
+                    loggedOutView.SetOffsetHorizontal(0f);
                     loggedOutView.Y = 0f;
                     loggedOutView.Height = LoggedOutHeight;
                 }
             }
             pointerBlocker = CreateChild<UguiSprite>("blocker", 4);
             {
-                pointerBlocker.Anchor = Anchors.Fill;
+                pointerBlocker.Anchor = AnchorType.Fill;
                 pointerBlocker.RawSize = Vector2.zero;
                 pointerBlocker.Position = Vector2.zero;
                 pointerBlocker.Alpha = 0f;

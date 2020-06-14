@@ -13,28 +13,28 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 		/// <summary>
 		/// The base hit timing values table.
 		/// </summary>
-		private static Dictionary<HitResults, Tuple<float, float, float>> timingRanges = new Dictionary<HitResults, Tuple<float, float, float>>() {
-			{ HitResults.Good, new Tuple<float, float, float>(160, 100, 40) },
-			{ HitResults.Ok, new Tuple<float, float, float>(280, 200, 120) },
-			{ HitResults.Bad, new Tuple<float, float, float>(400, 300, 200) },
-			{ HitResults.Miss, new Tuple<float, float, float>(400, 400, 400) }
+		private static Dictionary<HitResultType, Tuple<float, float, float>> timingRanges = new Dictionary<HitResultType, Tuple<float, float, float>>() {
+			{ HitResultType.Perfect, new Tuple<float, float, float>(160, 100, 40) },
+			{ HitResultType.Great, new Tuple<float, float, float>(280, 200, 120) },
+			{ HitResultType.Good, new Tuple<float, float, float>(400, 300, 200) },
+			{ HitResultType.Miss, new Tuple<float, float, float>(400, 400, 400) }
 		};
 
 
 		public override void SetDifficulty (float difficulty)
 		{
-			Good = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Good]);
-			Ok = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Ok]);
-			Bad = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Bad]);
-			Miss = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResults.Miss]);
+			Perfect = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResultType.Perfect]);
+			Great = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResultType.Great]);
+			Good = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResultType.Good]);
+			Miss = MapDifficulty.GetDifficultyValue(difficulty, timingRanges[HitResultType.Miss]);
 		}
 
-		public override IEnumerable<HitResults> SupportedHitResults ()
+		public override IEnumerable<HitResultType> SupportedHitResults ()
 		{
-			yield return HitResults.Good;
-			yield return HitResults.Ok;
-			yield return HitResults.Bad;
-			yield return HitResults.Miss;
+			yield return HitResultType.Perfect;
+			yield return HitResultType.Great;
+			yield return HitResultType.Good;
+			yield return HitResultType.Miss;
 		}
 	}
 }

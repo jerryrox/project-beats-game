@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDifficultyInfoCell : UguiObject, IMetaDifficultyInfoCell {
+    public class MetaDifficultyInfoCell : UguiObject, IHasIcon, IHasLabel, IHasTint {
 
         private ISprite icon;
         private ILabel label;
@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             set => label.Text = value;
         }
 
-        public Color IconTint
+        public Color Tint
         {
             get => icon.Color;
             set => icon.Color = value;
@@ -44,7 +44,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             label = CreateChild<Label>("label", 1);
             {
-                label.Pivot = Pivots.Left;
+                label.Pivot = PivotType.Left;
                 label.X = 0f;
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.FontSize = 18;

@@ -24,7 +24,7 @@ namespace PBGame.Data.Users
         [JsonIgnore]
         public User User { get; set; }
 
-        public GameModes GameMode { get; set; }
+        public GameModeType GameMode { get; set; }
 
         public int Level { get; set; } = 1;
 
@@ -57,7 +57,7 @@ namespace PBGame.Data.Users
         /// Table of number of rank types achieved.
         /// </summary>
         [JsonProperty]
-        private Dictionary<RankTypes, int> RankCounts { get; set; }
+        private Dictionary<RankType, int> RankCounts { get; set; }
 
         [JsonIgnore]
         [ReceivesDependency]
@@ -81,7 +81,7 @@ namespace PBGame.Data.Users
             return 0;
         }
 
-        public int GetRankCount(RankTypes type) => RankCounts[type];
+        public int GetRankCount(RankType type) => RankCounts[type];
 
         public void RecordIncompletePlay(IRecord record)
         {

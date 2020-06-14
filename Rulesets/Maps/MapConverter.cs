@@ -7,13 +7,13 @@ using PBGame.Rulesets.Objects;
 namespace PBGame.Rulesets.Maps
 {
 	public abstract class MapConverter<T> : IMapConverter
-        where T : HitObject
+        where T : BaseHitObject
     {
 		public IOriginalMap Map { get; private set; }
 
 		public bool IsConvertible => RequiredTypes.All(t => Map.HitObjects.Any(t.IsInstanceOfType));
 
-		public abstract GameModes TargetMode { get; }
+		public abstract GameModeType TargetMode { get; }
 
 		/// <summary>
 		/// Types of interfaces which all hit objects should be implemented with.
@@ -47,12 +47,12 @@ namespace PBGame.Rulesets.Maps
         /// <summary>
         /// Converts specified hit object in to game-specific variant of the object.
         /// </summary>
-        protected abstract IEnumerable<T> ConvertHitObjects(HitObject hitObject);
+        protected abstract IEnumerable<T> ConvertHitObjects(BaseHitObject hitObject);
 
 		/// <summary>
 		/// Converts the specified hit objects in to game-specific variant of hit objects.
 		/// </summary>
-		private List<T> ConvertHitObjects(IEnumerable<HitObject> objects)
+		private List<T> ConvertHitObjects(IEnumerable<BaseHitObject> objects)
 		{
 			List<T> newObjects = new List<T>();
 

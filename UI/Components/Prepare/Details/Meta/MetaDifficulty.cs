@@ -13,13 +13,13 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare.Details.Meta
 {
-    public class MetaDifficulty : UguiObject, IMetaDifficulty {
+    public class MetaDifficulty : UguiObject {
 
         private ILabel label;
         private IGrid grid;
-        private IMetaDifficultyInfo difficultyInfo;
-        private List<IMetaDifficultyScale> scales = new List<IMetaDifficultyScale>();
-        private IMetaDifficultyScale difficultyScale;
+        private MetaDifficultyInfo difficultyInfo;
+        private List<MetaDifficultyScale> scales = new List<MetaDifficultyScale>();
+        private MetaDifficultyScale difficultyScale;
 
 
         [ReceivesDependency]
@@ -34,8 +34,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.TopLeft;
-                label.Pivot = Pivots.TopLeft;
+                label.Anchor = AnchorType.TopLeft;
+                label.Pivot = PivotType.TopLeft;
                 label.X = 32f;
                 label.Y = -32f;
                 label.FontSize = 18;
@@ -46,9 +46,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             grid = CreateChild<UguiGrid>("grid", 1);
             {
-                grid.Anchor = Anchors.Fill;
-                grid.OffsetLeft = grid.OffsetRight = grid.OffsetBottom = 32f;
-                grid.OffsetTop = 64f;
+                grid.Anchor = AnchorType.Fill;
+                grid.Offset = new Offset(32f, 64f, 32f, 32f);
                 grid.Axis = GridLayoutGroup.Axis.Vertical;
                 grid.CellSize = new Vector2(236f, 36f);
 
@@ -118,7 +117,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// <summary>
         /// Returns the next available info cell, or creates a new one.
         /// </summary>
-        private IMetaDifficultyScale GetCell()
+        private MetaDifficultyScale GetCell()
         {
             var cell = scales.FirstOrDefault(c => !c.Active);
             if (cell != null)

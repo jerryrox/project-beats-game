@@ -3,6 +3,8 @@ using PBGame.Assets.Caching;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
+using PBGame.Configurations.Maps;
+using PBFramework.Data.Bindables;
 using PBFramework.Audio;
 using PBFramework.Allocation.Caching;
 
@@ -26,15 +28,21 @@ namespace PBGame.Maps
         private IBackgroundCacher backgroundCacher;
         private ICacherAgent<IMap, IMusicAudio> musicAgent;
         private ICacherAgent<IMap, IMapBackground> backgroundAgent;
+        private IMapsetConfiguration mapsetConfiguration;
+        private IMapConfiguration mapConfiguration;
 
         private IMapBackground emptyBackground;
 
-        private GameModes currentMode;
+        private GameModeType currentMode;
 
 
         public IMapset Mapset { get; private set; }
 
         public IPlayableMap Map { get; private set; }
+
+        public Bindable<MapsetConfig> MapsetConfig { get; private set; } = new Bindable<MapsetConfig>();
+
+        public Bindable<MapConfig> MapConfig { get; private set; } = new Bindable<MapConfig>();
 
         public IMusicAudio Music { get; private set; }
 
@@ -45,7 +53,9 @@ namespace PBGame.Maps
 
         public MapSelection(IMusicCacher musicCacher,
             IBackgroundCacher backgroundCacher,
-            IGameConfiguration gameConfiguration)
+            IGameConfiguration gameConfiguration,
+            IMapsetConfiguration mapsetConfiguration,
+            IMapConfiguration mapConfiguration)
         {
             if(musicCacher == null) throw new ArgumentNullException(nameof(musicCacher));
             if(backgroundCacher == null) throw new ArgumentNullException(nameof(backgroundCacher));
@@ -53,6 +63,8 @@ namespace PBGame.Maps
 
             this.musicCacher = musicCacher;
             this.backgroundCacher = backgroundCacher;
+            this.mapsetConfiguration = mapsetConfiguration;
+            this.mapConfiguration = mapConfiguration;
 
             // Initial background.
             Background = emptyBackground = new MapBackground(null);
@@ -112,12 +124,17 @@ namespace PBGame.Maps
             }
 
             // Apply default map.
-            if (map == null) map = mapset.Maps[0].GetPlayable(currentMode);
+            if (map == null) {
+                // Make sure the maps are sorted for the current game mode.
+                mapset.SortMapsByMode(currentMode);
+                map = mapset.Maps[0].GetPlayable(currentMode);
+            }
 
             // Set mapset only if different.
             if (mapset != this.Mapset)
             {
                 this.Mapset = mapset;
+                this.MapsetConfig.Value = mapsetConfiguration?.GetConfig(mapset);
                 OnMapsetChange?.Invoke(mapset);
             }
 
@@ -138,14 +155,22 @@ namespace PBGame.Maps
             // Set map only if different.
             if (map != this.Map)
             {
+                IPlayableMap prevMap = this.Map;
                 this.Map = map;
+                this.MapConfig.Value = mapConfiguration?.GetConfig(map);
                 OnMapChange?.Invoke(map);
 
-                // Switch or fresh-load the background and music.
-                UnloadMusic();
-                LoadMusic();
-                UnloadBackground();
-                LoadBackground();
+                // Change background / audio assets when necessary.
+                if (prevMap == null || !prevMap.Detail.IsSameBackground(map.Detail))
+                {
+                    UnloadBackground();
+                    LoadBackground();
+                }
+                if (prevMap == null || !prevMap.Detail.IsSameAudio(map.Detail))
+                {
+                    UnloadMusic();
+                    LoadMusic();
+                }
             }
         }
 

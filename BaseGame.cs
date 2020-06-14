@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PBGame.IO.Decoding.Osu;
+using PBGame.UI;
 using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Audio;
-using PBGame.Skins;
 using PBGame.Stores;
 using PBGame.Assets.Fonts;
 using PBGame.Assets.Caching;
@@ -17,12 +17,14 @@ using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Animations;
 using PBGame.Networking.API;
+using PBGame.Notifications;
 using PBGame.Configurations;
 using PBFramework.IO.Decoding;
 using PBFramework.UI.Navigations;
 using PBFramework.Utils;
 using PBFramework.Audio;
 using PBFramework.Assets.Atlasing;
+using PBFramework.Inputs;
 using PBFramework.Services;
 using PBFramework.Dependencies;
 
@@ -30,23 +32,30 @@ namespace PBGame
 {
     public abstract class BaseGame : MonoBehaviour, IGame {
 
+        public event Action<bool> OnAppFocus;
+        public event Action<bool> OnAppPause;
+
         protected ModeManager modeManager;
+
+        protected NotificationBox notificationBox;
 
         protected GameConfiguration gameConfiguration;
         protected MapConfiguration mapConfiguration;
         protected MapsetConfiguration mapsetConfiguration;
 
         protected FontManager fontManager;
-        protected IAtlas<Sprite> spriteAtlas;
+        protected ResourceSpriteAtlas spriteAtlas;
+        protected ResourceAudioAtlas audioAtlas;
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
         protected WebImageCacher webImageCacher;
-
-        protected SkinManager skinManager;
+        protected WebMusicCacher webMusicCacher;
 
         protected MusicController musicController;
-        protected SoundPooler soundPooler;
+
+        protected DefaultSoundTable soundTable;
+        protected SoundPool soundPool;
 
         protected MapsetStore mapsetStore;
         protected MapSelection mapSelection;
@@ -65,9 +74,14 @@ namespace PBGame
         protected IAnimePreset animePreset;
         protected IScreenNavigator screenNavigator;
         protected IOverlayNavigator overlayNavigator;
+        protected IDropdownProvider dropdownProvider;
+
+        protected InputManager inputManager;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
+
+        public string Version => Application.version;
 
 
         void Awake()
@@ -96,7 +110,9 @@ namespace PBGame
 
             Dependencies.CacheAs<IGame>(this);
 
-            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager(Dependencies));
+            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
+
+            Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
 
             Dependencies.CacheAs<IGameConfiguration>(gameConfiguration = new GameConfiguration());
             Dependencies.CacheAs<IMapConfiguration>(mapConfiguration = new MapConfiguration());
@@ -104,20 +120,21 @@ namespace PBGame
 
             Dependencies.CacheAs<IFontManager>(fontManager = new FontManager());
             Dependencies.CacheAs<IAtlas<Sprite>>(spriteAtlas = new ResourceSpriteAtlas());
+            Dependencies.CacheAs<IAtlas<AudioClip>>(audioAtlas = new ResourceAudioAtlas());
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
             Dependencies.CacheAs<IWebImageCacher>(webImageCacher = new WebImageCacher());
-
-            Dependencies.CacheAs<ISkinManager>(skinManager = new SkinManager());
-            skinManager.DefaultSkin.AssetStore.Load();
+            Dependencies.CacheAs<IWebMusicCacher>(webMusicCacher = new WebMusicCacher());
 
             Dependencies.CacheAs<IMusicController>(musicController = MusicController.Create());
-            Dependencies.CacheAs<ISoundPooler>(soundPooler = new SoundPooler(skinManager.DefaultSkin));
+
+            Dependencies.CacheAs<ISoundTable>(soundTable = new DefaultSoundTable(audioAtlas));
+            Dependencies.CacheAs<ISoundPool>(soundPool = new SoundPool(soundTable));
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
-            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration));
-            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore));
+            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration, mapsetConfiguration, mapConfiguration));
+            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
@@ -132,13 +149,31 @@ namespace PBGame
             Dependencies.CacheAs<IAnimePreset>(animePreset = new AnimePreset());
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
+            Dependencies.CacheAs<IDropdownProvider>(dropdownProvider = new DropdownProvider(rootMain));
+
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
         }
+
+        protected virtual void OnApplicationPause(bool paused) => OnAppPause?.Invoke(paused);
+
+        protected virtual void OnApplicationFocus(bool focused) => OnAppFocus?.Invoke(focused);
 
         /// <summary>
         /// Handles final process after initialization.
         /// </summary>
         protected virtual void PostInitialize()
         {
+            // Some default system settings.
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+            Application.targetFrameRate = 60;
+
+            // Inject notification box into api manager
+            foreach(var api in apiManager.GetAllApi())
+                api.NotificationBox = notificationBox;
+
+            // Apply accelerator to input manager
+            inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());
+
             // Register decoders.
             Decoders.AddDecoder<OriginalMap>(
                 "osu file format v",
@@ -150,5 +185,7 @@ namespace PBGame
         {
             metronome.Update();
         }
+
+
     }
 }

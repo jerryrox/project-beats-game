@@ -10,10 +10,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class StatHolder : UguiSprite, IStatHolder {
+    public class StatHolder : UguiSprite {
 
-        private IStatDisplay levelDisplay;
-        private IStatDisplay accuracyDisplay;
+        private StatDisplay levelDisplay;
+        private StatDisplay accuracyDisplay;
 
         // TODO: Integrate with user data.
         [ReceivesDependency]

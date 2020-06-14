@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingTabDisplay : UguiGrid, IRankingTabDisplay {
+    public class RankingTabDisplay : UguiGrid {
 
-        private IRankingTabButton globalTab;
-        private IRankingTabButton localTab;
+        private RankingTabButton globalTab;
+        private RankingTabButton localTab;
 
 
         [InitWithDependency]
@@ -23,12 +23,12 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             globalTab = CreateChild<RankingTabButton>("global", 0);
             {
                 globalTab.LabelText = "Global rank";
-                globalTab.RankDisplay = RankDisplayTypes.Global;
+                globalTab.RankDisplay = RankDisplayType.Global;
             }
             localTab = CreateChild<RankingTabButton>("local", 1);
             {
                 localTab.LabelText = "Local rank";
-                localTab.RankDisplay = RankDisplayTypes.Local;
+                localTab.RankDisplay = RankDisplayType.Local;
             }
         }
     }

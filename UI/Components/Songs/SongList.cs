@@ -1,24 +1,33 @@
 using System.Collections.Generic;
+using PBGame.UI.Components.Common.Dropdown;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Graphics;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
+using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Threading;
-using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class SongList : UguiListView, ISongList {
+    public class SongList : UguiListView, IListView {
+
+        private const int SongDeleteAction = 0;
+        private const int SongOffsetAction = 1;
+
 
         private List<IMapset> mapsets;
 
-        private IAnime centeringAni;
-        private Vector2 centeringPos;
+        private DropdownContext dropdownContext;
+
+        /// <summary>
+        /// The mapset currently under context of dropdown menu.
+        /// </summary>
+        private IMapset heldMapset;
 
 
         [ReceivesDependency]
@@ -27,10 +36,22 @@ namespace PBGame.UI.Components.Songs
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
+        [ReceivesDependency]
+        private IDropdownProvider DropdownProvider { get; set; }
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
 
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
+            // Init dropdown context.
+            dropdownContext = new DropdownContext() { IsSelectionMenu = false };
+            dropdownContext.OnSelection += OnDropdownSelection;
+            dropdownContext.Datas.Add(new DropdownData("Offset", SongOffsetAction));
+            dropdownContext.Datas.Add(new DropdownData("Delete", SongDeleteAction));
+
             // Init the list view.
             Initialize(OnCreateListItem, OnUpdateListItem);
             CellSize = new Vector2(rootMain.Resolution.x, 82f);
@@ -39,22 +60,10 @@ namespace PBGame.UI.Components.Songs
 
             background.SpriteName = "null";
 
-            centeringAni = new Anime();
-            centeringAni.AnimateVector2(pos => ScrollTo(pos))
-                .AddTime(0f, () => container.Position)
-                .AddTime(0.5f, () => centeringPos)
-                .Build();
-
             OnEnableInited();
 
             // Recalibrate after a frame due to a limitation where a rect transform's size doesn't update immediately when using anchors.
-            var timer = new SynchronizedTimer()
-            {
-                WaitFrameOnStart = true,
-                Limit = 0f
-            };
-            timer.OnFinished += delegate { Recalibrate(); };
-            timer.Start();
+            InvokeAfterTransformed(1, Recalibrate);
         }
 
         protected override void OnEnableInited()
@@ -92,13 +101,51 @@ namespace PBGame.UI.Components.Songs
         }
 
         /// <summary>
+        /// Event called from dropdown context when a menu iten has been selected.
+        /// </summary>
+        private void OnDropdownSelection(DropdownData data)
+        {
+            if (heldMapset == null)
+                return;
+
+            int action = (int)data.ExtraData;
+            switch (action)
+            {
+                case SongDeleteAction:
+                    Debug.LogWarning("Delete mapset: " + heldMapset.Metadata.Title);
+                    break;
+                case SongOffsetAction:
+                    // If not the selected mapset, make it selected.
+                    if(heldMapset != MapSelection.Mapset)
+                        MapSelection.SelectMapset(heldMapset);
+                        
+                    OverlayNavigator.Show<OffsetsOverlay>().Setup();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Event called from song cell when hold action is invoked.
+        /// </summary>
+        private void OnItemHold(SongListItem item)
+        {
+            if(!item.Active || item.Mapset == null)
+                return;
+
+            heldMapset = item.Mapset;
+            DropdownProvider.OpenAt(dropdownContext, item.RawTransform.position);
+        }
+
+        /// <summary>
         /// Event called from listview when another item should be created.
         /// </summary>
         private IListItem OnCreateListItem()
         {
             var item = container.CreateChild<SongListItem>("item");
-            item.Anchor = Anchors.MiddleStretch;
+            item.Anchor = AnchorType.MiddleStretch;
             item.Size = CellSize;
+            item.SetOffsetHorizontal(0f);
+            item.OnHold += () => OnItemHold(item);
             return item;
         }
 
@@ -113,7 +160,7 @@ namespace PBGame.UI.Components.Songs
             var mapset = mapsets[item.ItemIndex];
 
             // Cast the item into SongListItem and refresh it.
-            var songListItem = (ISongListItem)item;
+            var songListItem = (SongListItem)item;
             songListItem.SetMapset(mapset);
         }
 
@@ -133,7 +180,7 @@ namespace PBGame.UI.Components.Songs
             // Refresh the list.
             this.mapsets = mapsets;
             TotalItems = mapsets.Count;
-
+            
             CenterOnSelection(MapSelection.Mapset);
         }
 
@@ -147,11 +194,8 @@ namespace PBGame.UI.Components.Songs
             var selectionIndex = mapsets.IndexOf(selection);
             if (selectionIndex >= 0)
             {
-                centeringAni.Stop();
-
                 // Smooth transition to selection position.
-                centeringPos = CalculateSelectionPos(selectionIndex);
-                centeringAni.Play();
+                ScrollTo(CalculateSelectionPos(selectionIndex));
             }
         }
 

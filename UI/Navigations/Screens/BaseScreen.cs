@@ -1,3 +1,4 @@
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Graphics;
 using PBGame.Animations;
 using PBFramework;
@@ -9,7 +10,26 @@ namespace PBGame.UI.Navigations.Screens
 {
     public abstract class BaseScreen : UguiNavigationView, IBaseScreen {
 
-        public override HideActions HideAction => HideActions.Recycle;
+        private float? menuBarHeight = null;
+
+
+        public override HideActionType HideAction => HideActionType.Recycle;
+
+        /// <summary>
+        /// Returns the height of the menu bar overlay's container.
+        /// </summary>
+        public float MenuBarHeight
+        {
+            get
+            {
+                if(menuBarHeight.HasValue)
+                    return menuBarHeight.Value;
+                var overlay = OverlayNavigator?.Get<MenuBarOverlay>();
+                if(overlay == null)
+                    return 0f;
+                return (menuBarHeight = overlay.ContainerHeight).Value;
+            }
+        }
 
         /// <summary>
         /// Returns the depth of the screen.
@@ -19,7 +39,10 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Returns whether the screen should be displayed on 3D root.
         /// </summary>
-        protected virtual bool IsRoot3D { get; } = false;
+        protected virtual bool IsRoot3D => false;
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -33,7 +56,6 @@ namespace PBGame.UI.Navigations.Screens
 
             Depth = ScreenDepth;
         }
-
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {

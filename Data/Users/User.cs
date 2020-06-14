@@ -16,7 +16,7 @@ namespace PBGame.Data.Users
         /// Table of statistic information for each game mode.
         /// </summary>
         [JsonProperty]
-        private Dictionary<GameModes, UserStatistics> statistics { get; set; }
+        private Dictionary<GameModeType, UserStatistics> statistics { get; set; }
 
 
         [JsonIgnore]
@@ -58,7 +58,7 @@ namespace PBGame.Data.Users
             OnlineUser = onlineUser;
             OnlineId = onlineUser.Id;
             JoinedDate = DateTime.Now;
-            statistics = new Dictionary<GameModes, UserStatistics>();
+            statistics = new Dictionary<GameModeType, UserStatistics>();
         }
 
         [InitWithDependency]
@@ -84,7 +84,7 @@ namespace PBGame.Data.Users
             }
         }
 
-        public IUserStatistics GetStatistics(GameModes gameMode)
+        public IUserStatistics GetStatistics(GameModeType gameMode)
         {
             if(statistics.TryGetValue(gameMode, out UserStatistics value))
                 return value;

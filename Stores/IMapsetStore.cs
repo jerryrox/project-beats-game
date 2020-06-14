@@ -18,6 +18,6 @@ namespace PBGame.Stores
         /// <summary>
         /// Loads the mapset of specified id.
         /// </summary>
-        Task<Mapset> Load(Guid id, ISimpleProgress progress);
+        Mapset Load(Guid id);
     }
 }

@@ -8,7 +8,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns the max possible hit result from this judgement.
 		/// </summary>
-		public virtual HitResults MaxResult { get { return HitResults.Perfect; } }
+		public virtual HitResultType MaxResult { get { return HitResultType.Perfect; } }
 
 		/// <summary>
 		/// Returns whether this judgement should affect the combo.
@@ -27,19 +27,19 @@ namespace PBGame.Rulesets.Judgements
 		public virtual int GetNumericResult(JudgementResult result) { return GetNumericResult(result.HitResult); }
 
 		/// <summary>
-		/// Returns the amount of health to increase for specified judgement result.
+		/// Returns the amount of scale to boost health increase for specified judgement result.
 		/// </summary>
-		public virtual float GetHealthIncrease(JudgementResult result) { return GetHealthIncrease(result.HitResult); }
+		public virtual float GetHealthBonus(JudgementResult result) { return GetHealthBonus(result.HitResult); }
 
 		/// <summary>
 		/// Returns the amount of numeric value the specified hit result type accounts for.
 		/// </summary>
-		protected virtual int GetNumericResult(HitResults result) { return 0; }
+		public virtual int GetNumericResult(HitResultType result) { return 0; }
 
 		/// <summary>
-		/// Returns the amount of health to increase for specified hit result type.
+		/// Returns the amount of scale to boost health increase for specified hit result type.
 		/// </summary>
-		protected virtual float GetHealthIncrease(HitResults result) { return 0; }
+		public virtual float GetHealthBonus(HitResultType result) { return 0; }
 	}
 }
 

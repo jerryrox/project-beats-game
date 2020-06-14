@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
-using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
@@ -11,34 +11,25 @@ using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Graphics.Effects.Components;
-using PBFramework.Threading;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 using Coffee.UIExtensions;
 
+using ShadowEffect = PBFramework.Graphics.Effects.CoffeeUI.ShadowEffect;
+
 namespace PBGame.UI.Components.Songs
 {
-    public class PreviewBox : ButtonTrigger, IPreviewBox {
+    public class PreviewBox : HoverableTrigger {
 
         private ISprite mask;
-        private IMapImageDisplay imageDisplay;
+        private MapImageDisplay imageDisplay;
         private ISprite imageGradient;
         private IProgressBar progressBar;
         private ILabel titleLabel;
         private ILabel artistLabel;
-        private ISprite glow;
 
-        /// <summary>
-        /// Whether it is the first background assignment from map selection after init.
-        /// Required to wait a frame if first load due to an issue where the texture thinks its size is not initialized yet.
-        /// This caused the texture to fit images assuming a 100x100 size.
-        /// </summary>
-        private bool isFirstBackground = true;
-
-
-        protected override bool IsClickToTrigger => false;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -53,9 +44,17 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
+            hoverSprite.Depth = 1;
+            hoverSprite.Anchor = AnchorType.Fill;
+            hoverSprite.RawSize = new Vector2(28f, 30f);
+            hoverSprite.Color = Color.black;
+            hoverSprite.SpriteName = "glow-parallel-64";
+            hoverSprite.ImageType = Image.Type.Sliced;
+            hoverSprite.AddEffect(new FlipEffect()).Component.horizontal = true;
+
             mask = CreateChild<UguiSprite>("mask", 0);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Color = HexColor.Create("2A313A");
                 mask.SpriteName = "parallel-64";
@@ -66,12 +65,12 @@ namespace PBGame.UI.Components.Songs
 
                 imageDisplay = mask.CreateChild<MapImageDisplay>("imageDisplay", 0);
                 {
-                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.Anchor = AnchorType.Fill;
                     imageDisplay.RawSize = Vector2.zero;
 
                     imageGradient = imageDisplay.CreateChild<UguiSprite>("gradient", 100);
                     {
-                        imageGradient.Anchor = Anchors.Fill;
+                        imageGradient.Anchor = AnchorType.Fill;
                         imageGradient.RawSize = Vector2.zero;
                         imageGradient.SpriteName = "gradation-left";
                         imageGradient.Color = new Color(0f, 0f, 0f, 0.5f);
@@ -79,22 +78,20 @@ namespace PBGame.UI.Components.Songs
                 }
                 progressBar = mask.CreateChild<UguiProgressBar>("progress", 1);
                 {
-                    progressBar.Anchor = Anchors.BottomStretch;
-                    progressBar.Pivot = Pivots.Bottom;
-                    progressBar.OffsetLeft = 22;
-                    progressBar.OffsetRight = 0f;
+                    progressBar.Anchor = AnchorType.BottomStretch;
+                    progressBar.Pivot = PivotType.Bottom;
+                    progressBar.SetOffsetHorizontal(22f, 0f);
                     progressBar.Height = 6f;
                     progressBar.Y = 0f;
 
                     progressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
-                    progressBar.Foreground.OffsetTop = 2f;
+                    progressBar.Foreground.SetOffsetTop(2f);
                 }
                 titleLabel = mask.CreateChild<Label>("title", 2);
                 {
-                    titleLabel.Anchor = Anchors.TopStretch;
-                    titleLabel.Pivot = Pivots.Top;
-                    titleLabel.OffsetLeft = 20f;
-                    titleLabel.OffsetRight = 32f;
+                    titleLabel.Anchor = AnchorType.TopStretch;
+                    titleLabel.Pivot = PivotType.Top;
+                    titleLabel.SetOffsetHorizontal(20f, 32f);
                     titleLabel.Y = -8f;
                     titleLabel.Height = 30f;
                     titleLabel.IsBold = true;
@@ -109,10 +106,9 @@ namespace PBGame.UI.Components.Songs
                 }
                 artistLabel = mask.CreateChild<Label>("artist", 3);
                 {
-                    artistLabel.Anchor = Anchors.BottomStretch;
-                    artistLabel.Pivot = Pivots.Bottom;
-                    artistLabel.OffsetLeft = 32f;
-                    artistLabel.OffsetRight = 20f;
+                    artistLabel.Anchor = AnchorType.BottomStretch;
+                    artistLabel.Pivot = PivotType.Bottom;
+                    artistLabel.SetOffsetHorizontal(32f, 20f);
                     artistLabel.Y = 8f;
                     artistLabel.Height = 30f;
                     artistLabel.Alignment = TextAnchor.LowerLeft;
@@ -124,33 +120,23 @@ namespace PBGame.UI.Components.Songs
                     shadow.effectColor = new Color(0f, 0f, 0f, 0.5f);
                 }
             }
-            glow = CreateChild<UguiSprite>("glow", 1);
-            {
-                glow.Anchor = Anchors.Fill;
-                glow.RawSize = new Vector2(28f, 30f);
-                glow.Color = Color.black;
-                glow.SpriteName = "glow-parallel-64";
-                glow.ImageType = Image.Type.Sliced;
 
-                glow.AddEffect(new FlipEffect()).Component.horizontal = true;
-            }
-
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
+            hoverInAni = new Anime();
+            hoverInAni.AnimateColor(color => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color)
                 .AddTime(0.25f, () => MapSelection.Background.Highlight)
                 .Build();
-            hoverAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
+            hoverInAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
                 .AddTime(0f, () => imageGradient.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
 
-            outAni = new Anime();
-            outAni.AnimateColor(color => glow.Color = color)
-                .AddTime(0f, () => glow.Color)
+            hoverOutAni = new Anime();
+            hoverOutAni.AnimateColor(color => hoverSprite.Color = color)
+                .AddTime(0f, () => hoverSprite.Color)
                 .AddTime(0.25f, Color.black)
                 .Build();
-            outAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
+            hoverOutAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
                 .AddTime(0f, () => imageGradient.Alpha)
                 .AddTime(0.25f, 0.5f)
                 .Build();
@@ -201,18 +187,6 @@ namespace PBGame.UI.Components.Songs
         private void OnBackgroundChange(IMapBackground background)
         {
             imageDisplay.SetBackground(background);
-
-            if (isFirstBackground)
-            {
-                isFirstBackground = false;
-                var timer = new SynchronizedTimer()
-                {
-                    WaitFrameOnStart = true,
-                    Limit = 0f
-                };
-                timer.OnFinished += delegate { imageDisplay.FillTexture(); };
-                timer.Start();
-            }
         }
 
         /// <summary>
@@ -242,8 +216,10 @@ namespace PBGame.UI.Components.Songs
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if(MusicController.Audio == null)
                 progressBar.Value = 0f;
             else

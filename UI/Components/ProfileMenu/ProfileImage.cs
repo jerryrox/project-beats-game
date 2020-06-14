@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public class ProfileImage : UguiObject, IProfileImage {
+    public class ProfileImage : UguiObject {
 
         private ISprite glow;
         private ISprite mask;
@@ -41,14 +41,14 @@ namespace PBGame.UI.Components.ProfileMenu
 
             glow = CreateChild<UguiSprite>("glow", 0);
             {
-                glow.Anchor = Anchors.Fill;
+                glow.Anchor = AnchorType.Fill;
                 glow.RawSize = new Vector2(-60f, -60f);
                 glow.SpriteName = "glow-circle-32";
                 glow.Color = new Color(0f, 0f, 0f, 0.5f);
             }
             mask = CreateChild<UguiSprite>("mask", 1);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Color = new Color(0.125f, 0.125f, 0.125f);
                 mask.SpriteName = "circle-320";
@@ -57,7 +57,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 image = mask.CreateChild<UguiTexture>("image", 2);
                 {
-                    image.Anchor = Anchors.Fill;
+                    image.Anchor = AnchorType.Fill;
                     image.RawSize = Vector2.zero;
                 }
             }
