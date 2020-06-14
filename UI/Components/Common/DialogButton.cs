@@ -50,12 +50,21 @@ namespace PBGame.UI.Components.Common
                 .Build();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            if(hoverSprite != null)
+                hoverSprite.Width = BaseWidth;
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
-            Width = BaseWidth;
-            if(hoverSprite != null)
+            if (hoverSprite != null)
+            {
+                hoverSprite.Width = BaseWidth;
                 hoverSprite.Color = tint;
+            }
         }
 
         public override void UseDefaultHoverAni()

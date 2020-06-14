@@ -14,6 +14,11 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.9.1.1
+#### Fixes
+- Fixed Game pause state not resetting on disposal.
+- Fixed skip button not resetting size after using it once.
+
 ### 0.9.1
 #### New features
 - Implementation of Beats Standard game mode. (Not fully complete, but playable.)
