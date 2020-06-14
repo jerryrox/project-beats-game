@@ -14,13 +14,6 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.9.2
-#### New features
-#### Improvements
-#### Changes
-#### Fixes
-#### Others
-
 ### 0.9.1
 #### New features
 - Implementation of Beats Standard game mode. (Not fully complete, but playable.)
@@ -28,6 +21,12 @@ Slowly making progress 🧩
 #### Improvements
 - When selecting a mapset, select the first map that appears when sorted for the current game mode, and prioritize the maps that support the mode.
 #### Changes
+- Ensured a minimum "protected" visibility for UguiObject hierarchy objects' Update method.
 #### Fixes
+- Fixed ratio issue in PrepareScreen where information panel doesn't scroll up more when using a tall aspect ratio.
+- Fixed settings not visually updating when the value has changed without interaction of UI.
+- Fixed dragger start circle showing visual feedback on press/release even when no judgement was made yet.
+- Prevent pause again if already paused.
+- Prevent new input when paused.
 #### Others
 - Cleaned up README.
