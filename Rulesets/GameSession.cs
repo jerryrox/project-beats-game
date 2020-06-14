@@ -200,6 +200,8 @@ namespace PBGame.Rulesets
 
         public void InvokePause()
         {
+            if(IsPaused)
+                return;
             if(MusicController.CurrentTime < 0f)
                 return;
             if(MusicController.IsPlaying)
@@ -214,6 +216,8 @@ namespace PBGame.Rulesets
 
         public void InvokeResume()
         {
+            if(!IsPaused)
+                return;
             if(MusicController.IsPaused)
                 MusicController.Play();
 
