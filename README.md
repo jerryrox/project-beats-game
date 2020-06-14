@@ -14,6 +14,13 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.9.2
+#### New features
+#### Improvements
+#### Changes
+#### Fixes
+#### Others
+
 ### 0.9.1
 #### New features
 - Implementation of Beats Standard game mode. (Not fully complete, but playable.)

@@ -50,10 +50,19 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
         public override void SetEntryData(SettingsEntryBase entryData)
         {
+            if(stringEntry != null)
+                stringEntry.OnDataValueChange -= OnEntryValueChange;
+
             stringEntry = CastEntryData<SettingsEntryString>(entryData);
+            stringEntry.OnDataValueChange += OnEntryValueChange;
 
             label.Text = stringEntry.Name;
             input.Text = stringEntry.Value;
         }
+
+        /// <summary>
+        /// Event called on entry data value change.
+        /// </summary>
+        private void OnEntryValueChange(string value) => input.Text = value;
     }
 }

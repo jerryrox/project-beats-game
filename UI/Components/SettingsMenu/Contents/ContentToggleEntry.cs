@@ -37,10 +37,19 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
         public override void SetEntryData(SettingsEntryBase entryData)
         {
+            if(boolEntry != null)
+                boolEntry.OnDataValueChange -= OnEntryValueChange;
+
             boolEntry = CastEntryData<SettingsEntryBool>(entryData);
+            boolEntry.OnDataValueChange += OnEntryValueChange;
 
             toggle.LabelText = boolEntry.Name;
             toggle.IsFocused = boolEntry.Value;
         }
+
+        /// <summary>
+        /// Event called when entry data's value has changed.
+        /// </summary>
+        private void OnEntryValueChange(bool value) => toggle.IsFocused = value;
     }
 }

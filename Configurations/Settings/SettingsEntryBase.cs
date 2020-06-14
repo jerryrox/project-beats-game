@@ -25,6 +25,11 @@ namespace PBGame.Configurations.Settings
     public abstract class SettingsEntryBase<T> : SettingsEntryBase
     {
         /// <summary>
+        /// Event called when the bindable data's value has changed.
+        /// </summary>
+        public event Action<T> OnDataValueChange;
+
+        /// <summary>
         /// The bindable data to be serverd automatically at this class's level.
         /// May be null if data binding will be handled manually.
         /// </summary>
@@ -50,6 +55,13 @@ namespace PBGame.Configurations.Settings
         protected SettingsEntryBase(string name, IBindable<T> bindable) : base(name)
         {
             this.data = bindable;
+            if (bindable != null)
+            {
+                bindable.OnValueChanged += (value, _) =>
+                {
+                    OnDataValueChange?.Invoke(value);
+                };
+            }
         }
     }
 }
