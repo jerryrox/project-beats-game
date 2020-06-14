@@ -101,17 +101,20 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 }
             }
 
-            // Process new input presses.
-            foreach (var cursor in cursors)
+            // Process new input presses only if not paused.
+            if (!GameSession.IsPaused)
             {
-                if (cursor.State.Value == InputState.Press)
+                foreach (var cursor in cursors)
                 {
-                    // If hit on the hit bar, register this as a new BeatsCursor.
-                    if (!hitBarCursor.IsActive && IsOnHitBar(cursor, out float pos))
-                        TriggerCursorPress(cursor, pos);
-                    // If not hit on hit bar, this is treated as a key stoke.
-                    else
-                        TriggerKeyPress(cursor);
+                    if (cursor.State.Value == InputState.Press)
+                    {
+                        // If hit on the hit bar, register this as a new BeatsCursor.
+                        if (!hitBarCursor.IsActive && IsOnHitBar(cursor, out float pos))
+                            TriggerCursorPress(cursor, pos);
+                        // If not hit on hit bar, this is treated as a key stoke.
+                        else
+                            TriggerKeyPress(cursor);
+                    }
                 }
             }
             return true;
