@@ -20,6 +20,20 @@ namespace PBGame.UI.Components.Prepare
         private RankingContainer rankingContainer;
 
 
+        /// <summary>
+        /// Returns the total height of all children.
+        /// </summary>
+        public float TotalChildrenHeight
+        {
+            get
+            {
+                return menuHolder.Height +
+                    versionDisplay.Height +
+                    contentScroll.Container.Height;
+            }
+        }
+
+
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {

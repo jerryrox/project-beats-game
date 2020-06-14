@@ -14,6 +14,12 @@ namespace PBGame.UI.Components.Prepare
         private DetailContainer detailContainer;
 
 
+        /// <summary>
+        /// Returns the full height of the detail container.
+        /// </summary>
+        public float FullDetailHeight => detailContainer.TotalChildrenHeight;
+
+
         [InitWithDependency]
         private void Init()
         {

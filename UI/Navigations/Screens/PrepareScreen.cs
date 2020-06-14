@@ -1,13 +1,15 @@
 using PBGame.UI.Components.Prepare;
+using PBGame.Graphics;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
     public class PrepareScreen : BaseScreen, IPrepareScreen {
 
-        private const float InfoDetailedY = 640f;
+        private const float InfoDetailedYDiff = 720f - 640f;
         private const float InfoBriefY = 250f;
 
         private InfoContainer infoContainer;
@@ -22,7 +24,7 @@ namespace PBGame.UI.Navigations.Screens
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IRootMain rootMain)
         {
             // Cache this container for inner component.
             Dependencies = Dependencies.Clone();
@@ -33,7 +35,7 @@ namespace PBGame.UI.Navigations.Screens
                 infoContainer.Anchor = AnchorType.BottomStretch;
                 infoContainer.Pivot = PivotType.Top;
                 infoContainer.RawWidth = 0f;
-                infoContainer.Height = 640f;
+                infoContainer.Height = Mathf.Min(infoContainer.FullDetailHeight, rootMain.Resolution.y - InfoDetailedYDiff);
                 infoContainer.Y = InfoBriefY;
             }
             versionContainer = CreateChild<VersionContainer>("version", 1);
@@ -48,7 +50,7 @@ namespace PBGame.UI.Navigations.Screens
             infoDetailAni = new Anime();
             infoDetailAni.AnimateFloat(y => infoContainer.Y = y)
                 .AddTime(0f, () => infoContainer.Y)
-                .AddTime(0.25f, InfoDetailedY)
+                .AddTime(0.25f, infoContainer.Height)
                 .Build();
 
             infoBriefAni = new Anime();
