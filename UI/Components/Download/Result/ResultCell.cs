@@ -34,7 +34,7 @@ namespace PBGame.UI.Components.Download.Result
         {
             container = CreateChild<UguiSprite>("container", 0);
             {
-                container.Anchor = Anchors.Fill;
+                container.Anchor = AnchorType.Fill;
                 container.Offset = new Offset(8f);
                 container.SpriteName = "circle-32";
                 container.ImageType = Image.Type.Sliced;
@@ -43,20 +43,20 @@ namespace PBGame.UI.Components.Download.Result
 
                 coverImage = container.CreateChild<CoverImage>("cover", 0);
                 {
-                    coverImage.Anchor = Anchors.Fill;
+                    coverImage.Anchor = AnchorType.Fill;
                     coverImage.Offset = Offset.Zero;
                 }
                 shadow = container.CreateChild<UguiSprite>("shadow", 1);
                 {
-                    shadow.Anchor = Anchors.Fill;
+                    shadow.Anchor = AnchorType.Fill;
                     shadow.Offset = Offset.Zero;
                     shadow.Color = new Color(0f, 0f, 0f, 0.5f);
                     shadow.SpriteName = "gradation-bottom";
                 }
                 titleLabel = container.CreateChild<Label>("title", 2);
                 {
-                    titleLabel.Anchor = Anchors.BottomStretch;
-                    titleLabel.Pivot = Pivots.Bottom;
+                    titleLabel.Anchor = AnchorType.BottomStretch;
+                    titleLabel.Pivot = PivotType.Bottom;
                     titleLabel.SetOffsetHorizontal(8f);
                     titleLabel.Y = 74f;
                     titleLabel.IsBold = true;
@@ -68,8 +68,8 @@ namespace PBGame.UI.Components.Download.Result
                 }
                 artistLabel = container.CreateChild<Label>("artist", 3);
                 {
-                    artistLabel.Anchor = Anchors.BottomStretch;
-                    artistLabel.Pivot = Pivots.Bottom;
+                    artistLabel.Anchor = AnchorType.BottomStretch;
+                    artistLabel.Pivot = PivotType.Bottom;
                     artistLabel.SetOffsetHorizontal(8f);
                     artistLabel.Y = 58f;
                     artistLabel.IsBold = true;
@@ -81,8 +81,8 @@ namespace PBGame.UI.Components.Download.Result
                 }
                 mapperLabel = container.CreateChild<Label>("mapper", 4);
                 {
-                    mapperLabel.Anchor = Anchors.BottomStretch;
-                    mapperLabel.Pivot = Pivots.Bottom;
+                    mapperLabel.Anchor = AnchorType.BottomStretch;
+                    mapperLabel.Pivot = PivotType.Bottom;
                     mapperLabel.SetOffsetHorizontal(8f);
                     mapperLabel.Y = 42f;
                     mapperLabel.IsBold = true;
@@ -94,24 +94,24 @@ namespace PBGame.UI.Components.Download.Result
                 }
                 previewBar = container.CreateChild<PreviewBar>("preview", 5);
                 {
-                    previewBar.Anchor = Anchors.BottomStretch;
-                    previewBar.Pivot = Pivots.Bottom;
+                    previewBar.Anchor = AnchorType.BottomStretch;
+                    previewBar.Pivot = PivotType.Bottom;
                     previewBar.SetOffsetHorizontal(0f);
                     previewBar.Y = 36f;
                     previewBar.Height = 2f;
                 }
                 metaDisplayer = container.CreateChild<MetaDisplayer>("meta", 6);
                 {
-                    metaDisplayer.Anchor = Anchors.TopStretch;
-                    metaDisplayer.Pivot = Pivots.Top;
+                    metaDisplayer.Anchor = AnchorType.TopStretch;
+                    metaDisplayer.Pivot = PivotType.Top;
                     metaDisplayer.SetOffsetHorizontal(8f);
                     metaDisplayer.Y = -8f;
                     metaDisplayer.Height = 24f;
                 }
                 actionBar = container.CreateChild<ActionBar>("actions", 7);
                 {
-                    actionBar.Anchor = Anchors.BottomStretch;
-                    actionBar.Pivot = Pivots.Bottom;
+                    actionBar.Anchor = AnchorType.BottomStretch;
+                    actionBar.Pivot = PivotType.Bottom;
                     actionBar.SetOffsetHorizontal(0f);
                     actionBar.Y = 0f;
                     actionBar.Height = 36f;

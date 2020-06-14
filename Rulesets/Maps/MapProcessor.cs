@@ -28,7 +28,7 @@ namespace PBGame.Rulesets.Maps
 		/// </summary>
 		private void ApplySamplePoint(IPlayableMap map)
 		{
-			Action<HitObject> applyPoint = (hitObj) => {
+			Action<BaseHitObject> applyPoint = (hitObj) => {
 				var samplePoint = hitObj.SamplePoint;
 				if(samplePoint != null)
 				{

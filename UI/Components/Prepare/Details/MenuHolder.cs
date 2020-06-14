@@ -38,7 +38,7 @@ namespace PBGame.UI.Components.Prepare.Details
 
             grid = CreateChild<UguiGrid>("grid", 0);
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.RawSize = Vector2.zero;
                 InvokeAfterTransformed(1, () => grid.CellSize = new Vector2(Width / 3f, 56f));
 

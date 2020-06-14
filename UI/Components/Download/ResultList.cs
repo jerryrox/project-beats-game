@@ -36,8 +36,8 @@ namespace PBGame.UI.Components.Download
 
             scrollbar = CreateChild<BasicScrollbar>("scrollbar", 100);
             {
-                scrollbar.Anchor = Anchors.RightStretch;
-                scrollbar.Pivot = Pivots.Right;
+                scrollbar.Anchor = AnchorType.RightStretch;
+                scrollbar.Pivot = PivotType.Right;
                 scrollbar.X = 0;
                 scrollbar.Width = 2f;
                 scrollbar.SetOffsetVertical(0f);

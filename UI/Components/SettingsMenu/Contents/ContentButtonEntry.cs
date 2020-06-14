@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
         {
             button = CreateChild<BoxButton>("button");
             {
-                button.Anchor = Anchors.Fill;
+                button.Anchor = AnchorType.Fill;
                 button.Offset = new Offset(16f, 8f, 16f, 8f);
                 button.Color = colorPreset.Passive;
 

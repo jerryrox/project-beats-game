@@ -24,8 +24,8 @@ namespace PBGame.UI.Components.Download.Search
         {
             toggle = container.CreateChild<BasicToggle>("toggle", 1);
             {
-                toggle.Anchor = Anchors.Right;
-                toggle.Pivot = Pivots.Right;
+                toggle.Anchor = AnchorType.Right;
+                toggle.Pivot = PivotType.Right;
                 toggle.X = -16f;
                 toggle.Size = new Vector2(36f, 16f);
 
@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.Download.Search
             }
             touchArea = container.CreateChild<UguiSprite>("touch-area", 5);
             {
-                touchArea.Anchor = Anchors.Fill;
+                touchArea.Anchor = AnchorType.Fill;
                 touchArea.Alpha = 0f;
             }
 

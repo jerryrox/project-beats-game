@@ -40,7 +40,7 @@ namespace PBGame.UI.Components.QuickMenu
 
             label = CreateChild<Label>("label", 5);
             {
-                label.Anchor = Anchors.MiddleStretch;
+                label.Anchor = AnchorType.MiddleStretch;
                 label.SetOffsetHorizontal(0f);
                 label.FontSize = 16;
                 label.IsBold = true;

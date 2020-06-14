@@ -33,7 +33,7 @@ namespace PBGame.UI.Components
             Glow = CreateChild<UguiSprite>("glow");
             {
                 Glow.SpriteName = "logo-outer-glow";
-                Glow.Anchor = Anchors.Fill;
+                Glow.Anchor = AnchorType.Fill;
                 Glow.RawSize = Vector2.zero;
             }
             Outer = CreateChild<UguiSprite>("outer", 1);

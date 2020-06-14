@@ -83,7 +83,7 @@ namespace PBGame.UI.Components.System
 
             shadowSprite = CreateChild<UguiSprite>("shadow", 0);
             {
-                shadowSprite.Anchor = Anchors.Fill;
+                shadowSprite.Anchor = AnchorType.Fill;
                 shadowSprite.Offset = new Offset(-13.5f);
                 shadowSprite.Color = tint;
                 shadowSprite.Alpha = 0.3f;
@@ -92,7 +92,7 @@ namespace PBGame.UI.Components.System
             }
             backgroundSprite = CreateChild<UguiSprite>("bg", 1);
             {
-                backgroundSprite.Anchor = Anchors.Fill;
+                backgroundSprite.Anchor = AnchorType.Fill;
                 backgroundSprite.Offset = Offset.Zero;
                 backgroundSprite.Color = tint;
                 backgroundSprite.Alpha = 0.5f;
@@ -101,7 +101,7 @@ namespace PBGame.UI.Components.System
             }
             separatorSprite = CreateChild<UguiSprite>("separator", 2);
             {
-                separatorSprite.Anchor = Anchors.CenterStretch;
+                separatorSprite.Anchor = AnchorType.CenterStretch;
                 separatorSprite.SetOffsetVertical(0f);
                 separatorSprite.X = 0f;
                 separatorSprite.Width = 2f;

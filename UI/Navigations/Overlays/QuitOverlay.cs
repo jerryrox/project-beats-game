@@ -24,7 +24,7 @@ namespace PBGame.UI.Navigations.Overlays
         {
             darkSprite = CreateChild<UguiSprite>("dark", 0);
             {
-                darkSprite.Anchor = Anchors.Fill;
+                darkSprite.Anchor = AnchorType.Fill;
                 darkSprite.Offset = Offset.Zero;
                 darkSprite.Color = Color.black;
                 darkSprite.Alpha = 0f;

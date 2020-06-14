@@ -29,8 +29,8 @@ namespace PBGame.UI.Components.Initialize
         {
             Status = CreateChild<Label>("status", 0);
             {
-                Status.Anchor = Anchors.Left;
-                Status.Pivot = Pivots.Left;
+                Status.Anchor = AnchorType.Left;
+                Status.Pivot = PivotType.Left;
                 Status.Position = new Vector3(20f, 20f);
                 Status.Alignment = TextAnchor.MiddleLeft;
                 Status.FontSize = 20;
@@ -38,7 +38,7 @@ namespace PBGame.UI.Components.Initialize
             }
             Progress = CreateChild<UguiProgressBar>("progress", 1);
             {
-                Progress.Anchor = Anchors.MiddleStretch;
+                Progress.Anchor = AnchorType.MiddleStretch;
                 Progress.SetOffsetHorizontal(0f);
                 Progress.Y = 2f;
                 Progress.Height = 10f;

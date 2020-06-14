@@ -4,45 +4,45 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.UI
 {
-    public abstract class HudContainer : UguiObject, IHudContainer {
+    public abstract class HudContainer : UguiObject
+    {
+        /// <summary>
+        /// Returns the accuracy displayer object.
+        /// </summary>
+        public AccuracyDisplay AccuracyDisplay { get; protected set; }
 
-        public IAccuracyDisplay AccuracyDisplay { get; private set; }
+        /// <summary>
+        /// Returns the score displayer object.
+        /// </summary>
+        public ScoreDisplay ScoreDisplay { get; protected set; }
 
-        public IHealthDisplay HealthDisplay { get; private set; }
+        /// <summary>
+        /// Returns the combo displayer object.
+        /// </summary>
+        public ComboDisplay ComboDisplay { get; protected set; }
 
-        public IScoreDisplay ScoreDisplay { get; private set; }
+        /// <summary>
+        /// Returns the health displayer object.
+        /// </summary>
+        public HealthDisplay HealthDisplay { get; protected set; }
+
+        /// <summary>
+        /// Returns the skip displayer object.
+        /// </summary>
+        public SkipDisplay SkipDisplay { get; protected set; }
 
 
         [InitWithDependency]
         private void Init()
         {
-            AccuracyDisplay = CreateAccuracyDisplay();
+            SkipDisplay = CreateChild<SkipDisplay>("skip", 4);
             {
-                Depth = 0;
-            }
-            HealthDisplay = CreateHealthDisplay();
-            {
-                Depth = 2;
-            }
-            ScoreDisplay = CreateScoreDisplay();
-            {
-                Depth = 1;
+                SkipDisplay.Anchor = AnchorType.BottomStretch;
+                SkipDisplay.Pivot = PivotType.Bottom;
+                SkipDisplay.SetOffsetHorizontal(0f);
+                SkipDisplay.Y = 0f;
+                SkipDisplay.Height = 200f;
             }
         }
-
-        /// <summary>
-        /// Creates a new accuracy displayer object.
-        /// </summary>
-        protected abstract IAccuracyDisplay CreateAccuracyDisplay();
-
-        /// <summary>
-        /// Creates a new helath displayer object.
-        /// </summary>
-        protected abstract IHealthDisplay CreateHealthDisplay();
-
-        /// <summary>
-        /// Creates a new score displayer object.
-        /// </summary>
-        protected abstract IScoreDisplay CreateScoreDisplay();
     }
 }

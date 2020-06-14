@@ -70,7 +70,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             ModLabel = CreateLabel(450, "Mods");
 
             judgementLabels = new List<ILabel>();
-            foreach (var m in (HitResults[])Enum.GetValues(typeof(HitResults)))
+            foreach (var m in (HitResultType[])Enum.GetValues(typeof(HitResultType)))
             {
                 judgementLabels.Add(CreateLabel(null, m.ToString()));
             }
@@ -115,8 +115,8 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         private ILabel CreateLabel(float? x, string text)
         {
             var label = CreateChild<Label>(text, transform.childCount);
-            label.Anchor = Anchors.CenterStretch;
-            label.Pivot = Pivots.Left;
+            label.Anchor = AnchorType.CenterStretch;
+            label.Pivot = PivotType.Left;
             label.RawHeight = 0f;
             label.Text = text;
             if(x.HasValue)

@@ -17,7 +17,7 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 		/// <summary>
 		/// The time signature within this point.
 		/// </summary>
-		public TimeSignatures TimeSignature = TimeSignatures.Quadruple;
+		public TimeSignatureType TimeSignature = TimeSignatureType.Quadruple;
 
 		private float beatLength = DefaultBeatLength;
 

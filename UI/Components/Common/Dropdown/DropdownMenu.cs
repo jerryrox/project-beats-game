@@ -74,12 +74,12 @@ namespace PBGame.UI.Components.Common.Dropdown
             itemRecycler = new Recycler<DropdownMenuItem>(CreateMenuItem);
 
             // Make the menu fit within the parent's object.
-            Anchor = Anchors.Fill;
+            Anchor = AnchorType.Fill;
             Offset = Offset.Zero;
 
             var blocker = CreateChild<BasicTrigger>("blocker", 0);
             {
-                blocker.Anchor = Anchors.Fill;
+                blocker.Anchor = AnchorType.Fill;
                 blocker.Offset = Offset.Zero;
 
                 blocker.OnTriggered += () => CloseMenu();
@@ -90,7 +90,7 @@ namespace PBGame.UI.Components.Common.Dropdown
 
                 aniHolder = holder.CreateChild("ani-holder", 0);
                 {
-                    aniHolder.Anchor = Anchors.Fill;
+                    aniHolder.Anchor = AnchorType.Fill;
                     aniHolder.Offset = Offset.Zero;
 
                     canvasGroup = aniHolder.RawObject.AddComponent<CanvasGroup>();
@@ -98,7 +98,7 @@ namespace PBGame.UI.Components.Common.Dropdown
 
                     shadow = aniHolder.CreateChild<UguiSprite>("shadow", 0);
                     {
-                        shadow.Anchor = Anchors.Fill;
+                        shadow.Anchor = AnchorType.Fill;
                         shadow.Offset = new Offset(-7f);
                         shadow.SpriteName = "glow-circle-16";
                         shadow.ImageType = Image.Type.Sliced;
@@ -106,7 +106,7 @@ namespace PBGame.UI.Components.Common.Dropdown
                     }
                     container = aniHolder.CreateChild<UguiSprite>("container", 1);
                     {
-                        container.Anchor = Anchors.Fill;
+                        container.Anchor = AnchorType.Fill;
                         container.Offset = Offset.Zero;
                         container.SpriteName = "circle-16";
                         container.ImageType = Image.Type.Sliced;
@@ -114,7 +114,7 @@ namespace PBGame.UI.Components.Common.Dropdown
 
                         grid = container.CreateChild<UguiGrid>("grid", 0);
                         {
-                            grid.Anchor = Anchors.Fill;
+                            grid.Anchor = AnchorType.Fill;
                             grid.Offset = Offset.Zero;
                             grid.CellSize = ItemSize;
                             grid.Axis = GridLayoutGroup.Axis.Vertical;
@@ -203,9 +203,9 @@ namespace PBGame.UI.Components.Common.Dropdown
             hideAni.PlayFromStart();
         }
 
-        void IRecyclable<DropdownMenu>.OnRecycleNew() {}
+        void IRecyclable.OnRecycleNew() {}
 
-        void IRecyclable<DropdownMenu>.OnRecycleDestroy() {}
+        void IRecyclable.OnRecycleDestroy() {}
 
         /// <summary>
         /// Makes sure the menu does not go outside of the view boundary.

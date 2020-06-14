@@ -52,7 +52,7 @@ namespace PBGame.UI.Components.Common
         {
             focusSprite = CreateChild<UguiSprite>("focus", FocusSpriteDepth);
             {
-                focusSprite.Anchor = Anchors.Fill;
+                focusSprite.Anchor = AnchorType.Fill;
                 focusSprite.RawSize = Vector2.zero;
                 focusSprite.Position = Vector2.zero;
                 focusSprite.Alpha = 0f;

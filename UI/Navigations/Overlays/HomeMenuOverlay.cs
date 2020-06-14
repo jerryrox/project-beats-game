@@ -51,12 +51,12 @@ namespace PBGame.UI.Navigations.Overlays
         {
             Blur = CreateChild<BlurDisplay>("focus-blur", 0);
             {
-                Blur.Anchor = Anchors.Fill;
+                Blur.Anchor = AnchorType.Fill;
                 Blur.Offset = Offset.Zero;
             }
             GradientSprite = CreateChild<UguiSprite>("gradient", 1);
             {
-                GradientSprite.Anchor = Anchors.Fill;
+                GradientSprite.Anchor = AnchorType.Fill;
                 GradientSprite.RawSize = Vector2.zero;
 
                 gradientEffect = GradientSprite.AddEffect(new GradientEffect());
@@ -64,7 +64,7 @@ namespace PBGame.UI.Navigations.Overlays
             }
             QuitButton = CreateChild<MenuButton>("quit-button", 2);
             {
-                QuitButton.Anchor = Anchors.Bottom;
+                QuitButton.Anchor = AnchorType.Bottom;
                 QuitButton.Y = 100;
                 QuitButton.Size = new Vector2(160f, 160f);
                 QuitButton.LabelText = "Quit";

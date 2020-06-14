@@ -30,22 +30,22 @@ namespace PBGame.UI.Components.Download.Result
         {
             rankTag = CreateChild<RankMetaTag>("rank", 0);
             {
-                rankTag.Anchor = Anchors.TopLeft;
-                rankTag.Pivot = Pivots.TopLeft;
+                rankTag.Anchor = AnchorType.TopLeft;
+                rankTag.Pivot = PivotType.TopLeft;
                 rankTag.Position = Vector2.zero;
                 rankTag.Size = new Vector2(100f, TagHeight);
             }
             playCountTag = CreateChild<StatMetaTag>("stat", 1);
             {
-                playCountTag.Anchor = Anchors.TopRight;
-                playCountTag.Pivot = Pivots.TopRight;
+                playCountTag.Anchor = AnchorType.TopRight;
+                playCountTag.Pivot = PivotType.TopRight;
                 playCountTag.Position = Vector2.zero;
                 playCountTag.Height = TagHeight;
             }
             favoriteCountTag = CreateChild<StatMetaTag>("favorite", 2);
             {
-                favoriteCountTag.Anchor = Anchors.TopRight;
-                favoriteCountTag.Pivot = Pivots.TopRight;
+                favoriteCountTag.Anchor = AnchorType.TopRight;
+                favoriteCountTag.Pivot = PivotType.TopRight;
                 favoriteCountTag.Position = new Vector2(0f, -28);
                 favoriteCountTag.Height = TagHeight;
             }
@@ -96,8 +96,8 @@ namespace PBGame.UI.Components.Download.Result
         private MapMetaTag CreateMetaTag()
         {
             var tag = CreateChild<MapMetaTag>();
-            tag.Anchor = Anchors.TopLeft;
-            tag.Pivot = Pivots.TopLeft;
+            tag.Anchor = AnchorType.TopLeft;
+            tag.Pivot = PivotType.TopLeft;
             tag.Size = new Vector2(MapTagWidth, TagHeight);
             return tag;
         }

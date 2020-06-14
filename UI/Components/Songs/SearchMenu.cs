@@ -29,21 +29,21 @@ namespace PBGame.UI.Components.Songs
         {
             backgroundSprite = CreateChild<UguiSprite>("background", 0);
             {
-                backgroundSprite.Anchor = Anchors.Fill;
+                backgroundSprite.Anchor = AnchorType.Fill;
                 backgroundSprite.RawSize = Vector2.zero;
                 backgroundSprite.Color = new Color(1f, 1f, 1f, 0.125f);
             }
             Sorter = CreateChild<Sorter>("sorter", 1);
             {
-                Sorter.Anchor = Anchors.LeftStretch;
-                Sorter.Pivot = Pivots.Left;
+                Sorter.Anchor = AnchorType.LeftStretch;
+                Sorter.Pivot = PivotType.Left;
                 Sorter.X = 0f;
                 Sorter.SetOffsetVertical(0f);
             }
             SearchBar = CreateChild<SearchBar>("search-bar", 2);
             {
-                SearchBar.Anchor = Anchors.RightStretch;
-                SearchBar.Pivot = Pivots.Right;
+                SearchBar.Anchor = AnchorType.RightStretch;
+                SearchBar.Pivot = PivotType.Right;
                 SearchBar.X = -32f;
                 SearchBar.Width = 420f;
                 SearchBar.SetOffsetVertical(0f);

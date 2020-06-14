@@ -22,21 +22,21 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
             description = CreateChild<MetaDescription>("description", 0);
             {
-                description.Anchor = Anchors.Fill;
+                description.Anchor = AnchorType.Fill;
                 description.Offset = new Offset(0f, 0f, 620f, 0f);
             }
             misc = CreateChild<MetaMisc>("misc", 1);
             {
-                misc.Anchor = Anchors.RightStretch;
-                misc.Pivot = Pivots.Right;
+                misc.Anchor = AnchorType.RightStretch;
+                misc.Pivot = PivotType.Right;
                 misc.X = -300f;
                 misc.Width = 320f;
                 misc.RawHeight = 0f;
             }
             difficulty = CreateChild<MetaDifficulty>("difficulty", 2);
             {
-                difficulty.Anchor = Anchors.RightStretch;
-                difficulty.Pivot = Pivots.Right;
+                difficulty.Anchor = AnchorType.RightStretch;
+                difficulty.Pivot = PivotType.Right;
                 difficulty.RawHeight = 0f;
                 difficulty.Width = 300f;
                 difficulty.X = 0f;

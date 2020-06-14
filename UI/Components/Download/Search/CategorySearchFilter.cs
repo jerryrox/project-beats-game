@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Download.Search
         private void Init()
         {
             context = new DropdownContext();
-            context.ImportFromEnum<MapCategories>(State.Category.Value);
+            context.ImportFromEnum<MapCategoryType>(State.Category.Value);
             context.OnSelection += (data) =>
             {
                 if(data != null && State.Category.RawValue.ToString() != data.ExtraData.ToString())
@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.Download.Search
 
             dropdown = CreateChild<DropdownButton>("dropdown", 1);
             {
-                dropdown.Anchor = Anchors.Fill;
+                dropdown.Anchor = AnchorType.Fill;
                 dropdown.Offset = new Offset(0f, 24f, 0f, 0f);
                 dropdown.BackgroundSprite.Color = new Color(1f, 1f, 1f, 0.25f);
 
@@ -65,7 +65,7 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on rank state filter change.
         /// </summary>
-        private void OnRankStateChange(MapCategories status, MapCategories _)
+        private void OnRankStateChange(MapCategoryType status, MapCategoryType _)
         {
             dropdown.LabelText = status.ToString();
         }

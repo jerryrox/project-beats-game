@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
-using PBGame.Skins;
+using PBGame.Graphics;
 using PBFramework.IO.Decoding;
 using UnityEngine;
 
@@ -33,7 +33,7 @@ namespace PBGame.IO.Decoding.Osu
 
 		public override void Decode(StreamReader stream, T result)
 		{
-			Sections section = Sections.None;
+			SectionType section = SectionType.None;
 
 			string line;
 			while((line = stream.ReadLine()) != null)
@@ -48,12 +48,12 @@ namespace PBGame.IO.Decoding.Osu
 					string sectionString = line.Substring(1, line.Length-2);
 					try
 					{
-						section = (Sections)Enum.Parse(typeof(Sections), sectionString);
+						section = (SectionType)Enum.Parse(typeof(SectionType), sectionString);
 					}
 					catch(Exception e)
 					{
 						// If an error occurred, throw an exception.
-						section = Sections.None;
+						section = SectionType.None;
 						throw e;
 					}
 					continue;
@@ -75,13 +75,13 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Decodes the specified line for current section.
 		/// </summary>
-		protected virtual void DecodeLine(T result, Sections section, string line)
+		protected virtual void DecodeLine(T result, SectionType section, string line)
 		{
 			string l = TrimLine(line);
 
 			switch(section)
 			{
-			case Sections.Colours:
+			case SectionType.Colours:
 				DecodeColor(result, l);
 				return;
 			}
@@ -186,7 +186,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Types of sound samples attributed to an object or control point.
 		/// </summary>
-		public enum SampleTypes {
+		public enum SampleType {
 
 			None = 0,
 			Normal = 1,
@@ -197,7 +197,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Types of sections in any osu file.
 		/// </summary>
-		protected enum Sections {
+		protected enum SectionType {
 
 			None,
 			General,
@@ -215,7 +215,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Types of events in an osu beatmap or storyboard..
 		/// </summary>
-		protected enum EventTypes {
+		protected enum EventType {
 			
 			Background = 0,
 			Video = 1,
@@ -229,7 +229,7 @@ namespace PBGame.IO.Decoding.Osu
 		/// <summary>
 		/// Types of pivot points used for osu storyboards.
 		/// </summary>
-		protected enum PivotPoints {
+		protected enum PivotPointType {
 			
 			TopLeft,
 			Centre,

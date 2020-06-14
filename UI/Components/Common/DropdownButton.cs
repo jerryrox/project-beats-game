@@ -78,7 +78,7 @@ namespace PBGame.UI.Components.Common
 
             backgroundSprite = CreateChild<UguiSprite>("background", 0);
             {
-                backgroundSprite.Anchor = Anchors.Fill;
+                backgroundSprite.Anchor = AnchorType.Fill;
                 backgroundSprite.SpriteName = "circle-16";
                 backgroundSprite.ImageType = Image.Type.Sliced;
                 backgroundSprite.Offset = Offset.Zero;
@@ -86,14 +86,14 @@ namespace PBGame.UI.Components.Common
             }
             label = CreateChild<Label>("label", 2);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.Offset = new Offset(16f, 0f, 40f, 0f);
                 label.Alignment = TextAnchor.MiddleLeft;
                 label.FontSize = 16;
             }
             CreateIconSprite(depth: 3, spriteName: "icon-down", size: 20f, alpha: 1f);
             {
-                iconSprite.Anchor = Anchors.Right;
+                iconSprite.Anchor = AnchorType.Right;
                 iconSprite.Position = new Vector2(-20f, 0f);
             }
 
@@ -115,8 +115,8 @@ namespace PBGame.UI.Components.Common
             // Get a dropdown menu from provider.
             var dropdown = DropdownProvider.Open(Context);
             // Make the menu appear on the right side of the button.
-            Vector2 menuPosition = this.GetPositionAtCorner(Pivots.Right);
-            menuPosition -= dropdown.Holder.GetPositionAtCorner(Pivots.TopLeft);
+            Vector2 menuPosition = this.GetPositionAtCorner(PivotType.Right);
+            menuPosition -= dropdown.Holder.GetPositionAtCorner(PivotType.TopLeft);
             menuPosition.y += DropdownMenu.ItemSize.y * 0.5f;
             dropdown.PositionMenu(
                 myTransform.TransformPoint(menuPosition),

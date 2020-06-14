@@ -27,8 +27,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
             source = CreateChild<MetaMiscEntry>("source", 0);
             {
-                source.Anchor = Anchors.TopStretch;
-                source.Pivot = Pivots.Top;
+                source.Anchor = AnchorType.TopStretch;
+                source.Pivot = PivotType.Top;
                 source.SetOffsetHorizontal(0f);
                 source.Y = 0f;
                 source.Height = 120f;
@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             tags = CreateChild<MetaMiscEntry>("tags", 1);
             {
-                tags.Anchor = Anchors.Fill;
+                tags.Anchor = AnchorType.Fill;
                 tags.Offset = new Offset(0f, 120f, 0f, 0f);
 
                 tags.LabelText = "Tags";

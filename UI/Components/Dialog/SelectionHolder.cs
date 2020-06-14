@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -13,7 +14,7 @@ namespace PBGame.UI.Components.Dialog
 
         private ISprite bgSprite;
 
-        private List<SelectionButton> buttons = new List<SelectionButton>();
+        private List<DialogButton> buttons = new List<DialogButton>();
 
 
         [InitWithDependency]
@@ -23,7 +24,7 @@ namespace PBGame.UI.Components.Dialog
 
             bgSprite = CreateChild<UguiSprite>("bg", -1);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.5f);
             }
@@ -34,10 +35,10 @@ namespace PBGame.UI.Components.Dialog
         /// </summary>
         public void AddSelection(string label, Color color, Action callback)
         {
-            SelectionButton button = CreateChild<SelectionButton>("selection", buttons.Count);
+            DialogButton button = CreateChild<DialogButton>("selection", buttons.Count);
             {
-                button.Anchor = Anchors.Top;
-                button.Pivot = Pivots.Top;
+                button.Anchor = AnchorType.Top;
+                button.Pivot = PivotType.Top;
                 button.Y = Height == 0f ? 0f : -Height - 2f;
                 
                 button.LabelText = label;

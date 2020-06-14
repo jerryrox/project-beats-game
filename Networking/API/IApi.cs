@@ -17,7 +17,7 @@ namespace PBGame.Networking.API
         /// <summary>
         /// Returns the provider type of this api.
         /// </summary>
-        ApiProviders ApiType { get; }
+        ApiProviderType ApiType { get; }
 
         /// <summary>
         /// The displayed name of the API provider.
@@ -78,12 +78,12 @@ namespace PBGame.Networking.API
         /// <summary>
         /// Returns all game modes which is linked to the provider of this api.
         /// </summary>
-        IEnumerable<GameModes> GetGameModes();
+        IEnumerable<GameModeType> GetGameModes();
 
         /// <summary>
         /// Returns whether the specified game mode is relevant to this api's provider.
         /// </summary>
-        bool IsRelevantMode(GameModes gameMode);
+        bool IsRelevantMode(GameModeType gameMode);
 
         /// <summary>
         /// Returns whether the specified map is relevant to this api's provider.

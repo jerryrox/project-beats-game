@@ -13,14 +13,14 @@ namespace PBGame.Rulesets.Judgements
     /// </summary>
     public class HitTiming {
 
-        protected static IReadOnlyDictionary<HitResults, TimingTuple> DefaultRanges = new Dictionary<HitResults, TimingTuple>()
+        protected static IReadOnlyDictionary<HitResultType, TimingTuple> DefaultRanges = new Dictionary<HitResultType, TimingTuple>()
         {
-            { HitResults.Perfect, new TimingTuple(44.8f, 38.8f, 27.8f) },
-			{ HitResults.Great, new TimingTuple(128, 98, 68) },
-			{ HitResults.Good, new TimingTuple(194, 164, 134) },
-			{ HitResults.Ok, new TimingTuple(254, 224, 194) },
-			{ HitResults.Bad, new TimingTuple(302, 272, 242) },
-			{ HitResults.Miss, new TimingTuple(376, 346, 316) }
+            { HitResultType.Perfect, new TimingTuple(44.8f, 38.8f, 27.8f) },
+			{ HitResultType.Great, new TimingTuple(128, 98, 68) },
+			{ HitResultType.Good, new TimingTuple(194, 164, 134) },
+			{ HitResultType.Ok, new TimingTuple(254, 224, 194) },
+			{ HitResultType.Bad, new TimingTuple(302, 272, 242) },
+			{ HitResultType.Miss, new TimingTuple(376, 346, 316) }
         };
 
 		/// <summary>
@@ -59,12 +59,12 @@ namespace PBGame.Rulesets.Judgements
         /// </summary>
         public virtual void SetDifficulty(float difficulty)
         {
-			Perfect = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Perfect]);
-			Great = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Great]);
-			Good = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Good]);
-			Ok = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Ok]);
-			Bad = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Bad]);
-			Miss = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResults.Miss]);
+			Perfect = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResultType.Perfect]);
+			Great = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResultType.Great]);
+			Good = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResultType.Good]);
+			Ok = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResultType.Ok]);
+			Bad = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResultType.Bad]);
+			Miss = MapDifficulty.GetDifficultyValue(difficulty, DefaultRanges[HitResultType.Miss]);
         }
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns whether specified hit result is supported.
 		/// </summary>
-		public virtual bool IsHitResultSupported(HitResults result)
+		public virtual bool IsHitResultSupported(HitResultType result)
 		{
 			return SupportedHitResults().Any(r => r == result);
 		}
@@ -83,7 +83,7 @@ namespace PBGame.Rulesets.Judgements
 		/// <summary>
 		/// Returns the hit result type for specified hit offset.
 		/// </summary>
-		public HitResults GetHitResult(float offset)
+		public HitResultType GetHitResult(float offset)
 		{
 			if(offset < 0)
 				offset = -offset;
@@ -93,22 +93,22 @@ namespace PBGame.Rulesets.Judgements
 				if(offset <= GetHalfTiming(result))
 					return result;
 			}
-			return HitResults.None;
+			return HitResultType.None;
 		}
 
 		/// <summary>
 		/// Returns the halved value of the timing value for specified result.
 		/// </summary>
-		public float GetHalfTiming(HitResults type)
+		public float GetHalfTiming(HitResultType type)
 		{
 			switch(type)
 			{
-			case HitResults.Perfect: return Perfect / 2;
-			case HitResults.Great: return Great / 2;
-			case HitResults.Good: return Good / 2;
-			case HitResults.Ok: return Ok / 2;
-			case HitResults.Bad: return Bad / 2;
-			case HitResults.Miss: return Miss / 2;
+			case HitResultType.Perfect: return Perfect / 2;
+			case HitResultType.Great: return Great / 2;
+			case HitResultType.Good: return Good / 2;
+			case HitResultType.Ok: return Ok / 2;
+			case HitResultType.Bad: return Bad / 2;
+			case HitResultType.Miss: return Miss / 2;
 			}
             Logger.LogWarning($"HitTiming.GetHalfTiming - Unsupported hit result type: {type}");
             return 0;
@@ -123,25 +123,25 @@ namespace PBGame.Rulesets.Judgements
 		/// Returns the types of hit results which are supported by this hit timing in current game mode.
 		/// Should be ordered from Perfect to Miss.
 		/// </summary>
-		public virtual IEnumerable<HitResults> SupportedHitResults()
+		public virtual IEnumerable<HitResultType> SupportedHitResults()
 		{
-			yield return HitResults.Perfect;
-			yield return HitResults.Great;
-			yield return HitResults.Good;
-			yield return HitResults.Ok;
-			yield return HitResults.Bad;
-			yield return HitResults.Miss;
+			yield return HitResultType.Perfect;
+			yield return HitResultType.Great;
+			yield return HitResultType.Good;
+			yield return HitResultType.Ok;
+			yield return HitResultType.Bad;
+			yield return HitResultType.Miss;
 		}
 
 		/// <summary>
 		/// Returns the timing value for the lowest possible successful hit.
 		/// </summary>
-		protected HitResults LowestSuccessfulHitResult()
+		protected HitResultType LowestSuccessfulHitResult()
 		{
-			HitResults lastResult = HitResults.None;
+			HitResultType lastResult = HitResultType.None;
 			foreach(var result in SupportedHitResults())
 			{
-				if(result != HitResults.Miss)
+				if(result != HitResultType.Miss)
 					lastResult = result;
 			}
 			return lastResult;

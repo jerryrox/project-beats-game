@@ -45,7 +45,7 @@ namespace PBGame.UI.Components.Songs
         private void Init()
         {
             hoverSprite.Depth = 1;
-            hoverSprite.Anchor = Anchors.Fill;
+            hoverSprite.Anchor = AnchorType.Fill;
             hoverSprite.RawSize = new Vector2(28f, 30f);
             hoverSprite.Color = Color.black;
             hoverSprite.SpriteName = "glow-parallel-64";
@@ -54,7 +54,7 @@ namespace PBGame.UI.Components.Songs
 
             mask = CreateChild<UguiSprite>("mask", 0);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Color = HexColor.Create("2A313A");
                 mask.SpriteName = "parallel-64";
@@ -65,12 +65,12 @@ namespace PBGame.UI.Components.Songs
 
                 imageDisplay = mask.CreateChild<MapImageDisplay>("imageDisplay", 0);
                 {
-                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.Anchor = AnchorType.Fill;
                     imageDisplay.RawSize = Vector2.zero;
 
                     imageGradient = imageDisplay.CreateChild<UguiSprite>("gradient", 100);
                     {
-                        imageGradient.Anchor = Anchors.Fill;
+                        imageGradient.Anchor = AnchorType.Fill;
                         imageGradient.RawSize = Vector2.zero;
                         imageGradient.SpriteName = "gradation-left";
                         imageGradient.Color = new Color(0f, 0f, 0f, 0.5f);
@@ -78,8 +78,8 @@ namespace PBGame.UI.Components.Songs
                 }
                 progressBar = mask.CreateChild<UguiProgressBar>("progress", 1);
                 {
-                    progressBar.Anchor = Anchors.BottomStretch;
-                    progressBar.Pivot = Pivots.Bottom;
+                    progressBar.Anchor = AnchorType.BottomStretch;
+                    progressBar.Pivot = PivotType.Bottom;
                     progressBar.SetOffsetHorizontal(22f, 0f);
                     progressBar.Height = 6f;
                     progressBar.Y = 0f;
@@ -89,8 +89,8 @@ namespace PBGame.UI.Components.Songs
                 }
                 titleLabel = mask.CreateChild<Label>("title", 2);
                 {
-                    titleLabel.Anchor = Anchors.TopStretch;
-                    titleLabel.Pivot = Pivots.Top;
+                    titleLabel.Anchor = AnchorType.TopStretch;
+                    titleLabel.Pivot = PivotType.Top;
                     titleLabel.SetOffsetHorizontal(20f, 32f);
                     titleLabel.Y = -8f;
                     titleLabel.Height = 30f;
@@ -106,8 +106,8 @@ namespace PBGame.UI.Components.Songs
                 }
                 artistLabel = mask.CreateChild<Label>("artist", 3);
                 {
-                    artistLabel.Anchor = Anchors.BottomStretch;
-                    artistLabel.Pivot = Pivots.Bottom;
+                    artistLabel.Anchor = AnchorType.BottomStretch;
+                    artistLabel.Pivot = PivotType.Bottom;
                     artistLabel.SetOffsetHorizontal(32f, 20f);
                     artistLabel.Y = 8f;
                     artistLabel.Height = 30f;

@@ -25,7 +25,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Anchor of the toggle icon.
         /// </summary>
-        public Anchors IconAnchor
+        public AnchorType IconAnchor
         {
             get => iconHolder.Anchor;
             set => SetIconAnchor(value);
@@ -75,7 +75,7 @@ namespace PBGame.UI.Components.Common
 
             var touchArea = CreateChild<UguiSprite>("touch-area", -100);
             {
-                touchArea.Anchor = Anchors.Fill;
+                touchArea.Anchor = AnchorType.Fill;
                 touchArea.Offset = Offset.Zero;
                 touchArea.Alpha = 0f;
             }
@@ -85,7 +85,7 @@ namespace PBGame.UI.Components.Common
 
                 backgroundSprite = iconHolder.CreateChild<UguiSprite>("background", 0);
                 {
-                    backgroundSprite.Anchor = Anchors.Fill;
+                    backgroundSprite.Anchor = AnchorType.Fill;
                     backgroundSprite.Offset = Offset.Zero;
                     backgroundSprite.SpriteName = "circle-16";
                     backgroundSprite.ImageType = Image.Type.Sliced;
@@ -94,7 +94,7 @@ namespace PBGame.UI.Components.Common
 
                 outlineSprite = iconHolder.CreateChild<UguiSprite>("outline", 1);
                 {
-                    outlineSprite.Anchor = Anchors.Fill;
+                    outlineSprite.Anchor = AnchorType.Fill;
                     outlineSprite.Offset = Offset.Zero;
                     outlineSprite.SpriteName = "outline-circle-16";
                     outlineSprite.ImageType = Image.Type.Sliced;
@@ -152,7 +152,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Internally handles icon anchor assignment.
         /// </summary>
-        protected virtual void SetIconAnchor(Anchors anchor)
+        protected virtual void SetIconAnchor(AnchorType anchor)
         {
             iconHolder.Anchor = anchor;
 
@@ -161,31 +161,31 @@ namespace PBGame.UI.Components.Common
 
             switch (anchor)
             {
-                case Anchors.Bottom:
+                case AnchorType.Bottom:
                     iconHolder.Position = new Vector2(0f, halfHeight);
                     break;
-                case Anchors.BottomLeft:
+                case AnchorType.BottomLeft:
                     iconHolder.Position = new Vector2(halfWidth, halfHeight);
                     break;
-                case Anchors.BottomRight:
+                case AnchorType.BottomRight:
                     iconHolder.Position = new Vector2(-halfWidth, halfHeight);
                     break;
-                case Anchors.Center:
+                case AnchorType.Center:
                     iconHolder.Position = Vector2.zero;
                     break;
-                case Anchors.Left:
+                case AnchorType.Left:
                     iconHolder.Position = new Vector2(halfWidth, 0f);
                     break;
-                case Anchors.Right:
+                case AnchorType.Right:
                     iconHolder.Position = new Vector2(-halfWidth, 0f);
                     break;
-                case Anchors.Top:
+                case AnchorType.Top:
                     iconHolder.Position = new Vector2(0f, -halfHeight);
                     break;
-                case Anchors.TopLeft:
+                case AnchorType.TopLeft:
                     iconHolder.Position = new Vector2(halfWidth, -halfHeight);
                     break;
-                case Anchors.TopRight:
+                case AnchorType.TopRight:
                     iconHolder.Position = new Vector2(-halfWidth, -halfHeight);
                     break;
                 default:

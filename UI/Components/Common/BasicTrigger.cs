@@ -90,7 +90,7 @@ namespace PBGame.UI.Components.Common
         protected virtual string TriggerAudio => "menuclick";
 
         [ReceivesDependency]
-        protected ISoundPooler SoundPooler { get; set; }
+        protected ISoundPool SoundPool { get; set; }
 
 
         [InitWithDependency]
@@ -137,7 +137,7 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected virtual void OnPointerEntered()
         {
-            SoundPooler.Play(PointerEnterAudio);
+            SoundPool.Play(PointerEnterAudio);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace PBGame.UI.Components.Common
 
             StopHold();
 
-            SoundPooler.Play(TriggerAudio);
+            SoundPool.Play(TriggerAudio);
             OnTriggered?.Invoke();
         }
 

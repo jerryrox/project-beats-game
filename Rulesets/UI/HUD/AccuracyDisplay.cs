@@ -6,19 +6,40 @@ using UnityEngine;
 
 namespace PBGame.Rulesets.UI.HUD
 {
-    public class AccuracyDisplay : UguiObject, IAccuracyDisplay {
-
-        public ILabel AccuracyLabel { get; private set; }
+    public class AccuracyDisplay : UguiObject
+    {
+        /// <summary>
+        /// The label displaying the accuracy.
+        /// </summary>
+        public ILabel Label { get; private set; }
 
 
         [InitWithDependency]
-        private void Init()
+        private void Init(IGameSession gameSession)
         {
-            AccuracyLabel = CreateChild<Label>("label");
+            gameSession.OnSoftInit += () =>
             {
-                AccuracyLabel.Anchor = Anchors.Fill;
-                AccuracyLabel.RawSize = Vector2.zero;
+                gameSession.ScoreProcessor.Accuracy.BindAndTrigger(OnAccuracyChange);
+            };
+            gameSession.OnSoftDispose += () =>
+            {
+                Label.Text = "0%";
+            };
+
+            this.Size = Vector2.zero;
+
+            Label = CreateChild<Label>("label");
+            {
+                Label.Size = Vector2.zero;
             }
+        }
+
+        /// <summary>
+        /// Event called when the accuracy changes.
+        /// </summary>
+        private void OnAccuracyChange(float acc, float prevAcc)
+        {
+            Label.Text = acc.ToString("P2");
         }
     }
 }

@@ -39,7 +39,7 @@ namespace PBGame.UI.Components.GameLoad
 
             maskSprite = CreateChild<UguiSprite>("mask", 0);
             {
-                maskSprite.Anchor = Anchors.Fill;
+                maskSprite.Anchor = AnchorType.Fill;
                 maskSprite.Offset = Offset.Zero;
                 maskSprite.SpriteName = "circle-32";
                 maskSprite.ImageType = Image.Type.Sliced;
@@ -50,13 +50,13 @@ namespace PBGame.UI.Components.GameLoad
 
                 imageDisplay = maskSprite.CreateChild<MapImageDisplay>();
                 {
-                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.Anchor = AnchorType.Fill;
                     imageDisplay.Offset = Offset.Zero;
                 }
             }
             glowSprite = CreateChild<UguiSprite>("glow", 1);
             {
-                glowSprite.Anchor = Anchors.Fill;
+                glowSprite.Anchor = AnchorType.Fill;
                 glowSprite.Offset = new Offset(-15);
                 glowSprite.SpriteName = "glow-circle-32";
                 glowSprite.ImageType = Image.Type.Sliced;

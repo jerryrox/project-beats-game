@@ -31,8 +31,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
             input = CreateChild<BasicInput>("input", 1);
             {
-                input.Anchor = Anchors.BottomStretch;
-                input.Pivot = Pivots.Bottom;
+                input.Anchor = AnchorType.BottomStretch;
+                input.Pivot = PivotType.Bottom;
                 input.SetOffsetHorizontal(8f);
                 input.Y = 8f;
                 input.Height = 30f;

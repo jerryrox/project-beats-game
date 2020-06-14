@@ -2,7 +2,6 @@ using PBGame.UI.Components.Initialize;
 using PBGame.UI.Navigations.Screens.Initialize;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
-using PBGame.Skins;
 using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -45,7 +44,7 @@ namespace PBGame.UI.Navigations.Screens
             // Initialize load displayer,
             LoadDisplay = CreateChild<LoadDisplay>("load", 9);
             {
-                LoadDisplay.Anchor = Anchors.BottomStretch;
+                LoadDisplay.Anchor = AnchorType.BottomStretch;
                 LoadDisplay.SetOffsetHorizontal(0f);
                 LoadDisplay.Y = 0f;
             }

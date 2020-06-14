@@ -5,7 +5,7 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// The game mode which the difficulty scale was calculated for.
 		/// </summary>
-		public abstract GameModes GameMode { get; }
+		public abstract GameModeType GameMode { get; }
 
 		/// <summary>
 		/// The actual difficulty value of the beatmap.
@@ -15,15 +15,15 @@ namespace PBGame.Rulesets.Difficulty
 		/// <summary>
 		/// Returns the categorization type of the difficulty scale.
 		/// </summary>
-		public DifficultyTypes Type
+		public DifficultyType Type
         {
             get
             {
-				if(Scale < 2f) return DifficultyTypes.Easy;
-				if(Scale < 3.25f) return DifficultyTypes.Normal;
-				if(Scale < 4.5f) return DifficultyTypes.Hard;
-				if(Scale < 5.75f) return DifficultyTypes.Insane;
-                return DifficultyTypes.Extreme;
+				if(Scale < 2f) return DifficultyType.Easy;
+				if(Scale < 3.25f) return DifficultyType.Normal;
+				if(Scale < 4.5f) return DifficultyType.Hard;
+				if(Scale < 5.75f) return DifficultyType.Insane;
+                return DifficultyType.Extreme;
             }
         }
     }

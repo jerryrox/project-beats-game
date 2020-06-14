@@ -19,7 +19,7 @@ namespace PBGame.UI.Components.MusicMenu
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
             CreateIconSprite(depth: 0, alpha: 0.5f);
 

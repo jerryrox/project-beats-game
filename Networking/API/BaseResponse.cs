@@ -17,6 +17,11 @@ namespace PBGame.Networking.API
 
         public string ErrorMessage { get; protected set; }
 
+        /// <summary>
+        /// Returns whether the response should store incoming cookies.
+        /// </summary>
+        protected virtual bool StoresCookies => false;
+
 
         protected BaseResponse(IHttpRequest request)
         {
@@ -38,12 +43,15 @@ namespace PBGame.Networking.API
             if (headers != null)
             {
                 // Set cookies
-                foreach (var key in headers.Keys)
+                if (StoresCookies)
                 {
-                    if (key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
+                    foreach (var key in headers.Keys)
                     {
-                        api.Cookies.SetCookie(headers[key]);
-                        break;
+                        if (key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
+                        {
+                            api.Cookies.SetCookie(headers[key]);
+                            break;
+                        }
                     }
                 }
             }

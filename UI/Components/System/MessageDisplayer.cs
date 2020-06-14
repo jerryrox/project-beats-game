@@ -115,8 +115,8 @@ namespace PBGame.UI.Components.System
         private MessageCell CreateCell()
         {
             var cell = CreateChild<MessageCell>("cell", ChildCount);
-            cell.Anchor = Anchors.Top;
-            cell.Pivot = Pivots.Top;
+            cell.Anchor = AnchorType.Top;
+            cell.Pivot = PivotType.Top;
             cell.Width = this.Width;
             cell.OnHidden += (c) => {
                 // Remove from notifications automatically if hidden.

@@ -7,16 +7,26 @@ namespace PBGame.Rulesets.Beats.Standard.Judgements
 	/// </summary>
 	public class TickJudgementInfo : JudgementInfo {
 		
-		protected override int GetNumericResult (HitResults result)
+		public override int GetNumericResult (HitResultType result)
 		{
 			switch(result)
 			{
-			case HitResults.Good:
-			case HitResults.Ok:
-			case HitResults.Bad:
+			case HitResultType.Perfect:
+			case HitResultType.Great:
+			case HitResultType.Good:
 				return 20;
 			}
 			return 0;
-		}
+        }
+
+        public override float GetHealthBonus(HitResultType result)
+        {
+            switch (result)
+            {
+                case HitResultType.Perfect:
+                    return 0.25f;
+            }
+            return 0f;
+        }
 	}
 }

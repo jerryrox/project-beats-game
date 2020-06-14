@@ -53,7 +53,7 @@ namespace PBGame.UI.Components.Initialize
             startupAnime.AddEvent(startupAnime.Duration, () => OnStartup?.Invoke());
 
             breatheAnime = new Anime();
-            breatheAnime.WrapMode = WrapModes.Loop;
+            breatheAnime.WrapMode = WrapModeType.Loop;
             breatheAnime.AnimateColor((color) => this.Glow.Color = color)
                 .AddTime(0f, Color.black, EaseType.SineEaseOut)
                 .AddTime(1.1f, Color.gray, EaseType.SineEaseIn)

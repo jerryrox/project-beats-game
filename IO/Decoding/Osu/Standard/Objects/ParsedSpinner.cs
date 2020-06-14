@@ -8,7 +8,7 @@ namespace PBGame.IO.Decoding.Osu.Standard.Objects
 	/// <summary>
 	/// Hit object variant used for parsing slider.
 	/// </summary>
-	public class ParsedSpinner : HitObject, IHasEndTime, IHasPosition, IHasCombo {
+	public class ParsedSpinner : BaseHitObject, IHasEndTime, IHasPosition, IHasCombo {
 		
 		public float EndTime { get; set; }
 

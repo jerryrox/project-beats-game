@@ -48,7 +48,7 @@ namespace PBGame.UI.Components.Download.Result
 
             grid = CreateChild<UguiGrid>("grid", 0);
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.Offset = Offset.Zero;
 
                 downloadButton = grid.CreateChild<HoverableTrigger>("download", 0);

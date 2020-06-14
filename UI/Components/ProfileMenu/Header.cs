@@ -26,13 +26,13 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             profileImage = CreateChild<ProfileImage>("profile", 0);
             {
-                profileImage.Anchor = Anchors.Bottom;
+                profileImage.Anchor = AnchorType.Bottom;
                 profileImage.Size = new Vector2(100f, 100f);
                 profileImage.Y = 94f;
             }
             nickname = CreateChild<Label>("nickname", 1);
             {
-                nickname.Anchor = Anchors.BottomStretch;
+                nickname.Anchor = AnchorType.BottomStretch;
                 nickname.RawWidth = -64f;
                 nickname.Y = 24f;
                 nickname.Height = 30;

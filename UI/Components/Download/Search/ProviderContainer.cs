@@ -36,8 +36,8 @@ namespace PBGame.UI.Components.Download.Search
 
             titleLabel = CreateChild<Label>("title", 0);
             {
-                titleLabel.Anchor = Anchors.LeftStretch;
-                titleLabel.Pivot = Pivots.Left;
+                titleLabel.Anchor = AnchorType.LeftStretch;
+                titleLabel.Pivot = PivotType.Left;
                 titleLabel.SetOffsetVertical(0f);
                 titleLabel.X = 16f;
                 titleLabel.IsBold = true;
@@ -47,8 +47,8 @@ namespace PBGame.UI.Components.Download.Search
             }
             statusLabel = CreateChild<Label>("status", 1);
             {
-                statusLabel.Anchor = Anchors.RightStretch;
-                statusLabel.Pivot = Pivots.Right;
+                statusLabel.Anchor = AnchorType.RightStretch;
+                statusLabel.Pivot = PivotType.Right;
                 statusLabel.SetOffsetVertical(0f);
                 statusLabel.X = -16f;
                 statusLabel.IsBold = true;
@@ -57,10 +57,10 @@ namespace PBGame.UI.Components.Download.Search
             }
             grid = CreateChild<UguiGrid>("grid", 2);
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.Offset = new Offset(100f, 0f, 200f, 0f);
 
-                foreach (var provider in (ApiProviders[])Enum.GetValues(typeof(ApiProviders)))
+                foreach (var provider in (ApiProviderType[])Enum.GetValues(typeof(ApiProviderType)))
                 {
                     var button = grid.CreateChild<ProviderButton>(provider.ToString(), grid.ChildCount);
                     button.SetProvider(provider);
@@ -115,6 +115,6 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on api provider change.
         /// </summary>
-        private void OnProviderChange(ApiProviders provider, ApiProviders _) => RefreshStatus();
+        private void OnProviderChange(ApiProviderType provider, ApiProviderType _) => RefreshStatus();
     }
 }

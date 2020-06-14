@@ -19,17 +19,6 @@ namespace PBGame.Rulesets.Scoring
         /// </summary>
         event Action<JudgementResult> OnNewJudgement;
 
-        /// <summary>
-        /// Event called when the user has failed.
-        /// </summary>
-        event Action OnFailed;
-
-        /// <summary>
-        /// Event called to confirm whether current scoring state results in failure.
-        /// The registered functions should return whether the user has failed.
-        /// </summary>
-        event Func<IScoreProcessor, bool> OnFailConfirmation;
-
 
         /// <summary>
         /// Returns the map which the score has been processed for.
@@ -64,20 +53,20 @@ namespace PBGame.Rulesets.Scoring
         /// <summary>
         /// Returns the bindable accuracy value.
         /// </summary>
-        BindableDouble Accuracy { get; }
+        BindableFloat Accuracy { get; }
 
         /// <summary>
         /// Returns the bindable rank value.
         /// </summary>
-        Bindable<RankTypes> Ranking { get; }
+        Bindable<RankType> Ranking { get; }
 
         /// <summary>
         /// Returns whether all judgements have been made on all hit objects.
         /// </summary>
-        bool IsFinished { get; }    
+        bool IsFinished { get; }
 
         /// <summary>
-        /// Returns whether the user has failed.
+        /// Returns the whether the player has failed to achieve the success criteria.
         /// </summary>
         bool IsFailed { get; }
 

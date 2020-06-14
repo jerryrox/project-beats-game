@@ -37,8 +37,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
             slider = CreateChild<BasicSlider>("slider", 1);
             {
-                slider.Anchor = Anchors.BottomStretch;
-                slider.Pivot = Pivots.Bottom;
+                slider.Anchor = AnchorType.BottomStretch;
+                slider.Pivot = PivotType.Bottom;
                 slider.SetOffsetHorizontal(8f);
                 slider.Y = 8f;
                 slider.Height = 16f;

@@ -22,15 +22,15 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init()
         {
-            container.Anchor = Anchors.TopLeft;
-            container.Pivot = Pivots.TopLeft;
+            container.Anchor = AnchorType.TopLeft;
+            container.Pivot = PivotType.TopLeft;
             container.X = 16f;
             container.Y = -16f;
 
             content = container.CreateChild<ContentHolder>("content", 0);
             {
-                content.Anchor = Anchors.TopLeft;
-                content.Pivot = Pivots.TopLeft;
+                content.Anchor = AnchorType.TopLeft;
+                content.Pivot = PivotType.TopLeft;
                 content.Position = Vector2.zero;
                 content.Width = 320f;
 

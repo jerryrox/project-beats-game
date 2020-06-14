@@ -14,7 +14,7 @@ namespace PBGame.Configurations
         private Database<MapsetConfig> database;
 
 
-        public MapsetConfig GetConfig(IMapset mapset) => GetConfig(mapset.HashCode);
+        public MapsetConfig GetConfig(IMapset mapset) => mapset == null ? null : GetConfig(mapset.HashCode);
 
         public MapsetConfig GetConfig(int hash)
         {
@@ -29,6 +29,7 @@ namespace PBGame.Configurations
                 {
                     config = new MapsetConfig(hash);
                     config.InitializeAsNew();
+                    SetConfig(config);
                 }
                 return config;
             }
@@ -52,6 +53,6 @@ namespace PBGame.Configurations
             }
         }
 
-        public void Save() {}
+        public void Save() => Logger.LogWarning("MapsetConfiguration.Save - Unimplemented interface method 'Save()' called. Use SetConfig instaed.");
     }
 }

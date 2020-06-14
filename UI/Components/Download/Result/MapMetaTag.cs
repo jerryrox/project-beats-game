@@ -29,8 +29,8 @@ namespace PBGame.UI.Components.Download.Result
         {
             iconSprite = CreateChild<UguiSprite>("icon", 1);
             {
-                iconSprite.Anchor = Anchors.Left;
-                iconSprite.Pivot = Pivots.Left;
+                iconSprite.Anchor = AnchorType.Left;
+                iconSprite.Pivot = PivotType.Left;
                 iconSprite.Size = new Vector2(20f, 20f);
                 iconSprite.X = 8f;
                 iconSprite.Color = Color.black;
@@ -42,7 +42,7 @@ namespace PBGame.UI.Components.Download.Result
         /// <summary>
         /// Sets the count display for specified game mode.
         /// </summary>
-        public void SetMapCount(GameModes gameMode, int count)
+        public void SetMapCount(GameModeType gameMode, int count)
         {
             var service = ModeManager.GetService(gameMode);
             if (service == null)

@@ -32,14 +32,14 @@ namespace PBGame.UI.Components.Common
             label = CreateChild<Label>("label", 1);
             {
                 label.Alignment = TextAnchor.MiddleLeft;
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.FontSize = 16;
             }
 
-            SetIconAnchor(Anchors.Right);
+            SetIconAnchor(AnchorType.Right);
         }
 
-        protected override void SetIconAnchor(Anchors anchor)
+        protected override void SetIconAnchor(AnchorType anchor)
         {
             base.SetIconAnchor(anchor);
 
@@ -48,23 +48,23 @@ namespace PBGame.UI.Components.Common
 
             switch (anchor)
             {
-                case Anchors.Bottom:
-                case Anchors.BottomLeft:
-                case Anchors.BottomRight:
+                case AnchorType.Bottom:
+                case AnchorType.BottomLeft:
+                case AnchorType.BottomRight:
                     label.Offset = new Offset(0f, 0f, 0f, iconHeight);
                     break;
 
-                case Anchors.Left:
+                case AnchorType.Left:
                     label.Offset = new Offset(iconWidth, 0f, 0f, 0f);
                     break;
 
-                case Anchors.Right:
+                case AnchorType.Right:
                     label.Offset = new Offset(0f, 0f, iconWidth, 0f);
                     break;
 
-                case Anchors.Top:
-                case Anchors.TopLeft:
-                case Anchors.TopRight:
+                case AnchorType.Top:
+                case AnchorType.TopLeft:
+                case AnchorType.TopRight:
                     label.Offset = new Offset(0f, iconHeight, 0f, 0f);
                     break;
 

@@ -1,5 +1,7 @@
 using System;
 using PBGame.Rulesets.Maps;
+using PBGame.Configurations.Maps;
+using PBFramework.Data.Bindables;
 using PBFramework.Audio;
 
 namespace PBGame.Maps
@@ -46,6 +48,18 @@ namespace PBGame.Maps
         /// Returns the map currently selected.
         /// </summary>
         IPlayableMap Map { get; }
+
+        /// <summary>
+        /// Returns the config for the currently selected mapset.
+        /// </summary>
+        Bindable<MapsetConfig> MapsetConfig { get; }
+
+        /// <summary>
+        /// Returns the config for the currently selected map.
+        /// </summary>
+        Bindable<MapConfig> MapConfig { get; }
+
+
 
         /// <summary>
         /// Returns the selected map's music clip.

@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.MenuBar
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
             CreateIconSprite(spriteName: IconSpritename);
 

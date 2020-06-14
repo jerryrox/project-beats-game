@@ -28,8 +28,8 @@ namespace PBGame.UI.Components.Prepare.Details
 
             backButton = CreateChild<HoverableTrigger>("back", 0);
             {
-                backButton.Anchor = Anchors.LeftStretch;
-                backButton.Pivot = Pivots.Left;
+                backButton.Anchor = AnchorType.LeftStretch;
+                backButton.Pivot = PivotType.Left;
                 backButton.RawHeight = 0f;
                 backButton.Width = 80f;
                 backButton.X = 0f;
@@ -41,8 +41,8 @@ namespace PBGame.UI.Components.Prepare.Details
             }
             nextButton = CreateChild<HoverableTrigger>("next", 1);
             {
-                nextButton.Anchor = Anchors.RightStretch;
-                nextButton.Pivot = Pivots.Right;
+                nextButton.Anchor = AnchorType.RightStretch;
+                nextButton.Pivot = PivotType.Right;
                 nextButton.RawHeight = 0f;
                 nextButton.Width = 80f;
                 nextButton.X = 0f;
@@ -54,8 +54,8 @@ namespace PBGame.UI.Components.Prepare.Details
             }
             versionIcon = CreateChild<VersionButton>("version", 2);
             {
-                versionIcon.Anchor = Anchors.Left;
-                versionIcon.Pivot = Pivots.Left;
+                versionIcon.Anchor = AnchorType.Left;
+                versionIcon.Pivot = PivotType.Left;
                 versionIcon.X = 88f;
                 versionIcon.Size = new Vector2(72, 72);
 
@@ -63,7 +63,7 @@ namespace PBGame.UI.Components.Prepare.Details
             }
             nameLabel = CreateChild<Label>("title", 3);
             {
-                nameLabel.Anchor = Anchors.TopStretch;
+                nameLabel.Anchor = AnchorType.TopStretch;
                 nameLabel.SetOffsetHorizontal(176f, 80f);
                 nameLabel.Y = -26f;
                 nameLabel.Height = 30f;
@@ -71,7 +71,7 @@ namespace PBGame.UI.Components.Prepare.Details
             }
             scaleLabel = CreateChild<Label>("scale", 4);
             {
-                scaleLabel.Anchor = Anchors.BottomStretch;
+                scaleLabel.Anchor = AnchorType.BottomStretch;
                 scaleLabel.SetOffsetHorizontal(176f, 80f);
                 scaleLabel.Y = 26f;
                 scaleLabel.Height = 30f;

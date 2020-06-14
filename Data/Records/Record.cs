@@ -18,7 +18,7 @@ namespace PBGame.Data.Records
         private List<JudgementRecord> judgements;
 
         [JsonProperty]
-        private Dictionary<HitResults, int> hitResultCounts;
+        private Dictionary<HitResultType, int> hitResultCounts;
 
 
         [Indexed]
@@ -28,11 +28,11 @@ namespace PBGame.Data.Records
         public string MapHash { get; set; }
 
         [Indexed]
-        public GameModes GameMode { get; set; }
+        public GameModeType GameMode { get; set; }
 
         public string Username { get; set; }
 
-        public RankTypes Rank { get; set; }
+        public RankType Rank { get; set; }
 
         public int Score { get; set; }
 
@@ -44,7 +44,7 @@ namespace PBGame.Data.Records
         public IReadOnlyList<JudgementRecord> Judgements => judgements.AsReadOnly();
 
         [JsonIgnore]
-        public IReadOnlyDictionary<HitResults, int> HitResultCounts => hitResultCounts;
+        public IReadOnlyDictionary<HitResultType, int> HitResultCounts => hitResultCounts;
 
         [JsonIgnore]
         public int HitCount => judgements.Where(j => j.IsHit).Count();
@@ -59,7 +59,7 @@ namespace PBGame.Data.Records
         public bool HasReplay => RecordManager == null ? false : RecordManager.HasReplay(this);
 
         [JsonIgnore]
-        public bool IsClear => Rank != RankTypes.F;
+        public bool IsClear => Rank != RankType.F;
 
         [JsonIgnore]
         [ReceivesDependency]
@@ -100,7 +100,7 @@ namespace PBGame.Data.Records
             ExtractJudgements(scoreProcessor.Judgements);
         }
 
-        public int GetHitCount(HitResults result)
+        public int GetHitCount(HitResultType result)
         {
             return Judgements.Where(j => j.Result == result).Count();
         }
@@ -111,7 +111,7 @@ namespace PBGame.Data.Records
         private void ExtractJudgements(List<JudgementResult> judgements)
         {
             this.judgements = new List<JudgementRecord>(judgements.Count);
-            this.hitResultCounts = new Dictionary<HitResults, int>();
+            this.hitResultCounts = new Dictionary<HitResultType, int>();
 
             if (judgements != null)
             {

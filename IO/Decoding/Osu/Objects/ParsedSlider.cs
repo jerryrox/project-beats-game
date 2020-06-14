@@ -10,7 +10,7 @@ namespace PBGame.IO.Decoding.Osu.Objects
 	/// <summary>
 	/// Base hit object variant used for parsing sliders.
 	/// </summary>
-	public abstract class ParsedSlider : HitObject, IHasCurve {
+	public abstract class ParsedSlider : BaseHitObject, IHasCurve {
 
 		/// <summary>
 		/// Base distance of slider for 1 Beat per second.

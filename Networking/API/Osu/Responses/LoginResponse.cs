@@ -8,7 +8,10 @@ using Newtonsoft.Json.Linq;
 namespace PBGame.Networking.API.Osu.Responses
 {
     public class LoginResponse : BaseResponse, ILoginResponse {
-    
+
+        protected override bool StoresCookies => true;
+
+
         public LoginResponse(IHttpRequest request) : base(request) {}
 
         public override void Evaluate()
@@ -29,6 +32,7 @@ namespace PBGame.Networking.API.Osu.Responses
 
         public override void ApplyResponse(IApi api)
         {
+            base.ApplyResponse(api);
             try
             {
                 var json = JsonConvert.DeserializeObject<JObject>(request.Response.TextData);

@@ -34,7 +34,7 @@ namespace PBGame.UI.Components.HomeMenu
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init(ISoundPool soundPooler)
         {
             CreateIconSprite(depth: 2, size: 64f);
 
@@ -48,7 +48,7 @@ namespace PBGame.UI.Components.HomeMenu
             }
             flashSprite = CreateChild<UguiSprite>("flash", 0);
             {
-                flashSprite.Anchor = Anchors.Fill;
+                flashSprite.Anchor = AnchorType.Fill;
                 flashSprite.RawSize = Vector2.zero;
                 flashSprite.SpriteName = "glow-128";
                 flashSprite.Alpha = 0f;

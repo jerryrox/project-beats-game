@@ -53,7 +53,7 @@ namespace PBGame.UI.Components.Download
         /// <summary>
         /// Returns the current API provider type.
         /// </summary>
-        public Bindable<ApiProviders> ApiProvider { get; } = new Bindable<ApiProviders>();
+        public Bindable<ApiProviderType> ApiProvider { get; } = new Bindable<ApiProviderType>();
 
         /// <summary>
         /// Returns the mapset currently in preview.
@@ -68,22 +68,22 @@ namespace PBGame.UI.Components.Download
         /// <summary>
         /// Current game mode filter.
         /// </summary>
-        public Bindable<GameModes> Mode { get; } = new Bindable<GameModes>();
+        public Bindable<GameModeType> Mode { get; } = new Bindable<GameModeType>();
 
         /// <summary>
         /// Current map category filter.
         /// </summary>
-        public Bindable<MapCategories> Category { get; } = new Bindable<MapCategories>();
+        public Bindable<MapCategoryType> Category { get; } = new Bindable<MapCategoryType>();
 
         /// <summary>
         /// Current map genre filter.
         /// </summary>
-        public Bindable<MapGenres> Genre { get; } = new Bindable<MapGenres>();
+        public Bindable<MapGenreType> Genre { get; } = new Bindable<MapGenreType>();
 
         /// <summary>
         /// Current language filter.
         /// </summary>
-        public Bindable<MapLanguages> Language { get; } = new Bindable<MapLanguages>();
+        public Bindable<MapLanguageType> Language { get; } = new Bindable<MapLanguageType>();
 
         /// <summary>
         /// Sorting criteria.
@@ -138,13 +138,13 @@ namespace PBGame.UI.Components.Download
             CursorId = 0;
             IsRequestingNextPage = false;
             SearchRequest.Value = null;
-            ApiProvider.Value = ApiProviders.Osu;
+            ApiProvider.Value = ApiProviderType.Osu;
             PreviewingMapset.Value = null;
             Results.Value.Clear();
-            Mode.Value = GameModes.OsuStandard;
-            Category.Value = MapCategories.Ranked;
-            Genre.Value = MapGenres.Any;
-            Language.Value = MapLanguages.Any;
+            Mode.Value = GameModeType.OsuStandard;
+            Category.Value = MapCategoryType.Ranked;
+            Genre.Value = MapGenreType.Any;
+            Language.Value = MapLanguageType.Any;
             Sort.Value = MapSortType.Ranked;
             HasVideo.Value = false;
             HasStoryboard.Value = false;

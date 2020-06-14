@@ -26,17 +26,17 @@ namespace PBGame.Configurations
         /// <summary>
         /// The last selected ruleset mode.
         /// </summary>
-        ProxyBindable<GameModes> RulesetMode { get; }
+        ProxyBindable<GameModeType> RulesetMode { get; }
 
         /// <summary>
         /// The last selected mapset sorting field.
         /// </summary>
-        ProxyBindable<MapsetSorts> MapsetSort { get; }
+        ProxyBindable<MapsetSortType> MapsetSort { get; }
 
         /// <summary>
         /// The last selected type of rank retrieval source.
         /// </summary>
-        ProxyBindable<RankDisplayTypes> RankDisplay { get; }
+        ProxyBindable<RankDisplayType> RankDisplay { get; }
 
         /// <summary>
         /// Login and displayed username of the player for online access.

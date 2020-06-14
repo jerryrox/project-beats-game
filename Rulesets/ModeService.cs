@@ -16,22 +16,15 @@ namespace PBGame.Rulesets
 		/// </summary>
 		protected IGameSession cachedSession;
 
-		private IDependencyContainer dependencyContainer;
-
 		
         public abstract string Name { get; }
 
 		public abstract string BaseIconName { get; }
 
-        public abstract GameModes GameMode { get; }
+        public abstract GameModeType GameMode { get; }
 
         public virtual bool IsPlayable => true;
-
-
-        protected ModeService(IDependencyContainer dependencyContainer)
-		{
-			this.dependencyContainer = dependencyContainer;
-		}
+		
 
         public string GetIconName(int size) => $"{BaseIconName}-{size}";
 
@@ -43,12 +36,11 @@ namespace PBGame.Rulesets
 
 		public abstract HitTiming CreateTiming();
 
-		public IGameSession GetSession(IGraphicObject container)
+		public IGameSession GetSession(IGraphicObject container, IDependencyContainer dependency)
 		{
-			if(cachedSession == null)
+            if(cachedSession == null)
 			{
-				cachedSession = CreateSession(container);
-				dependencyContainer.Inject(cachedSession);
+				cachedSession = CreateSession(container, dependency);
 			}
 			return cachedSession;
 		}
@@ -56,7 +48,7 @@ namespace PBGame.Rulesets
 		/// <summary>
 		/// Creates a new instance of the game session for current mode.
 		/// </summary>
-		protected abstract IGameSession CreateSession(IGraphicObject container);
+		protected abstract IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency);
 	}
 }
 

@@ -17,6 +17,11 @@ namespace PBGame.UI.Components.Common
         protected ILabel label;
 
 
+        /// <summary>
+        /// Returns the label on the button.
+        /// </summary>
+        public ILabel Label => label;
+
         public string LabelText
         {
             get => label.Text;
@@ -64,7 +69,7 @@ namespace PBGame.UI.Components.Common
 
             label = CreateChild<Label>("label", 1);
             {
-                label.Anchor = Anchors.Fill;
+                label.Anchor = AnchorType.Fill;
                 label.RawSize = Vector2.zero;
                 label.IsBold = true;
                 label.Alignment = TextAnchor.MiddleCenter;

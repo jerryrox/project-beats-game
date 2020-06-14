@@ -45,15 +45,15 @@ namespace PBGame.UI.Navigations.Overlays
         {
             FpsDisplayer = CreateChild<FpsDisplayer>("fps-displayer", 100);
             {
-                FpsDisplayer.Anchor = Anchors.BottomRight;
-                FpsDisplayer.Pivot = Pivots.BottomRight;
+                FpsDisplayer.Anchor = AnchorType.BottomRight;
+                FpsDisplayer.Pivot = PivotType.BottomRight;
                 FpsDisplayer.Position = new Vector3(-DisplayerPadding, DisplayerPadding);
                 FpsDisplayer.Size = new Vector2(170f, 30f);
             }
             MessageDisplayer = CreateChild<MessageDisplayer>("message-displayer", 1);
             {
-                MessageDisplayer.Anchor = Anchors.TopRight;
-                MessageDisplayer.Pivot = Pivots.Right;
+                MessageDisplayer.Anchor = AnchorType.TopRight;
+                MessageDisplayer.Pivot = PivotType.Right;
                 MessageDisplayer.Position = new Vector3(-DisplayerPadding, -DisplayerPadding);
                 MessageDisplayer.Size = new Vector2(320f, 0f);
             }

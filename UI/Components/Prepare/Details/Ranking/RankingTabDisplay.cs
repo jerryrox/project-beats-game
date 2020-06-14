@@ -23,12 +23,12 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             globalTab = CreateChild<RankingTabButton>("global", 0);
             {
                 globalTab.LabelText = "Global rank";
-                globalTab.RankDisplay = RankDisplayTypes.Global;
+                globalTab.RankDisplay = RankDisplayType.Global;
             }
             localTab = CreateChild<RankingTabButton>("local", 1);
             {
                 localTab.LabelText = "Local rank";
-                localTab.RankDisplay = RankDisplayTypes.Local;
+                localTab.RankDisplay = RankDisplayType.Local;
             }
         }
     }

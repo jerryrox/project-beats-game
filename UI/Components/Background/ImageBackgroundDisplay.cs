@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Background
         {
             mapImage = CreateChild<MapImageDisplay>("bg");
             {
-                mapImage.Anchor = Anchors.Fill;
+                mapImage.Anchor = AnchorType.Fill;
                 mapImage.RawSize = Vector2.zero;
             }
         }

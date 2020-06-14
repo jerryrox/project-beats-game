@@ -61,7 +61,7 @@ namespace PBGame.UI.Navigations.Screens
 
             bgSprite = CreateChild<UguiSprite>("bg", -1);
             {
-                bgSprite.Anchor = Anchors.Fill;
+                bgSprite.Anchor = AnchorType.Fill;
                 bgSprite.Offset = Offset.Zero;
 
                 var gradient = bgSprite.AddEffect(new GradientEffect());
@@ -71,23 +71,23 @@ namespace PBGame.UI.Navigations.Screens
             }
             searchMenu = CreateChild<SearchMenu>("search-menu", 1);
             {
-                searchMenu.Anchor = Anchors.Fill;
-                searchMenu.Pivot = Pivots.Top;
+                searchMenu.Anchor = AnchorType.Fill;
+                searchMenu.Pivot = PivotType.Top;
                 searchMenu.Offset = new Offset(0f, MenuBarHeight, 0f, 0f);
             }
             resultArea = CreateChild<UguiObject>("result-area", 1);
             {
-                resultArea.Anchor = Anchors.Fill;
+                resultArea.Anchor = AnchorType.Fill;
                 resultArea.Offset = new Offset(0f, searchMenu.FoldedHeight + MenuBarHeight, 0f, 0f);
 
                 resultList = resultArea.CreateChild<ResultList>("list", 0);
                 {
-                    resultList.Anchor = Anchors.Fill;
+                    resultList.Anchor = AnchorType.Fill;
                     resultList.Offset = new Offset(8f, 0f);
                 }
                 resultLoader = resultArea.CreateChild<ResultLoader>("loader", 1);
                 {
-                    resultLoader.Anchor = Anchors.Fill;
+                    resultLoader.Anchor = AnchorType.Fill;
                     resultLoader.Offset = Offset.Zero;
                 }
             }

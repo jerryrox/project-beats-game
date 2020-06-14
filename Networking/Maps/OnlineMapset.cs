@@ -83,7 +83,7 @@ namespace PBGame.Networking.Maps
         /// <summary>
         /// Returns the status of the map.
         /// </summary>
-        public MapStatus Status { get; set; }
+        public MapStateType Status { get; set; }
 
         /// <summary>
         /// Returns whether the downloading of this map is disabled.

@@ -34,8 +34,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.TopLeft;
-                label.Pivot = Pivots.TopLeft;
+                label.Anchor = AnchorType.TopLeft;
+                label.Pivot = PivotType.TopLeft;
                 label.X = 32f;
                 label.Y = -32f;
                 label.FontSize = 18;
@@ -46,7 +46,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             }
             grid = CreateChild<UguiGrid>("grid", 1);
             {
-                grid.Anchor = Anchors.Fill;
+                grid.Anchor = AnchorType.Fill;
                 grid.Offset = new Offset(32f, 64f, 32f, 32f);
                 grid.Axis = GridLayoutGroup.Axis.Vertical;
                 grid.CellSize = new Vector2(236f, 36f);

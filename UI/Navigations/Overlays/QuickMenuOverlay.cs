@@ -34,21 +34,21 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init()
         {
-            container.Anchor = Anchors.TopStretch;
-            container.Pivot = Pivots.Top;
+            container.Anchor = AnchorType.TopStretch;
+            container.Pivot = PivotType.Top;
             container.SetOffsetHorizontal(16f);
             container.Y = -16f;
             container.Height = ButtonSize.y;
 
             scrollView = container.CreateChild<UguiScrollView>("scrollview", 0);
             {
-                scrollView.Anchor = Anchors.Fill;
+                scrollView.Anchor = AnchorType.Fill;
                 scrollView.Offset = Offset.Zero;
                 scrollView.Background.Color = new Color(0f, 0f, 0f, 0.5f);
 
                 grid = scrollView.Container.AddComponentInject<UguiGrid>();
                 {
-                    grid.Anchor = Anchors.LeftStretch;
+                    grid.Anchor = AnchorType.LeftStretch;
                     grid.SetOffsetVertical(0f);
                     grid.X = 0f;
                     grid.CellSize = ButtonSize;

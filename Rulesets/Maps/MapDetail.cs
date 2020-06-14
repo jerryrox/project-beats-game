@@ -83,7 +83,7 @@ namespace PBGame.Rulesets.Maps
         /// The game mode which this map is initially created for.
         /// The actual playable game mode should be referenced from map, not mapDetail.
         /// </summary>
-        public GameModes GameMode { get; set; }
+        public GameModeType GameMode { get; set; }
 
 		/// <summary>
 		/// Whether break periods should display letterbox on the background image.

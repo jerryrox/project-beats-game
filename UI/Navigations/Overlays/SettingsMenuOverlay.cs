@@ -30,8 +30,8 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init()
         {
-            container.Anchor = Anchors.RightStretch;
-            container.Pivot = Pivots.TopRight;
+            container.Anchor = AnchorType.RightStretch;
+            container.Pivot = PivotType.TopRight;
             container.X = -16f;
             container.Y = -16f;
             container.RawHeight = -32f;
@@ -39,14 +39,14 @@ namespace PBGame.UI.Navigations.Overlays
 
             var bg = container.CreateChild<UguiSprite>("bg", -100);
             {
-                bg.Anchor = Anchors.Fill;
+                bg.Anchor = AnchorType.Fill;
                 bg.Offset = Offset.Zero;
                 bg.Color = new Color(0f, 0f, 0f, 0.5f);
             }
             navBar = container.CreateChild<NavBar>("navBar", 1);
             {
-                navBar.Anchor = Anchors.RightStretch;
-                navBar.Pivot = Pivots.Right;
+                navBar.Anchor = AnchorType.RightStretch;
+                navBar.Pivot = PivotType.Right;
                 navBar.Width = 72f;
                 navBar.RawHeight = 0f;
                 navBar.Position = Vector2.zero;
@@ -55,7 +55,7 @@ namespace PBGame.UI.Navigations.Overlays
             }
             contentHolder = container.CreateChild<ContentHolder>("content", 0);
             {
-                contentHolder.Anchor = Anchors.Fill;
+                contentHolder.Anchor = AnchorType.Fill;
                 contentHolder.Offset = new Offset(0f, 0f, 72f, 0f);
 
                 contentHolder.OnTabFocus += (tabData) => navBar.ShowFocusOnTab(tabData);

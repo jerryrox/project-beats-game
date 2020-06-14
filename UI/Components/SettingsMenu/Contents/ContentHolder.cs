@@ -40,8 +40,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
 
             scrollBar = CreateChild<UguiScrollBar>("scrollbar", 1);
             {
-                scrollBar.Anchor = Anchors.RightStretch;
-                scrollBar.Pivot = Pivots.Right;
+                scrollBar.Anchor = AnchorType.RightStretch;
+                scrollBar.Pivot = PivotType.Right;
                 scrollBar.SetOffsetVertical(0f);
                 scrollBar.X = 0f;
                 scrollBar.Width = 2f;
@@ -78,8 +78,8 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
                 {
                     var group = container.CreateChild<ContentGroup>(tab.Name);
                     {
-                        group.Anchor = Anchors.TopStretch;
-                        group.Pivot = Pivots.Top;
+                        group.Anchor = AnchorType.TopStretch;
+                        group.Pivot = PivotType.Top;
                         group.Y = -container.Height;
                         group.SetOffsetHorizontal(0f);
                     }

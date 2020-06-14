@@ -1,11 +1,15 @@
+using System.Collections.Generic;
 using PBGame.Rulesets.Difficulty;
+using PBGame.Rulesets.Judgements;
 using PBFramework.Graphics;
 using UnityEngine;
 
 namespace PBGame.Graphics
 {
     public interface IColorPreset {
-    
+
+        List<Color> DefaultComboColors { get; }
+
         ColorPalette PrimaryFocus { get; }
 
         ColorPalette SecondaryFocus { get; }
@@ -24,6 +28,11 @@ namespace PBGame.Graphics
         /// <summary>
         /// Returns the color resembling the specified difficulty categorization type.
         /// </summary>
-        ColorPalette GetDifficultyColor(DifficultyTypes type);
+        ColorPalette GetDifficultyColor(DifficultyType type);
+
+        /// <summary>
+        /// Returns the color resembling the specified hit result type.
+        /// </summary>
+        ColorPalette GetHitResultColor(HitResultType type);
     }
 }

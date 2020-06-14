@@ -36,7 +36,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             image = CreateChild<UguiTexture>("image", 0);
             {
-                image.Anchor = Anchors.Fill;
+                image.Anchor = AnchorType.Fill;
                 image.RawSize = Vector2.zero;
             }
 

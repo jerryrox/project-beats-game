@@ -74,12 +74,12 @@ namespace PBGame.UI.Components.Prepare
 
             holder = CreateChild<UguiObject>("holder");
             {
-                holder.Anchor = Anchors.Fill;
+                holder.Anchor = AnchorType.Fill;
                 holder.RawSize = new Vector2(-12f, -12f);
 
                 glow = holder.CreateChild<UguiSprite>("glow", 0);
                 {
-                    glow.Anchor = Anchors.Fill;
+                    glow.Anchor = AnchorType.Fill;
                     glow.RawSize = new Vector2(56f, 56f);
                     glow.SpriteName = "glow-circle-32";
 
@@ -87,19 +87,19 @@ namespace PBGame.UI.Components.Prepare
                 }
                 bg = holder.CreateChild<UguiSprite>("bg", 1);
                 {
-                    bg.Anchor = Anchors.Fill;
+                    bg.Anchor = AnchorType.Fill;
                     bg.RawSize = Vector2.zero;
                     bg.SpriteName = "circle-64";
                 }
                 center = holder.CreateChild<UguiSprite>("center", 2);
                 {
-                    center.Anchor = Anchors.Fill;
+                    center.Anchor = AnchorType.Fill;
                     center.RawSize = new Vector2(-10f, -10f);
                     center.SpriteName = "circle-320";
                 }
                 icon = holder.CreateChild<UguiSprite>("icon", 3);
                 {
-                    icon.Anchor = Anchors.Fill;
+                    icon.Anchor = AnchorType.Fill;
                     icon.RawSize = new Vector2(-12f, -12f);
                     icon.Color = new Color(0.125f, 0.125f, 0.125f);
                 }

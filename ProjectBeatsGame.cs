@@ -4,10 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBGame.Notifications;
+using PBFramework.Data;
 using UnityEngine;
 
 namespace PBGame
@@ -18,6 +20,18 @@ namespace PBGame
         /// Holds the original screen size before modifying with game configurations.
         /// </summary>
         private Vector2 originalScreenSize;
+
+        /// <summary>
+        /// The offset of the current mapset.
+        /// </summary>
+        private IMusicOffset mapsetOffset;
+
+        /// <summary>
+        /// The offset of the current map.
+        /// </summary>
+        private IMusicOffset mapOffset;
+
+        private Cached<MenuBarOverlay> cachedMenuBar = new Cached<MenuBarOverlay>();
 
 
         /// <summary>
@@ -36,6 +50,7 @@ namespace PBGame
             HookEngine();
             HookMusicController();
             HookScreenNavigator();
+            HookOverlayNavigator();
             HookMapSelection();
             HookConfigurations();
             HookDownloadStore();
@@ -106,8 +121,8 @@ namespace PBGame
         {
             musicController.OnEnd += () =>
             {
-                // TODO: Loop the music when not in game screen.
-                // if(!(screenNavigator.CurrentScreen is GameScreen))
+                // Loop the music when not in game screen.
+                if (!(screenNavigator.CurrentScreen is GameScreen))
                 {
                     // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
                     // Check whether menu bar exists and try letting the music menu handle music switching.
@@ -147,12 +162,57 @@ namespace PBGame
                 if (mapSelection.Map != null)
                 {
                     // Change loop time based on the screens.
-                    // TODO: Uncomment when game screen is implemented.
-                    if (view is HomeScreen || view is DownloadScreen)// || view is GameScreen)
+                    if (view is HomeScreen || view is DownloadScreen || view is GameScreen)
                         musicController.LoopTime = 0f;
                     else
                         musicController.LoopTime = mapSelection.Map.Metadata.PreviewTime;
                 }
+
+                ApplyMenuBarOverlay();
+                ApplyMenuBarProperties();
+            };
+            screenNavigator.OnScreenChange += (curScreen, prevScreen) =>
+            {
+                // If navigating out of game screen, play music if stopped.
+                if (prevScreen is GameScreen)
+                {
+                    if (!musicController.IsPlaying)
+                    {
+                        bool wasPaused = musicController.IsPaused;
+                        musicController.Play();
+                        // Play from preview point if music stopped at the end.
+                        if (!wasPaused)
+                        {
+                            musicController.Seek(mapSelection.Map.Metadata.PreviewTime);
+                            musicController.Fade(0f, 1f);
+                        }
+                    }
+                }
+            };
+        }
+
+        /// <summary>
+        /// Triggers actions on cerain overlay navigator events.
+        /// </summary>
+        private void HookOverlayNavigator()
+        {
+            overlayNavigator.OnShowView += (view) =>
+            {
+                if (!(view is MenuBarOverlay))
+                    ApplyMenuBarOverlay();
+                else
+                {
+                    if (!cachedMenuBar.IsValid)
+                    {
+                        cachedMenuBar.Value = view as MenuBarOverlay;
+                        ApplyMenuBarProperties();
+                    }
+                }
+            };
+            overlayNavigator.OnHideView += (view) =>
+            {
+                if (!(view is MenuBarOverlay))
+                    ApplyMenuBarOverlay();
             };
         }
 
@@ -161,6 +221,25 @@ namespace PBGame
         /// </summary>
         private void HookMapSelection()
         {
+            mapSelection.MapConfig.OnValueChanged += (config, prevConfig) =>
+            {
+                // Observe offset changes in the map.
+                if(prevConfig != null)
+                    prevConfig.Offset.OnValueChanged -= OnMusicOffsetChange;
+                mapOffset = config;
+                if(mapOffset != null)
+                    mapOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+            };
+            mapSelection.MapsetConfig.OnValueChanged += (config, prevConfig) =>
+            {
+                // Observe offset changes in the mapset.
+                if(prevConfig != null)
+                    prevConfig.Offset.OnValueChanged -= OnMusicOffsetChange;
+                mapsetOffset = config;
+                if(mapsetOffset != null)
+                    mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+            };
+
             mapSelection.OnMusicLoaded += (music) =>
             {
                 // Play music on load.
@@ -203,7 +282,7 @@ namespace PBGame
             gameConfiguration.MasterVolume.OnValueChanged += (volume, _) =>
             {
                 musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
-                soundPooler.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
+                soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
             gameConfiguration.MusicVolume.OnValueChanged += (volume, _) =>
             {
@@ -211,7 +290,7 @@ namespace PBGame
             };
             gameConfiguration.EffectVolume.OnValueChanged += (volume, _) =>
             {
-                soundPooler.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
+                soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
 
             // Mapset sort change events
@@ -234,6 +313,12 @@ namespace PBGame
             gameConfiguration.Framerate.OnValueChanged += (framerate, _) =>
             {
                 ApplyScreenResolution();
+            };
+
+            // Offset settings
+            gameConfiguration.GlobalOffset.OnValueChanged += (offset, _) =>
+            {
+                musicController.Clock.Offset = offset;
             };
         }
 
@@ -262,11 +347,11 @@ namespace PBGame
         {
             mapManager.OnImportMapset += (mapset) =>
             {
-                if(mapset == null)
+                if (mapset == null)
                     return;
-                    
+
                 // Select new map if in songs selection.
-                if(screenNavigator.CurrentScreen is SongsScreen)
+                if (screenNavigator.CurrentScreen is SongsScreen)
                     mapSelection.SelectMapset(mapset);
 
                 notificationBox.Add(new Notification()
@@ -274,6 +359,48 @@ namespace PBGame
                     Message = $"Imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
                 });
             };
+        }
+
+        /// <summary>
+        /// Applies menu bar overlay where necessary.
+        /// </summary>
+        private void ApplyMenuBarOverlay()
+        {
+            if (screenNavigator.CurrentScreen is HomeScreen)
+            {
+                if (overlayNavigator.IsShowing(typeof(HomeMenuOverlay)))
+                    overlayNavigator.Show<MenuBarOverlay>(true);
+                else
+                    overlayNavigator.Hide<MenuBarOverlay>();
+                return;
+            }
+
+            if (overlayNavigator.IsShowing(typeof(GameLoadOverlay)) ||
+                screenNavigator.CurrentScreen is GameScreen ||
+                screenNavigator.CurrentScreen is InitializeScreen ||
+                screenNavigator.CurrentScreen is SplashScreen)
+            {
+                overlayNavigator.Hide<MenuBarOverlay>();
+                return;
+            }
+
+            // Show menu ber by default.
+            overlayNavigator.Show<MenuBarOverlay>(true);
+        }
+
+        /// <summary>
+        /// Applies menu bar properties on screen change.
+        /// </summary>
+        private void ApplyMenuBarProperties()
+        {
+            if (!cachedMenuBar.IsValid)
+                return;
+
+            var menuBar = cachedMenuBar.Value;
+            bool isHomeActive = screenNavigator.CurrentScreen is HomeScreen;
+
+            menuBar.MusicButton.Active = isHomeActive;
+            menuBar.BackgroundSprite.Color = new Color(0f, 0f, 0f, 0f);
         }
 
         /// <summary>
@@ -287,5 +414,26 @@ namespace PBGame
 
             Application.targetFrameRate = framerate;
         }
+
+        /// <summary>
+        /// Applies music offset to music controller.
+        /// </summary>
+        private void ApplyMusicOffset() => musicController.Clock.Offset = GetMusicOffset();
+
+        /// <summary>
+        /// Event called when the mapset/map's offset has been changed.
+        /// </summary>
+        private void OnMusicOffsetChange(int offset, int prevOffset) => ApplyMusicOffset();
+
+        /// <summary>
+        /// Returns the total music offset applied.
+        /// </summary>
+        private float GetMusicOffset()
+        {
+            return gameConfiguration.GlobalOffset.Value +
+                (mapOffset != null ? mapOffset.Offset.Value : 0) +
+                (mapsetOffset != null ? mapsetOffset.Offset.Value : 0);
+        }
+
     }
 }

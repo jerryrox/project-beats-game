@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Download.Search
 
             input = CreateChild<BasicInput>("input", 1);
             {
-                input.Anchor = Anchors.Fill;
+                input.Anchor = AnchorType.Fill;
                 input.Offset = new Offset(0f, 24f, 0f, 0f);
                 input.Background.Color = new Color(1f, 1f, 1f, 0.25f);
                 input.CreateIconSprite(spriteName: "icon-search", size: 24f);

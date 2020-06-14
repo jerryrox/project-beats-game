@@ -20,7 +20,7 @@ namespace PBGame.UI.Components.SettingsMenu.Navbars
         /// </summary>
         public SettingsTab TabData => tabData;
 
-        protected override Anchors HighlightSpriteAnchor => Anchors.RightStretch;
+        protected override AnchorType HighlightSpriteAnchor => AnchorType.RightStretch;
 
 
         [InitWithDependency]

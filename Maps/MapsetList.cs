@@ -25,7 +25,7 @@ namespace PBGame.Maps
         /// <summary>
         /// The last sorting method used.
         /// </summary>
-        private MapsetSorts sortMethod = MapsetSorts.Title;
+        private MapsetSortType sortMethod = MapsetSortType.Title;
 
         /// <summary>
         /// Whether sorting should be applied implicitly on modifying the list.
@@ -115,21 +115,21 @@ namespace PBGame.Maps
             return mapsets[index >= mapsets.Count-1 ? 0 : index + 1];
         }
 
-        public void Sort(MapsetSorts sort)
+        public void Sort(MapsetSortType sort)
         {
             sortMethod = sort;
             switch (sort)
             {
-                case MapsetSorts.Title:
+                case MapsetSortType.Title:
                     mapsets.Sort((x, y) => x.Metadata.Title.CompareTo(y.Metadata.Title));
                     break;
-                case MapsetSorts.Artist:
+                case MapsetSortType.Artist:
                     mapsets.Sort((x, y) => x.Metadata.Artist.CompareTo(y.Metadata.Artist));
                     break;
-                case MapsetSorts.Creator:
+                case MapsetSortType.Creator:
                     mapsets.Sort((x, y) => x.Metadata.Creator.CompareTo(y.Metadata.Creator));
                     break;
-                case MapsetSorts.Date:
+                case MapsetSortType.Date:
                     mapsets.Sort((x, y) => x.ImportedDate.CompareTo(y.ImportedDate));
                     break;
             }

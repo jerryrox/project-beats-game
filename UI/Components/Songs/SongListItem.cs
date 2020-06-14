@@ -79,7 +79,7 @@ namespace PBGame.UI.Components.Songs
 
 
         [InitWithDependency]
-        private void Init(ISoundPooler soundPooler)
+        private void Init()
         {
             IsClickToTrigger = true;
 
@@ -91,7 +91,7 @@ namespace PBGame.UI.Components.Songs
 
             container = CreateChild<UguiObject>("container", 0);
             {
-                container.Anchor = Anchors.CenterStretch;
+                container.Anchor = AnchorType.CenterStretch;
                 container.SetOffsetVertical(5f);
                 container.Width = UnfocusedWidth;
 
@@ -108,7 +108,7 @@ namespace PBGame.UI.Components.Songs
                 }
                 glow = container.CreateChild<UguiSprite>("glow", 1);
                 {
-                    glow.Anchor = Anchors.Fill;
+                    glow.Anchor = AnchorType.Fill;
                     glow.RawSize = new Vector2(30f, 30f);
                     glow.SpriteName = "glow-circle-32";
                     glow.ImageType = Image.Type.Sliced;
@@ -116,7 +116,7 @@ namespace PBGame.UI.Components.Songs
                 }
                 thumbContainer = container.CreateChild<UguiSprite>("thumb", 2);
                 {
-                    thumbContainer.Anchor = Anchors.Fill;
+                    thumbContainer.Anchor = AnchorType.Fill;
                     thumbContainer.RawSize = Vector2.zero;
                     thumbContainer.SpriteName = "circle-32";
                     thumbContainer.ImageType = Image.Type.Sliced;
@@ -126,15 +126,15 @@ namespace PBGame.UI.Components.Songs
 
                     thumbImage = thumbContainer.CreateChild<UguiTexture>("image");
                     {
-                        thumbImage.Anchor = Anchors.Fill;
+                        thumbImage.Anchor = AnchorType.Fill;
                         thumbImage.RawSize = Vector2.zero;
                         thumbImage.Color = UnfocusedThumbColor;
                     }
                 }
                 titleLabel = container.CreateChild<Label>("title", 3);
                 {
-                    titleLabel.Anchor = Anchors.TopStretch;
-                    titleLabel.Pivot = Pivots.Top;
+                    titleLabel.Anchor = AnchorType.TopStretch;
+                    titleLabel.Pivot = PivotType.Top;
                     titleLabel.Y = -8f;
                     titleLabel.Height = 32f;
                     titleLabel.SetOffsetHorizontal(20f);
@@ -151,8 +151,8 @@ namespace PBGame.UI.Components.Songs
                 }
                 artistLabel = container.CreateChild<Label>("artist", 4);
                 {
-                    artistLabel.Anchor = Anchors.BottomStretch;
-                    artistLabel.Pivot = Pivots.Bottom;
+                    artistLabel.Anchor = AnchorType.BottomStretch;
+                    artistLabel.Pivot = PivotType.Bottom;
                     artistLabel.Y = 8f;
                     artistLabel.Height = 24f;
                     artistLabel.SetOffsetHorizontal(20f);
@@ -167,8 +167,8 @@ namespace PBGame.UI.Components.Songs
                 }
                 creatorLabel = container.CreateChild<Label>("creator", 5);
                 {
-                    creatorLabel.Anchor = Anchors.BottomStretch;
-                    creatorLabel.Pivot = Pivots.Bottom;
+                    creatorLabel.Anchor = AnchorType.BottomStretch;
+                    creatorLabel.Pivot = PivotType.Bottom;
                     creatorLabel.Y = 8f;
                     creatorLabel.Height = 24f;
                     creatorLabel.SetOffsetHorizontal(20f);

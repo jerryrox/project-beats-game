@@ -19,10 +19,10 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		/// </summary>
 		public HitCircle StartCircle { get; set; }
 
-        /// <summary>
-        /// The hit object located at the ending position of the dragger.
-        /// </summary>
-        public DraggerEndCircle EndCircle { get; set; }
+		/// <summary>
+		/// The list of samples to be played on dragger end.
+		/// </summary>
+		public List<SoundInfo> EndSamples { get; set; }
 
         public SliderPath Path { get; set; }
 
@@ -44,15 +44,21 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 		/// <summary>
 		/// Returns the ending position x of the dragger.
 		/// </summary>
-		public float EndX { get { return EndCircle.X; } }
+		public float EndX { get; set; }
 
 
 		protected override void ApplyMapPropertiesSelf (ControlPointGroup controlPoints, MapDifficulty difficulty)
 		{
 			base.ApplyMapPropertiesSelf (controlPoints, difficulty);
 
-			// Calculate tick generation interval.
-			TimingControlPoint timingPoint = controlPoints.TimingPointAt(StartTime);
+            // Set samples to be played on dragger end.
+            EndSamples = NodeSamples[NodeSamples.Count - 1];
+
+            // Set ending position
+            EndX = this.GetPosition(1f).x;
+
+            // Calculate tick generation interval.
+            TimingControlPoint timingPoint = controlPoints.TimingPointAt(StartTime);
 			TickInterval = timingPoint.BeatLength / difficulty.SliderTickRate;
 		}
 
@@ -92,14 +98,6 @@ namespace PBGame.Rulesets.Beats.Standard.Objects
 					X = this.GetPosition(progress).x
 				});
 			}
-
-			// Create end circle
-			AddNestedObject(EndCircle = new DraggerEndCircle() {
-				StartTime = EndTime,
-				Samples = NodeSamples[NodeSamples.Count-1],
-				SamplePoint = SamplePoint,
-				X = this.GetPosition(1).x
-			});
 		}
 
 		public override Rulesets.Judgements.JudgementInfo CreateJudgementInfo() { return new JudgementInfo(); }

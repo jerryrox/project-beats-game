@@ -9,7 +9,6 @@ using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Audio;
-using PBGame.Skins;
 using PBGame.Stores;
 using PBGame.Assets.Fonts;
 using PBGame.Assets.Caching;
@@ -33,6 +32,9 @@ namespace PBGame
 {
     public abstract class BaseGame : MonoBehaviour, IGame {
 
+        public event Action<bool> OnAppFocus;
+        public event Action<bool> OnAppPause;
+
         protected ModeManager modeManager;
 
         protected NotificationBox notificationBox;
@@ -42,17 +44,18 @@ namespace PBGame
         protected MapsetConfiguration mapsetConfiguration;
 
         protected FontManager fontManager;
-        protected IAtlas<Sprite> spriteAtlas;
+        protected ResourceSpriteAtlas spriteAtlas;
+        protected ResourceAudioAtlas audioAtlas;
 
         protected MusicCacher musicCacher;
         protected BackgroundCacher backgroundCacher;
         protected WebImageCacher webImageCacher;
         protected WebMusicCacher webMusicCacher;
 
-        protected SkinManager skinManager;
-
         protected MusicController musicController;
-        protected SoundPooler soundPooler;
+
+        protected DefaultSoundTable soundTable;
+        protected SoundPool soundPool;
 
         protected MapsetStore mapsetStore;
         protected MapSelection mapSelection;
@@ -77,6 +80,8 @@ namespace PBGame
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
+
+        public string Version => Application.version;
 
 
         void Awake()
@@ -105,7 +110,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IGame>(this);
 
-            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager(Dependencies));
+            Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
             Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
 
@@ -115,20 +120,20 @@ namespace PBGame
 
             Dependencies.CacheAs<IFontManager>(fontManager = new FontManager());
             Dependencies.CacheAs<IAtlas<Sprite>>(spriteAtlas = new ResourceSpriteAtlas());
+            Dependencies.CacheAs<IAtlas<AudioClip>>(audioAtlas = new ResourceAudioAtlas());
 
             Dependencies.CacheAs<IMusicCacher>(musicCacher = new MusicCacher());
             Dependencies.CacheAs<IBackgroundCacher>(backgroundCacher = new BackgroundCacher());
             Dependencies.CacheAs<IWebImageCacher>(webImageCacher = new WebImageCacher());
             Dependencies.CacheAs<IWebMusicCacher>(webMusicCacher = new WebMusicCacher());
 
-            Dependencies.CacheAs<ISkinManager>(skinManager = new SkinManager());
-            skinManager.DefaultSkin.AssetStore.Load();
-
             Dependencies.CacheAs<IMusicController>(musicController = MusicController.Create());
-            Dependencies.CacheAs<ISoundPooler>(soundPooler = new SoundPooler(skinManager.DefaultSkin));
+
+            Dependencies.CacheAs<ISoundTable>(soundTable = new DefaultSoundTable(audioAtlas));
+            Dependencies.CacheAs<ISoundPool>(soundPool = new SoundPool(soundTable));
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
-            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration));
+            Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration, mapsetConfiguration, mapConfiguration));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
 
@@ -146,8 +151,12 @@ namespace PBGame
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
             Dependencies.CacheAs<IDropdownProvider>(dropdownProvider = new DropdownProvider(rootMain));
 
-            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution));
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
         }
+
+        protected virtual void OnApplicationPause(bool paused) => OnAppPause?.Invoke(paused);
+
+        protected virtual void OnApplicationFocus(bool focused) => OnAppFocus?.Invoke(focused);
 
         /// <summary>
         /// Handles final process after initialization.
@@ -176,5 +185,7 @@ namespace PBGame
         {
             metronome.Update();
         }
+
+
     }
 }

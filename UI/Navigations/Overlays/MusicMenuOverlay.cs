@@ -50,8 +50,8 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            container.Anchor = Anchors.TopRight;
-            container.Pivot = Pivots.TopRight;
+            container.Anchor = AnchorType.TopRight;
+            container.Pivot = PivotType.TopRight;
             container.X = -16f;
             container.Y = -16f;
             container.Width = 400f;
@@ -59,7 +59,7 @@ namespace PBGame.UI.Navigations.Overlays
 
             mask = container.CreateChild<UguiSprite>("mask", 0);
             {
-                mask.Anchor = Anchors.Fill;
+                mask.Anchor = AnchorType.Fill;
                 mask.RawSize = Vector2.zero;
                 mask.Position = Vector2.zero;
                 mask.SpriteName = "box";
@@ -67,19 +67,19 @@ namespace PBGame.UI.Navigations.Overlays
 
                 imageDisplay = mask.CreateChild<MapImageDisplay>("imageDisplay", 0);
                 {
-                    imageDisplay.Anchor = Anchors.Fill;
+                    imageDisplay.Anchor = AnchorType.Fill;
                     imageDisplay.RawSize = Vector2.zero;
                 }
                 gradient = mask.CreateChild<UguiSprite>("gradient", 1);
                 {
-                    gradient.Anchor = Anchors.Fill;
+                    gradient.Anchor = AnchorType.Fill;
                     gradient.Offset = new Offset(0f, -22f, 0f, 0f);
                     gradient.SpriteName = "gradation-bottom";
                     gradient.Color = new Color(0f, 0f, 0f, 0.9f);
                 }
                 title = mask.CreateChild<Label>("title", 2);
                 {
-                    title.Anchor = Anchors.BottomStretch;
+                    title.Anchor = AnchorType.BottomStretch;
                     title.SetOffsetHorizontal(16f);
                     title.Y = 92f;
                     title.Height = 30f;
@@ -89,7 +89,7 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 artist = mask.CreateChild<Label>("artist", 3);
                 {
-                    artist.Anchor = Anchors.BottomStretch;
+                    artist.Anchor = AnchorType.BottomStretch;
                     artist.SetOffsetHorizontal(16f);
                     artist.Y = 70f;
                     artist.Height = 30f;
@@ -98,7 +98,7 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 randomButton = mask.CreateChild<ControlButton>("random", 4);
                 {
-                    randomButton.Anchor = Anchors.BottomLeft;
+                    randomButton.Anchor = AnchorType.BottomLeft;
                     randomButton.X = 36f;
                     randomButton.Y = 36f;
                     randomButton.Size = new Vector2(48f, 48f);
@@ -112,7 +112,7 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 prevButton = mask.CreateChild<ControlButton>("prev", 5);
                 {
-                    prevButton.Anchor = Anchors.Bottom;
+                    prevButton.Anchor = AnchorType.Bottom;
                     prevButton.X = -56f;
                     prevButton.Y = 36f;
                     prevButton.Size = new Vector2(48f, 48f);
@@ -126,7 +126,7 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 playButton = mask.CreateChild<ControlButton>("play", 6);
                 {
-                    playButton.Anchor = Anchors.Bottom;
+                    playButton.Anchor = AnchorType.Bottom;
                     playButton.Y = 36f;
                     playButton.Size = new Vector2(48f, 48f);
                     playButton.IconName = "icon-play";
@@ -142,7 +142,7 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 nextButton = mask.CreateChild<ControlButton>("next", 7);
                 {
-                    nextButton.Anchor = Anchors.Bottom;
+                    nextButton.Anchor = AnchorType.Bottom;
                     nextButton.X = 56f;
                     nextButton.Y = 36f;
                     nextButton.Size = new Vector2(48f, 48f);
@@ -156,8 +156,8 @@ namespace PBGame.UI.Navigations.Overlays
                 }
                 timeBar = mask.CreateChild<TimeBar>("timebar", 8);
                 {
-                    timeBar.Anchor = Anchors.BottomStretch;
-                    timeBar.Pivot = Pivots.Bottom;
+                    timeBar.Anchor = AnchorType.BottomStretch;
+                    timeBar.Pivot = PivotType.Bottom;
                     timeBar.SetOffsetHorizontal(0f);
                     timeBar.Y = 0f;
                     timeBar.Height = 8f;

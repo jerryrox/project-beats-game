@@ -42,22 +42,22 @@ namespace PBGame.UI.Components.Prepare
         {
             gradient = CreateChild<UguiSprite>("gradient", 0);
             {
-                gradient.Anchor = Anchors.Fill;
+                gradient.Anchor = AnchorType.Fill;
                 gradient.RawSize = Vector2.zero;
                 gradient.SpriteName = "gradation-top";
                 gradient.Color = new Color(0f, 0f, 0f, 0.75f);
             }
             listContainer = CreateChild<UguiObject>("list-container", 1);
             {
-                listContainer.Anchor = Anchors.TopStretch;
-                listContainer.Pivot = Pivots.Top;
+                listContainer.Anchor = AnchorType.TopStretch;
+                listContainer.Pivot = PivotType.Top;
                 listContainer.RawWidth = 0f;
                 listContainer.Height = 64f;
                 listContainer.Y = -(prepareScreen as PrepareScreen).MenuBarHeight;
 
                 versionList = listContainer.CreateChild<UguiListView>("version-list", 0);
                 {
-                    versionList.Anchor = Anchors.Fill;
+                    versionList.Anchor = AnchorType.Fill;
                     versionList.RawSize = new Vector2(-64f, 0f);
                     versionList.SetOffsetVertical(0f);
 
@@ -153,6 +153,6 @@ namespace PBGame.UI.Components.Prepare
         /// <summary>
         /// Event called on game mode configuration change.
         /// </summary>
-        private void OnModeChange(GameModes gameMode, GameModes _ = GameModes.BeatsStandard) => RefreshList();
+        private void OnModeChange(GameModeType gameMode, GameModeType _ = GameModeType.BeatsStandard) => RefreshList();
     }
 }

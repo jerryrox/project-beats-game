@@ -29,8 +29,8 @@ namespace PBGame.UI.Components.Songs
         {
             label = CreateChild<Label>("label", 0);
             {
-                label.Anchor = Anchors.LeftStretch;
-                label.Pivot = Pivots.Left;
+                label.Anchor = AnchorType.LeftStretch;
+                label.Pivot = PivotType.Left;
                 label.X = 24;
                 var offset = label.Offset;
                 offset.Vertical = 0f;
@@ -42,15 +42,15 @@ namespace PBGame.UI.Components.Songs
             }
             grid = CreateChild<UguiGrid>("grid", 1);
             {
-                grid.Anchor = Anchors.LeftStretch;
-                grid.Pivot = Pivots.Left;
+                grid.Anchor = AnchorType.LeftStretch;
+                grid.Pivot = PivotType.Left;
                 grid.SetOffsetVertical(0f);
                 grid.X = label.X * 2f + label.PreferredWidth;
-                grid.Width = ButtonSize * Enum.GetNames(typeof(MapsetSorts)).Length;
+                grid.Width = ButtonSize * Enum.GetNames(typeof(MapsetSortType)).Length;
                 grid.CellSize = new Vector2(ButtonSize, 56f);
             }
 
-            foreach (var sortType in (MapsetSorts[])Enum.GetValues(typeof(MapsetSorts)))
+            foreach (var sortType in (MapsetSortType[])Enum.GetValues(typeof(MapsetSortType)))
             {
                 var button = grid.CreateChild<SortButton>(sortType.ToString(), sortButtons.Count);
                 {
@@ -69,7 +69,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Sets the sorting method of the mapsets.
         /// </summary>
-        public void SetSort(MapsetSorts sort)
+        public void SetSort(MapsetSortType sort)
         {
             // Apply on button.
             for (int i = 0; i < sortButtons.Count; i++)
@@ -82,7 +82,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Event called when the current sort type has been changed.
         /// </summary>
-        private void OnSortChange(MapsetSorts sort)
+        private void OnSortChange(MapsetSortType sort)
         {
             if (GameConfiguration.MapsetSort.Value != sort)
             {

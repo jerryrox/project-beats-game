@@ -18,7 +18,7 @@ namespace PBGame.IO.Decoding.Osu.Standard
 
 		public HitObjectParser(float offset, int formatVersion) : base(offset, formatVersion) {}
 
-		protected override HitObject CreateCircle (Vector2 pos, bool isNewCombo, int comboOffset)
+		protected override BaseHitObject CreateCircle (Vector2 pos, bool isNewCombo, int comboOffset)
 		{
 			isNewCombo |= forceNewCombo;
 			comboOffset += extraComboOffset;
@@ -33,8 +33,8 @@ namespace PBGame.IO.Decoding.Osu.Standard
 			};
 		}
 
-		protected override HitObject CreateSlider (Vector2 pos, bool isNewCombo, int comboOffset, Vector2[] controlPoints,
-            float length, PathTypes pathType, int repeatCount, List<List<SoundInfo>> nodeSamples)
+		protected override BaseHitObject CreateSlider (Vector2 pos, bool isNewCombo, int comboOffset, Vector2[] controlPoints,
+            float length, PathType pathType, int repeatCount, List<List<SoundInfo>> nodeSamples)
 		{
 			isNewCombo |= forceNewCombo;
 			comboOffset += extraComboOffset;
@@ -52,7 +52,7 @@ namespace PBGame.IO.Decoding.Osu.Standard
 			};
 		}
 
-		protected override HitObject CreateSpinner (Vector2 pos, bool isNewCombo, int comboOffset, float endTime)
+		protected override BaseHitObject CreateSpinner (Vector2 pos, bool isNewCombo, int comboOffset, float endTime)
 		{
 			forceNewCombo |= (formatVersion <= 8 || isNewCombo);
 			extraComboOffset += comboOffset;
@@ -63,7 +63,7 @@ namespace PBGame.IO.Decoding.Osu.Standard
 			};
 		}
 
-		protected override HitObject CreateHold (Vector2 pos, bool isNewCombo, int comboOffset, float endTime)
+		protected override BaseHitObject CreateHold (Vector2 pos, bool isNewCombo, int comboOffset, float endTime)
 		{
 			return null;
 		}

@@ -17,14 +17,14 @@ namespace PBGame.UI.Components.Download.Result
         [InitWithDependency]
         private void Init()
         {
-            label.Anchor = Anchors.RightStretch;
-            label.Pivot = Pivots.Right;
+            label.Anchor = AnchorType.RightStretch;
+            label.Pivot = PivotType.Right;
             label.Alignment = TextAnchor.MiddleRight;
 
             iconSprite = CreateChild<UguiSprite>("icon", 1);
             {
-                iconSprite.Anchor = Anchors.Right;
-                iconSprite.Pivot = Pivots.Right;
+                iconSprite.Anchor = AnchorType.Right;
+                iconSprite.Pivot = PivotType.Right;
                 iconSprite.Size = new Vector2(20f, 20f);
                 iconSprite.X = -8f;
                 iconSprite.Color = Color.black;
