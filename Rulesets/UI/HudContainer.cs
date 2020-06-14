@@ -25,5 +25,24 @@ namespace PBGame.Rulesets.UI
         /// Returns the health displayer object.
         /// </summary>
         public HealthDisplay HealthDisplay { get; protected set; }
+
+        /// <summary>
+        /// Returns the skip displayer object.
+        /// </summary>
+        public SkipDisplay SkipDisplay { get; protected set; }
+
+
+        [InitWithDependency]
+        private void Init()
+        {
+            SkipDisplay = CreateChild<SkipDisplay>("skip", 4);
+            {
+                SkipDisplay.Anchor = AnchorType.BottomStretch;
+                SkipDisplay.Pivot = PivotType.Bottom;
+                SkipDisplay.SetOffsetHorizontal(0f);
+                SkipDisplay.Y = 0f;
+                SkipDisplay.Height = 200f;
+            }
+        }
     }
 }
