@@ -165,6 +165,7 @@ namespace PBGame.Rulesets
         public void InvokeSoftDispose()
         {
             IsPlaying = false;
+            IsPaused = false;
 
             int playTime = GetPlayTime();
 
