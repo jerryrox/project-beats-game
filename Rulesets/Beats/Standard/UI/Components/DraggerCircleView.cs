@@ -144,6 +144,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         {
             if(this.isHolding == holding)
                 return;
+            // Show visual change only if there is currently a valid result for this hit object.
+            if (!IsJudged)
+                return;
 
             // Held down
             if (holding && !wasHolding)
