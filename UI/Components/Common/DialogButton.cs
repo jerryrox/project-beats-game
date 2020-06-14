@@ -8,9 +8,9 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PBGame.UI.Components.Dialog
+namespace PBGame.UI.Components.Common
 {
-    public class SelectionButton : BoxButton, IHasLabel, IHasTint {
+    public class DialogButton : BoxButton, IHasLabel, IHasTint {
 
         private const float BaseWidth = 720f;
         private const float HoverWidth = 880f;
@@ -54,7 +54,8 @@ namespace PBGame.UI.Components.Dialog
         {
             base.OnDisable();
             Width = BaseWidth;
-            hoverSprite.Color = tint;
+            if(hoverSprite != null)
+                hoverSprite.Color = tint;
         }
 
         public override void UseDefaultHoverAni()

@@ -17,6 +17,11 @@ namespace PBGame.UI.Components.Common
         protected ILabel label;
 
 
+        /// <summary>
+        /// Returns the label on the button.
+        /// </summary>
+        public ILabel Label => label;
+
         public string LabelText
         {
             get => label.Text;
