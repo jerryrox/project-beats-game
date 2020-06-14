@@ -14,9 +14,9 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.9.1 (In progress)
+### 0.9.1
 #### New features
-- Implementation of Beats Standard game mode. (Still WIP)
+- Implementation of Beats Standard game mode. (Not fully complete, but playable.)
 - Offset settings overlay
 #### Improvements
 - When selecting a mapset, select the first map that appears when sorted for the current game mode, and prioritize the maps that support the mode.
