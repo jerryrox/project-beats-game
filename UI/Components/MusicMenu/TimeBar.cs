@@ -62,7 +62,7 @@ namespace PBGame.UI.Components.MusicMenu
                 .Build();
         }
 
-        private void Update()
+        protected void Update()
         {
             if (isControlling) return;
 

@@ -235,10 +235,12 @@ namespace PBGame.UI.Components.System
             return ColorPreset.Passive;
         }
 
-        private void Update()
+        protected override void Update()
         {
             if(IsAnimating)
                 return;
+
+            base.Update();
 
             // Handle auto hiding after certain time.
             if (curDuration > 0f)

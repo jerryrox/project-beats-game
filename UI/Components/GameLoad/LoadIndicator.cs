@@ -43,6 +43,8 @@ namespace PBGame.UI.Components.GameLoad
                 .AddTime(0f, 1f, EaseType.QuadEaseOut)
                 .AddTime(0.5f, 0f)
                 .Build();
+
+            Rotate = true;
         }
 
         protected override void OnDisable()
@@ -55,10 +57,5 @@ namespace PBGame.UI.Components.GameLoad
         public void Show() => showAni.PlayFromStart();
 
         public void Hide() => hideAni.PlayFromStart();
-
-        private void Update()
-        {
-            RotationZ -= Time.deltaTime * RotationSpeed;
-        }
     }
 }

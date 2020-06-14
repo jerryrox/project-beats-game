@@ -145,7 +145,7 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
             }
         }
 
-        private void Update()
+        protected void Update()
         {
             if (maxScrollPos == 0f)
                 return;

@@ -93,7 +93,7 @@ namespace PBGame.UI.Components.ProfileMenu
             hideAni.PlayFromStart();
         }
 
-        private void Update()
+        protected void Update()
         {
             if(pointerBlocker == null || pointerBlocker.IsRaycastTarget)
                 loader.RotationZ += Time.deltaTime * RotationSpeed;

@@ -77,7 +77,7 @@ namespace PBGame.UI.Components.Songs
             SetSearch(value);
         }
 
-        private void Update()
+        protected void Update()
         {
             if (searchDelay > 0f)
             {

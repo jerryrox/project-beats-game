@@ -216,8 +216,10 @@ namespace PBGame.UI.Components.Songs
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if(MusicController.Audio == null)
                 progressBar.Value = 0f;
             else

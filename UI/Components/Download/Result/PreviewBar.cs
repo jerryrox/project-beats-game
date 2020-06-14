@@ -106,7 +106,7 @@ namespace PBGame.UI.Components.Download.Result
             Alpha = 0f;
         }
 
-        private void Update()
+        protected void Update()
         {
             if(mapset == null || State.PreviewingMapset.Value != mapset)
                 return;

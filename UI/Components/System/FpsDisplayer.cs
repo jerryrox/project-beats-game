@@ -159,7 +159,7 @@ namespace PBGame.UI.Components.System
                 hideAni.PlayFromStart();
         }
 
-        private void Update()
+        protected void Update()
         {
             float deltaTime = Time.deltaTime;
 

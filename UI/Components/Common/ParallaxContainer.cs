@@ -158,7 +158,7 @@ namespace PBGame.UI.Components.Common
             }
         }
 
-        private void Update()
+        protected void Update()
         {
             if(!useParallax)
                 return;

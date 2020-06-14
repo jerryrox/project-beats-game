@@ -49,7 +49,7 @@ namespace PBGame.UI.Components.Common
             }
         }
 
-        private void Update()
+        protected void Update()
         {
             if(Rotate)
                 iconSprite.RotationZ -= Time.deltaTime * RotateSpeed;

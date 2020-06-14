@@ -69,7 +69,7 @@ namespace PBGame.UI.Components.MenuBar
             }
         }
 
-        void Update()
+        protected void Update()
         {
             animateTime += Time.deltaTime * ColorSpeed;
             if (animateTime >= 1f)
