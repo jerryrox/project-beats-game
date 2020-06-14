@@ -17,6 +17,7 @@ Slowly making progress 🧩
 ### 0.9.1.1
 #### Fixes
 - Fixed Game pause state not resetting on disposal.
+- Fixed skip button not resetting size after using it once.
 
 ### 0.9.1
 #### New features
