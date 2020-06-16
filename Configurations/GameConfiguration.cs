@@ -70,6 +70,7 @@ namespace PBGame.Configurations
         public ProxyBindableFloat EffectVolume { get; private set; }
         public ProxyBindableInt GlobalOffset { get; private set; }
         public ProxyBindable<bool> UseBeatmapHitsounds { get; private set; }
+        public ProxyBindable<bool> UseButtonHoverSound { get; private set; }
 
 
         public GameConfiguration()
@@ -146,6 +147,7 @@ namespace PBGame.Configurations
                 });
                 soundTab.AddEntry(new SettingsEntryInt("Global Offset", GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0, -100, 100)));
                 soundTab.AddEntry(new SettingsEntryBool("Use Map Hitsounds", UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true)));
+                soundTab.AddEntry(new SettingsEntryBool("Button hover sound", UseButtonHoverSound = InitBoolBindable(nameof(UseButtonHoverSound), true)));
             }
 
             // Trigger change for all configurations on load.
