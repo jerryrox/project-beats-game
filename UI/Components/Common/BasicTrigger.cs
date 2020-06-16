@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Audio;
+using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -62,6 +63,12 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         private bool didHold = false;
 
+        /// <summary>
+        /// Whether button hover sound should be played.
+        /// Updated from game configuration.
+        /// </summary>
+        private bool useButtonHoverSound;
+
 
         public virtual string IconName
         {
@@ -92,6 +99,9 @@ namespace PBGame.UI.Components.Common
         [ReceivesDependency]
         protected ISoundPool SoundPool { get; set; }
 
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -101,6 +111,9 @@ namespace PBGame.UI.Components.Common
             OnPointerClick += OnPointerClicked;
             OnPointerDown += OnPointerDowned;
             OnPointerUp += OnPointerUpped;
+
+            if (GameConfiguration != null)
+                GameConfiguration.UseButtonHoverSound.BindAndTrigger(OnUseButtonHoverSoundChange);
         }
 
         protected override void OnEnable()
@@ -113,6 +126,11 @@ namespace PBGame.UI.Components.Common
         {
             base.OnDisable();
             triggerAni?.Stop();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            GameConfiguration.UseButtonHoverSound.OnValueChanged -= OnUseButtonHoverSoundChange;
         }
 
         /// <summary>
@@ -137,7 +155,8 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected virtual void OnPointerEntered()
         {
-            SoundPool.Play(PointerEnterAudio);
+            if(useButtonHoverSound)
+                SoundPool.Play(PointerEnterAudio);
         }
 
         /// <summary>
@@ -230,6 +249,14 @@ namespace PBGame.UI.Components.Common
         {
             holdTime = -1f;
             didHold = false;
+        }
+
+        /// <summary>
+        /// Event called from game configuration when button hover sound option is toggled.
+        /// </summary>
+        private void OnUseButtonHoverSoundChange(bool use, bool _)
+        {
+            useButtonHoverSound = use;
         }
     }
 }
