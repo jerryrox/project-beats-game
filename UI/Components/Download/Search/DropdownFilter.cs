@@ -87,13 +87,13 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
-            bindable.OnRawValueChanged -= OnFilterValueChange;
+            bindable.OnNewRawValue -= OnFilterValueChange;
         }
 
         /// <summary>
         /// Event called when the value of the bindable data has changed.
         /// </summary>
-        private void OnFilterValueChange(object data, object _)
+        private void OnFilterValueChange(object data)
         {
             dropdown.LabelText = data.ToString();
         }

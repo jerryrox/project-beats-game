@@ -203,7 +203,7 @@ namespace PBGame.UI.Navigations.Overlays
             MapSelection.OnMapChange += OnMapChange;
             MapSelection.OnBackgroundLoaded += OnBackgroundChange;
 
-            GameConfiguration.PreferUnicode.OnValueChanged += OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue += OnPreferUnicode;
 
             SetPlayButtonIcon();
             SetLabelText();
@@ -222,7 +222,7 @@ namespace PBGame.UI.Navigations.Overlays
             MapSelection.OnMapChange -= OnMapChange;
             MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
 
-            GameConfiguration.PreferUnicode.OnValueChanged -= OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called when the unicode preference option has changed.
         /// </summary>
-        private void OnPreferUnicode(bool preferUnicode, bool _) => SetLabelText();
+        private void OnPreferUnicode(bool preferUnicode) => SetLabelText();
 
         /// <summary>
         /// Event called from music controller when music is playing.

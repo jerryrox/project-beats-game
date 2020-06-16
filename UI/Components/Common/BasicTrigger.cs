@@ -130,7 +130,7 @@ namespace PBGame.UI.Components.Common
 
         protected virtual void OnDestroy()
         {
-            GameConfiguration.UseButtonHoverSound.OnValueChanged -= OnUseButtonHoverSoundChange;
+            GameConfiguration.UseButtonHoverSound.OnNewValue -= OnUseButtonHoverSoundChange;
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Event called from game configuration when button hover sound option is toggled.
         /// </summary>
-        private void OnUseButtonHoverSoundChange(bool use, bool _)
+        private void OnUseButtonHoverSoundChange(bool use)
         {
             useButtonHoverSound = use;
         }

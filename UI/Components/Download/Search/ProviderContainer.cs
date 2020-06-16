@@ -100,7 +100,7 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
-            State.ApiProvider.OnValueChanged -= OnProviderChange;
+            State.ApiProvider.OnNewValue -= OnProviderChange;
         }
 
         /// <summary>
@@ -115,6 +115,6 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on api provider change.
         /// </summary>
-        private void OnProviderChange(ApiProviderType provider, ApiProviderType _) => RefreshStatus();
+        private void OnProviderChange(ApiProviderType provider) => RefreshStatus();
     }
 }

@@ -102,7 +102,7 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            State.PreviewingMapset.OnValueChanged -= OnPreviewMapsetChange;
+            State.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
 
             mapset = null;
         }
@@ -152,7 +152,7 @@ namespace PBGame.UI.Components.Download.Result
         /// <summary>
         /// Event called on previewing mapset change.
         /// </summary>
-        private void OnPreviewMapsetChange(OnlineMapset mapset, OnlineMapset _)
+        private void OnPreviewMapsetChange(OnlineMapset mapset)
         {
             SetPreviewing(IsPreviewing);
         }

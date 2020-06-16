@@ -144,10 +144,5 @@ namespace PBGame.UI.Components.Prepare.Details
         /// Event called on map selection change.
         /// </summary>
         private void OnMapChange(IPlayableMap map) => RefreshDisplays();
-
-        /// <summary>
-        /// Event called on unicode preference change.
-        /// </summary>
-        private void OnUnicodeChange(bool preferUnicode, bool _) => RefreshDisplays();
     }
 }

@@ -279,44 +279,44 @@ namespace PBGame
         private void HookConfigurations()
         {
             // Game volume change events
-            gameConfiguration.MasterVolume.OnValueChanged += (volume, _) =>
+            gameConfiguration.MasterVolume.OnNewValue += (volume) =>
             {
                 musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
                 soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
-            gameConfiguration.MusicVolume.OnValueChanged += (volume, _) =>
+            gameConfiguration.MusicVolume.OnNewValue += (volume) =>
             {
                 musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
             };
-            gameConfiguration.EffectVolume.OnValueChanged += (volume, _) =>
+            gameConfiguration.EffectVolume.OnNewValue += (volume) =>
             {
                 soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
 
             // Mapset sort change events
-            gameConfiguration.MapsetSort.OnValueChanged += (sort, _) =>
+            gameConfiguration.MapsetSort.OnNewValue += (sort) =>
             {
                 mapManager.Sort(sort);
             };
 
             // Parallax events
-            gameConfiguration.UseParallax.OnValueChanged += (useParallax, _) =>
+            gameConfiguration.UseParallax.OnNewValue += (useParallax) =>
             {
                 inputManager.UseAcceleration = useParallax;
             };
 
             // Resolution & framerate change events
-            gameConfiguration.ResolutionQuality.OnValueChanged += (quality, _) =>
+            gameConfiguration.ResolutionQuality.OnNewValue += (quality) =>
             {
                 ApplyScreenResolution();
             };
-            gameConfiguration.Framerate.OnValueChanged += (framerate, _) =>
+            gameConfiguration.Framerate.OnNewValue += (framerate) =>
             {
                 ApplyScreenResolution();
             };
 
             // Offset settings
-            gameConfiguration.GlobalOffset.OnValueChanged += (offset, _) =>
+            gameConfiguration.GlobalOffset.OnNewValue += (offset) =>
             {
                 musicController.Clock.Offset = offset;
             };

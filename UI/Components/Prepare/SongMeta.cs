@@ -96,7 +96,7 @@ namespace PBGame.UI.Components.Prepare
         private void BindEvents()
         {
             MapSelection.OnMapChange += OnMapChange;
-            GameConfiguration.PreferUnicode.OnValueChanged += OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue += OnPreferUnicode;
 
             SetupLabels();
         }
@@ -107,7 +107,7 @@ namespace PBGame.UI.Components.Prepare
         private void UnbindEvents()
         {
             MapSelection.OnMapChange -= OnMapChange;
-            GameConfiguration.PreferUnicode.OnValueChanged -= OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 
         /// <summary>
@@ -139,6 +139,6 @@ namespace PBGame.UI.Components.Prepare
         /// <summary>
         /// Event called on unicode preference change.
         /// </summary>
-        private void OnPreferUnicode(bool _, bool __) => SetupLabels();
+        private void OnPreferUnicode(bool preferUnicode) => SetupLabels();
     }
 }

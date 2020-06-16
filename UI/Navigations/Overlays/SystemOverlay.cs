@@ -90,8 +90,8 @@ namespace PBGame.UI.Navigations.Overlays
         protected override void OnDisable()
         {
             base.OnDisable();
-            GameConfiguration.ShowFps.OnValueChanged -= OnShowFpsChange;
-            GameConfiguration.DisplayMessages.OnValueChanged -= OnDisplayMessagesChange;
+            GameConfiguration.ShowFps.OnNewValue -= OnShowFpsChange;
+            GameConfiguration.DisplayMessages.OnNewValue -= OnDisplayMessagesChange;
 
             OverlayNavigator.OnShowView -= OnOverlayShow;
             OverlayNavigator.OnHideView -= OnOverlayHide;
@@ -137,12 +137,12 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called on show fps settings change.
         /// </summary>
-        private void OnShowFpsChange(bool show, bool _) => FpsDisplayer.ToggleDisplay(show);
+        private void OnShowFpsChange(bool show) => FpsDisplayer.ToggleDisplay(show);
 
         /// <summary>
         /// Event called on display messages settings change.
         /// </summary>
-        private void OnDisplayMessagesChange(bool show, bool _) => ToggleMessageDisplayer();
+        private void OnDisplayMessagesChange(bool show) => ToggleMessageDisplayer();
 
         /// <summary>
         /// Event called on overlay show.

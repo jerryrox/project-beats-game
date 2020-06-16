@@ -165,7 +165,7 @@ namespace PBGame.UI.Components.Songs
         {
             MapSelection.OnBackgroundLoaded += OnBackgroundChange;
             MapSelection.OnMapChange += OnMapChange;
-            GameConfiguration.PreferUnicode.OnValueChanged += OnConfigChange;
+            GameConfiguration.PreferUnicode.OnNewValue += OnConfigChange;
 
             OnBackgroundChange(MapSelection.Background);
             OnMapChange(MapSelection.Map);
@@ -178,7 +178,7 @@ namespace PBGame.UI.Components.Songs
         {
             MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
             MapSelection.OnMapChange -= OnMapChange;
-            GameConfiguration.PreferUnicode.OnValueChanged -= OnConfigChange;
+            GameConfiguration.PreferUnicode.OnNewValue -= OnConfigChange;
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Event called when the game configuration for prefer unicode has changed.
         /// </summary>
-        private void OnConfigChange(bool preferUnicode, bool _) => SetLabels(MapSelection.Map, preferUnicode);
+        private void OnConfigChange(bool preferUnicode) => SetLabels(MapSelection.Map, preferUnicode);
 
         /// <summary>
         /// Sets label values.

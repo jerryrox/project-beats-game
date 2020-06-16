@@ -38,7 +38,7 @@ namespace PBGame.Networking.API
         {
             User = new Bindable<IOnlineUser>(offlineUser);
 
-            User.OnValueChanged += (user, _) => IsOnline.Value = user != offlineUser;
+            User.OnNewValue += (user) => IsOnline.Value = user != offlineUser;
         }
 
         public string GetUrl(string path)

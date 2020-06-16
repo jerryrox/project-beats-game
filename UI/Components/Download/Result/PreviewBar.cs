@@ -82,7 +82,7 @@ namespace PBGame.UI.Components.Download.Result
             this.mapset = mapset;
 
             bool isPreviewingMapset = ShouldDisplay;
-            State.PreviewingMapset.OnValueChanged += OnPreviewMapsetChange;
+            State.PreviewingMapset.OnNewValue += OnPreviewMapsetChange;
             Toggle(isPreviewingMapset, false);
 
             Value = isPreviewingMapset ? MusicController.Progress : 0f;
@@ -99,7 +99,7 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            State.PreviewingMapset.OnValueChanged -= OnPreviewMapsetChange;
+            State.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
 
             mapset = null;
             Value = 0f;
@@ -145,7 +145,7 @@ namespace PBGame.UI.Components.Download.Result
         /// <summary>
         /// Event called on previewing mapset change.
         /// </summary>
-        private void OnPreviewMapsetChange(OnlineMapset mapset, OnlineMapset _)
+        private void OnPreviewMapsetChange(OnlineMapset mapset)
         {
             Toggle(ShouldDisplay, true);
         }

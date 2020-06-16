@@ -86,13 +86,13 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
-            State.ApiProvider.OnValueChanged -= OnProviderChange;
+            State.ApiProvider.OnNewValue -= OnProviderChange;
         }
 
         /// <summary>
         /// Event called on api provider change.
         /// </summary>
-        private void OnProviderChange(ApiProviderType provider, ApiProviderType _)
+        private void OnProviderChange(ApiProviderType provider)
         {
             IsFocused = provider == this.provider;
         }

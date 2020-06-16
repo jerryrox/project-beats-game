@@ -73,14 +73,14 @@ namespace PBGame.UI.Components.Download.Search
         {
             base.OnDisable();
 
-            State.IsDescending.OnValueChanged -= OnIsDescendingChange;
-            State.Sort.OnValueChanged -= OnSortChange;
+            State.IsDescending.OnNewValue -= OnIsDescendingChange;
+            State.Sort.OnNewValue -= OnSortChange;
         }
 
         /// <summary>
         /// Event called on isDescending flag change.
         /// </summary>
-        private void OnIsDescendingChange(bool isDescending, bool _)
+        private void OnIsDescendingChange(bool isDescending)
         {
             toggle.IsFocused = isDescending;
         }
@@ -88,7 +88,7 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on map sort criteria change.
         /// </summary>
-        private void OnSortChange(MapSortType type, MapSortType _)
+        private void OnSortChange(MapSortType type)
         {
             dropdown.LabelText = type.ToString();
         }

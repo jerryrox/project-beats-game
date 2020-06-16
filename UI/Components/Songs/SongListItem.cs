@@ -231,10 +231,9 @@ namespace PBGame.UI.Components.Songs
         private void BindEvents()
         {
             MapSelection.OnMapsetChange += OnMapsetChanged;
-            GameConfiguration.PreferUnicode.OnValueChanged += OnPreferUnicode;
-
             OnMapsetChanged(MapSelection.Mapset);
-            OnPreferUnicode(GameConfiguration.PreferUnicode.Value, false);
+            
+            GameConfiguration.PreferUnicode.BindAndTrigger(OnPreferUnicode);
         }
 
         /// <summary>
@@ -243,7 +242,7 @@ namespace PBGame.UI.Components.Songs
         private void UnbindEvents()
         {
             MapSelection.OnMapsetChange -= OnMapsetChanged;
-            GameConfiguration.PreferUnicode.OnValueChanged -= OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 
         /// <summary>
@@ -329,7 +328,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Event called on unicode preference option change.
         /// </summary>
-        private void OnPreferUnicode(bool useUnicode, bool _) => SetLabelText();
+        private void OnPreferUnicode(bool useUnicode) => SetLabelText();
 
         /// <summary>
         /// Event called from cacher agent when the mapset background has been loaded.

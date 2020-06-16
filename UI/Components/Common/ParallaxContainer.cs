@@ -117,7 +117,7 @@ namespace PBGame.UI.Components.Common
         protected override void OnDisable()
         {
             base.OnDisable();
-            GameConfiguration.UseParallax.OnValueChanged -= OnUseParallaxChange;
+            GameConfiguration.UseParallax.OnNewValue -= OnUseParallaxChange;
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Event called on parallax option change.
         /// </summary>
-        private void OnUseParallaxChange(bool useParallax, bool _)
+        private void OnUseParallaxChange(bool useParallax)
         {
             SetParallax(useParallax);
         }

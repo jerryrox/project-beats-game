@@ -49,7 +49,7 @@ namespace PBGame.UI.Components.Common
         protected override void OnDisable()
         {
             base.OnDisable();
-            GameConfiguration.UseBlurShader.OnValueChanged -= OnBlurChange;
+            GameConfiguration.UseBlurShader.OnNewValue -= OnBlurChange;
         }
 
         /// <summary>
@@ -64,6 +64,6 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Event called when blur settings have changed.
         /// </summary>
-        private void OnBlurChange(bool useBlur, bool _) => SetBlur(useBlur);
+        private void OnBlurChange(bool useBlur) => SetBlur(useBlur);
     }
 }

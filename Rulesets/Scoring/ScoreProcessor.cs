@@ -90,8 +90,8 @@ namespace PBGame.Rulesets.Scoring
 
         protected ScoreProcessor()
 		{
-            Combo.OnValueChanged += (combo, _) => HighestCombo.Value = Math.Max(combo, HighestCombo.Value);
-            Accuracy.OnValueChanged += (acc, _) => Ranking.Value = CalculateRank(acc);
+            Combo.OnNewValue += (combo) => HighestCombo.Value = Math.Max(combo, HighestCombo.Value);
+            Accuracy.OnNewValue += (acc) => Ranking.Value = CalculateRank(acc);
 
 			resultCounts[HitResultType.Miss] = 0;
 			resultCounts[HitResultType.Bad] = 0;

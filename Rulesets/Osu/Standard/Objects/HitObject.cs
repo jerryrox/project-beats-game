@@ -100,7 +100,7 @@ namespace PBGame.Rulesets.Osu.Standard.Objects
         protected HitObject()
         {
             // Make sure stack height is applied to all children.
-            bindableStackHeight.OnValueChanged += (height, _) =>
+            bindableStackHeight.OnNewValue += (height) =>
             {
                 foreach(var nested in NestedObjects.OfType<HitObject>())
                     nested.StackHeight = height;

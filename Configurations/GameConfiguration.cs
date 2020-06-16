@@ -89,14 +89,14 @@ namespace PBGame.Configurations
             {
                 generalTab.AddEntry(new SettingsEntryBool("Prefer unicode", PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false)));
                 generalTab.AddEntry(new SettingsEntryBool("Show messages", DisplayMessages = InitBoolBindable(nameof(DisplayMessages), true)));
-                DisplayMessages.OnValueChanged += (display, _) =>
+                DisplayMessages.OnNewValue += (display) =>
                 {
                     // Automatically disable messages in game if message displaying is false.
                     if(!display)
                         DisplayMessagesInGame.Value = false;
                 };
                 generalTab.AddEntry(new SettingsEntryBool("Show messages in game", DisplayMessagesInGame = InitBoolBindable(nameof(DisplayMessagesInGame), false)));
-                DisplayMessagesInGame.OnValueChanged += (display, _) =>
+                DisplayMessagesInGame.OnNewValue += (display) =>
                 {
                     // Turn off this configuration when toggled on but display message itself is turned off.
                     if(display && !DisplayMessages.Value)
