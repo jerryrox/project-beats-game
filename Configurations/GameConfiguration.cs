@@ -186,7 +186,7 @@ namespace PBGame.Configurations
             where T : struct
         {
             var bindable = new ProxyBindable<T>(
-                () => storage.GetEnum<T>(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetEnum<T>(propertyName, defaultValue),
                 (value) => storage.SetEnum(propertyName, value)
             );
             allSettings.Add(bindable);
@@ -199,7 +199,7 @@ namespace PBGame.Configurations
         private ProxyBindable<string> InitStringBindable(string propertyName, string defaultValue)
         {
             var bindable = new ProxyBindable<string>(
-                () => storage.GetString(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetString(propertyName, defaultValue),
                 (value) => storage.SetString(propertyName, value)
             );
             allSettings.Add(bindable);
@@ -212,7 +212,7 @@ namespace PBGame.Configurations
         private ProxyBindable<bool> InitBoolBindable(string propertyName, bool defaultValue)
         {
             var bindable = new ProxyBindable<bool>(
-                () => storage.GetBool(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetBool(propertyName, defaultValue),
                 (value) => storage.SetBool(propertyName, value)
             );
             allSettings.Add(bindable);
