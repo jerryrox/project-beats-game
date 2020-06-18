@@ -5,6 +5,7 @@ using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Configurations;
+using PBFramework.Data.Bindables;
 using PBFramework.Services;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
@@ -13,16 +14,17 @@ namespace PBGame.UI.Navigations.Screens.Initialize
 {
     public class InitLoader : IInitLoader {
 
-        public event Action<string> OnStatusChange;
-
-        public event Action<float> OnProgress;
-
         public event Action OnComplete;
+
+        private Bindable<string> bindableState = new Bindable<string>("");
+        private BindableFloat bindableProgress = new BindableFloat(0.0f);
 
 
         public bool IsComplete { get; private set; }
 
-        public string State { get; private set; }
+        public IReadOnlyBindable<string> State => bindableState;
+
+        public IReadOnlyBindable<float> Progress => bindableProgress;
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
@@ -147,8 +149,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void SetState(string state)
         {
-            this.State = state;
-            OnStatusChange?.Invoke(state);
+            UnityThreadService.DispatchUnattended(() => bindableState.Value = state);
         }
 
         /// <summary>
@@ -156,11 +157,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void SetProgress(float progress)
         {
-            UnityThreadService.DispatchUnattended(() =>
-            {
-                OnProgress?.Invoke(progress);
-                return null;
-            });
+            UnityThreadService.DispatchUnattended(() => bindableProgress.Value = progress);
         }
     }
 }
