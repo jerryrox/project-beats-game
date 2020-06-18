@@ -17,7 +17,8 @@ Slowly making progress 🧩
 ### 0.9.2 (WIP)
 #### New features
 - Added button hover sound toggle configuration.
-
+#### Changes
+- Changed most "value change events" to using Bindable values instead for consistency.
 
 ### 0.9.1.1
 #### Fixes
