@@ -17,9 +17,14 @@ Slowly making progress 🧩
 ### 0.9.2 (WIP)
 #### New features
 - Added button hover sound toggle configuration.
+#### Improvements
+- Clamped max height of the dropdown menu holder.
 #### Changes
 - Changed most "value change events" to using Bindable values instead for consistency.
 - Moved FontManager away to the framework's context.
+#### Fixes
+- Fixed GameConfiguration failing when not initialized within test runtime environment.
+- Fixed issue where IRoot dependency is not cached.
 
 ### 0.9.1.1
 #### Fixes
