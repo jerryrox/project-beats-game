@@ -242,8 +242,13 @@ namespace PBGame
 
             mapSelection.Music.OnNewValue += (music) =>
             {
-                // Play music on load.
                 musicController.MountAudio(music);
+                if (music == null)
+                {
+                    musicController.Stop();
+                    return;
+                }
+
                 musicController.Play();
 
                 // Seek to preview time if not home screen.
