@@ -10,7 +10,7 @@ namespace PBGame.Audio
 
 		public event Action OnBeat;
 
-        public event Action<double> OnBeatLengthChange;
+        public event Action<float> OnBeatLengthChange;
 
         private IMusicController musicController;
 
@@ -19,11 +19,11 @@ namespace PBGame.Audio
 		private TimingControlPoint nextTimingPoint;
         private int timingPointIndex;
 
-        private double curTime = -1;
-		private double nextBeatTime = 0;
+        private float curTime = -1;
+		private float nextBeatTime = 0;
 
 
-		public double BeatLength => curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
+		public float BeatLength => curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
 
 
 		public Metronome(IMapSelection selection, IMusicController controller)

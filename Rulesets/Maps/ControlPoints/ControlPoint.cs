@@ -10,7 +10,7 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 		/// <summary>
 		/// Starting time of the control point.
 		/// </summary>
-		public double Time { get; set; }
+		public float Time { get; set; }
 
 
         public int CompareTo (ControlPoint other) { return Time.CompareTo(other.Time); }
