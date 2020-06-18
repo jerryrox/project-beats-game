@@ -2,6 +2,7 @@ using System;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Maps.ControlPoints;
+using PBFramework.Data.Bindables;
 using PBFramework.Audio;
 
 namespace PBGame.Audio
@@ -10,10 +11,7 @@ namespace PBGame.Audio
 
 		public event Action OnBeat;
 
-        public event Action<float> OnBeatLengthChange;
-
         private IMusicController musicController;
-
         private IPlayableMap map;
 		private TimingControlPoint curTimingPoint;
 		private TimingControlPoint nextTimingPoint;
@@ -22,8 +20,10 @@ namespace PBGame.Audio
         private float curTime = -1;
 		private float nextBeatTime = 0;
 
+        private BindableFloat bindableBeatLength = new BindableFloat(TimingControlPoint.DefaultBeatLength);
 
-		public float BeatLength => curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
+
+        public IReadOnlyBindable<float> BeatLength => bindableBeatLength;//curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
 
 
 		public Metronome(IMapSelection selection, IMusicController controller)
@@ -123,7 +123,7 @@ namespace PBGame.Audio
 			}
 
 			// Set next beat time.
-			nextBeatTime += BeatLength;
+			nextBeatTime += bindableBeatLength.Value;
         }
 
 		/// <summary>
@@ -137,9 +137,10 @@ namespace PBGame.Audio
 			}
 			else
 			{
-				nextBeatTime = (int)((curTime - curTimingPoint.Time) / BeatLength) * BeatLength + curTimingPoint.Time;
+                float beatLength = bindableBeatLength.Value;
+                nextBeatTime = (int)((curTime - curTimingPoint.Time) / beatLength) * beatLength + curTimingPoint.Time;
 				if(curTime < curTimingPoint.Time)
-					nextBeatTime -= BeatLength;
+					nextBeatTime -= beatLength;
 			}
 		}
 
@@ -151,7 +152,7 @@ namespace PBGame.Audio
             curTimingPoint = timingPoint;
             timingPointIndex = index;
 
-            OnBeatLengthChange?.Invoke(BeatLength);
+            bindableBeatLength.Value = curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
         }
     }
 }

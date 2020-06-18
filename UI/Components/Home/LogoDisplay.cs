@@ -172,7 +172,7 @@ namespace PBGame.UI.Components.Home
         private void BindEvents()
         {
             Metronome.OnBeat += PlayPulse;
-            Metronome.OnBeatLengthChange += AdjustBeatSpeed;
+            Metronome.BeatLength.OnNewValue += AdjustBeatSpeed;
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace PBGame.UI.Components.Home
         private void UnbindEvents()
         {
             Metronome.OnBeat -= PlayPulse;
-            Metronome.OnBeatLengthChange -= AdjustBeatSpeed;
+            Metronome.BeatLength.OnNewValue -= AdjustBeatSpeed;
         }
     }
 }
