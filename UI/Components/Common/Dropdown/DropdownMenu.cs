@@ -67,6 +67,9 @@ namespace PBGame.UI.Components.Common.Dropdown
         /// </summary>
         private bool IsAnimating => showAni.IsPlaying || hideAni.IsPlaying;
 
+        [ReceivesDependency(true)]
+        private IRoot Root { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -168,7 +171,7 @@ namespace PBGame.UI.Components.Common.Dropdown
                 item.Depth = activeItems.Count;
                 activeItems.Add(item);
             }
-            holder.Height = ItemSize.y * activeItems.Count;
+            holder.Height = Mathf.Min(ItemSize.y * activeItems.Count, GetMaxHolderHeight());
 
             showAni.PlayFromStart();
         }
@@ -206,6 +209,11 @@ namespace PBGame.UI.Components.Common.Dropdown
         void IRecyclable.OnRecycleNew() {}
 
         void IRecyclable.OnRecycleDestroy() {}
+
+        /// <summary>
+        /// Calculates the max height of the menu holder.
+        /// </summary>
+        private float GetMaxHolderHeight() => Root != null ? Root.Resolution.y / 2f : float.MaxValue;
 
         /// <summary>
         /// Makes sure the menu does not go outside of the view boundary.
