@@ -18,6 +18,9 @@ namespace PBGame.Graphics
             if (dependency != null)
             {
                 dependency.Inject(root);
+
+                if(!dependency.Contains<IRoot>())
+                    dependency.CacheAs<IRoot>(root);
             }
             return root;
         }
