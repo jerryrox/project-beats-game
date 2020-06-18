@@ -41,7 +41,7 @@ namespace PBGame.Maps
 
         public IReadOnlyBindable<IMapBackground> Background => bindableBackground;
 
-        public bool HasSelection => Mapset != null && Map != null;
+        public bool HasSelection => bindableMapset.Value != null && bindableMap.Value != null;
 
 
         public MapSelection(IMusicCacher musicCacher,
@@ -120,9 +120,9 @@ namespace PBGame.Maps
             }
 
             // Set mapset only if different.
-            if (mapset != this.Mapset)
+            var prevMapset = bindableMapset.Value;
+            if (mapset != prevMapset)
             {
-                var prevMapset = bindableMapset.Value;
                 bindableMapset.SetWithoutTrigger(mapset);
                 this.MapsetConfig.Value = mapsetConfiguration?.GetConfig(mapset);
                 bindableMapset.TriggerWithPrevious(prevMapset);
@@ -143,7 +143,7 @@ namespace PBGame.Maps
             }
 
             // Set map only if different.
-            if (map != this.Map)
+            if (map != bindableMap.Value)
             {
                 IPlayableMap prevMap = bindableMap.Value;
                 bindableMap.SetWithoutTrigger(map);

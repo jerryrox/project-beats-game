@@ -125,7 +125,7 @@ namespace PBGame.UI.Components.GameLoad
         /// </summary>
         private void SetupDisplays()
         {
-            var map = MapSelection.Map;
+            var map = MapSelection.Map.Value;
             if (map == null)
             {
                 titleLabel.Text = "";
@@ -136,10 +136,10 @@ namespace PBGame.UI.Components.GameLoad
             else
             {
                 var preferUnicode = GameConfiguration.PreferUnicode.Value;
-                titleLabel.Text = map.Value.Metadata.GetTitle(preferUnicode);
-                artistLabel.Text = map.Value.Metadata.GetArtist(preferUnicode);
-                versionLabel.Text = map.Value.Detail.Version;
-                mapperLabel.Text = $"mapped by {map.Value.Metadata.Creator}";
+                titleLabel.Text = map.Metadata.GetTitle(preferUnicode);
+                artistLabel.Text = map.Metadata.GetArtist(preferUnicode);
+                versionLabel.Text = map.Detail.Version;
+                mapperLabel.Text = $"mapped by {map.Metadata.Creator}";
             }
         }
 

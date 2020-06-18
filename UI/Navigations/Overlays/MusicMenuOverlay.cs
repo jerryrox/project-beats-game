@@ -238,13 +238,13 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void SetLabelText()
         {
-            var map = MapSelection.Map;
+            var map = MapSelection.Map.Value;
             if (map != null)
             {
                 var preferUnicode = GameConfiguration.PreferUnicode.Value;
 
-                title.Text = map.Value.Metadata.GetTitle(preferUnicode);
-                artist.Text = map.Value.Metadata.GetArtist(preferUnicode);
+                title.Text = map.Metadata.GetTitle(preferUnicode);
+                artist.Text = map.Metadata.GetArtist(preferUnicode);
             }
             else
             {

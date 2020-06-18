@@ -116,7 +116,7 @@ namespace PBGame.UI.Components.Songs
                     break;
                 case SongOffsetAction:
                     // If not the selected mapset, make it selected.
-                    if(heldMapset != MapSelection.Mapset)
+                    if(heldMapset != MapSelection.Mapset.Value)
                         MapSelection.SelectMapset(heldMapset);
                         
                     OverlayNavigator.Show<OffsetsOverlay>().Setup();

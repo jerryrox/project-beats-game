@@ -49,7 +49,7 @@ namespace PBGame.UI.Components.Prepare
         /// <summary>
         /// Returns whether this button should be focused with the current state.
         /// </summary>
-        private bool ShouldBeFocused => !isInteractible || myMap == MapSelection.Map;
+        private bool ShouldBeFocused => !isInteractible || myMap == MapSelection.Map.Value;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
