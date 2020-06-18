@@ -19,6 +19,7 @@ Slowly making progress 🧩
 - Added button hover sound toggle configuration.
 #### Changes
 - Changed most "value change events" to using Bindable values instead for consistency.
+- Moved FontManager away to the framework's context.
 
 ### 0.9.1.1
 #### Fixes
