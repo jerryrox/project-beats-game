@@ -23,7 +23,7 @@ namespace PBGame.UI.Components.Prepare
         /// <summary>
         /// Returns the current mapset selected.
         /// </summary>
-        private IMapset CurMapset => MapSelection.Mapset;
+        private IMapset CurMapset => MapSelection.Mapset.Value;
 
         /// <summary>
         /// Returns the list of original maps in current mapset.
@@ -94,7 +94,7 @@ namespace PBGame.UI.Components.Prepare
         /// </summary>
         private void BindEvents()
         {
-            MapSelection.OnMapsetChange += OnMapsetChange;
+            MapSelection.Mapset.OnNewValue += OnMapsetChange;
             GameConfiguration.RulesetMode.OnValueChanged += OnModeChange;
 
             RefreshList();
@@ -105,7 +105,7 @@ namespace PBGame.UI.Components.Prepare
         /// </summary>
         private void UnbindEvents()
         {
-            MapSelection.OnMapsetChange -= OnMapsetChange;
+            MapSelection.Mapset.OnNewValue -= OnMapsetChange;
             GameConfiguration.RulesetMode.OnValueChanged -= OnModeChange;
         }
 

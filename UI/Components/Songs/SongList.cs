@@ -86,7 +86,7 @@ namespace PBGame.UI.Components.Songs
         private void BindEvents()
         {
             MapManager.DisplayedMapsets.OnChange += OnMapsetListChange;
-            MapSelection.OnMapsetChange += OnMapsetChange;
+            MapSelection.Mapset.OnNewValue += OnMapsetChange;
 
             OnMapsetListChange(MapManager.DisplayedMapsets.RawList);
         }
@@ -97,7 +97,7 @@ namespace PBGame.UI.Components.Songs
         private void UnbindEvents()
         {
             MapManager.DisplayedMapsets.OnChange -= OnMapsetListChange;
-            MapSelection.OnMapsetChange -= OnMapsetChange;
+            MapSelection.Mapset.OnNewValue -= OnMapsetChange;
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace PBGame.UI.Components.Songs
             this.mapsets = mapsets;
             TotalItems = mapsets.Count;
             
-            CenterOnSelection(MapSelection.Mapset);
+            CenterOnSelection(MapSelection.Mapset.Value);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace PBGame.UI.Components.Songs
         private void CenterOnSelection(IMapset mapset)
         {
             // If the selected mapset currently exists in the new list, focus on that area.
-            var selection = MapSelection.Mapset;
+            var selection = MapSelection.Mapset.Value;
             var selectionIndex = mapsets.IndexOf(selection);
             if (selectionIndex >= 0)
             {

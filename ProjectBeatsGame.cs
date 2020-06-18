@@ -159,13 +159,13 @@ namespace PBGame
         {
             screenNavigator.OnShowView += (view) =>
             {
-                if (mapSelection.Map != null)
+                if (mapSelection.Map.Value != null)
                 {
                     // Change loop time based on the screens.
                     if (view is HomeScreen || view is DownloadScreen || view is GameScreen)
                         musicController.LoopTime = 0f;
                     else
-                        musicController.LoopTime = mapSelection.Map.Metadata.PreviewTime;
+                        musicController.LoopTime = mapSelection.Map.Value.Metadata.PreviewTime;
                 }
 
                 ApplyMenuBarOverlay();
@@ -183,7 +183,7 @@ namespace PBGame
                         // Play from preview point if music stopped at the end.
                         if (!wasPaused)
                         {
-                            musicController.Seek(mapSelection.Map.Metadata.PreviewTime);
+                            musicController.Seek(mapSelection.Map.Value.Metadata.PreviewTime);
                             musicController.Fade(0f, 1f);
                         }
                     }
@@ -240,16 +240,21 @@ namespace PBGame
                     mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
             };
 
-            mapSelection.OnMusicLoaded += (music) =>
+            mapSelection.Music.OnNewValue += (music) =>
             {
-                // Play music on load.
                 musicController.MountAudio(music);
+                if (music == null)
+                {
+                    musicController.Stop();
+                    return;
+                }
+
                 musicController.Play();
 
                 // Seek to preview time if not home screen.
                 if (!(screenNavigator.CurrentScreen.Value is HomeScreen))
                 {
-                    var previewTime = mapSelection.Map.Metadata.PreviewTime;
+                    var previewTime = mapSelection.Map.Value.Metadata.PreviewTime;
                     // Some songs don't have a proper preview time.
                     if (previewTime < 0)
                         previewTime = music.Duration / 2;
@@ -264,12 +269,6 @@ namespace PBGame
 
                 // Play song
                 musicController.Fade(0f, 1f);
-            };
-            mapSelection.OnMusicUnloaded += () =>
-            {
-                // Stop and unload music.
-                musicController.Stop();
-                musicController.MountAudio(null);
             };
         }
 

@@ -9,45 +9,14 @@ namespace PBGame.Maps
     public interface IMapSelection {
 
         /// <summary>
-        /// Event called when the selected mapset has changed.
-        /// </summary>
-        event Action<IMapset> OnMapsetChange;
-
-        /// <summary>
-        /// Event called when the selected mapset has changed.
-        /// </summary>
-        event Action<IPlayableMap> OnMapChange;
-
-        /// <summary>
-        /// Event called when the music for current map has been loaded.
-        /// </summary>
-        event Action<IMusicAudio> OnMusicLoaded;
-
-        /// <summary>
-        /// Event called when the background for current map has been loaded.
-        /// </summary>
-        event Action<IMapBackground> OnBackgroundLoaded;
-
-        /// <summary>
-        /// Event called when the current music has been unloaded.
-        /// </summary>
-        event Action OnMusicUnloaded;
-
-        /// <summary>
-        /// Event called when the current background has been unloaded.
-        /// </summary>
-        event Action OnBackgroundUnloaded;
-
-
-        /// <summary>
         /// Returns the mapset currently selected.
         /// </summary>
-        IMapset Mapset { get; }
+        IReadOnlyBindable<IMapset> Mapset { get; }
 
         /// <summary>
         /// Returns the map currently selected.
         /// </summary>
-        IPlayableMap Map { get; }
+        IReadOnlyBindable<IPlayableMap> Map { get; }
 
         /// <summary>
         /// Returns the config for the currently selected mapset.
@@ -64,13 +33,12 @@ namespace PBGame.Maps
         /// <summary>
         /// Returns the selected map's music clip.
         /// </summary>
-        IMusicAudio Music { get; }
+        IReadOnlyBindable<IMusicAudio> Music { get; }
 
         /// <summary>
         /// Returns the selected map's background asset.
         /// </summary>
-        /// <value></value>
-        IMapBackground Background { get; }
+        IReadOnlyBindable<IMapBackground> Background { get; }
 
         /// <summary>
         /// Returns whether there is currently a valid mapset & map selection.

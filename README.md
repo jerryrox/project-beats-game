@@ -14,6 +14,11 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.9.2 (WIP)
+#### New features
+- Added button hover sound toggle configuration.
+
+
 ### 0.9.1.1
 #### Fixes
 - Fixed Game pause state not resetting on disposal.

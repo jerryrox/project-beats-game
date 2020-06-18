@@ -161,9 +161,9 @@ namespace PBGame.UI.Components.Home
         /// <summary>
         /// Adjusts the speed of the pulse animation for specified length.
         /// </summary>
-        private void AdjustBeatSpeed(double beatLength)
+        private void AdjustBeatSpeed(float beatLength)
         {
-            pulseAni.Speed = 1000f / (float)beatLength;
+            pulseAni.Speed = 1000f / beatLength;
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace PBGame.UI.Components.Home
         private void BindEvents()
         {
             Metronome.OnBeat += PlayPulse;
-            Metronome.OnBeatLengthChange += AdjustBeatSpeed;
+            Metronome.BeatLength.OnNewValue += AdjustBeatSpeed;
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace PBGame.UI.Components.Home
         private void UnbindEvents()
         {
             Metronome.OnBeat -= PlayPulse;
-            Metronome.OnBeatLengthChange -= AdjustBeatSpeed;
+            Metronome.BeatLength.OnNewValue -= AdjustBeatSpeed;
         }
     }
 }

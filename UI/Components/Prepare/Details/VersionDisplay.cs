@@ -100,7 +100,7 @@ namespace PBGame.UI.Components.Prepare.Details
         /// </summary>
         private void BindEvents()
         {
-            MapSelection.OnMapChange += OnMapChange;
+            MapSelection.Map.OnNewValue += OnMapChange;
 
             RefreshDisplays();
         }
@@ -110,7 +110,7 @@ namespace PBGame.UI.Components.Prepare.Details
         /// </summary>
         private void UnbindEvents()
         {
-            MapSelection.OnMapChange -= OnMapChange;
+            MapSelection.Map.OnNewValue -= OnMapChange;
         }
 
         /// <summary>
@@ -118,8 +118,8 @@ namespace PBGame.UI.Components.Prepare.Details
         /// </summary>
         private void SelectMap(int offset)
         {
-            var maps = MapSelection.Mapset.Maps;
-            var curMap = MapSelection.Map.OriginalMap;
+            var maps = MapSelection.Mapset.Value.Maps;
+            var curMap = MapSelection.Map.Value.OriginalMap;
 
             // Determin the index
             int index = maps.IndexOf(curMap) + offset;
@@ -133,7 +133,7 @@ namespace PBGame.UI.Components.Prepare.Details
         /// </summary>
         private void RefreshDisplays()
         {
-            var map = MapSelection.Map;
+            var map = MapSelection.Map.Value;
 
             versionIcon.Setup(map);
             nameLabel.Text = map.Detail.Version;

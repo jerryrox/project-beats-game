@@ -51,8 +51,8 @@ namespace PBGame.UI.Navigations.Screens
 
             // Initialize loader
             initLoader = new InitLoader(Dependencies);
-            initLoader.OnProgress += OnLoaderProgress;
-            initLoader.OnStatusChange += OnLoaderStatus;
+            initLoader.Progress.OnNewValue += OnLoaderProgress;
+            initLoader.State.OnNewValue += OnLoaderStatus;
             initLoader.OnComplete += LogoDisplay.PlayEnd;
             initLoader.Load();
 

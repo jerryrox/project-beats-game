@@ -124,7 +124,7 @@ namespace PBGame.UI.Components.Songs
             hoverInAni = new Anime();
             hoverInAni.AnimateColor(color => hoverSprite.Color = color)
                 .AddTime(0f, () => hoverSprite.Color)
-                .AddTime(0.25f, () => MapSelection.Background.Highlight)
+                .AddTime(0.25f, () => MapSelection.Background.Value.Highlight)
                 .Build();
             hoverInAni.AnimateFloat(alpha => imageGradient.Alpha = alpha)
                 .AddTime(0f, () => imageGradient.Alpha)
@@ -163,12 +163,9 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void BindEvents()
         {
-            MapSelection.OnBackgroundLoaded += OnBackgroundChange;
-            MapSelection.OnMapChange += OnMapChange;
+            MapSelection.Background.BindAndTrigger(OnBackgroundChange);
+            MapSelection.Map.BindAndTrigger(OnMapChange);
             GameConfiguration.PreferUnicode.OnNewValue += OnConfigChange;
-
-            OnBackgroundChange(MapSelection.Background);
-            OnMapChange(MapSelection.Map);
         }
 
         /// <summary>
@@ -176,8 +173,8 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void UnbindEvents()
         {
-            MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
-            MapSelection.OnMapChange -= OnMapChange;
+            MapSelection.Background.OnNewValue -= OnBackgroundChange;
+            MapSelection.Map.OnNewValue -= OnMapChange;
             GameConfiguration.PreferUnicode.OnNewValue -= OnConfigChange;
         }
 
@@ -197,7 +194,7 @@ namespace PBGame.UI.Components.Songs
         /// <summary>
         /// Event called when the game configuration for prefer unicode has changed.
         /// </summary>
-        private void OnConfigChange(bool preferUnicode) => SetLabels(MapSelection.Map, preferUnicode);
+        private void OnConfigChange(bool preferUnicode) => SetLabels(MapSelection.Map.Value, preferUnicode);
 
         /// <summary>
         /// Sets label values.

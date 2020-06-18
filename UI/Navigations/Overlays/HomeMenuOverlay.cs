@@ -106,15 +106,14 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnEnableInited();
 
-            MapSelection.OnBackgroundLoaded += OnBackgroundChange;
-            OnBackgroundChange(MapSelection.Background);
+            MapSelection.Background.BindAndTrigger(OnBackgroundChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
+            MapSelection.Background.OnNewValue -= OnBackgroundChange;
         }
 
         /// <summary>

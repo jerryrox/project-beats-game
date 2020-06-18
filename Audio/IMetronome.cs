@@ -1,4 +1,5 @@
 using System;
+using PBFramework.Data.Bindables;
 
 namespace PBGame.Audio
 {
@@ -9,16 +10,11 @@ namespace PBGame.Audio
         /// </summary>
         event Action OnBeat;
 
-        /// <summary>
-        /// Event called when the beat length has been changed.
-        /// </summary>
-        event Action<double> OnBeatLengthChange;
-
 
         /// <summary>
         /// Returns the length of a beat in milliseconds.
         /// </summary>
-        double BeatLength { get; }
+        IReadOnlyBindable<float> BeatLength { get; }
 
 
         /// <summary>

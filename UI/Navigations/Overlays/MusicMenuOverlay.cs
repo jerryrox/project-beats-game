@@ -200,14 +200,14 @@ namespace PBGame.UI.Navigations.Overlays
             MusicController.OnPause += OnMusicPause;
             MusicController.OnUnpause += OnMusicUnpause;
 
-            MapSelection.OnMapChange += OnMapChange;
-            MapSelection.OnBackgroundLoaded += OnBackgroundChange;
+            MapSelection.Map.OnNewValue += OnMapChange;
+            MapSelection.Background.OnNewValue += OnBackgroundChange;
 
             GameConfiguration.PreferUnicode.OnNewValue += OnPreferUnicode;
 
             SetPlayButtonIcon();
             SetLabelText();
-            OnBackgroundChange(MapSelection.Background);
+            OnBackgroundChange(MapSelection.Background.Value);
         }
 
         /// <summary>
@@ -219,8 +219,8 @@ namespace PBGame.UI.Navigations.Overlays
             MusicController.OnPause -= OnMusicPause;
             MusicController.OnUnpause -= OnMusicUnpause;
 
-            MapSelection.OnMapChange -= OnMapChange;
-            MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
+            MapSelection.Map.OnNewValue -= OnMapChange;
+            MapSelection.Background.OnNewValue -= OnBackgroundChange;
 
             GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
@@ -243,8 +243,8 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 var preferUnicode = GameConfiguration.PreferUnicode.Value;
 
-                title.Text = map.Metadata.GetTitle(preferUnicode);
-                artist.Text = map.Metadata.GetArtist(preferUnicode);
+                title.Text = map.Value.Metadata.GetTitle(preferUnicode);
+                artist.Text = map.Value.Metadata.GetArtist(preferUnicode);
             }
             else
             {

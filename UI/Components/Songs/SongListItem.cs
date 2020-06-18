@@ -222,7 +222,7 @@ namespace PBGame.UI.Components.Songs
             LoadBackground();
 
             // Set mapset focus.
-            SetFocus(MapSelection.Mapset != null && this.Mapset == MapSelection.Mapset);
+            SetFocus(MapSelection.Mapset.Value != null && this.Mapset == MapSelection.Mapset.Value);
         }
 
         /// <summary>
@@ -230,8 +230,7 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void BindEvents()
         {
-            MapSelection.OnMapsetChange += OnMapsetChanged;
-            OnMapsetChanged(MapSelection.Mapset);
+            MapSelection.Mapset.BindAndTrigger(OnMapsetChanged);
             
             GameConfiguration.PreferUnicode.BindAndTrigger(OnPreferUnicode);
         }
@@ -241,7 +240,7 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void UnbindEvents()
         {
-            MapSelection.OnMapsetChange -= OnMapsetChanged;
+            MapSelection.Mapset.OnNewValue -= OnMapsetChanged;
             GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 

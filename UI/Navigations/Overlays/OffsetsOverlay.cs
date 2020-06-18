@@ -60,7 +60,7 @@ namespace PBGame.UI.Navigations.Overlays
             }
         }
         
-        public void Setup() => Setup(MapSelection.Mapset, MapSelection.Map, MapSelection.MapsetConfig.Value, MapSelection.MapConfig.Value);
+        public void Setup() => Setup(MapSelection.Mapset.Value, MapSelection.Map.Value, MapSelection.MapsetConfig.Value, MapSelection.MapConfig.Value);
 
         public void Setup(IMapset mapset, IMap map) => Setup(mapset, map, MapsetConfiguration.GetConfig(mapset), MapConfiguration.GetConfig(map));
 

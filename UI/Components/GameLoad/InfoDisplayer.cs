@@ -136,10 +136,10 @@ namespace PBGame.UI.Components.GameLoad
             else
             {
                 var preferUnicode = GameConfiguration.PreferUnicode.Value;
-                titleLabel.Text = map.Metadata.GetTitle(preferUnicode);
-                artistLabel.Text = map.Metadata.GetArtist(preferUnicode);
-                versionLabel.Text = map.Detail.Version;
-                mapperLabel.Text = $"mapped by {map.Metadata.Creator}";
+                titleLabel.Text = map.Value.Metadata.GetTitle(preferUnicode);
+                artistLabel.Text = map.Value.Metadata.GetArtist(preferUnicode);
+                versionLabel.Text = map.Value.Detail.Version;
+                mapperLabel.Text = $"mapped by {map.Value.Metadata.Creator}";
             }
         }
 
