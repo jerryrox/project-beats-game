@@ -120,7 +120,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Adjusts background display matching the specified screen.
         /// </summary>
-        private void ChangeBgDisplay(INavigationView screen)
+        private void OnScreenChange(INavigationView screen)
         {
             // TODO: Display different background if required.
             SetBackground(ImageBackground);
@@ -134,8 +134,8 @@ namespace PBGame.UI.Navigations.Overlays
             MapSelection.OnBackgroundLoaded += MountBackground;
             MountBackground(MapSelection.Background);
 
-            ScreenNavigator.OnShowView += ChangeBgDisplay;
-            ChangeBgDisplay(ScreenNavigator.CurrentScreen);
+            ScreenNavigator.OnShowView += OnScreenChange;
+            OnScreenChange(ScreenNavigator.CurrentScreen.Value);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace PBGame.UI.Navigations.Overlays
         private void UnbindEvents()
         {
             MapSelection.OnBackgroundLoaded -= MountBackground;
-            ScreenNavigator.OnShowView -= ChangeBgDisplay;
+            ScreenNavigator.OnShowView -= OnScreenChange;
         }
     }
 }

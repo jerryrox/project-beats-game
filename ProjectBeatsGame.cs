@@ -122,7 +122,7 @@ namespace PBGame
             musicController.OnEnd += () =>
             {
                 // Loop the music when not in game screen.
-                if (!(screenNavigator.CurrentScreen is GameScreen))
+                if (!(screenNavigator.CurrentScreen.Value is GameScreen))
                 {
                     // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
                     // Check whether menu bar exists and try letting the music menu handle music switching.
@@ -132,12 +132,12 @@ namespace PBGame
                         menuBar.MusicButton.SetNextMusic();
                     }
                     // Else if homescreen, select a random music.
-                    else if (screenNavigator.CurrentScreen is HomeScreen)
+                    else if (screenNavigator.CurrentScreen.Value is HomeScreen)
                     {
                         mapSelection.SelectMapset(mapManager.AllMapsets.GetRandom());
                     }
                     // Else if download screen, just stop there.
-                    else if (screenNavigator.CurrentScreen is DownloadScreen)
+                    else if (screenNavigator.CurrentScreen.Value is DownloadScreen)
                     {
                         musicController.Stop();
                     }
@@ -171,7 +171,7 @@ namespace PBGame
                 ApplyMenuBarOverlay();
                 ApplyMenuBarProperties();
             };
-            screenNavigator.OnScreenChange += (curScreen, prevScreen) =>
+            screenNavigator.CurrentScreen.OnValueChanged += (curScreen, prevScreen) =>
             {
                 // If navigating out of game screen, play music if stopped.
                 if (prevScreen is GameScreen)
@@ -247,7 +247,7 @@ namespace PBGame
                 musicController.Play();
 
                 // Seek to preview time if not home screen.
-                if (!(screenNavigator.CurrentScreen is HomeScreen))
+                if (!(screenNavigator.CurrentScreen.Value is HomeScreen))
                 {
                     var previewTime = mapSelection.Map.Metadata.PreviewTime;
                     // Some songs don't have a proper preview time.
@@ -351,7 +351,7 @@ namespace PBGame
                     return;
 
                 // Select new map if in songs selection.
-                if (screenNavigator.CurrentScreen is SongsScreen)
+                if (screenNavigator.CurrentScreen.Value is SongsScreen)
                     mapSelection.SelectMapset(mapset);
 
                 notificationBox.Add(new Notification()
@@ -366,7 +366,7 @@ namespace PBGame
         /// </summary>
         private void ApplyMenuBarOverlay()
         {
-            if (screenNavigator.CurrentScreen is HomeScreen)
+            if (screenNavigator.CurrentScreen.Value is HomeScreen)
             {
                 if (overlayNavigator.IsShowing(typeof(HomeMenuOverlay)))
                     overlayNavigator.Show<MenuBarOverlay>(true);
@@ -376,9 +376,9 @@ namespace PBGame
             }
 
             if (overlayNavigator.IsShowing(typeof(GameLoadOverlay)) ||
-                screenNavigator.CurrentScreen is GameScreen ||
-                screenNavigator.CurrentScreen is InitializeScreen ||
-                screenNavigator.CurrentScreen is SplashScreen)
+                screenNavigator.CurrentScreen.Value is GameScreen ||
+                screenNavigator.CurrentScreen.Value is InitializeScreen ||
+                screenNavigator.CurrentScreen.Value is SplashScreen)
             {
                 overlayNavigator.Hide<MenuBarOverlay>();
                 return;
@@ -397,7 +397,7 @@ namespace PBGame
                 return;
 
             var menuBar = cachedMenuBar.Value;
-            bool isHomeActive = screenNavigator.CurrentScreen is HomeScreen;
+            bool isHomeActive = screenNavigator.CurrentScreen.Value is HomeScreen;
 
             menuBar.MusicButton.Active = isHomeActive;
             menuBar.BackgroundSprite.Color = new Color(0f, 0f, 0f, 0f);

@@ -6,7 +6,7 @@ Currently, I'm restructuring my original source to make things more organized an
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (1.0.2) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 
