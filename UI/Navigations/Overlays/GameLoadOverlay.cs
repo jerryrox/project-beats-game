@@ -145,7 +145,7 @@ namespace PBGame.UI.Navigations.Overlays
             SetBindGameScreen(true);
 
             // Start loading the game.
-            gameScreen.PreInitialize(MapSelection.Map, modeServicer);
+            gameScreen.PreInitialize(MapSelection.Map.Value, modeServicer);
 
             // User may escape out of the game at any time.
             SetBindEscape(true);

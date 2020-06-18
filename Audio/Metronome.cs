@@ -30,7 +30,7 @@ namespace PBGame.Audio
 		{
             musicController = controller;
 
-            selection.OnMapChange += map =>
+            selection.Map.OnNewValue += map =>
             {
                 this.map = map;
                 curTime = controller.CurrentTime;

@@ -130,7 +130,7 @@ namespace PBGame.UI.Navigations.Screens
             // Stop preview music in case it's currently playing.
             state.PreviewingMapset.Value = null;
 
-            MusicController.MountAudio(MapSelection.Music);
+            MusicController.MountAudio(MapSelection.Music.Value);
             MusicController.Play();
         }
 

@@ -12,17 +12,10 @@ namespace PBGame.Maps
 {
     public class MapSelection : IMapSelection {
 
-        public event Action<IMapset> OnMapsetChange;
-
-        public event Action<IPlayableMap> OnMapChange;
-
-        public event Action<IMusicAudio> OnMusicLoaded;
-
-        public event Action<IMapBackground> OnBackgroundLoaded;
-
-        public event Action OnMusicUnloaded;
-
-        public event Action OnBackgroundUnloaded;
+        private Bindable<IMapset> bindableMapset = new Bindable<IMapset>(null);
+        private Bindable<IPlayableMap> bindableMap = new Bindable<IPlayableMap>(null);
+        private Bindable<IMusicAudio> bindableMusic = new Bindable<IMusicAudio>(null);
+        private Bindable<IMapBackground> bindableBackground = new Bindable<IMapBackground>(null);
 
         private IMusicCacher musicCacher;
         private IBackgroundCacher backgroundCacher;
@@ -36,17 +29,17 @@ namespace PBGame.Maps
         private GameModeType currentMode;
 
 
-        public IMapset Mapset { get; private set; }
+        public IReadOnlyBindable<IMapset> Mapset => bindableMapset;
 
-        public IPlayableMap Map { get; private set; }
+        public IReadOnlyBindable<IPlayableMap> Map => bindableMap;
 
         public Bindable<MapsetConfig> MapsetConfig { get; private set; } = new Bindable<MapsetConfig>();
 
         public Bindable<MapConfig> MapConfig { get; private set; } = new Bindable<MapConfig>();
 
-        public IMusicAudio Music { get; private set; }
+        public IReadOnlyBindable<IMusicAudio> Music => bindableMusic;
 
-        public IMapBackground Background { get; private set; }
+        public IReadOnlyBindable<IMapBackground> Background => bindableBackground;
 
         public bool HasSelection => Mapset != null && Map != null;
 
@@ -67,7 +60,7 @@ namespace PBGame.Maps
             this.mapConfiguration = mapConfiguration;
 
             // Initial background.
-            Background = emptyBackground = new MapBackground(null);
+            bindableBackground.Value = emptyBackground = new MapBackground(null);
 
             // Setup music loader
             musicAgent = new CacherAgent<IMap, IMusicAudio>(musicCacher)
@@ -77,8 +70,7 @@ namespace PBGame.Maps
             };
             musicAgent.OnFinished += (music) =>
             {
-                this.Music = music;
-                OnMusicLoaded?.Invoke(music);
+                bindableMusic.Value = music;
             };
 
             // Setup background loader
@@ -89,8 +81,7 @@ namespace PBGame.Maps
             };
             backgroundAgent.OnFinished += (background) =>
             {
-                this.Background = background;
-                OnBackgroundLoaded?.Invoke(background);
+                bindableBackground.Value = background;
             };
 
             // Listen to game mode change event from config.
@@ -106,8 +97,8 @@ namespace PBGame.Maps
                 {
                     currentMode = newMode;
                     // Automatically change to variant playable for this new mode.
-                    if(Map != null)
-                        SelectMap(Map.OriginalMap.GetPlayable(newMode));
+                    if(Map.Value != null)
+                        SelectMap(Map.Value.OriginalMap.GetPlayable(newMode));
                 }
             };
         }
@@ -118,8 +109,6 @@ namespace PBGame.Maps
             {
                 UnloadMusic();
                 UnloadBackground();
-                OnMapsetChange?.Invoke(null);
-                OnMapChange?.Invoke(null);
                 return;
             }
 
@@ -133,9 +122,10 @@ namespace PBGame.Maps
             // Set mapset only if different.
             if (mapset != this.Mapset)
             {
-                this.Mapset = mapset;
+                var prevMapset = bindableMapset.Value;
+                bindableMapset.SetWithoutTrigger(mapset);
                 this.MapsetConfig.Value = mapsetConfiguration?.GetConfig(mapset);
-                OnMapsetChange?.Invoke(mapset);
+                bindableMapset.TriggerWithPrevious(prevMapset);
             }
 
             // Select the map.
@@ -148,17 +138,17 @@ namespace PBGame.Maps
             {
                 UnloadMusic();
                 UnloadBackground();
-                OnMapChange?.Invoke(null);
+                bindableMap.Value = null;
                 return;
             }
 
             // Set map only if different.
             if (map != this.Map)
             {
-                IPlayableMap prevMap = this.Map;
-                this.Map = map;
+                IPlayableMap prevMap = bindableMap.Value;
+                bindableMap.SetWithoutTrigger(map);
                 this.MapConfig.Value = mapConfiguration?.GetConfig(map);
-                OnMapChange?.Invoke(map);
+                bindableMap.TriggerWithPrevious(prevMap);
 
                 // Change background / audio assets when necessary.
                 if (prevMap == null || !prevMap.Detail.IsSameBackground(map.Detail))
@@ -181,8 +171,8 @@ namespace PBGame.Maps
         /// </summary>
         private void LoadMusic()
         {
-            if(Map != null)
-                musicAgent.Request(Map);
+            if(bindableMap.Value != null)
+                musicAgent.Request(bindableMap.Value);
         }
 
         /// <summary>
@@ -190,8 +180,8 @@ namespace PBGame.Maps
         /// </summary>
         private void LoadBackground()
         {
-            if(Map != null)
-                backgroundAgent.Request(Map);
+            if(bindableMap.Value != null)
+                backgroundAgent.Request(bindableMap.Value);
         }
 
         /// <summary>
@@ -200,8 +190,7 @@ namespace PBGame.Maps
         private void UnloadMusic()
         {
             musicAgent.Remove();
-            Music = null;
-            OnMusicUnloaded?.Invoke();
+            bindableMusic.Value = null;
         }
 
         /// <summary>
@@ -210,11 +199,7 @@ namespace PBGame.Maps
         private void UnloadBackground()
         {
             backgroundAgent.Remove();
-            Background = null;
-            OnBackgroundUnloaded?.Invoke();
-
-            Background = emptyBackground;
-            OnBackgroundLoaded?.Invoke(Background);
+            bindableBackground.Value = emptyBackground;
         }
     }
 }

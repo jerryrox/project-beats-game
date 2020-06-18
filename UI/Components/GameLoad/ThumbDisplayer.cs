@@ -69,15 +69,14 @@ namespace PBGame.UI.Components.GameLoad
         {
             base.OnEnableInited();
 
-            MapSelection.OnBackgroundLoaded += OnBackgroundLoad;
-            OnBackgroundLoad(MapSelection.Background);
+            MapSelection.Background.BindAndTrigger(OnBackgroundLoad);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            MapSelection.OnBackgroundLoaded -= OnBackgroundLoad;
+            MapSelection.Background.OnNewValue -= OnBackgroundLoad;
             OnBackgroundLoad(MapBackground.Empty);
         }
 

@@ -76,9 +76,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// </summary>
         private void BindEvents()
         {
-            MapSelection.OnMapChange += OnMapChange;
-
-            OnMapChange(MapSelection.Map);
+            MapSelection.Map.BindAndTrigger(OnMapChange);
         }
         
         /// <summary>
@@ -86,7 +84,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// </summary>
         private void UnbindEvents()
         {
-            MapSelection.OnMapChange -= OnMapChange;
+            MapSelection.Map.OnNewValue -= OnMapChange;
         }
 
         /// <summary>

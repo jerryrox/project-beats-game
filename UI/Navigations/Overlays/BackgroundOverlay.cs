@@ -131,11 +131,9 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void BindEvents()
         {
-            MapSelection.OnBackgroundLoaded += MountBackground;
-            MountBackground(MapSelection.Background);
+            MapSelection.Background.BindAndTrigger(MountBackground);
 
-            ScreenNavigator.OnShowView += OnScreenChange;
-            OnScreenChange(ScreenNavigator.CurrentScreen.Value);
+            ScreenNavigator.CurrentScreen.BindAndTrigger(OnScreenChange);
         }
 
         /// <summary>
@@ -143,8 +141,8 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void UnbindEvents()
         {
-            MapSelection.OnBackgroundLoaded -= MountBackground;
-            ScreenNavigator.OnShowView -= OnScreenChange;
+            MapSelection.Background.OnNewValue -= MountBackground;
+            ScreenNavigator.CurrentScreen.OnNewValue -= OnScreenChange;
         }
     }
 }
