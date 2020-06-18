@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Assets.Fonts;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -74,14 +71,11 @@ namespace PBGame.UI.Components.Common
 
 
         [InitWithDependency]
-        private void Init(IFontManager fontManager, IColorPreset colorPreset)
+        private void Init(IColorPreset colorPreset)
         {
             tint = colorPreset.PrimaryFocus;
 
             component.onEndEdit.AddListener(value => SetFocus(false, true));
-
-            // Assign default font.
-            valueLabel.Font = placeholderLabel.Font = fontManager.DefaultFont;
 
             // By default, background sprite component is the input itself so we need to separate that.
             backgroundSprite.SpriteName = "null";

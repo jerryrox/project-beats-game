@@ -1,5 +1,4 @@
 using PBGame.UI;
-using PBGame.Assets.Fonts;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -20,10 +19,6 @@ namespace PBGame.UI.Components.Initialize
         public IProgressBar Progress { get; private set; }
 
 
-        [ReceivesDependency]
-        private IFontManager FontManager { get; set; }
-
-
         [InitWithDependency]
         private void Init()
         {
@@ -34,7 +29,6 @@ namespace PBGame.UI.Components.Initialize
                 Status.Position = new Vector3(20f, 20f);
                 Status.Alignment = TextAnchor.MiddleLeft;
                 Status.FontSize = 20;
-                Status.Font = FontManager.DefaultFont;
             }
             Progress = CreateChild<UguiProgressBar>("progress", 1);
             {
