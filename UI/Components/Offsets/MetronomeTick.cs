@@ -51,6 +51,7 @@ namespace PBGame.UI.Components.Offsets
                 fillSprite.Anchor = AnchorType.Fill;
                 fillSprite.Offset = Offset.Zero;
                 fillSprite.SpriteName = "circle-32";
+                fillSprite.Alpha = 0f;
             }
 
             tickAni = new Anime();
