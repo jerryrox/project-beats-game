@@ -43,12 +43,7 @@ namespace PBGame.UI.Components.Common
         {
             tint = colorPreset.PrimaryFocus;
 
-            var blocker = CreateChild<UguiSprite>("blocker", -10);
-            {
-                blocker.Anchor = AnchorType.Fill;
-                blocker.Offset = Offset.Zero;
-                blocker.SpriteName = "null";
-            }
+            CreateChild<Blocker>("blocker", -10);
 
             background.Anchor = AnchorType.MiddleStretch;
             background.Depth = -1;

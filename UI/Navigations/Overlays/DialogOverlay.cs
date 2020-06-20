@@ -14,7 +14,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         private BlurDisplay blurDisplay;
         private ISprite bgSprite;
-        private ISprite blocker;
+        private Blocker blocker;
         private ILabel messageLabel;
         private SelectionHolder selectionHolder;
 
@@ -66,12 +66,7 @@ namespace PBGame.UI.Navigations.Overlays
                 selectionHolder.SetOffsetHorizontal(0f);
                 selectionHolder.Y = 26f;
             }
-            blocker = CreateChild<UguiSprite>("blocker", 4);
-            {
-                blocker.Anchor = AnchorType.Fill;
-                blocker.RawSize = Vector2.zero;
-                blocker.SpriteName = "null";
-            }
+            blocker = CreateChild<Blocker>("blocker", 4);
 
             if(!IsDerived)
                 OnEnableInited();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
 using PBGame.Networking.API;
 using PBFramework.UI;
@@ -25,7 +26,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private ISprite mask;
         private LoggedInView loggedInView;
         private LoggedOutView loggedOutView;
-        private ISprite pointerBlocker;
+        private Blocker blocker;
 
         private IAnime loggedInAni;
         private IAnime loggedOutAni;
@@ -73,14 +74,7 @@ namespace PBGame.UI.Components.ProfileMenu
                     loggedOutView.Height = LoggedOutHeight;
                 }
             }
-            pointerBlocker = CreateChild<UguiSprite>("blocker", 4);
-            {
-                pointerBlocker.Anchor = AnchorType.Fill;
-                pointerBlocker.RawSize = Vector2.zero;
-                pointerBlocker.Position = Vector2.zero;
-                pointerBlocker.Alpha = 0f;
-                pointerBlocker.Active = false;
-            }
+            blocker = CreateChild<Blocker>("blocker", 4);
 
             loggedInAni = new Anime();
             loggedInAni.AnimateFloat(alpha => loggedInView.Alpha = alpha)
@@ -95,8 +89,8 @@ namespace PBGame.UI.Components.ProfileMenu
                 .AddTime(0f, () => this.Height)
                 .AddTime(0.25f, LoggedInHeight)
                 .Build();
-            loggedInAni.AddEvent(0f, () => loggedInView.Active = pointerBlocker.Active = true);
-            loggedInAni.AddEvent(loggedInAni.Duration, () => loggedOutView.Active = pointerBlocker.Active = false);
+            loggedInAni.AddEvent(0f, () => loggedInView.Active = blocker.Active = true);
+            loggedInAni.AddEvent(loggedInAni.Duration, () => loggedOutView.Active = blocker.Active = false);
 
             loggedOutAni = new Anime();
             loggedOutAni.AnimateFloat(alpha => loggedInView.Alpha = alpha)
@@ -111,8 +105,8 @@ namespace PBGame.UI.Components.ProfileMenu
                 .AddTime(0f, () => this.Height)
                 .AddTime(0.25f, LoggedOutHeight)
                 .Build();
-            loggedOutAni.AddEvent(0f, () => loggedOutView.Active = pointerBlocker.Active = true);
-            loggedOutAni.AddEvent(loggedInAni.Duration, () => loggedInView.Active = pointerBlocker.Active = false);
+            loggedOutAni.AddEvent(0f, () => loggedOutView.Active = blocker.Active = true);
+            loggedOutAni.AddEvent(loggedInAni.Duration, () => loggedInView.Active = blocker.Active = false);
 
             OnEnableInited();
         }
@@ -168,7 +162,7 @@ namespace PBGame.UI.Components.ProfileMenu
                     loggedOutView.Alpha = 1f;
                     loggedOutView.Active = true;
                 }
-                pointerBlocker.Active = false;
+                blocker.Active = false;
             }
             // Animate
             else
