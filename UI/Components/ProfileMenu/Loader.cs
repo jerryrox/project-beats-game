@@ -18,9 +18,8 @@ namespace PBGame.UI.Components.ProfileMenu
 
         private CanvasGroup canvasGroup;
 
-        private ISprite dark;
         private LoaderIcon loader;
-        private IRaycastable pointerBlocker;
+        private Blocker blocker;
 
         private IAnime showAni;
         private IAnime hideAni;
@@ -38,26 +37,19 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
-            dark = CreateChild<UguiSprite>("dark", 0);
+            blocker = CreateChild<Blocker>("blocker", 0);
             {
-                dark.Anchor = AnchorType.Fill;
-                dark.RawSize = Vector2.zero;
-                dark.Color = new Color(0f, 0f, 0f, 0.5f);
+                blocker.Background.SpriteName = null;
+                blocker.Background.Color = new Color(0f, 0f, 0f, 0.5f);
 
-                pointerBlocker = dark as IRaycastable;
-
-                loader = dark.CreateChild<LoaderIcon>("loader", 1);
+                loader = blocker.CreateChild<LoaderIcon>("loader", 1);
                 {
                     loader.Size = new Vector2(72f, 72f);
                 }
             }
 
-            if(pointerBlocker != null)
-                pointerBlocker.IsRaycastTarget = false;
-
-            Alpha = 0f;
-
             showAni = new Anime();
+            showAni.AddEvent(0f, () => Active = true);
             showAni.AnimateFloat(alpha => this.Alpha = alpha)
                 .AddTime(0f, () => this.Alpha)
                 .AddTime(0.25f, 1f)
@@ -68,8 +60,10 @@ namespace PBGame.UI.Components.ProfileMenu
                 .AddTime(0f, () => this.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
-            if (pointerBlocker != null)
-                hideAni.AddEvent(0.25f, () => pointerBlocker.IsRaycastTarget = false);
+            hideAni.AddEvent(hideAni.Duration, () => Active = false);
+
+            Active = false;
+            Alpha = 0f;
         }
 
         /// <summary>
@@ -77,9 +71,6 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         public void Show()
         {
-            if(pointerBlocker != null)
-                pointerBlocker.IsRaycastTarget = true;
-
             hideAni.Stop();
             showAni.PlayFromStart();
         }
@@ -95,8 +86,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
         protected void Update()
         {
-            if(pointerBlocker == null || pointerBlocker.IsRaycastTarget)
-                loader.RotationZ += Time.deltaTime * RotationSpeed;
+            loader.RotationZ += Time.deltaTime * RotationSpeed;
         }
     }
 }

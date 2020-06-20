@@ -74,12 +74,9 @@ namespace PBGame.UI.Components.Common.Dropdown
             Anchor = AnchorType.Fill;
             Offset = Offset.Zero;
 
-            var blocker = CreateChild<BasicTrigger>("blocker", 0);
+            var blocker = CreateChild<Blocker>("blocker", 0);
             {
-                blocker.Anchor = AnchorType.Fill;
-                blocker.Offset = Offset.Zero;
-
-                blocker.OnTriggered += () => CloseMenu();
+                blocker.OnTriggered += CloseMenu;
             }
             holder = CreateChild("holder", 1);
             {
