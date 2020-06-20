@@ -12,17 +12,17 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Common.Dropdown
 {
-    public class DropdownMenuItem : FocusableTrigger, IRecyclable<DropdownMenuItem> {
+    public class DropdownMenuItem : FocusableTrigger, IListItem {
 
         private ILabel label;
 
-
-        public IRecycler<DropdownMenuItem> Recycler { get; set; }
 
         /// <summary>
         /// The dropdown data represented by this item.
         /// </summary>
         public DropdownData Data { get; set; }
+
+        int IListItem.ItemIndex { get; set; }
 
         protected override int FocusSpriteDepth => 1;
 
@@ -66,6 +66,13 @@ namespace PBGame.UI.Components.Common.Dropdown
                 .Build();
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            if(hoverSprite != null)
+                hoverSprite.Alpha = 0f;
+        }
+
         /// <summary>
         /// Sets up the dropdown item using specified data.
         /// </summary>
@@ -74,18 +81,6 @@ namespace PBGame.UI.Components.Common.Dropdown
             this.Data = data;
             IsFocused = isSelected;
             label.Text = data.Text;
-        }
-
-        public void OnRecycleNew()
-        {
-            SetFocused(false, false);
-            hoverSprite.Alpha = 0f;
-            Active = true;
-        }
-
-        public void OnRecycleDestroy()
-        {
-            Active = false;
         }
     }
 }

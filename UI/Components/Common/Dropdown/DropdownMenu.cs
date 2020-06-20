@@ -43,14 +43,10 @@ namespace PBGame.UI.Components.Common.Dropdown
         private IGraphicObject aniHolder;
         private CanvasGroup canvasGroup;
         private ISprite shadow;
-        private ISprite container;
-        private IGrid grid;
+        private IListView listContainer;
 
         private IAnime showAni;
         private IAnime hideAni;
-
-        private Recycler<DropdownMenuItem> itemRecycler;
-        private List<DropdownMenuItem> activeItems = new List<DropdownMenuItem>();
 
         private DropdownContext context;
 
@@ -74,8 +70,6 @@ namespace PBGame.UI.Components.Common.Dropdown
         [InitWithDependency]
         private void Init()
         {
-            itemRecycler = new Recycler<DropdownMenuItem>(CreateMenuItem);
-
             // Make the menu fit within the parent's object.
             Anchor = AnchorType.Fill;
             Offset = Offset.Zero;
@@ -107,21 +101,18 @@ namespace PBGame.UI.Components.Common.Dropdown
                         shadow.ImageType = Image.Type.Sliced;
                         shadow.Color = Color.black;
                     }
-                    container = aniHolder.CreateChild<UguiSprite>("container", 1);
+                    listContainer = aniHolder.CreateChild<UguiListView>("list", 1);
                     {
-                        container.Anchor = AnchorType.Fill;
-                        container.Offset = Offset.Zero;
-                        container.SpriteName = "circle-16";
-                        container.ImageType = Image.Type.Sliced;
-                        container.Color = new Color(0f, 0f, 0f, 0.75f);
+                        listContainer.Anchor = AnchorType.Fill;
+                        listContainer.Offset = Offset.Zero;
+                        listContainer.Background.SpriteName = "circle-16";
+                        listContainer.Background.ImageType = Image.Type.Sliced;
+                        listContainer.Background.Color = new Color(0f, 0f, 0f, 0.75f);
 
-                        grid = container.CreateChild<UguiGrid>("grid", 0);
-                        {
-                            grid.Anchor = AnchorType.Fill;
-                            grid.Offset = Offset.Zero;
-                            grid.CellSize = ItemSize;
-                            grid.Axis = GridLayoutGroup.Axis.Vertical;
-                        }
+                        listContainer.Initialize(OnCreateMenuItem, OnUpdateMenuItem);
+                        listContainer.CellSize = ItemSize;
+                        listContainer.Corner = GridLayoutGroup.Corner.UpperLeft;
+                        listContainer.Axis = GridLayoutGroup.Axis.Vertical;
                     }
                 }
             }
@@ -163,15 +154,10 @@ namespace PBGame.UI.Components.Common.Dropdown
 
             this.context = context;
 
-            // Show menu items and resize menu.
-            foreach (var data in context.Datas)
-            {
-                var item = itemRecycler.GetNext();
-                item.Setup(data, data == context.Selection);
-                item.Depth = activeItems.Count;
-                activeItems.Add(item);
-            }
-            holder.Height = Mathf.Min(ItemSize.y * activeItems.Count, GetMaxHolderHeight());
+            // Clamp menu height so it doesn't go over half of screen height.
+            holder.Height = Mathf.Min(ItemSize.y * context.Datas.Count, GetMaxHolderHeight());
+
+            listContainer.TotalItems = context.Datas.Count;
 
             showAni.PlayFromStart();
         }
@@ -196,11 +182,7 @@ namespace PBGame.UI.Components.Common.Dropdown
             if(!Active || IsAnimating)
                 return;
 
-            // Remove all menu items.
-            for (int i = 0; i < activeItems.Count; i++)
-                itemRecycler.Return(activeItems[i]);
-            activeItems.Clear();
-
+            listContainer.TotalItems = 0;
             context = null;
 
             hideAni.PlayFromStart();
@@ -259,22 +241,29 @@ namespace PBGame.UI.Components.Common.Dropdown
             if (context != null)
                 context.SelectData(item.Data);
 
-            // Change focus so the user can see a glimpse of focus change animation on the items.
-            for (int i = 0; i < activeItems.Count; i++)
-                activeItems[i].IsFocused = activeItems[i] == item;
-
             // Hide menu.
             CloseMenu();
         }
 
         /// <summary>
-        /// Creates and returna new dropdown menu item.
+        /// Event called when a new menu item needs to be created.
         /// </summary>
-        private DropdownMenuItem CreateMenuItem()
+        private IListItem OnCreateMenuItem()
         {
-            var item = grid.CreateChild<DropdownMenuItem>("item", 0);
+            var item = listContainer.Container.CreateChild<DropdownMenuItem>("item", 0);
+            item.Size = ItemSize;
             item.OnTriggered += () => OnSelectedItem(item);
             return item;
+        }
+
+        /// <summary>
+        /// Event called on menu item update due to listview.
+        /// </summary>
+        private void OnUpdateMenuItem(IListItem item)
+        {
+            DropdownMenuItem menuItem = item as DropdownMenuItem;
+            var itemData = context.Datas[item.ItemIndex];
+            menuItem.Setup(itemData, context.Selection == itemData);
         }
     }
 }
