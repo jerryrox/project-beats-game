@@ -155,7 +155,7 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         protected virtual void OnPointerEntered()
         {
-            if(useButtonHoverSound)
+            if(useButtonHoverSound && !string.IsNullOrEmpty(PointerEnterAudio))
                 SoundPool.Play(PointerEnterAudio);
         }
 
@@ -210,7 +210,8 @@ namespace PBGame.UI.Components.Common
 
             StopHold();
 
-            SoundPool.Play(TriggerAudio);
+            if(!string.IsNullOrEmpty(TriggerAudio))
+                SoundPool.Play(TriggerAudio);
             OnTriggered?.Invoke();
         }
 
