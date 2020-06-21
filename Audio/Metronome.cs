@@ -1,9 +1,11 @@
 using System;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
+using PBGame.Rulesets.Maps.Timing;
 using PBGame.Rulesets.Maps.ControlPoints;
 using PBFramework.Data.Bindables;
 using PBFramework.Audio;
+using UnityEngine;
 
 namespace PBGame.Audio
 {
@@ -11,31 +13,55 @@ namespace PBGame.Audio
 
 		public event Action OnBeat;
 
-        private IMusicController musicController;
+        private IAudioController audioController;
         private IPlayableMap map;
 		private TimingControlPoint curTimingPoint;
 		private TimingControlPoint nextTimingPoint;
         private int timingPointIndex;
 
+        private BeatFrequency frequency = BeatFrequency.Full;
+
         private float curTime = -1;
 		private float nextBeatTime = 0;
 
+        private BindableInt bindableBeatIndex = new BindableInt(0);
         private BindableFloat bindableBeatLength = new BindableFloat(TimingControlPoint.DefaultBeatLength);
 
 
-        public IReadOnlyBindable<float> BeatLength => bindableBeatLength;//curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
+        public IReadOnlyBindable<int> BeatIndex => bindableBeatIndex;
 
+        public int BeatsInInterval => GetBeatsInInterval();
 
-		public Metronome(IMapSelection selection, IMusicController controller)
-		{
-            musicController = controller;
-
-            selection.Map.OnNewValue += map =>
+        public BeatFrequency Frequency
+        {
+            get => frequency;
+            set
             {
-                this.map = map;
-                curTime = controller.CurrentTime;
-                FindTimingPoint();
-            };
+                frequency = value;
+                SetCurrentTimingPoint(curTimingPoint, timingPointIndex);
+                RecalibrateBeatTime();
+            }
+        }
+
+        public IReadOnlyBindable<float> BeatLength => bindableBeatLength;
+
+
+        public Metronome(IMapSelection selection, IAudioController controller)
+		{
+            if(controller == null)
+                throw new ArgumentNullException(nameof(controller));
+
+            audioController = controller;
+
+            if (selection != null)
+            {
+                selection.Map.OnNewValue += map =>
+                {
+                    this.map = map;
+                    curTime = controller.CurrentTime;
+                    FindTimingPoint();
+                };
+            }
             controller.OnSeek += time =>
             {
                 curTime = time;
@@ -48,10 +74,10 @@ namespace PBGame.Audio
             };
         }
 
-		public void Update()
+        public void Update()
 		{
 			// Get current time
-			curTime = musicController.Clock.CurrentTime;
+			curTime = audioController.CurrentTime;
 
 			// If beat time reached
 			if(curTime >= nextBeatTime)
@@ -68,7 +94,7 @@ namespace PBGame.Audio
 		{
 			if(map == null)
 			{
-                SetCurrentTimingPoint(new TimingControlPoint(), -1);
+                SetCurrentTimingPoint(null, 0);
 				nextTimingPoint = null;
 
                 RecalibrateBeatTime();
@@ -124,6 +150,9 @@ namespace PBGame.Audio
 
 			// Set next beat time.
 			nextBeatTime += bindableBeatLength.Value;
+
+            // Find new beat index.
+            FindBeatIndex();
         }
 
 		/// <summary>
@@ -133,7 +162,7 @@ namespace PBGame.Audio
 		{
 			if(curTimingPoint == null)
 			{
-				nextBeatTime = (int)(curTime / 1000) * 1000;
+				nextBeatTime = (int)(curTime / TimingControlPoint.DefaultBeatLength) * TimingControlPoint.DefaultBeatLength;
 			}
 			else
 			{
@@ -142,7 +171,10 @@ namespace PBGame.Audio
 				if(curTime < curTimingPoint.Time)
 					nextBeatTime -= beatLength;
 			}
-		}
+
+            // Find beat index from the start of the timing point.
+            FindBeatIndex();
+        }
 
 		/// <summary>
 		/// Sets new timing point.
@@ -152,7 +184,37 @@ namespace PBGame.Audio
             curTimingPoint = timingPoint;
             timingPointIndex = index;
 
-            bindableBeatLength.Value = curTimingPoint == null ? TimingControlPoint.DefaultBeatLength : curTimingPoint.BeatLength;
+            bindableBeatLength.Value = (
+                curTimingPoint == null ?
+                TimingControlPoint.DefaultBeatLength :
+                curTimingPoint.BeatLength
+            ) / (int)frequency;
+        }
+
+        /// <summary>
+        /// Finds new beat index at current time.
+        /// </summary>
+        private void FindBeatIndex()
+        {
+            float startTime = 0f;
+            if (curTimingPoint != null)
+            {
+                startTime = curTimingPoint.Time;
+            }
+            // Adding 1 in calculation to prevent precision point error.
+            bindableBeatIndex.Value = (int)((curTime + 1f - startTime) / bindableBeatLength.Value) % GetBeatsInInterval();
+        }
+
+        /// <summary>
+        /// Returns the number of beats in an interval of current time signature.
+        /// </summary>
+        private int GetBeatsInInterval()
+        {
+            return (int)frequency * (
+                curTimingPoint == null ?
+                (int)TimeSignatureType.Quadruple :
+                (int)curTimingPoint.TimeSignature
+            );
         }
     }
 }
