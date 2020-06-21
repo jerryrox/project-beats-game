@@ -5,6 +5,7 @@ using PBGame.Audio;
 using PBFramework.UI;
 using PBFramework.Utils;
 using PBFramework.Graphics;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -12,7 +13,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Offsets
 {
-    public class MetronomeTick : UguiSprite, IHasTint {
+    public class MetronomeTick : UguiSprite, IHasTint, IRecyclable<MetronomeTick> {
 
         private ISprite glowSprite;
         private ISprite fillSprite;
@@ -29,6 +30,8 @@ namespace PBGame.UI.Components.Offsets
                 fillSprite.Tint = value;
             }
         }
+
+        IRecycler<MetronomeTick> IRecyclable<MetronomeTick>.Recycler { get; set; }
 
         [ReceivesDependency]
         private ISoundPool SoundPool { get; set; }
@@ -78,6 +81,16 @@ namespace PBGame.UI.Components.Offsets
         {
             tickAni.PlayFromStart();
             SoundPool.Play("heartbeat");
+        }
+
+        void IRecyclable.OnRecycleNew()
+        {
+            Active = true;
+        }
+
+        void IRecyclable.OnRecycleDestroy()
+        {
+            Active = false;
         }
     }
 }
