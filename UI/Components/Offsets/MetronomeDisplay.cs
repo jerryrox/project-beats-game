@@ -21,8 +21,12 @@ namespace PBGame.UI.Components.Offsets
         private const float BaseSpacing = 176f;
 
         private ManagedRecycler<MetronomeTick> tickRecycler;
-        private IMetronome curMetronome;
 
+
+        /// <summary>
+        /// Returns the current metronome in use.
+        /// </summary>
+        public IMetronome CurMetronome { get; private set; }
 
         /// <summary>
         /// Returns the number of ticks currently visible.
@@ -50,9 +54,12 @@ namespace PBGame.UI.Components.Offsets
         {
             RemoveMetronome();
 
-            curMetronome = metronome;
-            if(metronome != null)
+            CurMetronome = metronome;
+            if (metronome != null)
+            {
                 metronome.BeatIndex.OnNewValue += OnMetronomeBeatIndex;
+                metronome.BeatsInInterval.BindAndTrigger(OnBeatsInIntervalChange);
+            }
         }
 
         /// <summary>
@@ -60,9 +67,12 @@ namespace PBGame.UI.Components.Offsets
         /// </summary>
         public void RemoveMetronome()
         {
-            if(curMetronome != null)
-                curMetronome.BeatIndex.OnNewValue -= OnMetronomeBeatIndex;
-            curMetronome = null;
+            if (CurMetronome != null)
+            {
+                CurMetronome.BeatIndex.OnNewValue -= OnMetronomeBeatIndex;
+                CurMetronome.BeatsInInterval.OnNewValue -= OnBeatsInIntervalChange;
+            }
+            CurMetronome = null;
         }
 
         /// <summary>
