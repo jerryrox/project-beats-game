@@ -17,6 +17,7 @@ namespace PBGame.UI.Navigations.Overlays
     public class OffsetsOverlay : BaseOverlay, IOffsetsOverlay {
 
         private BackgroundDisplay backgroundDisplay;
+        private MetronomeContainer metronomeContainer;
         private OffsetSlider mapsetSlider;
         private OffsetSlider mapSlider;
 
@@ -44,22 +45,31 @@ namespace PBGame.UI.Navigations.Overlays
                 backgroundDisplay.Anchor = AnchorType.Fill;
                 backgroundDisplay.Offset = Offset.Zero;
             }
-            mapsetSlider = CreateChild<OffsetSlider>("mapset", 1);
+            metronomeContainer = CreateChild<MetronomeContainer>("metronome-container", 1);
+            {
+                metronomeContainer.Anchor = AnchorType.BottomStretch;
+                metronomeContainer.SetOffsetHorizontal(0f);
+                metronomeContainer.Y = 140f;
+                metronomeContainer.Height = 64f;
+            }
+            mapsetSlider = CreateChild<OffsetSlider>("mapset", 2);
             {
                 mapsetSlider.Anchor = AnchorType.Bottom;
                 mapsetSlider.Position = new Vector3(-240f, 56f);
                 mapsetSlider.Size = new Vector2(400f, 100f);
                 mapsetSlider.LabelText = "Mapset offset";
             }
-            mapSlider = CreateChild<OffsetSlider>("map", 2);
+            mapSlider = CreateChild<OffsetSlider>("map", 3);
             {
                 mapSlider.Anchor = AnchorType.Bottom;
                 mapSlider.Position = new Vector3(240f, 56f);
                 mapSlider.Size = new Vector2(400f, 100f);
                 mapSlider.LabelText = "Map offset";
             }
+
+            OnEnableInited();
         }
-        
+
         public void Setup() => Setup(MapSelection.Mapset.Value, MapSelection.Map.Value, MapSelection.MapsetConfig.Value, MapSelection.MapConfig.Value);
 
         public void Setup(IMapset mapset, IMap map) => Setup(mapset, map, MapsetConfiguration.GetConfig(mapset), MapConfiguration.GetConfig(map));
