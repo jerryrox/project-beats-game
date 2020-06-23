@@ -38,7 +38,7 @@ namespace PBGame.Audio
         /// <summary>
         /// Current beat frequency scale.
         /// </summary>
-        BeatFrequency Frequency { get; set; }
+        Bindable<BeatFrequency> Frequency { get; }
 
         /// <summary>
         /// Returns the length of a beat in milliseconds.

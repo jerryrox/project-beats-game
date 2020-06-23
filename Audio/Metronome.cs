@@ -21,8 +21,6 @@ namespace PBGame.Audio
 		private TimingControlPoint nextTimingPoint;
         private int timingPointIndex;
 
-        private BeatFrequency frequency = BeatFrequency.Full;
-
         private float curTime = -1;
 		private float nextBeatTime = 0;
 
@@ -67,19 +65,8 @@ namespace PBGame.Audio
 
         public IReadOnlyBindable<int> BeatsInInterval => bindableBeatsInInterval;
 
-        public BeatFrequency Frequency
-        {
-            get => frequency;
-            set
-            {
-                frequency = value;
-                ResetBeatsInInterval();
-                ResetBeatLength();
-                ResetNextBeatTime();
-                FindCurBeatIndex();
-            }
-        }
-
+        public Bindable<BeatFrequency> Frequency { get; private set; } = new Bindable<BeatFrequency>(BeatFrequency.Full);
+        
         public IReadOnlyBindable<float> BeatLength => bindableBeatLength;
 
         /// <summary>
@@ -88,17 +75,22 @@ namespace PBGame.Audio
         private float CurrentTime => audioController == null ? 0f : audioController.CurrentTime;
 
 
+        public Metronome()
+        {
+            Frequency.OnNewValue += (frequency) =>
+            {
+                ResetBeatsInInterval();
+                ResetBeatLength();
+                ResetNextBeatTime();
+                FindCurBeatIndex();
+            };
+            ResetBeatsInInterval();
+        }
+
         public void Update()
 		{
 			// Get current time
 			curTime = CurrentTime;
-
-            // Check if current time has reached the next timing point.
-            if(nextTimingPoint != null && curTime >= nextTimingPoint.Time)
-            {
-                // Find the next timing point.
-                FindNextTimingPointFrom(timingPointIndex);
-            }
 
 			// If beat time reached
 			if(curTime >= nextBeatTime)
@@ -107,6 +99,13 @@ namespace PBGame.Audio
                 
                 // Set next beat time.
                 nextBeatTime += bindableBeatLength.Value;
+
+                // Check if current time has reached the next timing point.
+                if(nextTimingPoint != null && curTime >= nextTimingPoint.Time)
+                {
+                    // Find the next timing point.
+                    FindNextTimingPointFrom(timingPointIndex);
+                }
 
                 // Find new beat index.
                 FindCurBeatIndex();
@@ -193,7 +192,7 @@ namespace PBGame.Audio
                 curTimingPoint == null ?
                 TimingControlPoint.DefaultBeatLength :
                 curTimingPoint.BeatLength
-            ) / (int)frequency;
+            ) / (int)Frequency.Value;
         }
 
         /// <summary>
@@ -206,8 +205,10 @@ namespace PBGame.Audio
             {
                 startTime = curTimingPoint.Time;
             }
+            // BeatsInInterval must be at least 1.
+            int beatsInInterval = Mathf.Max(bindableBeatsInInterval.Value, 1);
             // Adding 1 in calculation to prevent precision point error.
-            bindableBeatIndex.Value = (int)((curTime + 1f - startTime) / bindableBeatLength.Value) % bindableBeatsInInterval.Value;
+            bindableBeatIndex.Value = (int)((curTime + 1f - startTime) / bindableBeatLength.Value) % beatsInInterval;
         }
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace PBGame.Audio
         /// </summary>
         private void ResetBeatsInInterval()
         {
-            bindableBeatsInInterval.Value = (int)frequency * (int)(
+            bindableBeatsInInterval.Value = (int)Frequency.Value * (int)(
                 curTimingPoint == null ?
                 TimeSignatureType.Quadruple :
                 curTimingPoint.TimeSignature
