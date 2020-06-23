@@ -240,6 +240,11 @@ namespace PBGame
                     mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
             };
 
+            mapSelection.Map.OnNewValue += (map) =>
+            {
+                metronome.CurrentMap = map;
+            };
+
             mapSelection.Music.OnNewValue += (music) =>
             {
                 musicController.MountAudio(music);
