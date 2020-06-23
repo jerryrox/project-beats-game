@@ -18,12 +18,14 @@ Slowly making progress 🧩
 #### New features
 - Added button hover sound toggle configuration.
 - Added scrolling capability for dropdown menu popup.
+- Added metronome for OffsetsOverlay.
 #### Improvements
 - Clamped max height of the dropdown menu holder.
 - Abstraction of "Blocker object" using a common component.
 #### Changes
 - Changed most "value change events" to using Bindable values instead for consistency.
 - Moved FontManager away to the framework's context.
+- Made Metronome class no longer strongly dependent on IAudioController and IMapSelection.
 #### Fixes
 - Fixed GameConfiguration failing when not initialized within test runtime environment.
 - Fixed issue where IRoot dependency is not cached.
