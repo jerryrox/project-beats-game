@@ -200,14 +200,14 @@ namespace PBGame.UI.Navigations.Overlays
             MusicController.OnPause += OnMusicPause;
             MusicController.OnUnpause += OnMusicUnpause;
 
-            MapSelection.OnMapChange += OnMapChange;
-            MapSelection.OnBackgroundLoaded += OnBackgroundChange;
+            MapSelection.Map.OnNewValue += OnMapChange;
+            MapSelection.Background.OnNewValue += OnBackgroundChange;
 
-            GameConfiguration.PreferUnicode.OnValueChanged += OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue += OnPreferUnicode;
 
             SetPlayButtonIcon();
             SetLabelText();
-            OnBackgroundChange(MapSelection.Background);
+            OnBackgroundChange(MapSelection.Background.Value);
         }
 
         /// <summary>
@@ -219,10 +219,10 @@ namespace PBGame.UI.Navigations.Overlays
             MusicController.OnPause -= OnMusicPause;
             MusicController.OnUnpause -= OnMusicUnpause;
 
-            MapSelection.OnMapChange -= OnMapChange;
-            MapSelection.OnBackgroundLoaded -= OnBackgroundChange;
+            MapSelection.Map.OnNewValue -= OnMapChange;
+            MapSelection.Background.OnNewValue -= OnBackgroundChange;
 
-            GameConfiguration.PreferUnicode.OnValueChanged -= OnPreferUnicode;
+            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void SetLabelText()
         {
-            var map = MapSelection.Map;
+            var map = MapSelection.Map.Value;
             if (map != null)
             {
                 var preferUnicode = GameConfiguration.PreferUnicode.Value;
@@ -269,7 +269,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called when the unicode preference option has changed.
         /// </summary>
-        private void OnPreferUnicode(bool preferUnicode, bool _) => SetLabelText();
+        private void OnPreferUnicode(bool preferUnicode) => SetLabelText();
 
         /// <summary>
         /// Event called from music controller when music is playing.

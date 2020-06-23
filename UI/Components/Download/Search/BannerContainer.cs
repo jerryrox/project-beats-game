@@ -17,7 +17,7 @@ namespace PBGame.UI.Components.Download.Search
 
         private WebTexture bannerTexture;
         private IGrid grid;
-        private UguiSprite blocker;
+        private Blocker blocker;
 
 
         public bool IsInteractible
@@ -75,12 +75,7 @@ namespace PBGame.UI.Components.Download.Search
                     hasStoryboardFilter.Setup(State.HasStoryboard);
                 }
             }
-            blocker = CreateChild<UguiSprite>("blocker", 2);
-            {
-                blocker.Anchor = AnchorType.Fill;
-                blocker.Offset = Offset.Zero;
-                blocker.Alpha = 0f;
-            }
+            blocker = CreateChild<Blocker>("blocker", 2);
 
             InvokeAfterTransformed(1, () =>
             {

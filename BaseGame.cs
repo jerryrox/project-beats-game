@@ -10,7 +10,6 @@ using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Stores;
-using PBGame.Assets.Fonts;
 using PBGame.Assets.Caching;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
@@ -23,6 +22,7 @@ using PBFramework.IO.Decoding;
 using PBFramework.UI.Navigations;
 using PBFramework.Utils;
 using PBFramework.Audio;
+using PBFramework.Assets.Fonts;
 using PBFramework.Assets.Atlasing;
 using PBFramework.Inputs;
 using PBFramework.Services;
@@ -135,7 +135,10 @@ namespace PBGame
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration, mapsetConfiguration, mapConfiguration));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
-            Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
+            Dependencies.CacheAs<IMetronome>(metronome = new Metronome()
+            {
+                AudioController = musicController
+            });
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
@@ -179,6 +182,9 @@ namespace PBGame
                 "osu file format v",
                 (header) => new OsuBeatmapDecoder(ParseUtils.ParseInt(header.Split('v').Last(), OsuBeatmapDecoder.LatestVersion))
             );
+
+            // Set default font
+            fontManager.DefaultFont.Value = new ResourceFont("Fonts/Montserrat");
         }
 
         protected virtual void Update()

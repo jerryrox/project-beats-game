@@ -115,10 +115,10 @@ namespace PBGame.UI.Navigations.Screens
             base.OnDisable();
             musicAgent.Remove();
 
-            state.PreviewingMapset.OnValueChanged -= OnPreviewMapsetChange;
+            state.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
             state.OnNextPage -= RequestMapsetList;
             state.OnRequestList -= RequestMapsetList;
-            state.SearchRequest.OnValueChanged -= OnRequestChange;
+            state.SearchRequest.OnNewValue -= OnRequestChange;
 
             state.ResetState();
         }
@@ -130,7 +130,7 @@ namespace PBGame.UI.Navigations.Screens
             // Stop preview music in case it's currently playing.
             state.PreviewingMapset.Value = null;
 
-            MusicController.MountAudio(MapSelection.Music);
+            MusicController.MountAudio(MapSelection.Music.Value);
             MusicController.Play();
         }
 
@@ -234,7 +234,7 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Event called on previewing mapset change.
         /// </summary>
-        private void OnPreviewMapsetChange(OnlineMapset mapset, OnlineMapset _)
+        private void OnPreviewMapsetChange(OnlineMapset mapset)
         {
             MusicController.Stop();
             MusicController.MountAudio(null);
@@ -248,7 +248,7 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Event called on mapset list request object change.
         /// </summary>
-        private void OnRequestChange(IMapsetListRequest request, IMapsetListRequest _)
+        private void OnRequestChange(IMapsetListRequest request)
         {
             if(request == null)
                 resultLoader.Hide();

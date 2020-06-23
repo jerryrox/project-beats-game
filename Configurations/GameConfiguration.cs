@@ -70,6 +70,7 @@ namespace PBGame.Configurations
         public ProxyBindableFloat EffectVolume { get; private set; }
         public ProxyBindableInt GlobalOffset { get; private set; }
         public ProxyBindable<bool> UseBeatmapHitsounds { get; private set; }
+        public ProxyBindable<bool> UseButtonHoverSound { get; private set; }
 
 
         public GameConfiguration()
@@ -88,14 +89,14 @@ namespace PBGame.Configurations
             {
                 generalTab.AddEntry(new SettingsEntryBool("Prefer unicode", PreferUnicode = InitBoolBindable(nameof(PreferUnicode), false)));
                 generalTab.AddEntry(new SettingsEntryBool("Show messages", DisplayMessages = InitBoolBindable(nameof(DisplayMessages), true)));
-                DisplayMessages.OnValueChanged += (display, _) =>
+                DisplayMessages.OnNewValue += (display) =>
                 {
                     // Automatically disable messages in game if message displaying is false.
                     if(!display)
                         DisplayMessagesInGame.Value = false;
                 };
                 generalTab.AddEntry(new SettingsEntryBool("Show messages in game", DisplayMessagesInGame = InitBoolBindable(nameof(DisplayMessagesInGame), false)));
-                DisplayMessagesInGame.OnValueChanged += (display, _) =>
+                DisplayMessagesInGame.OnNewValue += (display) =>
                 {
                     // Turn off this configuration when toggled on but display message itself is turned off.
                     if(display && !DisplayMessages.Value)
@@ -146,6 +147,7 @@ namespace PBGame.Configurations
                 });
                 soundTab.AddEntry(new SettingsEntryInt("Global Offset", GlobalOffset = InitIntBindable(nameof(GlobalOffset), 0, -100, 100)));
                 soundTab.AddEntry(new SettingsEntryBool("Use Map Hitsounds", UseBeatmapHitsounds = InitBoolBindable(nameof(UseBeatmapHitsounds), true)));
+                soundTab.AddEntry(new SettingsEntryBool("Button hover sound", UseButtonHoverSound = InitBoolBindable(nameof(UseButtonHoverSound), true)));
             }
 
             // Trigger change for all configurations on load.
@@ -184,7 +186,7 @@ namespace PBGame.Configurations
             where T : struct
         {
             var bindable = new ProxyBindable<T>(
-                () => storage.GetEnum<T>(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetEnum<T>(propertyName, defaultValue),
                 (value) => storage.SetEnum(propertyName, value)
             );
             allSettings.Add(bindable);
@@ -197,7 +199,7 @@ namespace PBGame.Configurations
         private ProxyBindable<string> InitStringBindable(string propertyName, string defaultValue)
         {
             var bindable = new ProxyBindable<string>(
-                () => storage.GetString(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetString(propertyName, defaultValue),
                 (value) => storage.SetString(propertyName, value)
             );
             allSettings.Add(bindable);
@@ -210,7 +212,7 @@ namespace PBGame.Configurations
         private ProxyBindable<bool> InitBoolBindable(string propertyName, bool defaultValue)
         {
             var bindable = new ProxyBindable<bool>(
-                () => storage.GetBool(propertyName, defaultValue),
+                () => storage == null ? defaultValue : storage.GetBool(propertyName, defaultValue),
                 (value) => storage.SetBool(propertyName, value)
             );
             allSettings.Add(bindable);

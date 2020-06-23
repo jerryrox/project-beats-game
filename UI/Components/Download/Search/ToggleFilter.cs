@@ -97,13 +97,13 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
-            bindable.OnValueChanged -= OnBoolValueChange;
+            bindable.OnNewValue -= OnBoolValueChange;
         }
 
         /// <summary>
         /// Event called when the boolean value of bindable has changed.
         /// </summary>
-        private void OnBoolValueChange(bool value, bool _)
+        private void OnBoolValueChange(bool value)
         {
             toggle.IsFocused = value;
         }

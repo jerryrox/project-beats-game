@@ -6,7 +6,7 @@ Currently, I'm restructuring my original source to make things more organized an
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.0.2) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 
@@ -14,6 +14,22 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.9.2
+#### New features
+- Added button hover sound toggle configuration.
+- Added scrolling capability for dropdown menu popup.
+- Added metronome for OffsetsOverlay.
+#### Improvements
+- Clamped max height of the dropdown menu holder.
+- Abstraction of "Blocker object" using a common component.
+#### Changes
+- Changed most "value change events" to using Bindable values instead for consistency.
+- Moved FontManager away to the framework's context.
+- Made Metronome class no longer strongly dependent on IAudioController and IMapSelection.
+#### Fixes
+- Fixed GameConfiguration failing when not initialized within test runtime environment.
+- Fixed issue where IRoot dependency is not cached.
+
 ### 0.9.1.1
 #### Fixes
 - Fixed Game pause state not resetting on disposal.

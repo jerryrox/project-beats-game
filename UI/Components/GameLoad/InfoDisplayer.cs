@@ -113,7 +113,7 @@ namespace PBGame.UI.Components.GameLoad
         /// </summary>
         private void UnbindEvents()
         {
-            GameConfiguration.PreferUnicode.OnValueChanged -= OnPreferUnicodeChange;
+            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicodeChange;
         }
 
         public void Show() => showAni.PlayFromStart();
@@ -125,7 +125,7 @@ namespace PBGame.UI.Components.GameLoad
         /// </summary>
         private void SetupDisplays()
         {
-            var map = MapSelection.Map;
+            var map = MapSelection.Map.Value;
             if (map == null)
             {
                 titleLabel.Text = "";
@@ -179,7 +179,7 @@ namespace PBGame.UI.Components.GameLoad
         /// <summary>
         /// Event called on prefer unicode preference change.
         /// </summary>
-        private void OnPreferUnicodeChange(bool preferUnicode, bool _)
+        private void OnPreferUnicodeChange(bool preferUnicode)
         {
             SetupDisplays();
         }

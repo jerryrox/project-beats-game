@@ -60,7 +60,7 @@ namespace PBGame.UI.Components.MenuBar
 
             MusicPlaylist = new MusicPlaylist(MapManager);
             MusicPlaylist.Refill();
-            MusicPlaylist.Focus(MapSelection.Mapset);
+            MusicPlaylist.Focus(MapSelection.Mapset.Value);
         }
 
         protected override void OnDisable()

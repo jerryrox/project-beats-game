@@ -77,7 +77,7 @@ namespace PBGame.UI.Components.Songs
 
                 prevButton.OnTriggered += () =>
                 {
-                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset));
+                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset.Value));
                 };
             }
             nextButton = CreateChild<HoverableTrigger>("next", 3);
@@ -93,7 +93,7 @@ namespace PBGame.UI.Components.Songs
 
                 nextButton.OnTriggered += () =>
                 {
-                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset));
+                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset.Value));
                 };
             }
             playButton = CreateChild<HoverableTrigger>("play", 4);

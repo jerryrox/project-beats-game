@@ -57,7 +57,7 @@ namespace PBGame.Configurations.Settings
             this.data = bindable;
             if (bindable != null)
             {
-                bindable.OnValueChanged += (value, _) =>
+                bindable.OnNewValue += (value) =>
                 {
                     OnDataValueChange?.Invoke(value);
                 };

@@ -49,13 +49,13 @@ namespace PBGame.UI.Components.Download.Search
         protected override void OnDisable()
         {
             base.OnDisable();
-            State.SearchTerm.OnValueChanged -= OnSearchTermChange;
+            State.SearchTerm.OnNewValue -= OnSearchTermChange;
         }
 
         /// <summary>
         /// Event called on search term change.
         /// </summary>
-        private void OnSearchTermChange(string term, string _)
+        private void OnSearchTermChange(string term)
         {
             input.Text = term;
         }

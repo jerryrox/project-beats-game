@@ -140,5 +140,9 @@ namespace PBGame.Configurations
         /// Whether hitsounds from the beatmap should be used, if available.
         /// </summary>
 		ProxyBindable<bool> UseBeatmapHitsounds { get; }
+        /// <summary>
+        /// Whether button hover sounds should be played.
+        /// </summary>
+		ProxyBindable<bool> UseButtonHoverSound { get; }
     }
 }

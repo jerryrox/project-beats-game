@@ -59,13 +59,13 @@ namespace PBGame.UI.Components.Download.Search
         {
             base.OnDisable();
 
-            State.Category.OnValueChanged -= OnRankStateChange;
+            State.Category.OnNewValue -= OnRankStateChange;
         }
 
         /// <summary>
         /// Event called on rank state filter change.
         /// </summary>
-        private void OnRankStateChange(MapCategoryType status, MapCategoryType _)
+        private void OnRankStateChange(MapCategoryType status)
         {
             dropdown.LabelText = status.ToString();
         }

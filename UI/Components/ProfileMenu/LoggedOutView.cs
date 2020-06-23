@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
-using PBGame.Assets.Fonts;
 using PBGame.Graphics;
 using PBGame.Configurations;
 using PBGame.Networking.API;
@@ -50,7 +49,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
 
         [InitWithDependency]
-        private void Init(IColorPreset colorPreset, IFontManager fontManager)
+        private void Init(IColorPreset colorPreset)
         {
             canvasGroup = myObject.AddComponent<CanvasGroup>();
 

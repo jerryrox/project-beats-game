@@ -1,18 +1,9 @@
 using System;
+using PBFramework.Data.Bindables;
 
 namespace PBGame.UI.Navigations.Screens.Initialize
 {
     public interface IInitLoader {
-
-        /// <summary>
-        /// Event called when the loader status has changed.
-        /// </summary>
-        event Action<string> OnStatusChange;
-
-        /// <summary>
-        /// Event called when the loader progress has changed.
-        /// </summary>
-        event Action<float> OnProgress;
 
         /// <summary>
         /// Event called when the loading process has completed.
@@ -28,7 +19,12 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// <summary>
         /// Returns the current state of the loader.
         /// </summary>
-        string State { get; }
+        IReadOnlyBindable<string> State { get; }
+
+        /// <summary>
+        /// Returns the current loader progress.
+        /// </summary>
+        IReadOnlyBindable<float> Progress { get; }
 
 
         /// <summary>
