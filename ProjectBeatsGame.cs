@@ -198,6 +198,9 @@ namespace PBGame
         {
             overlayNavigator.OnShowView += (view) =>
             {
+                if(view is OffsetsOverlay)
+                    musicController.SetVolume(0.5f);
+
                 if (!(view is MenuBarOverlay))
                     ApplyMenuBarOverlay();
                 else
@@ -211,6 +214,9 @@ namespace PBGame
             };
             overlayNavigator.OnHideView += (view) =>
             {
+                if(view is OffsetsOverlay)
+                    musicController.SetVolume(1f);
+
                 if (!(view is MenuBarOverlay))
                     ApplyMenuBarOverlay();
             };
@@ -238,6 +244,11 @@ namespace PBGame
                 mapsetOffset = config;
                 if(mapsetOffset != null)
                     mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
+            };
+
+            mapSelection.Map.OnNewValue += (map) =>
+            {
+                metronome.CurrentMap = map;
             };
 
             mapSelection.Music.OnNewValue += (music) =>
@@ -280,12 +291,12 @@ namespace PBGame
             // Game volume change events
             gameConfiguration.MasterVolume.OnNewValue += (volume) =>
             {
-                musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
+                ApplyMusicVolume();
                 soundPool.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.EffectVolume.Value);
             };
             gameConfiguration.MusicVolume.OnNewValue += (volume) =>
             {
-                musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value);
+                ApplyMusicVolume();
             };
             gameConfiguration.EffectVolume.OnNewValue += (volume) =>
             {
@@ -420,6 +431,14 @@ namespace PBGame
         private void ApplyMusicOffset() => musicController.Clock.Offset = GetMusicOffset();
 
         /// <summary>
+        /// Applies volume to music controller.
+        /// </summary>
+        private void ApplyMusicVolume(float scale = 1f)
+        {
+            musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value * scale);
+        }
+
+        /// <summary>
         /// Event called when the mapset/map's offset has been changed.
         /// </summary>
         private void OnMusicOffsetChange(int offset, int prevOffset) => ApplyMusicOffset();
@@ -433,6 +452,5 @@ namespace PBGame
                 (mapOffset != null ? mapOffset.Offset.Value : 0) +
                 (mapsetOffset != null ? mapsetOffset.Offset.Value : 0);
         }
-
     }
 }

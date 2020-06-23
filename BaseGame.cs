@@ -135,7 +135,10 @@ namespace PBGame
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration, mapsetConfiguration, mapConfiguration));
             Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
-            Dependencies.CacheAs<IMetronome>(metronome = new Metronome(mapSelection, musicController));
+            Dependencies.CacheAs<IMetronome>(metronome = new Metronome()
+            {
+                AudioController = musicController
+            });
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());

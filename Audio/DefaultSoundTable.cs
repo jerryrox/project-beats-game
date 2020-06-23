@@ -53,8 +53,6 @@ namespace PBGame.Audio
             LoadAudio("soft-sliderslide");
             LoadAudio("soft-slidertick");
             LoadAudio("soft-sliderwhistle");
-            LoadAudio("toggle-off");
-            LoadAudio("toggle-on");
             LoadAudio("type");
             LoadAudio("warning");
         }

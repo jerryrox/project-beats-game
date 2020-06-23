@@ -38,7 +38,9 @@ namespace PBGame.UI.Components.Offsets
         {
             titleLabel = CreateChild<Label>("title", 0);
             {
-                titleLabel.Anchor = AnchorType.Top;
+                titleLabel.Anchor = AnchorType.TopStretch;
+                titleLabel.SetOffsetHorizontal(0f);
+                titleLabel.Height = 32f;
                 titleLabel.Y = -16f;
                 titleLabel.Alignment = TextAnchor.MiddleCenter;
                 titleLabel.IsBold = true;
@@ -46,7 +48,9 @@ namespace PBGame.UI.Components.Offsets
             }
             offsetLabel = CreateChild<Label>("offset", 1);
             {
-                offsetLabel.Anchor = AnchorType.Top;
+                offsetLabel.Anchor = AnchorType.TopStretch;
+                offsetLabel.SetOffsetHorizontal(0f);
+                offsetLabel.Height = 32f;
                 offsetLabel.Y = -40f;
                 offsetLabel.Alignment = TextAnchor.MiddleCenter;
                 offsetLabel.FontSize = 18;
