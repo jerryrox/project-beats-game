@@ -14,7 +14,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.9.2 (WIP)
+### 0.9.2
 #### New features
 - Added button hover sound toggle configuration.
 - Added scrolling capability for dropdown menu popup.
