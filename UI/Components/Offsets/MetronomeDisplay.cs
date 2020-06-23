@@ -90,7 +90,7 @@ namespace PBGame.UI.Components.Offsets
             {
                 MetronomeTick tick = tickRecycler.GetNext();
                 tick.Depth = i;
-                tick.Tint = i == 0 ? ColorPreset.PrimaryFocus : ColorPreset.SecondaryFocus;
+                tick.Tint = ColorPreset.SecondaryFocus;
             }
             SpaceWidth = BaseSpacing / tickCount;
         }
