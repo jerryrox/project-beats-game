@@ -3,6 +3,7 @@ using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Maps.Timing;
 using PBGame.Rulesets.Maps.ControlPoints;
+using PBFramework.Data;
 using PBFramework.Data.Bindables;
 using PBFramework.Audio;
 using UnityEngine;
@@ -27,6 +28,7 @@ namespace PBGame.Audio
 
         private BindableInt bindableBeatIndex = new BindableInt(0);
         private BindableFloat bindableBeatLength = new BindableFloat(TimingControlPoint.DefaultBeatLength);
+        private BindableInt bindableBeatsInInterval = new BindableInt(0);
 
 
         public IPlayableMap CurrentMap
@@ -63,11 +65,7 @@ namespace PBGame.Audio
 
         public IReadOnlyBindable<int> BeatIndex => bindableBeatIndex;
 
-        public int BeatsInInterval => (int)frequency * (int)(
-            curTimingPoint == null ?
-            TimeSignatureType.Quadruple :
-            curTimingPoint.TimeSignature
-        );
+        public IReadOnlyBindable<int> BeatsInInterval => bindableBeatsInInterval;
 
         public BeatFrequency Frequency
         {
@@ -75,6 +73,7 @@ namespace PBGame.Audio
             set
             {
                 frequency = value;
+                ResetBeatsInInterval();
                 ResetBeatLength();
                 ResetNextBeatTime();
                 FindCurBeatIndex();
@@ -161,7 +160,8 @@ namespace PBGame.Audio
                     timingPointIndex = i;
                 }
             }
-
+            
+            ResetBeatsInInterval();
             ResetBeatLength();
             ResetNextBeatTime();
         }
@@ -207,7 +207,19 @@ namespace PBGame.Audio
                 startTime = curTimingPoint.Time;
             }
             // Adding 1 in calculation to prevent precision point error.
-            bindableBeatIndex.Value = (int)((curTime + 1f - startTime) / bindableBeatLength.Value) % BeatsInInterval;
+            bindableBeatIndex.Value = (int)((curTime + 1f - startTime) / bindableBeatLength.Value) % bindableBeatsInInterval.Value;
+        }
+
+        /// <summary>
+        /// Resets the value of beats in interval.
+        /// </summary>
+        private void ResetBeatsInInterval()
+        {
+            bindableBeatsInInterval.Value = (int)frequency * (int)(
+                curTimingPoint == null ?
+                TimeSignatureType.Quadruple :
+                curTimingPoint.TimeSignature
+            );
         }
 
         /// <summary>

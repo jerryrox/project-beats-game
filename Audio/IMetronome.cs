@@ -33,7 +33,7 @@ namespace PBGame.Audio
         /// <summary>
         /// Returns the number of beats in the interval of current time signature.
         /// </summary>
-        int BeatsInInterval { get; }
+        IReadOnlyBindable<int> BeatsInInterval { get; }
 
         /// <summary>
         /// Current beat frequency scale.
