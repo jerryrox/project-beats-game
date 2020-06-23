@@ -1,4 +1,7 @@
 using System;
+using PBGame.Maps;
+using PBGame.Rulesets.Maps;
+using PBFramework.Audio;
 using PBFramework.Data.Bindables;
 
 namespace PBGame.Audio
@@ -11,6 +14,16 @@ namespace PBGame.Audio
         /// </summary>
         event Action OnBeat;
 
+
+        /// <summary>
+        /// The current map which the metronome is referring to.
+        /// </summary>
+        IPlayableMap CurrentMap { get; set; }
+
+        /// <summary>
+        /// The audio controller to refer current time value from.
+        /// </summary>
+        IAudioController AudioController { get; set; }
 
         /// <summary>
         /// Returns the index of the beat within the current interval.
