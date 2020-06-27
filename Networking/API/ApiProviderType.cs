@@ -6,8 +6,8 @@ namespace PBGame.Networking.API
     public enum ApiProviderType {
     
         Osu = 0,
-
-        // TODO: Bloodcat = 1,
+        Bloodcat = 1,
+        
         // TODO: Beats = 2,
     }
 }

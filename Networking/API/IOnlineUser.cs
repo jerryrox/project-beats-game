@@ -5,7 +5,7 @@ namespace PBGame.Networking.API
         /// <summary>
         /// Returns the api provider this user has been created from.
         /// </summary>
-        IApi Api { get; }
+        IApiProvider Provider { get; }
 		
 		/// <summary>
 		/// Returns the identifier of the user in the server.
