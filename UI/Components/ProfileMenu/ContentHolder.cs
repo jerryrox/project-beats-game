@@ -19,7 +19,6 @@ namespace PBGame.UI.Components.ProfileMenu
     public class ContentHolder : UguiObject {
 
         private const float LoggedInHeight = 480f;
-        private const float LoggedOutHeight = 204f;
 
         private ISprite background;
 
@@ -39,8 +38,6 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init()
         {
-            Height = LoggedOutHeight;
-
             background = CreateChild<UguiSprite>("background", 1);
             {
                 background.Anchor = AnchorType.Fill;
@@ -71,7 +68,8 @@ namespace PBGame.UI.Components.ProfileMenu
                     loggedOutView.Pivot = PivotType.Bottom;
                     loggedOutView.SetOffsetHorizontal(0f);
                     loggedOutView.Y = 0f;
-                    loggedOutView.Height = LoggedOutHeight;
+
+                    loggedOutView.CurLoginView.OnNewValue += OnLoginProviderViewChange;
                 }
             }
             blocker = CreateChild<Blocker>("blocker", 4);
@@ -103,7 +101,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 .Build();
             loggedOutAni.AnimateFloat(height => this.Height = height)
                 .AddTime(0f, () => this.Height)
-                .AddTime(0.25f, LoggedOutHeight)
+                .AddTime(0.25f, () => loggedOutView.DesiredHeight)
                 .Build();
             loggedOutAni.AddEvent(0f, () => loggedOutView.Active = blocker.Active = true);
             loggedOutAni.AddEvent(loggedInAni.Duration, () => loggedInView.Active = blocker.Active = false);
@@ -156,7 +154,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 }
                 else
                 {
-                    Height = LoggedOutHeight;
+                    Height = loggedOutView.DesiredHeight;
                     loggedInView.Alpha = 0f;
                     loggedInView.Active = false;
                     loggedOutView.Alpha = 1f;
@@ -192,6 +190,15 @@ namespace PBGame.UI.Components.ProfileMenu
         private void OnUserChange(IUser user, IUser _ = null)
         {
             SwitchView(user != null);
+        }
+
+        /// <summary>
+        /// Event called from logged out view when its current login provider view has changed.
+        /// </summary>
+        private void OnLoginProviderViewChange(ILoginView loginView)
+        {
+            // Animate height change.
+            loggedOutAni.PlayFromStart();
         }
     }
 }
