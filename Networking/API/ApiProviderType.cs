@@ -7,7 +7,5 @@ namespace PBGame.Networking.API
     
         Osu = 0,
         Bloodcat = 1,
-        
-        // TODO: Beats = 2,
     }
 }
