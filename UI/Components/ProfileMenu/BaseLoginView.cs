@@ -66,7 +66,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 .AddTime(0f, () => Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
-            hideAni.AddEvent(hideAni.Duration, () => Active = true);
+            hideAni.AddEvent(hideAni.Duration, () => Active = false);
         }
 
         protected override void OnDisable()

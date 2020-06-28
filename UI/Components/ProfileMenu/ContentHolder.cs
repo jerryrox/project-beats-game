@@ -56,16 +56,16 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 loggedInView = mask.CreateChild<LoggedInView>("logged-in", 0);
                 {
-                    loggedInView.Anchor = AnchorType.BottomStretch;
-                    loggedInView.Pivot = PivotType.Bottom;
+                    loggedInView.Anchor = AnchorType.TopStretch;
+                    loggedInView.Pivot = PivotType.Top;
                     loggedInView.SetOffsetHorizontal(0f);
                     loggedInView.Y = 0f;
                     loggedInView.Height = LoggedInHeight;
                 }
                 loggedOutView = mask.CreateChild<LoggedOutView>("logged-out", 0);
                 {
-                    loggedOutView.Anchor = AnchorType.BottomStretch;
-                    loggedOutView.Pivot = PivotType.Bottom;
+                    loggedOutView.Anchor = AnchorType.TopStretch;
+                    loggedOutView.Pivot = PivotType.Top;
                     loggedOutView.SetOffsetHorizontal(0f);
                     loggedOutView.Y = 0f;
 

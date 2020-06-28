@@ -116,6 +116,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 credentialLogin.Anchor = AnchorType.TopStretch;
                 credentialLogin.Pivot = PivotType.Top;
+                credentialLogin.SetOffsetHorizontal(0f);
                 credentialLogin.Y = -BaseHeight;
                 credentialLogin.Height = credentialLogin.DesiredHeight;
                 credentialLogin.Active = false;
@@ -124,6 +125,7 @@ namespace PBGame.UI.Components.ProfileMenu
             {
                 oAuthLogin.Anchor = AnchorType.TopStretch;
                 oAuthLogin.Pivot = PivotType.Top;
+                oAuthLogin.SetOffsetHorizontal(0f);
                 oAuthLogin.Y = -BaseHeight;
                 oAuthLogin.Height = oAuthLogin.DesiredHeight;
                 oAuthLogin.Active = false;
