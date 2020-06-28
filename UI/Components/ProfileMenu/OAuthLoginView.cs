@@ -40,17 +40,9 @@ namespace PBGame.UI.Components.ProfileMenu
             }
         }
 
-        public override void Setup(IApi api)
-        {
-            base.Setup(api);
-        }
-
         /// <summary>
         /// Starts performing OAuth login.
         /// </summary>
-        private void DoLogin()
-        {
-            Api.Request(Api.RequestFactory.GetLogin());
-        }
+        private void DoLogin() => Api.Request(ApiProvider.OAuth());
     }
 }

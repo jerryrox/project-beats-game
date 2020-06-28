@@ -58,10 +58,14 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         public Bindable<ILoginView> CurLoginView { get; private set; } = new Bindable<ILoginView>();
 
-        private IApi OsuApi => ApiManager.GetApi(ApiProviderType.Osu);
+        /// <summary>
+        /// Returns the provider currently selected.
+        /// </summary>
+        /// <returns></returns>
+        private IApiProvider CurProvider => Api.GetProvider(GameConfiguration.LastLoginApi.Value);
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
@@ -153,9 +157,22 @@ namespace PBGame.UI.Components.ProfileMenu
             GameConfiguration.LastLoginApi.Value = apiType;
             GameConfiguration.Save();
 
-            var api = ApiManager.GetApi(apiType);
-            // TODO: Display OAuth or Credential login based on API information.
-            // CurLoginView.Value = 
+            // Display OAuth or Credential login based on API information.
+            var provider = Api.GetProvider(apiType);
+            ILoginView loginView = null;
+            if (provider.IsOAuthLogin)
+            {
+                loginView = oAuthLogin;
+                oAuthLogin.Show();
+                credentialLogin.Hide();
+            }
+            else
+            {
+                loginView = credentialLogin;
+                oAuthLogin.Hide();
+                credentialLogin.Show();
+            }
+            CurLoginView.Value = loginView;
         }
 
         // /// <summary>

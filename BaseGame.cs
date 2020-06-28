@@ -34,6 +34,8 @@ namespace PBGame
 
         public event Action<bool> OnAppFocus;
         public event Action<bool> OnAppPause;
+        
+        protected EnvConfiguration envConfiguration;
 
         protected ModeManager modeManager;
 
@@ -63,7 +65,7 @@ namespace PBGame
         protected Metronome metronome;
 
         protected DownloadStore downloadStore;
-        protected ApiManager apiManager;
+        protected Api api;
 
         protected IUserManager userManager;
         protected IRecordManager recordManager;
@@ -110,6 +112,8 @@ namespace PBGame
 
             Dependencies.CacheAs<IGame>(this);
 
+            Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(true));
+
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
             Dependencies.CacheAs<INotificationBox>(notificationBox = new NotificationBox());
@@ -141,7 +145,7 @@ namespace PBGame
             });
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
-            Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
+            Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox));
 
             Dependencies.CacheAs<IUserManager>(userManager = new UserManager(Dependencies));
             Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager(Dependencies));
@@ -170,9 +174,8 @@ namespace PBGame
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = 60;
 
-            // Inject notification box into api manager
-            foreach(var api in apiManager.GetAllApi())
-                api.NotificationBox = notificationBox;
+            // Load environment
+            envConfiguration.Load("Configurations/");
 
             // Apply accelerator to input manager
             inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());

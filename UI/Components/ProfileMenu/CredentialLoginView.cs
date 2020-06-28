@@ -24,7 +24,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private BoxButton loginButton;
         private Loader loader;
 
-        private ILoginRequest loginRequest;
+        private AuthRequest authRequest;
 
 
         public override float DesiredHeight => 200f;
@@ -103,12 +103,12 @@ namespace PBGame.UI.Components.ProfileMenu
             DisposeRequest(true);
         }
 
-        public override void Setup(IApi api)
+        public override void Setup(IApiProvider provider)
         {
             DisposeRequest(true);
-            base.Setup(api);
+            base.Setup(provider);
 
-            if (GameConfiguration.LastLoginApi.Value == api.ApiType && GameConfiguration.SaveCredentials.Value)
+            if (GameConfiguration.LastLoginApi.Value == provider.Type && GameConfiguration.SaveCredentials.Value)
             {
                 remember.IsFocused = true;
                 username.Text = GameConfiguration.Username.Value;
@@ -134,17 +134,17 @@ namespace PBGame.UI.Components.ProfileMenu
 
             // Start request.
             DisposeRequest(true);
-            loginRequest = Api.RequestFactory.GetLogin();
-            loginRequest.Username = username.Text;
-            loginRequest.Password = password.Text;
-            loginRequest.OnRequestEnd += OnLoginResponse;
-            Api.Request(loginRequest);
+            authRequest = ApiProvider.Auth();
+            authRequest.Username = username.Text;
+            authRequest.Password = password.Text;
+            authRequest.Response.OnNewValue += OnLoginResponse;
+            Api.Request(authRequest);
         }
 
         /// <summary>
         /// Event called on login API response.
         /// </summary>
-        private void OnLoginResponse(ILoginResponse response)
+        private void OnLoginResponse(AuthResponse response)
         {
             loader.Hide();
             DisposeRequest(false);
@@ -172,11 +172,11 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void DisposeRequest(bool callDispose)
         {
-            if(loginRequest == null)
+            if(authRequest == null)
                 return;
             if(callDispose)
-                loginRequest.Dispose();
-            loginRequest = null;
+                authRequest.Dispose();
+            authRequest = null;
         }
     }
 }

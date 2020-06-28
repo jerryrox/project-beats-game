@@ -25,6 +25,9 @@ namespace PBGame.UI.Components.ProfileMenu
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
+        [ReceivesDependency]
+        private IApi Api { get; set; }
+
 
         [InitWithDependency]
         private void Init(IColorPreset colorPreset, IScreenNavigator screenNavigator)
@@ -93,8 +96,8 @@ namespace PBGame.UI.Components.ProfileMenu
             base.OnEnableInited();
 
             var user = UserManager.CurrentUser.Value;
-            if(user != null && user.OnlineUser.Api != null)
-                accountLabel.Text = $"Logged in using {user.OnlineUser.Api.ApiType}";
+            if(user != null && user.OnlineUser.Provider != null)
+                accountLabel.Text = $"Logged in using {user.OnlineUser.Provider.Name}";
             else
                 accountLabel.Text = $"You are currently offline.";
         }
@@ -109,9 +112,9 @@ namespace PBGame.UI.Components.ProfileMenu
             dialog.AddConfirmCancel(() =>
             {
                 var user = UserManager.CurrentUser.Value;
-                if(user != null && user.OnlineUser.Api != null)
-                    user.OnlineUser.Api.Logout();
-                    
+                if(user != null && user.OnlineUser.Provider != null)
+                    Api.Logout();
+
                 UserManager.SaveUser(user);
                 UserManager.RemoveUser();
             });

@@ -4,8 +4,7 @@ namespace PBGame.Networking.API
 {
     public class OnlineUser : IOnlineUser {
 
-        // TODO:
-        public IApiProvider Provider => null;
+        public IApiProvider Provider { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.Download.Search
 
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private DownloadState State { get; set; }
@@ -69,7 +69,7 @@ namespace PBGame.UI.Components.Download.Search
         {
             this.provider = provider;
 
-            var api = ApiManager.GetApi(provider);
+            var api = Api.GetProvider(provider);
             iconSprite.SpriteName = api.IconName;
         }
 

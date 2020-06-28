@@ -15,7 +15,7 @@ namespace PBGame.Networking.API.Responses
         /// <summary>
         /// Returns the online user information retrieved from the server.
         /// </summary>
-        public IOnlineUser User { get; private set; }
+        public OnlineUser User { get; private set; }
 
 
         public MeResponse(IHttpRequest request, IApiProvider provider) : base(request)

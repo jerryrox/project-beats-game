@@ -71,7 +71,7 @@ namespace PBGame.UI.Components.Download.Result
             favoriteCountTag.SetFavoriteCount(mapset.FavoriteCount);
 
             float tagX = rankTag.Width + HorizontalTagSpace;
-            foreach (var mode in mapset.Maps.GroupBy(m => m.Mode))
+            foreach (var mode in mapset.Maps.GroupBy(m => m.GameMode))
             {
                 var tag = mapTagRecycler.GetNext();
                 tag.SetMapCount(mode.Key, mode.Count());

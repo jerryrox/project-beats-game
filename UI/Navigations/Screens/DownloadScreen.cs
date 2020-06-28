@@ -44,7 +44,7 @@ namespace PBGame.UI.Navigations.Screens
         private IMapSelection MapSelection { get; set; }
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private INotificationBox NotificationBox { get; set; }
@@ -147,31 +147,18 @@ namespace PBGame.UI.Navigations.Screens
             }
 
             // Verify requestable.
-            var api = ApiManager.GetApi(state.ApiProvider.Value);
+            var api = Api.GetProvider(state.ApiProvider.Value);
             if (api == null)
                 return;
-            var request = api.RequestFactory.GetMapsetList();
-            if (request == null)
-            {
-                // Show notification that this request is not supported on current provider.
-                NotificationBox.Add(new Notification()
-                {
-                    Message = "The current provider does not support mapset search.",
-                    Type = NotificationType.Warning,
-                    Scope = NotificationScope.Temporary
-                });
-                return;
-            }
 
+            var request = api.Mapsets();
             // Cursor should be assigned if requesting next page.
             if (state.IsRequestingNextPage)
             {
-                request.CursorName = state.CursorName;
-                request.CursorValue = state.CursorValue;
-                request.CursorId = state.CursorId;
+                request.Cursor = state.Cursor;
             }
 
-            request.Mode = state.Mode.Value.GetIndex();
+            request.GameMode = (GameModeType)state.Mode.Value.GetIndex();
             request.Category = state.Category.Value;
             request.Genre = state.Genre.Value;
             request.Language = state.Language.Value;
@@ -179,26 +166,25 @@ namespace PBGame.UI.Navigations.Screens
             request.IsDescending = state.IsDescending.Value;
             request.HasVideo = state.HasVideo.Value;
             request.HasStoryboard = state.HasStoryboard.Value;
-            request.SearchTerm = state.SearchTerm.Value;
-            request.OnRequestEnd += OnMapsetListResponse;
+            request.Query = state.SearchTerm.Value;
+
+            request.Response.OnNewValue += OnMapsetListResponse;
 
             state.SearchRequest.Value = request;
-            api.Request(request);
+            Api.Request(request);
         }
 
         /// <summary>
         /// Event called on mapset list request end.
         /// </summary>
-        private void OnMapsetListResponse(IMapsetListResponse response)
+        private void OnMapsetListResponse(MapsetsResponse response)
         {
             bool isNextPage = state.IsRequestingNextPage;
 
             if (response.IsSuccess)
             {
-                state.CursorName = response.CursorName;
-                state.CursorValue = response.CursorValue;
-                state.CursorId = response.CursorId;
-
+                state.Cursor = response.Cursor;
+                
                 state.ModifyResults(resulsts =>
                 {
                     if(!isNextPage)
@@ -248,7 +234,7 @@ namespace PBGame.UI.Navigations.Screens
         /// <summary>
         /// Event called on mapset list request object change.
         /// </summary>
-        private void OnRequestChange(IMapsetListRequest request)
+        private void OnRequestChange(MapsetsRequest request)
         {
             if(request == null)
                 resultLoader.Hide();

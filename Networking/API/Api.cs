@@ -67,6 +67,11 @@ namespace PBGame.Networking.API
             if (request.DidRequest)
                 throw new Exception("Attempted to request an API request under the Api when it has already been requested.");
 
+            // TODO: Display request as notification.
+            // request.InnerRequest.OnProgress += (progress) =>
+            // {
+            //     Debug.Log("Download progress: " + progress);
+            // };
             request.Request();
         }
 
@@ -90,8 +95,11 @@ namespace PBGame.Networking.API
                 }
                 else if (response is MeResponse meResponse)
                 {
-                    if(meResponse.User != null)
+                    if (meResponse.User != null)
+                    {
+                        meResponse.User.Provider = AuthenticatedProvider;
                         user.Value = meResponse.User;
+                    }
                 }
                 else if (response is OAuthResponse oAuthResponse)
                 {
