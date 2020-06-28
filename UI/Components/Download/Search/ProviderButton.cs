@@ -71,6 +71,8 @@ namespace PBGame.UI.Components.Download.Search
 
             var api = Api.GetProvider(provider);
             iconSprite.SpriteName = api.IconName;
+            
+            RefreshFocus();
         }
 
         /// <summary>
@@ -90,11 +92,16 @@ namespace PBGame.UI.Components.Download.Search
         }
 
         /// <summary>
+        /// Refreshes the button's focus state.
+        /// </summary>
+        private void RefreshFocus()
+        {
+            IsFocused = this.provider == State.ApiProvider.Value;
+        }
+
+        /// <summary>
         /// Event called on api provider change.
         /// </summary>
-        private void OnProviderChange(ApiProviderType provider)
-        {
-            IsFocused = provider == this.provider;
-        }
+        private void OnProviderChange(ApiProviderType provider) => RefreshFocus();
     }
 }
