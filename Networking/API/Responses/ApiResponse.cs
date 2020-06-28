@@ -1,9 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using PBFramework.Services;
-using PBFramework.Threading;
+using PBFramework.Debugging;
 using PBFramework.Networking;
 using PBFramework.Networking.API;
 using Newtonsoft.Json;
@@ -12,6 +11,8 @@ using Newtonsoft.Json.Linq;
 namespace PBGame.Networking.API.Responses
 {
     public class ApiResponse : IApiResponse {
+
+        public event Action OnEvaluated;
 
         protected IHttpRequest request;
 
@@ -29,63 +30,50 @@ namespace PBGame.Networking.API.Responses
             this.request = request;
         }
 
-        public Task Evaluate(IEventProgress progress = null)
+        public void Evaluate()
         {
             var response = request.Response;
             if(response == null)
                 throw new Exception("There is no response to evaluate!");
 
-            return Task.Run(() =>
+            try
             {
                 if (response.IsSuccess)
-                    ParseResponse(response, progress);
+                {
+                    ParseResponse(response);
+                }
                 else
                 {
-                    IsSuccess = false;
-                    ErrorMessage = response.ErrorMessage;
+                    EvaluateFail(response.ErrorMessage);
                 }
-
-                UnityThreadService.DispatchUnattended(() =>
-                {
-                    progress?.Report(1f);
-                    progress?.InvokeFinished();
-                    return null;
-                });
-            });
+            }
+            catch (Exception e)
+            {
+                EvaluateFail(e.Message);
+                Logger.LogError(e.ToString());
+            }
         }
 
         /// <summary>
         /// Parses the raw response data.
         /// </summary>
-        protected virtual void ParseResponse(IWebResponse response, IEventProgress progress)
+        protected virtual void ParseResponse(IWebResponse response)
         {
-            JObject json = JsonConvert.DeserializeObject<JObject>(response.TextData);
+            JObject json = UnityThreadService.Dispatch(() => JsonConvert.DeserializeObject<JObject>(response.TextData)) as JObject;
             if (json.ContainsKey("type"))
             {
                 if (json["type"].ToString().Equals("Error", StringComparison.OrdinalIgnoreCase))
                 {
-                    IsSuccess = false;
-                    ErrorMessage = json["message"].ToString() ?? "Response error.";
+                    EvaluateFail(json["message"].ToString() ?? "Response error.");
                 }
                 else
                 {
-                    IsSuccess = true;
-                    try
-                    {
-                        ParseResponseData(json["data"], progress);
-                    }
-                    catch (Exception e)
-                    {
-                        IsSuccess = false;
-                        ErrorMessage = e.Message;
-                        // TODO: Output error to logger.
-                    }
+                    ParseResponseData(json["data"]);
                 }
             }
             else
             {
-                IsSuccess = false;
-                ErrorMessage = "Unknown response format detected.";
+                EvaluateFail("Unknown response format detected.");
                 // TODO: Output response text to logger.
             }
         }
@@ -93,6 +81,25 @@ namespace PBGame.Networking.API.Responses
         /// <summary>
         /// Parses the specified response data into the format appropriate for this response.
         /// </summary>
-        protected virtual void ParseResponseData(JToken responseData, IEventProgress progress) { }
+        protected virtual void ParseResponseData(JToken responseData) { }
+
+        /// <summary>
+        /// Evaluates a failed response and fires event.
+        /// </summary>
+        protected void EvaluateFail(string message)
+        {
+            IsSuccess = false;
+            ErrorMessage = message;
+            OnEvaluated?.Invoke();
+        }
+
+        /// <summary>
+        /// Evaluates a success response and fires event.
+        /// </summary>
+        protected void EvaluateSuccess()
+        {
+            IsSuccess = true;
+            OnEvaluated?.Invoke();
+        }
     }
 }

@@ -1,10 +1,16 @@
+using System;
 using System.Threading.Tasks;
 using PBFramework.Threading;
 
 namespace PBGame.Networking.API.Responses
 {
     public interface IApiResponse {
-    
+
+        /// <summary>
+        /// Event called on evaluation end.
+        /// </summary>
+        event Action OnEvaluated;
+
         /// <summary>
         /// Returns whether the response is successful.
         /// </summary>
@@ -19,6 +25,6 @@ namespace PBGame.Networking.API.Responses
         /// <summary>
         /// Evaluates the response data to see whether it's a success.
         /// </summary>
-        Task Evaluate(IEventProgress progress = null);
+        void Evaluate();
     }
 }

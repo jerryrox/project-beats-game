@@ -1,8 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Networking.Maps;
-using PBFramework.Threading;
+using PBFramework.Services;
 using PBFramework.Networking.API;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -29,14 +30,34 @@ namespace PBGame.Networking.API.Responses
 
         public MapsetsResponse(IHttpRequest request) : base(request) {}
 
-        protected override void ParseResponseData(JToken responseData, IEventProgress progress)
+        protected override void ParseResponseData(JToken responseData)
         {
-            var data = responseData.ToObject<JObject>();
-            Mapsets = data["mapsets"].ToObject<OnlineMapset[]>();
-            if(data.ContainsKey("cursor"))
-                Cursor = data["cursor"].ToString();
-            if(data.ContainsKey("total"))
-                Total = data["total"].Value<int>();
+            Task.Run(() =>
+            {
+                try
+                {
+                    var data = responseData.ToObject<JObject>();
+                    Mapsets = data["mapsets"].ToObject<OnlineMapset[]>();
+                    if(data.ContainsKey("cursor"))
+                        Cursor = data["cursor"].ToString();
+                    if(data.ContainsKey("total"))
+                        Total = data["total"].Value<int>();
+
+                    UnityThreadService.DispatchUnattended(() =>
+                    {
+                        EvaluateSuccess();
+                        return null;
+                    });
+                }
+                catch (Exception e)
+                {
+                    UnityThreadService.DispatchUnattended(() => 
+                    {
+                        EvaluateFail(e.Message);
+                        return null;
+                    });
+                }
+            });
         }
     }
 }

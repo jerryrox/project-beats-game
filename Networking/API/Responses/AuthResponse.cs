@@ -20,17 +20,17 @@ namespace PBGame.Networking.API.Responses
             
         }
 
-        protected override void ParseResponseData(JToken responseData, IEventProgress progress)
+        protected override void ParseResponseData(JToken responseData)
         {
             var auth = responseData.ToObject<Authentication>();
             if (auth != null && !string.IsNullOrEmpty(auth.AccessToken))
             {
                 Authentication = auth;
+                EvaluateSuccess();
             }
             else
             {
-                IsSuccess = false;
-                ErrorMessage = "Access token is missing!";
+                EvaluateFail("Access token is missing!");
             }
         }
     }

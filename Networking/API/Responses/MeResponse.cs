@@ -23,27 +23,25 @@ namespace PBGame.Networking.API.Responses
             this.provider = provider;
         }
 
-        protected override void ParseResponseData(JToken responseData, IEventProgress progress)
+        protected override void ParseResponseData(JToken responseData)
         {
             var user = responseData.ToObject<OnlineUser>();
             if (user == null)
             {
-                IsSuccess = false;
-                ErrorMessage = "Failed to parse user information.";
+                EvaluateFail("Failed to parse user information.");
             }
             else if (string.IsNullOrEmpty(user.Id))
             {
-                IsSuccess = false;
-                ErrorMessage = "An invalid user Id was given.";
+                EvaluateFail("An invalid user Id was given.");
             }
             else if (string.IsNullOrEmpty(user.Username))
             {
-                IsSuccess = false;
-                ErrorMessage = "An invalid username was given.";
+                EvaluateFail("An invalid username was given.");
             }
             else
             {
                 this.User = user;
+                EvaluateSuccess();
             }
         }
     }

@@ -20,13 +20,16 @@ namespace PBGame.Networking.API.Responses
     
         }
 
-        protected override void ParseResponseData(JToken responseData, IEventProgress progress)
+        protected override void ParseResponseData(JToken responseData)
         {
             OAuthUrl = responseData["oauthUrl"].ToString();
             if (string.IsNullOrEmpty(OAuthUrl))
             {
-                IsSuccess = false;
-                ErrorMessage = "OAuth URL is missing!";
+                EvaluateFail("OAuth URL is missing!");
+            }
+            else
+            {
+                EvaluateSuccess();
             }
         }
     }

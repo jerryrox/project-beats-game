@@ -20,23 +20,24 @@ namespace PBGame.Networking.API.Responses
             this.mapsetId = mapsetId;
         }
 
-        protected override void ParseResponse(IWebResponse response, IEventProgress progress)
+        protected override void ParseResponse(IWebResponse response)
         {
             if (response.Code == 200)
             {
                 var bytes = response.ByteData;
-                if(bytes != null && bytes.Length > 0)
+                if (bytes != null && bytes.Length > 0)
+                {
                     downloadStore.MapStorage.Write(GetFileName(), bytes);
+                    EvaluateSuccess();
+                }
                 else
                 {
-                    IsSuccess = false;
-                    ErrorMessage = "Missing byte data.";
+                    EvaluateFail("Missing byte data.");
                 }
             }
             else
             {
-                IsSuccess = false;
-                ErrorMessage = response.ErrorMessage ?? "Download failed due to unknown reason.";
+                EvaluateFail(response.ErrorMessage ?? "Download failed due to unknown reason.");
             }
         }
 
