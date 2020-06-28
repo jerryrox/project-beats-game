@@ -28,8 +28,8 @@ namespace PBGame.Networking.API.Requests
         {
             var request = new HttpPostRequest(api.GetUrl(provider, "/auth"));
             var postData = new FormPostData();
-            postData.AddField("username", Username);
-            postData.AddField("password", Password);
+            postData.AddField("username", Username ?? "");
+            postData.AddField("password", Password ?? "");
             request.SetPostData(postData);
             return request;
         }
