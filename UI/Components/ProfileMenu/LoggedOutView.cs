@@ -104,11 +104,12 @@ namespace PBGame.UI.Components.ProfileMenu
                 apiDropdown.Height = 40f;
 
                 dropdownContext = new DropdownContext();
+                dropdownContext.ImportFromEnum<ApiProviderType>(GameConfiguration.LastLoginApi.Value);
                 dropdownContext.OnSelection += (value) =>
                 {
-                    SelectApi((ApiProviderType)value.ExtraData);
+                    if(value != null && value.ExtraData != null)
+                        SelectApi((ApiProviderType)value.ExtraData);
                 };
-                dropdownContext.ImportFromEnum<ApiProviderType>(GameConfiguration.LastLoginApi.Value);
 
                 apiDropdown.Context = dropdownContext;
             }
