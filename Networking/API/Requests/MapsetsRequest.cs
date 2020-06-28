@@ -69,19 +69,25 @@ namespace PBGame.Networking.API.Requests
         {
         }
 
-        protected override IHttpRequest CreateRequest()
-        {
-            var request = new HttpGetRequest(api.GetUrl(provider, $"/mapsets"));
-            request.AddQueryParams(GetQueries());
-            return request;
-        }
+        protected override IHttpRequest CreateRequest() => new HttpGetRequest(api.GetUrl(provider, $"/mapsets"));
 
         protected override MapsetsResponse CreateResponse(IHttpRequest request) => new MapsetsResponse(request);
+
+        protected override void OnPreRequest()
+        {
+            var queries = GetQueries();
+            while (queries.MoveNext())
+            {
+                UnityEngine.Debug.Log("Adding key; " + queries.Current.Key + ", value: " + queries.Current.Value);
+                InnerRequest.AddQueryParam(queries.Current.Key, queries.Current.Value);
+            }
+            UnityEngine.Debug.Log("Url: " + InnerRequest.Url);
+        }
 
         /// <summary>
         /// Returns all query parameters.
         /// </summary>
-        private IEnumerable<KeyValuePair<string, string>> GetQueries()
+        private IEnumerator<KeyValuePair<string, string>> GetQueries()
         {
             if (!string.IsNullOrEmpty(this.Cursor))
             {

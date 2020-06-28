@@ -24,16 +24,16 @@ namespace PBGame.Networking.API.Requests
     
         }
 
-        protected override IHttpRequest CreateRequest()
+        protected override IHttpRequest CreateRequest() => new HttpPostRequest(api.GetUrl(provider, "/auth"));
+
+        protected override AuthResponse CreateResponse(IHttpRequest request) => new AuthResponse(request);
+
+        protected override void OnPreRequest()
         {
-            var request = new HttpPostRequest(api.GetUrl(provider, "/auth"));
             var postData = new FormPostData();
             postData.AddField("username", Username ?? "");
             postData.AddField("password", Password ?? "");
-            request.SetPostData(postData);
-            return request;
+            (InnerRequest as HttpPostRequest).SetPostData(postData);
         }
-
-        protected override AuthResponse CreateResponse(IHttpRequest request) => new AuthResponse(request);
     }
 }

@@ -47,7 +47,10 @@ namespace PBGame.Networking.API.Requests
                 throw new Exception("This request has already been disposed!");
 
             DidRequest = true;
+            
             InnerRequest.OnFinished += OnHttpResponse;
+
+            OnPreRequest();
             InnerRequest.Start();
         }
 
@@ -70,6 +73,11 @@ namespace PBGame.Networking.API.Requests
         /// Creates a new response object using current request.
         /// </summary>
         protected abstract T CreateResponse(IHttpRequest request);
+
+        /// <summary>
+        /// Event called before requesting.
+        /// </summary>
+        protected virtual void OnPreRequest() { }
 
         /// <summary>
         /// Event called on inner request response.
