@@ -71,7 +71,7 @@ namespace PBGame.Networking.API.Requests
 
         protected override IHttpRequest CreateRequest() => new HttpGetRequest(api.GetUrl(provider, $"/mapsets"));
 
-        protected override MapsetsResponse CreateResponse(IHttpRequest request) => new MapsetsResponse(request);
+        protected override MapsetsResponse CreateResponse(IHttpRequest request) => new MapsetsResponse(request.Response);
 
         protected override void OnPreRequest()
         {

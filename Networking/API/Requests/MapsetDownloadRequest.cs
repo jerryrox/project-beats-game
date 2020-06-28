@@ -28,6 +28,6 @@ namespace PBGame.Networking.API.Requests
             => new HttpGetRequest(api.GetUrl(provider, $"/mapsets/{MapsetId}/download"));
 
         protected override MapsetDownloadResponse CreateResponse(IHttpRequest request)
-            => new MapsetDownloadResponse(request, DownloadStore, MapsetId);
+            => new MapsetDownloadResponse(request.Response, DownloadStore, MapsetId);
     }
 }

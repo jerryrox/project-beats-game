@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.Networking.Maps;
 using PBFramework.Services;
-using PBFramework.Networking.API;
+using PBFramework.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -28,7 +28,7 @@ namespace PBGame.Networking.API.Responses
         public int? Total { get; private set; }
 
 
-        public MapsetsResponse(IHttpRequest request) : base(request) {}
+        public MapsetsResponse(IWebResponse response) : base(response) {}
 
         protected override void ParseResponseData(JToken responseData)
         {

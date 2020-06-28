@@ -14,7 +14,7 @@ namespace PBGame.Networking.API.Responses
 
         public event Action OnEvaluated;
 
-        protected IHttpRequest request;
+        protected IWebResponse response;
 
 
         public bool IsSuccess { get; protected set; }
@@ -22,17 +22,16 @@ namespace PBGame.Networking.API.Responses
         public string ErrorMessage { get; protected set; }
 
 
-        public ApiResponse(IHttpRequest request)
+        public ApiResponse(IWebResponse response)
         {
-            if(request == null)
-                throw new ArgumentNullException(nameof(request));
+            if(response == null)
+                throw new ArgumentNullException(nameof(response));
 
-            this.request = request;
+            this.response = response;
         }
 
         public void Evaluate()
         {
-            var response = request.Response;
             if(response == null)
                 throw new Exception("There is no response to evaluate!");
 
@@ -40,7 +39,7 @@ namespace PBGame.Networking.API.Responses
             {
                 if (response.IsSuccess)
                 {
-                    ParseResponse(response);
+                    ParseResponse();
                 }
                 else
                 {
@@ -57,7 +56,7 @@ namespace PBGame.Networking.API.Responses
         /// <summary>
         /// Parses the raw response data.
         /// </summary>
-        protected virtual void ParseResponse(IWebResponse response)
+        protected virtual void ParseResponse()
         {
             JObject json = UnityThreadService.Dispatch(() => JsonConvert.DeserializeObject<JObject>(response.TextData)) as JObject;
             if (json.ContainsKey("type"))

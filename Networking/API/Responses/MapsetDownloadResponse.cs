@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using PBGame.Stores;
 using PBFramework.Threading;
 using PBFramework.Networking;
-using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Responses
 {
@@ -14,13 +13,13 @@ namespace PBGame.Networking.API.Responses
         private string mapsetId;
 
 
-        public MapsetDownloadResponse(IHttpRequest request, IDownloadStore downloadStore, string mapsetId) : base(request)
+        public MapsetDownloadResponse(IWebResponse response, IDownloadStore downloadStore, string mapsetId) : base(response)
         {
             this.downloadStore = downloadStore;
             this.mapsetId = mapsetId;
         }
 
-        protected override void ParseResponse(IWebResponse response)
+        protected override void ParseResponse()
         {
             if (response.Code == 200)
             {

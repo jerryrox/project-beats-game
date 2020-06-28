@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBFramework.Threading;
-using PBFramework.Networking.API;
+using PBFramework.Networking;
 using Newtonsoft.Json.Linq;
 
 namespace PBGame.Networking.API.Responses
@@ -18,7 +18,7 @@ namespace PBGame.Networking.API.Responses
         public OnlineUser User { get; private set; }
 
 
-        public MeResponse(IHttpRequest request, IApiProvider provider) : base(request)
+        public MeResponse(IWebResponse response, IApiProvider provider) : base(response)
         {
             this.provider = provider;
         }

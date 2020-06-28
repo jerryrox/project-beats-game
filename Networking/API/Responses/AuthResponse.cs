@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBFramework.Threading;
-using PBFramework.Networking.API;
+using PBFramework.Networking;
 using Newtonsoft.Json.Linq;
 
 namespace PBGame.Networking.API.Responses
@@ -15,7 +15,7 @@ namespace PBGame.Networking.API.Responses
         public Authentication Authentication { get; private set; }
 
 
-        public AuthResponse(IHttpRequest request) : base(request)
+        public AuthResponse(IWebResponse response) : base(response)
         {
             
         }

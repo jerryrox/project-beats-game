@@ -26,7 +26,7 @@ namespace PBGame.Networking.API.Requests
 
         protected override IHttpRequest CreateRequest() => new HttpPostRequest(api.GetUrl(provider, "/auth"));
 
-        protected override AuthResponse CreateResponse(IHttpRequest request) => new AuthResponse(request);
+        protected override AuthResponse CreateResponse(IHttpRequest request) => new AuthResponse(request.Response);
 
         protected override void OnPreRequest()
         {
