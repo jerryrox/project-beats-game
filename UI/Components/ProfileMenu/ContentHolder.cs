@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
+using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -34,6 +35,9 @@ namespace PBGame.UI.Components.ProfileMenu
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
 
+        [ReceivesDependency]
+        private IColorPreset ColorPreset { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -43,7 +47,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 background.Anchor = AnchorType.Fill;
                 background.RawSize = Vector2.zero;
                 background.Position = Vector2.zero;
-                background.Color = new Color(0f, 0f, 0f, 0.25f);
+                background.Color = ColorPreset.Background;
             }
             mask = CreateChild<UguiSprite>("mask", 3);
             {
@@ -52,7 +56,8 @@ namespace PBGame.UI.Components.ProfileMenu
                 mask.Position = Vector2.zero;
                 mask.SpriteName = "box";
 
-                mask.AddEffect(new MaskEffect());
+                var maskEffect = mask.AddEffect(new MaskEffect());
+                maskEffect.Component.showMaskGraphic = false;
 
                 loggedInView = mask.CreateChild<LoggedInView>("logged-in", 0);
                 {

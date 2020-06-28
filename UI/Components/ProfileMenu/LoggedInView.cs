@@ -14,7 +14,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private CanvasGroup canvasGroup;
 
         private CoverDisplay coverDisplay;
-        private ISprite background;
+        private ISprite coverBackground;
         private ISprite shadow;
         private Header header;
         private StatHolder statHolder;
@@ -40,26 +40,6 @@ namespace PBGame.UI.Components.ProfileMenu
                 coverDisplay.SetOffsetHorizontal(0f);
                 coverDisplay.Y = 0f;
                 coverDisplay.Height = 106f;
-            }
-            background = CreateChild<UguiSprite>("bg", 1);
-            {
-                background.Anchor = AnchorType.BottomStretch;
-                background.Pivot = PivotType.Bottom;
-                background.SetOffsetHorizontal(0f);
-                background.Y = 0f;
-                background.Height = 374f;
-                background.Color = HexColor.Create("1D2126");
-
-                shadow = background.CreateChild<UguiSprite>("shadow");
-                {
-                    shadow.Anchor = AnchorType.TopStretch;
-                    shadow.Pivot = PivotType.Bottom;
-                    shadow.SetOffsetHorizontal(0f);
-                    shadow.Y = 0f;
-                    shadow.Height = 32f;
-                    shadow.Color = new Color(0f, 0f, 0f, 0.5f);
-                    shadow.SpriteName = "gradation-bottom";
-                }
             }
             header = CreateChild<Header>("header", 2);
             {

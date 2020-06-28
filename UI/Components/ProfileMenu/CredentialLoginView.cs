@@ -50,7 +50,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 password.Anchor = AnchorType.TopStretch;
                 password.Pivot = PivotType.Top;
                 password.SetOffsetHorizontal(32f);
-                password.Y = -6f;
+                password.Y = -60f;
                 password.Height = 36f;
                 password.InputType = InputField.InputType.Password;
                 password.Placeholder = "password";

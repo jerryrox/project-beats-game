@@ -81,20 +81,16 @@ namespace PBGame.UI.Components.ProfileMenu
             
             CurLoginView.TriggerWhenDifferent = true;
 
-            bg = CreateChild<UguiSprite>("bg");
-            {
-                bg.Anchor = AnchorType.Fill;
-                bg.RawSize = Vector2.zero;
-                bg.Color = HexColor.Create("1D2126");
-            }
             var providerLabel = CreateChild<Label>("provider-label");
             {
                 providerLabel.Anchor = AnchorType.TopStretch;
                 providerLabel.SetOffsetHorizontal(32f);
                 providerLabel.Y = -32f;
-                providerLabel.Height = 0f;
+                providerLabel.Height = 16f;
                 providerLabel.IsBold = true;
+                providerLabel.FontSize = 16;
                 providerLabel.Alignment = TextAnchor.MiddleCenter;
+                providerLabel.Text = "Select provider";
             }
             apiDropdown = CreateChild<DropdownButton>("api-dropdown");
             {
@@ -175,6 +171,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 oAuthLogin.Hide();
                 credentialLogin.Show();
             }
+            loginView.Setup(provider);
             CurLoginView.Value = loginView;
         }
 

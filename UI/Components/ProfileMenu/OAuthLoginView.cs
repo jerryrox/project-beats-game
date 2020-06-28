@@ -28,10 +28,10 @@ namespace PBGame.UI.Components.ProfileMenu
                 loginButton.Anchor = AnchorType.TopStretch;
                 loginButton.Pivot = PivotType.Top;
                 loginButton.SetOffsetHorizontal(48f);
-                loginButton.Y = -148f;
+                loginButton.Y = -16;
                 loginButton.Height = 36f;
                 loginButton.Color = colorPreset.Positive;
-                loginButton.LabelText = "Log in";
+                loginButton.LabelText = "OAuth log in";
 
                 loginButton.OnTriggered += () =>
                 {
