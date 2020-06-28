@@ -175,7 +175,7 @@ namespace PBGame
             Application.targetFrameRate = 60;
 
             // Load environment
-            envConfiguration.Load("Configurations/");
+            envConfiguration.Load("Configurations/Env");
 
             // Apply accelerator to input manager
             inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());
