@@ -77,14 +77,13 @@ namespace PBGame.Networking.API.Requests
         private void OnHttpResponse()
         {
             T response = CreateResponse(InnerRequest);
-            var progress = new EventProgress();
-            progress.OnFinished += () =>
+            response.OnEvaluated += () =>
             {
                 this.response.Value = response;
                 Dispose();
             };
 
-            response.Evaluate(progress);
+            response.Evaluate();
         }
     }
 }
