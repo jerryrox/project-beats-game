@@ -107,6 +107,7 @@ namespace PBGame.UI.Components.Download
             ResetState();
 
             // Trigger mapset list request when any of these values change.
+            ApiProvider.OnValueChanged += delegate { RequestMapsetList(); };
             Mode.OnValueChanged += delegate { RequestMapsetList(); };
             Category.OnValueChanged += delegate { RequestMapsetList(); };
             Genre.OnValueChanged += delegate { RequestMapsetList(); };
