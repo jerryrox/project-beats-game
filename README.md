@@ -17,8 +17,15 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.9.3 (WIP)
+#### New features
+- Allow selection of different API providers for logging in.
+- Added fragment view fore OAuth login.
 #### Improvements
 - Upgraded Unity version to 2019.4 LTS
+#### Changes
+- Reworked on networking API to adapt to project-beats-api.
+#### Fixes
+- Fixed mapsets result list keep on refreshing when there are no more results.
 
 ### 0.9.2
 #### New features
