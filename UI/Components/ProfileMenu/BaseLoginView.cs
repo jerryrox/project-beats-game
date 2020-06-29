@@ -29,9 +29,12 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// The API instance assigned to interact with.
         /// </summary>
-        public IApi Api { get; private set; }
+        public IApiProvider ApiProvider { get; private set; }
 
         public abstract float DesiredHeight { get; }
+
+        [ReceivesDependency]
+        protected IApi Api { get; set; }
 
 
         [InitWithDependency]
@@ -63,7 +66,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 .AddTime(0f, () => Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
-            hideAni.AddEvent(hideAni.Duration, () => Active = true);
+            hideAni.AddEvent(hideAni.Duration, () => Active = false);
         }
 
         protected override void OnDisable()
@@ -76,9 +79,9 @@ namespace PBGame.UI.Components.ProfileMenu
             }
         }
 
-        public virtual void Setup(IApi api)
+        public virtual void Setup(IApiProvider provider)
         {
-            this.Api = api;
+            this.ApiProvider = provider;
         }
 
         public void Show()

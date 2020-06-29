@@ -32,7 +32,7 @@ namespace PBGame.UI.Components.Download.Result
         private IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private DownloadState State { get; set; }
@@ -115,16 +115,15 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            var api = ApiManager.GetApi(State.ApiProvider.Value);
+            var api = Api.GetProvider(State.ApiProvider.Value);
             if(api == null)
                 return;
-            var request = api.RequestFactory.GetMapDownload();
+            var request = api.MapsetDownload();
             request.DownloadStore = DownloadStore;
-            request.Mapset = mapset;
+            request.MapsetId = mapset.Id.ToString();
 
-            // TODO: Temporarily log onto console
-            api.Request(request);
-            request.Promise.OnProgress += (progress) =>
+            Api.Request(request);
+            request.InnerRequest.OnProgress += (progress) =>
             {
                 Debug.Log("Download progress: " + progress);
             };

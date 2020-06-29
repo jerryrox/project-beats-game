@@ -51,6 +51,8 @@ namespace PBGame.Graphics
 
         public Color DarkBackground { get; private set; } = HexColor.Create("0E1216");
 
+        public Color Background { get; private set; } = HexColor.Create("1D2126");
+
 
         public ColorPalette GetDifficultyColor(DifficultyType type)
         {

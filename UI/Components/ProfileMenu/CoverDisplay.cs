@@ -1,5 +1,6 @@
 using PBGame.Data.Users;
 using PBGame.Assets.Caching;
+using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Allocation.Caching;
@@ -23,6 +24,9 @@ namespace PBGame.UI.Components.ProfileMenu
         [ReceivesDependency]
         private IWebImageCacher WebImageCacher { get; set; }
 
+        [ReceivesDependency]
+        private IColorPreset ColorPreset { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -34,10 +38,26 @@ namespace PBGame.UI.Components.ProfileMenu
                 image.Active = profileImage != null;
             };
 
-            image = CreateChild<UguiTexture>("image", 0);
+            var bg = CreateChild<UguiSprite>("bg");
+            {
+                bg.Anchor = AnchorType.Fill;
+                bg.Offset = Offset.Zero;
+                bg.Color = ColorPreset.DarkBackground;
+            }
+            image = CreateChild<UguiTexture>("image");
             {
                 image.Anchor = AnchorType.Fill;
-                image.RawSize = Vector2.zero;
+                image.Offset = Offset.Zero;
+            }
+            var shadow = CreateChild<UguiSprite>("shadow");
+            {
+                shadow.Anchor = AnchorType.BottomStretch;
+                shadow.Pivot = PivotType.Bottom;
+                shadow.SetOffsetHorizontal(0f);
+                shadow.Y = 0f;
+                shadow.Height = 32f;
+                shadow.Color = new Color(0f, 0f, 0f, 0.5f);
+                shadow.SpriteName = "gradation-bottom";
             }
 
             OnEnableInited();

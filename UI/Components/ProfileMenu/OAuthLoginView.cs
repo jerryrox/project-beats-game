@@ -28,10 +28,10 @@ namespace PBGame.UI.Components.ProfileMenu
                 loginButton.Anchor = AnchorType.TopStretch;
                 loginButton.Pivot = PivotType.Top;
                 loginButton.SetOffsetHorizontal(48f);
-                loginButton.Y = -148f;
+                loginButton.Y = -16;
                 loginButton.Height = 36f;
                 loginButton.Color = colorPreset.Positive;
-                loginButton.LabelText = "Log in";
+                loginButton.LabelText = "OAuth log in";
 
                 loginButton.OnTriggered += () =>
                 {
@@ -40,17 +40,9 @@ namespace PBGame.UI.Components.ProfileMenu
             }
         }
 
-        public override void Setup(IApi api)
-        {
-            base.Setup(api);
-        }
-
         /// <summary>
         /// Starts performing OAuth login.
         /// </summary>
-        private void DoLogin()
-        {
-            Api.Request(Api.RequestFactory.GetLogin());
-        }
+        private void DoLogin() => Api.Request(ApiProvider.OAuth());
     }
 }

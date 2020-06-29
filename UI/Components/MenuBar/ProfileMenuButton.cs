@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.MenuBar
         private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private IWebImageCacher WebImageCacher { get; set; }
@@ -40,7 +40,7 @@ namespace PBGame.UI.Components.MenuBar
 
 
         [InitWithDependency]
-        private void Init(IApiManager apiManager)
+        private void Init()
         {
             OnFocused += (isFocused) =>
             {
@@ -143,7 +143,7 @@ namespace PBGame.UI.Components.MenuBar
             if(newUser != null)
                 nicknameLabel.Text = newUser.Username;
             else
-                nicknameLabel.Text = ApiManager.OfflineUser.Username;
+                nicknameLabel.Text = Api.User.Value.Username;
 
             // Unload profie image using web image cacher.
             cacherAgent.Remove();

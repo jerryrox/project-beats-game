@@ -24,6 +24,8 @@ namespace PBGame.Graphics
 
         Color DarkBackground { get; }
 
+        Color Background { get; }
+
 
         /// <summary>
         /// Returns the color resembling the specified difficulty categorization type.

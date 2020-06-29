@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Sets up the view for logging in with credentials for the specified API provider.
         /// </summary>
-        void Setup(IApi api);
+        void Setup(IApiProvider provider);
 
         /// <summary>
         /// Starts showing this login view.

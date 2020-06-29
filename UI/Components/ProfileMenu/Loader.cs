@@ -39,7 +39,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             blocker = CreateChild<Blocker>("blocker", 0);
             {
-                blocker.Background.SpriteName = null;
+                blocker.Background.SpriteName = "Null";
                 blocker.Background.Color = new Color(0f, 0f, 0f, 0.5f);
 
                 loader = blocker.CreateChild<LoaderIcon>("loader", 1);

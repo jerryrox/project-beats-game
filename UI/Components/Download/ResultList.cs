@@ -118,7 +118,12 @@ namespace PBGame.UI.Components.Download
                 lastDelta -= ContainerStartPos;
             }
 
+            int countBeforeRequest = TotalItems;
             TotalItems = result.Count;
+
+            // If there are no new results, the list shouldn't request for more results on current search options.
+            if(countBeforeRequest != TotalItems)
+                requestedNextPage = false;
 
             if (lastDelta.HasValue)
             {
@@ -126,8 +131,6 @@ namespace PBGame.UI.Components.Download
                 pos += lastDelta.Value;
                 container.Position = pos;
             }
-
-            requestedNextPage = false;
         }
     }
 }
