@@ -184,12 +184,12 @@ namespace PBGame.UI.Navigations.Screens
             if (response.IsSuccess)
             {
                 state.Cursor = response.Cursor;
-                
-                state.ModifyResults(resulsts =>
+
+                state.ModifyResults(results =>
                 {
-                    if(!isNextPage)
-                        resulsts.Clear();
-                    resulsts.AddRange(response.Mapsets);
+                    if (!isNextPage)
+                        results.Clear();
+                    results.AddRange(response.Mapsets);
                 });
             }
             else
