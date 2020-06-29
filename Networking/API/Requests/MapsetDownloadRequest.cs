@@ -25,9 +25,14 @@ namespace PBGame.Networking.API.Requests
         }
 
         protected override IHttpRequest CreateRequest()
-            => new HttpGetRequest(api.GetUrl(provider, $"/mapsets/{MapsetId}/download"));
+            => new HttpGetRequest(api.GetUrl(provider, "/mapsets/download"));
 
         protected override MapsetDownloadResponse CreateResponse(IHttpRequest request)
             => new MapsetDownloadResponse(request.Response, DownloadStore, MapsetId);
+
+        protected override void OnPreRequest()
+        {
+            InnerRequest.AddQueryParam("id", MapsetId);
+        }
     }
 }

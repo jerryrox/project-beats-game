@@ -77,11 +77,7 @@ namespace PBGame.Networking.API.Requests
         {
             var queries = GetQueries();
             while (queries.MoveNext())
-            {
-                UnityEngine.Debug.Log("Adding key; " + queries.Current.Key + ", value: " + queries.Current.Value);
                 InnerRequest.AddQueryParam(queries.Current.Key, queries.Current.Value);
-            }
-            UnityEngine.Debug.Log("Url: " + InnerRequest.Url);
         }
 
         /// <summary>
