@@ -20,8 +20,6 @@ Slowly making progress 🧩
 #### New features
 - Allow selection of different API providers for logging in.
 - Added fragment view fore OAuth login.
-#### Improvements
-- Upgraded Unity version to 2019.4 LTS
 #### Changes
 - Reworked on networking API to adapt to project-beats-api.
 #### Fixes
