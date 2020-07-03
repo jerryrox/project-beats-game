@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Networking.Maps;
-using PBFramework.Services;
+using PBFramework.Threading;
 using PBFramework.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,7 +43,7 @@ namespace PBGame.Networking.API.Responses
                     if(data.ContainsKey("total"))
                         Total = data["total"].Value<int>();
 
-                    UnityThreadService.DispatchUnattended(() =>
+                    UnityThread.DispatchUnattended(() =>
                     {
                         EvaluateSuccess();
                         return null;
@@ -51,7 +51,7 @@ namespace PBGame.Networking.API.Responses
                 }
                 catch (Exception e)
                 {
-                    UnityThreadService.DispatchUnattended(() => 
+                    UnityThread.DispatchUnattended(() => 
                     {
                         EvaluateFail(e.Message);
                         return null;

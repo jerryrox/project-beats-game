@@ -25,7 +25,7 @@ using PBFramework.Audio;
 using PBFramework.Assets.Fonts;
 using PBFramework.Assets.Atlasing;
 using PBFramework.Inputs;
-using PBFramework.Services;
+using PBFramework.Threading;
 using PBFramework.Dependencies;
 
 namespace PBGame
@@ -108,7 +108,7 @@ namespace PBGame
         /// </summary>
         protected virtual void InitializeModules()
         {
-            UnityThreadService.Initialize();
+            UnityThread.Initialize();
 
             Dependencies.CacheAs<IGame>(this);
 
