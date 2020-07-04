@@ -11,16 +11,10 @@ namespace PBGame.Networking.API
     public class Authentication {
 
         /// <summary>
-        /// The index of the API provider which the authentication is valid for.
+        /// The API provider which the authentication is valid for.
         /// </summary>
         [JsonProperty("provider")]
-        public int ProviderIndex { get; set; }
-
-        /// <summary>
-        /// Returns the type of the api provider corresponding to the ProviderIndex.
-        /// </summary>
-        [JsonIgnore]
-        public ApiProviderType ProviderType => (ApiProviderType)ProviderIndex;
+        public ApiProviderType ProviderType { get; set; }
 
         /// <summary>
         /// The access token to access endpoints which require authorization.
