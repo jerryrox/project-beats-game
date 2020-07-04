@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
+using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Utils;
@@ -19,7 +20,6 @@ namespace PBGame.UI.Components.ProfileMenu
     public class ContentHolder : UguiObject {
 
         private const float LoggedInHeight = 480f;
-        private const float LoggedOutHeight = 204f;
 
         private ISprite background;
 
@@ -35,18 +35,18 @@ namespace PBGame.UI.Components.ProfileMenu
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
 
+        [ReceivesDependency]
+        private IColorPreset ColorPreset { get; set; }
+
 
         [InitWithDependency]
         private void Init()
         {
-            Height = LoggedOutHeight;
-
             background = CreateChild<UguiSprite>("background", 1);
             {
                 background.Anchor = AnchorType.Fill;
-                background.RawSize = Vector2.zero;
-                background.Position = Vector2.zero;
-                background.Color = new Color(0f, 0f, 0f, 0.25f);
+                background.Offset = Offset.Zero;
+                background.Color = ColorPreset.Background;
             }
             mask = CreateChild<UguiSprite>("mask", 3);
             {
@@ -55,23 +55,20 @@ namespace PBGame.UI.Components.ProfileMenu
                 mask.Position = Vector2.zero;
                 mask.SpriteName = "box";
 
-                mask.AddEffect(new MaskEffect());
+                var maskEffect = mask.AddEffect(new MaskEffect());
+                maskEffect.Component.showMaskGraphic = false;
 
                 loggedInView = mask.CreateChild<LoggedInView>("logged-in", 0);
                 {
-                    loggedInView.Anchor = AnchorType.BottomStretch;
-                    loggedInView.Pivot = PivotType.Bottom;
-                    loggedInView.SetOffsetHorizontal(0f);
-                    loggedInView.Y = 0f;
-                    loggedInView.Height = LoggedInHeight;
+                    loggedInView.Anchor = AnchorType.Fill;
+                    loggedInView.Offset = Offset.Zero;
                 }
                 loggedOutView = mask.CreateChild<LoggedOutView>("logged-out", 0);
                 {
-                    loggedOutView.Anchor = AnchorType.BottomStretch;
-                    loggedOutView.Pivot = PivotType.Bottom;
-                    loggedOutView.SetOffsetHorizontal(0f);
-                    loggedOutView.Y = 0f;
-                    loggedOutView.Height = LoggedOutHeight;
+                    loggedOutView.Anchor = AnchorType.Fill;
+                    loggedOutView.Offset = Offset.Zero;
+
+                    loggedOutView.CurLoginView.OnNewValue += OnLoginProviderViewChange;
                 }
             }
             blocker = CreateChild<Blocker>("blocker", 4);
@@ -103,7 +100,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 .Build();
             loggedOutAni.AnimateFloat(height => this.Height = height)
                 .AddTime(0f, () => this.Height)
-                .AddTime(0.25f, LoggedOutHeight)
+                .AddTime(0.25f, () => loggedOutView.DesiredHeight)
                 .Build();
             loggedOutAni.AddEvent(0f, () => loggedOutView.Active = blocker.Active = true);
             loggedOutAni.AddEvent(loggedInAni.Duration, () => loggedInView.Active = blocker.Active = false);
@@ -128,7 +125,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void BindEvents()
         {
-            UserManager.CurrentUser.OnValueChanged += OnUserChange;
+            UserManager.CurrentUser.OnNewValue += OnUserChange;
 
             SwitchView(UserManager.CurrentUser.Value != null, false);
         }
@@ -138,7 +135,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void UnbindEvents()
         {
-            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
+            UserManager.CurrentUser.OnNewValue -= OnUserChange;
         }
 
         private void SwitchView(bool isLoggedIn, bool animate = true)
@@ -156,7 +153,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 }
                 else
                 {
-                    Height = LoggedOutHeight;
+                    Height = loggedOutView.DesiredHeight;
                     loggedInView.Alpha = 0f;
                     loggedInView.Active = false;
                     loggedOutView.Alpha = 1f;
@@ -189,9 +186,18 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Event called on online user change.
         /// </summary>
-        private void OnUserChange(IUser user, IUser _ = null)
+        private void OnUserChange(IUser user)
         {
             SwitchView(user != null);
+        }
+
+        /// <summary>
+        /// Event called from logged out view when its current login provider view has changed.
+        /// </summary>
+        private void OnLoginProviderViewChange(ILoginView loginView)
+        {
+            // Animate height change.
+            loggedOutAni.PlayFromStart();
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Networking.API;
 using PBFramework.Data.Bindables;
-using PBFramework.Services;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
 
@@ -38,7 +37,7 @@ namespace PBGame.Data.Users
             {
                 userStore.Reload();
 
-                UnityThreadService.DispatchUnattended(() =>
+                UnityThread.DispatchUnattended(() =>
                 {
                     if (progress != null)
                     {
@@ -59,7 +58,7 @@ namespace PBGame.Data.Users
             {
                 var user = userStore.LoadUser(onlineUser) as User;
 
-                UnityThreadService.DispatchUnattended(() =>
+                UnityThread.DispatchUnattended(() =>
                 {
                     dependencies.Inject(user);
                     currentUser.Value = user;

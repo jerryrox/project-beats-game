@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Common;
+using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Data.Users;
 using PBGame.Graphics;
 using PBGame.Configurations;
 using PBGame.Networking.API;
+using PBGame.Networking.API.Requests;
 using PBGame.Networking.API.Responses;
 using PBFramework.UI;
+using PBFramework.Data.Bindables;
 using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Threading;
@@ -15,19 +18,25 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Components.ProfileMenu
 {
-    // TODO: Support for logging in using other API providers.
     public class LoggedOutView : UguiObject, IHasAlpha
     {
+        private const float BaseHeight = 104f;
+
         private CanvasGroup canvasGroup;
 
         private ISprite bg;
-        private LoginInput username;
-        private LoginInput password;
-        private LabelledToggle remember;
-        private BoxButton loginButton;
+        private DropdownButton apiDropdown;
+        private CredentialLoginView credentialLogin;
+        private OAuthLoginView oAuthLogin;
         private Loader loader;
+
+        private DropdownContext dropdownContext;
+
+        private IApiRequest curRequest;
 
 
         public float Alpha
@@ -36,10 +45,32 @@ namespace PBGame.UI.Components.ProfileMenu
             set => canvasGroup.alpha = value;
         }
 
-        private IApi OsuApi => ApiManager.GetApi(ApiProviderType.Osu);
+        /// <summary>
+        /// Returns the preferred height of this view within the login content holder.
+        /// </summary>
+        public float DesiredHeight
+        {
+            get
+            {
+                var loginView = CurLoginView.Value;
+                if(loginView == null)
+                    return BaseHeight;
+                return BaseHeight + loginView.DesiredHeight;
+            }
+        }
+
+        /// <summary>
+        /// Current login provider view in use.
+        /// </summary>
+        public Bindable<ILoginView> CurLoginView { get; private set; } = new Bindable<ILoginView>();
+
+        /// <summary>
+        /// Returns the provider currently selected.
+        /// </summary>
+        private IApiProvider CurProvider => Api.GetProvider(GameConfiguration.LastLoginApi.Value);
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
@@ -51,162 +82,196 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
+            Dependencies = Dependencies.Clone();
+            Dependencies.Cache(this);
+
             canvasGroup = myObject.AddComponent<CanvasGroup>();
+            
+            CurLoginView.TriggerWhenDifferent = true;
 
-            bg = CreateChild<UguiSprite>("bg", 0);
+            var providerLabel = CreateChild<Label>("provider-label");
             {
-                bg.Anchor = AnchorType.Fill;
-                bg.RawSize = Vector2.zero;
-                bg.Color = HexColor.Create("1D2126");
+                providerLabel.Anchor = AnchorType.TopStretch;
+                providerLabel.SetOffsetHorizontal(32f);
+                providerLabel.Y = -32f;
+                providerLabel.Height = 16f;
+                providerLabel.IsBold = true;
+                providerLabel.FontSize = 16;
+                providerLabel.Alignment = TextAnchor.MiddleCenter;
+                providerLabel.Text = "Select provider";
             }
-            username = CreateChild<LoginInput>("username", 1);
+            apiDropdown = CreateChild<DropdownButton>("api-dropdown");
             {
-                username.Anchor = AnchorType.TopStretch;
-                username.SetOffsetHorizontal(32);
-                username.Y = -40f;
-                username.Height = 36f;
-                username.Placeholder = "username";
-            }
-            password = CreateChild<LoginInput>("password", 2);
-            {
-                password.Anchor = AnchorType.TopStretch;
-                password.SetOffsetHorizontal(32f);
-                password.Y = -80f;
-                password.Height = 36f;
-                password.InputType = InputField.InputType.Password;
-                password.Placeholder = "password";
-            }
-            remember = CreateChild<LabelledToggle>("remember", 3);
-            {
-                remember.Anchor = AnchorType.Top;
-                remember.Position = new Vector3(0f, -120f);
-                remember.Size = new Vector2(160f, 24f);
-                remember.LabelText = "Remember me";
+                apiDropdown.Anchor = AnchorType.TopStretch;
+                apiDropdown.SetOffsetHorizontal(32f);
+                apiDropdown.Y = -72f;
+                apiDropdown.Height = 40f;
 
-                remember.OnFocused += (isFocused) =>
+                dropdownContext = new DropdownContext();
+                dropdownContext.ImportFromEnum<ApiProviderType>(GameConfiguration.LastLoginApi.Value);
+                dropdownContext.OnSelection += (value) =>
                 {
-                    if (!isFocused)
-                    {
-                        GameConfiguration.Username.Value = "";
-                        GameConfiguration.Password.Value = "";
-                    }
-                    GameConfiguration.SaveCredentials.Value = isFocused;
-                    GameConfiguration.Save();
+                    if(value != null && value.ExtraData != null)
+                        SelectApi((ApiProviderType)value.ExtraData);
                 };
-            }
-            loginButton = CreateChild<BoxButton>("login", 4);
-            {
-                loginButton.Anchor = AnchorType.TopStretch;
-                loginButton.SetOffsetHorizontal(48f);
-                loginButton.Y = -162f;
-                loginButton.Height = 36f;
-                loginButton.Color = colorPreset.Positive;
-                loginButton.LabelText = "Login to osu!";
 
-                loginButton.OnTriggered += () =>
-                {
-                    DoLogin();
-                };
+                apiDropdown.Context = dropdownContext;
             }
-            loader = CreateChild<Loader>("loader", 5);
+            credentialLogin = CreateChild<CredentialLoginView>("credentials");
+            {
+                credentialLogin.Anchor = AnchorType.TopStretch;
+                credentialLogin.Pivot = PivotType.Top;
+                credentialLogin.SetOffsetHorizontal(0f);
+                credentialLogin.Y = -BaseHeight;
+                credentialLogin.Height = credentialLogin.DesiredHeight;
+                credentialLogin.Active = false;
+            }
+            oAuthLogin = CreateChild<OAuthLoginView>("oauth");
+            {
+                oAuthLogin.Anchor = AnchorType.TopStretch;
+                oAuthLogin.Pivot = PivotType.Top;
+                oAuthLogin.SetOffsetHorizontal(0f);
+                oAuthLogin.Y = -BaseHeight;
+                oAuthLogin.Height = oAuthLogin.DesiredHeight;
+                oAuthLogin.Active = false;
+            }
+            loader = CreateChild<Loader>("loader");
             {
                 loader.Anchor = AnchorType.Fill;
-                loader.RawSize = Vector2.zero;
+                loader.Offset = new Offset(0f, BaseHeight, 0f, 0f);
             }
 
-            if (GameConfiguration.SaveCredentials.Value)
-            {
-                remember.IsFocused = true;
-                username.Text = GameConfiguration.Username.Value;
-                password.Text = GameConfiguration.Password.Value;
-            }
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            // Listen to API authentication state change.
+            Api.Authentication.OnValueChanged += OnApiAuthenticated;
+
+            // Setup view for the currently selected API provider.
+            SelectApi((ApiProviderType)dropdownContext.Selection.ExtraData);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Api.Authentication.OnValueChanged -= OnApiAuthenticated;
+
+            FinishCurRequest(true);
         }
 
         /// <summary>
-        /// Performs login process.
+        /// Sets the type of API provider to use.
         /// </summary>
-        private void DoLogin()
+        public void SelectApi(ApiProviderType apiType)
         {
+            GameConfiguration.LastLoginApi.Value = apiType;
+            GameConfiguration.Save();
+
+            // Current auth request must be stopped.
+            FinishCurRequest(true);
+
+            // Display OAuth or Credential login based on API information.
+            var provider = Api.GetProvider(apiType);
+            ILoginView loginView = null;
+            if (provider.IsOAuthLogin)
+            {
+                loginView = oAuthLogin;
+                oAuthLogin.Show();
+                credentialLogin.Hide();
+            }
+            else
+            {
+                loginView = credentialLogin;
+                oAuthLogin.Hide();
+                credentialLogin.Show();
+            }
+            loginView.Setup(provider);
+            CurLoginView.Value = loginView;
+        }
+
+        /// <summary>
+        /// Starts authentication request routine.
+        /// </summary>
+        public void RequestAuth(IApiRequest request)
+        {
+            if(request == null)
+                return;
+
             loader.Show();
 
-            username.IsFocused = false;
-            password.IsFocused = false;
-
-            // Start request.
-            var request = OsuApi.RequestFactory.GetLogin();
-            request.Username = username.Text;
-            request.Password = password.Text;
-            request.OnRequestEnd += OnLoginResponse;
-            OsuApi.Request(request);
+            curRequest = request;
+            request.RawResponse.OnNewRawValue += OnAuthResponse;
+            Api.Request(request);
         }
 
         /// <summary>
-        /// Event called on login API response.
+        /// Requests for online Me information from API.
         /// </summary>
-        private void OnLoginResponse(ILoginResponse response)
+        private void RequestMe()
         {
+            if(Api.Authentication.Value == null)
+                return;
+
+            loader.Show();
+            curRequest = CurProvider.Me();
+            curRequest.RawResponse.OnNewRawValue += OnMeResponse;
+            Api.Request(curRequest);
+        }
+
+        /// <summary>
+        /// Aborts current auth API request.
+        /// </summary>
+        private void FinishCurRequest(bool disposeRequest)
+        {
+            if(curRequest == null)
+                return;
+
             loader.Hide();
-            
-            if (!response.IsSuccess)
+
+            if(disposeRequest)
+                curRequest.Dispose();
+            curRequest = null;
+        }
+
+        /// <summary>
+        /// Event called on initial authentication response.
+        /// </summary>
+        private void OnAuthResponse(object rawResponse)
+        {
+            FinishCurRequest(false);
+
+            if(!(rawResponse is OAuthResponse) && !(rawResponse is AuthResponse))
             {
-                GameConfiguration.Username.Value = "";
-                GameConfiguration.Password.Value = "";
-
-                username.ShowInvalid();
-                password.ShowInvalid();
-
-                // TODO: Display quick message "response.ErrorMessage"
-                return;
-            }
-
-            // Wait for online user load.
-            if(OsuApi.User.Value.IsOnline)
-                LoadUserData(OsuApi.User.Value);
-            else
-            {
-                OsuApi.User.OnValueChanged += LoadUserData;
+                Logger.LogError($"Invalid auth response type: {rawResponse.GetType().Name}");
             }
         }
 
         /// <summary>
-        /// Starts loading the user data in accordance to the currently logged-in online user.
+        /// Event called on online Me information response.
         /// </summary>
-        private void LoadUserData(IOnlineUser onlineUser, IOnlineUser _ = null)
+        private void OnMeResponse(object rawResponse)
         {
-            OsuApi.User.OnValueChanged -= LoadUserData;
+            FinishCurRequest(false);
 
-            if (onlineUser.IsOnline)
+            if (!(rawResponse is MeResponse))
             {
-                var progress = new ReturnableProgress<IUser>();
-                progress.OnFinished += OnUserDataLoaded;
-                UserManager.SetUser(onlineUser, progress);
-            }
-            else
-            {
-                // TODO: Display quick message "User is not logged in!"
-                loader.Hide();
+                Logger.LogError($"Invalid me response type: {rawResponse.GetType().Name}");
             }
         }
 
         /// <summary>
-        /// Event called on user data load end.
+        /// Event called when the authentication state has been changed in the API.
         /// </summary>
-        private void OnUserDataLoaded(IUser user)
+        private void OnApiAuthenticated(Authentication newAuth, Authentication oldAuth)
         {
-            if (user == null)
-            {
-                // TODO: Display quick message "Failed to load user data."
-                OsuApi.Logout();
-                return;
-            }
-
-            if (remember.IsFocused)
-            {
-                GameConfiguration.Username.Value = username.Text;
-                GameConfiguration.Password.Value = password.Text;
-                GameConfiguration.Save();
-            }
-            username.Text = password.Text = "";
+            // Became authenticated.
+            if (newAuth != null && newAuth != oldAuth)
+                RequestMe();
         }
     }
 }

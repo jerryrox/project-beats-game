@@ -5,6 +5,7 @@ using PBGame.UI.Components.Common;
 using PBGame.Stores;
 using PBGame.Networking.API;
 using PBGame.Networking.Maps;
+using PBGame.Notifications;
 using PBFramework.UI;
 using PBFramework.Audio;
 using PBFramework.Graphics;
@@ -32,13 +33,16 @@ namespace PBGame.UI.Components.Download.Result
         private IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
         [ReceivesDependency]
         private DownloadState State { get; set; }
 
         [ReceivesDependency]
         private IDownloadStore DownloadStore { get; set; }
+
+        [ReceivesDependency]
+        private INotificationBox NotificationBox { get; set; }
 
 
         [InitWithDependency]
@@ -115,16 +119,22 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            var api = ApiManager.GetApi(State.ApiProvider.Value);
+            var api = Api.GetProvider(State.ApiProvider.Value);
             if(api == null)
                 return;
-            var request = api.RequestFactory.GetMapDownload();
+            var request = api.MapsetDownload();
             request.DownloadStore = DownloadStore;
-            request.Mapset = mapset;
+            request.MapsetId = mapset.Id.ToString();
 
-            // TODO: Temporarily log onto console
-            api.Request(request);
-            request.Promise.OnProgress += (progress) =>
+            NotificationBox.Add(new Notification()
+            {
+                Type = NotificationType.Passive,
+                Message = $"Download started for {mapset.Artist} - {mapset.Title}.",
+                Scope = NotificationScope.Temporary,
+            });
+
+            Api.Request(request);
+            request.InnerRequest.OnProgress += (progress) =>
             {
                 Debug.Log("Download progress: " + progress);
             };

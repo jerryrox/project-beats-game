@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Download.Search
         private DownloadState State { get; set; }
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
 
         [InitWithDependency]
@@ -108,7 +108,7 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void RefreshStatus()
         {
-            var api = ApiManager.GetApi(State.ApiProvider.Value);
+            var api = Api.GetProvider(State.ApiProvider.Value);
             statusLabel.Text = $"using {api.Name}";
         }
 

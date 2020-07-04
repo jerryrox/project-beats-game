@@ -55,6 +55,7 @@ namespace PBGame
             HookConfigurations();
             HookDownloadStore();
             HookMapManager();
+            HookApi();
 
             // Display splash view.
             if (ShouldShowFirstView)
@@ -372,6 +373,22 @@ namespace PBGame
         }
 
         /// <summary>
+        /// Triggers action on certain API events.
+        /// </summary>
+        private void HookApi()
+        {
+            api.User.OnValueChanged += (user, oldUser) =>
+            {
+                // If user turned online
+                if (user.IsOnline && user != oldUser)
+                    OnUserBecameOnline(user);
+                // If user turned offline
+                else if (!user.IsOnline && user != oldUser)
+                    OnUserBecameOffline(user);
+            };
+        }
+
+        /// <summary>
         /// Applies menu bar overlay where necessary.
         /// </summary>
         private void ApplyMenuBarOverlay()
@@ -436,6 +453,22 @@ namespace PBGame
         private void ApplyMusicVolume(float scale = 1f)
         {
             musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value * scale);
+        }
+
+        /// <summary>
+        /// Event called when the user in API has become online.
+        /// </summary>
+        private void OnUserBecameOnline(IOnlineUser user)
+        {
+            userManager.SetUser(user, null);
+        }
+
+        /// <summary>
+        /// Event called when the user in API has become offline.
+        /// </summary>
+        private void OnUserBecameOffline(IOnlineUser user)
+        {
+            userManager.RemoveUser();
         }
 
         /// <summary>
