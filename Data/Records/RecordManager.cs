@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using PBGame.Data.Users;
 using PBGame.Stores;
 using PBGame.Rulesets.Maps;
-using PBFramework.Services;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
 
@@ -36,7 +35,7 @@ namespace PBGame.Data.Records
                 recordStore.Reload();
                 // TODO: Reload replay store.
 
-                UnityThreadService.DispatchUnattended(() =>
+                UnityThread.DispatchUnattended(() =>
                 {
                     if (progress != null)
                     {
@@ -55,7 +54,7 @@ namespace PBGame.Data.Records
             {
                 var records = GetInjectedRecords(recordStore.GetRecords(map));
 
-                UnityThreadService.DispatchUnattended(() => {
+                UnityThread.DispatchUnattended(() => {
                     if (progress != null)
                     {
                         progress.Report(1f);

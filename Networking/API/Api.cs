@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Networking.API.Osu;
@@ -8,7 +9,11 @@ using PBGame.Networking.API.Responses;
 using PBGame.Notifications;
 using PBGame.Configurations;
 using PBFramework.Data.Bindables;
+using PBFramework.Networking;
+using PBFramework.Networking.Linking;
 using UnityEngine;
+
+using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.Networking.API
 {
@@ -34,7 +39,7 @@ namespace PBGame.Networking.API
         public IApiProvider AuthenticatedProvider => IsLoggedIn ? GetProvider(authentication.Value.ProviderType) : null;
 
 
-        public Api(IEnvConfiguration envConfig, INotificationBox notificationBox)
+        public Api(IEnvConfiguration envConfig, INotificationBox notificationBox, DeepLinker deepLinker)
         {
             if (envConfig == null)
                 throw new ArgumentNullException(nameof(envConfig));
@@ -47,6 +52,11 @@ namespace PBGame.Networking.API
                 { ApiProviderType.Osu, new OsuApiProvider(this) },
                 { ApiProviderType.Bloodcat, new BloodcatApiProvider(this) },
             };
+
+            if (deepLinker != null)
+            {
+                deepLinker.LinkPath("api", OnDeepLinkApi);
+            }
         }
 
         public IApiProvider GetProvider(ApiProviderType type) => providers[type];
@@ -72,15 +82,14 @@ namespace PBGame.Networking.API
                 request.InnerRequest.SetHeader("Authorization", $"Bearer {authentication.Value.AccessToken}");
 
             // TODO: Display request as notification.
-            // request.InnerRequest.OnProgress += (progress) =>
-            // {
-            //     Debug.Log("Download progress: " + progress);
-            // };
             request.Request();
         }
 
         public void HandleResponse(IApiResponse response)
         {
+            if(response == null)
+                return;
+
             if (!response.IsSuccess)
             {
                 notificationBox?.Add(new Notification()
@@ -109,6 +118,33 @@ namespace PBGame.Networking.API
                 {
                     if(!string.IsNullOrEmpty(oAuthResponse.OAuthUrl))
                         Application.OpenURL(oAuthResponse.OAuthUrl);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event called from deep linker when the path indicates API response.
+        /// </summary>
+        private void OnDeepLinkApi(WebLink link)
+        {
+            if (link.Parameters.TryGetValue("response", out string response))
+            {
+                try
+                {
+                    var bytes = Convert.FromBase64String(response);
+                    string decodedResponse = Encoding.UTF8.GetString(bytes);
+                    var authResponse = new AuthResponse(new CustomWebResponse()
+                    {
+                        IsSuccess = true,
+                        TextData = decodedResponse
+                    });
+                    authResponse.Evaluate();
+                    HandleResponse(authResponse);
+                }
+                catch (Exception e)
+                {
+                    // TODO: Log
+                    Logger.LogError($"Failed to parse deeplink response: {response}\n{e.ToString()}");
                 }
             }
         }

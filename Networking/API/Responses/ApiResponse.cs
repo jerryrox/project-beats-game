@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBFramework.Services;
+using PBFramework.Threading;
 using PBFramework.Debugging;
 using PBFramework.Networking;
 using PBFramework.Networking.API;
@@ -58,7 +58,7 @@ namespace PBGame.Networking.API.Responses
         /// </summary>
         protected virtual void ParseResponse()
         {
-            JObject json = UnityThreadService.Dispatch(() => JsonConvert.DeserializeObject<JObject>(response.TextData)) as JObject;
+            JObject json = UnityThread.Dispatch(() => JsonConvert.DeserializeObject<JObject>(response.TextData)) as JObject;
             if (json.ContainsKey("type"))
             {
                 if (json["type"].ToString().Equals("Error", StringComparison.OrdinalIgnoreCase))

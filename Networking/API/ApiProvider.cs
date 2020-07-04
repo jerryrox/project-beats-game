@@ -17,7 +17,7 @@ namespace PBGame.Networking.API
 
         public abstract string Name { get; }
 
-        public virtual string InternalName => Type.ToString().ToLower();
+        public virtual string InternalName => Type.ToString();
 
         public virtual string IconName => $"icon-provider-{InternalName}";
 

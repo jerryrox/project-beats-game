@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Rulesets.Maps;
 using PBGame.Notifications;
-using PBFramework.Services;
 using PBFramework.Threading;
 
 using Random = UnityEngine.Random;
@@ -59,7 +58,7 @@ namespace PBGame.Maps
                         if (loadedMapset != null)
                         {
                             // Dispatch mapset imported event on main thread.
-                            UnityThreadService.Dispatch(() =>
+                            UnityThread.Dispatch(() =>
                             {
                                 // Add to all mapsets
                                 allMapsets.AddOrReplace(loadedMapset);
@@ -109,7 +108,7 @@ namespace PBGame.Maps
                 await store.Reload(progress);
 
                 // Run on the main thread
-                UnityThreadService.DispatchUnattended(() =>
+                UnityThread.DispatchUnattended(() =>
                 {
                     // Refill the mapset list
                     allMapsets.Clear();
@@ -133,7 +132,7 @@ namespace PBGame.Maps
                 progress?.Report(0f);
                 IMapset mapset = store.Load(id);
 
-                UnityThreadService.DispatchUnattended(() =>
+                UnityThread.DispatchUnattended(() =>
                 {
                     // If already loaded within all mapsets, replace it.
                     allMapsets.AddOrReplace(mapset);

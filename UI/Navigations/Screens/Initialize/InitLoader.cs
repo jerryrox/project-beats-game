@@ -6,7 +6,6 @@ using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Configurations;
 using PBFramework.Data.Bindables;
-using PBFramework.Services;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
 
@@ -136,7 +135,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void FinalizeLoad()
         {
-            UnityThreadService.DispatchUnattended(() =>
+            UnityThread.DispatchUnattended(() =>
             {
                 IsComplete = true;
                 OnComplete?.Invoke();
@@ -149,7 +148,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void SetState(string state)
         {
-            UnityThreadService.DispatchUnattended(() => bindableState.Value = state);
+            UnityThread.DispatchUnattended(() => bindableState.Value = state);
         }
 
         /// <summary>
@@ -157,7 +156,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void SetProgress(float progress)
         {
-            UnityThreadService.DispatchUnattended(() => bindableProgress.Value = progress);
+            UnityThread.DispatchUnattended(() => bindableProgress.Value = progress);
         }
     }
 }
