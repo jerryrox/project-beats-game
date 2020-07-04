@@ -26,6 +26,7 @@ Slowly making progress 🧩
 - Upgraded Unity to 2019.4 LTS
 #### Fixes
 - Fixed mapsets result list keep on refreshing when there are no more results.
+- Fixed loader indicator not displaying correctly.
 - API provider will now be passed without lowered case due to parsing issues using JSON.
 
 ### 0.9.2
