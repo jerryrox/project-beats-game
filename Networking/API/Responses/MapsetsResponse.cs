@@ -38,9 +38,9 @@ namespace PBGame.Networking.API.Responses
                 {
                     var data = responseData.ToObject<JObject>();
                     Mapsets = data["mapsets"].ToObject<OnlineMapset[]>();
-                    if(data.ContainsKey("cursor"))
+                    if (data.ContainsKey("cursor"))
                         Cursor = data["cursor"].ToString();
-                    if(data.ContainsKey("total"))
+                    if (data.ContainsKey("total"))
                         Total = data["total"].Value<int>();
 
                     UnityThread.DispatchUnattended(() =>

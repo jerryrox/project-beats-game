@@ -17,6 +17,8 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.9.4 (WIP)
+#### New features
+- Added ability to test using localhost api server.
 
 ### 0.9.3
 #### New features
