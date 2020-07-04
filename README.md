@@ -6,16 +6,18 @@ Currently, I'm restructuring my original source to make things more organized an
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.0.3) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.0.4) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
-- project-beats-api (Only if using Network feature. Tested on 0.3.0) (https://github.com/jerryrox/project-beats-api)
+- project-beats-api (Only if using Network feature. Tested on 0.4.0) (https://github.com/jerryrox/project-beats-api)
 
 ## Development progress
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.9.4 (WIP)
+
 ### 0.9.3
 #### New features
 - Allow selection of different API providers for logging in.
