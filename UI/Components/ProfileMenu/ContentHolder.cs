@@ -45,8 +45,7 @@ namespace PBGame.UI.Components.ProfileMenu
             background = CreateChild<UguiSprite>("background", 1);
             {
                 background.Anchor = AnchorType.Fill;
-                background.RawSize = Vector2.zero;
-                background.Position = Vector2.zero;
+                background.Offset = Offset.Zero;
                 background.Color = ColorPreset.Background;
             }
             mask = CreateChild<UguiSprite>("mask", 3);
@@ -61,18 +60,20 @@ namespace PBGame.UI.Components.ProfileMenu
 
                 loggedInView = mask.CreateChild<LoggedInView>("logged-in", 0);
                 {
-                    loggedInView.Anchor = AnchorType.TopStretch;
-                    loggedInView.Pivot = PivotType.Top;
-                    loggedInView.SetOffsetHorizontal(0f);
-                    loggedInView.Y = 0f;
-                    loggedInView.Height = LoggedInHeight;
+                    loggedInView.Anchor = AnchorType.Fill;
+                    loggedInView.Offset = Offset.Zero;
+                    // loggedInView.Pivot = PivotType.Top;
+                    // loggedInView.SetOffsetHorizontal(0f);
+                    // loggedInView.Y = 0f;
+                    // loggedInView.Height = LoggedInHeight;
                 }
                 loggedOutView = mask.CreateChild<LoggedOutView>("logged-out", 0);
                 {
-                    loggedOutView.Anchor = AnchorType.TopStretch;
-                    loggedOutView.Pivot = PivotType.Top;
-                    loggedOutView.SetOffsetHorizontal(0f);
-                    loggedOutView.Y = 0f;
+                    loggedOutView.Anchor = AnchorType.Fill;
+                    loggedOutView.Offset = Offset.Zero;
+                    // loggedOutView.Pivot = PivotType.Top;
+                    // loggedOutView.SetOffsetHorizontal(0f);
+                    // loggedOutView.Y = 0f;
 
                     loggedOutView.CurLoginView.OnNewValue += OnLoginProviderViewChange;
                 }

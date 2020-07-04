@@ -62,7 +62,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 remember.Anchor = AnchorType.Top;
                 remember.Pivot = PivotType.Top;
                 remember.Position = new Vector3(0f, -104f);
-                remember.Size = new Vector2(160f, 24f);
+                remember.Size = new Vector2(170f, 24f);
                 remember.LabelText = "Remember me";
 
                 remember.OnFocused += (isFocused) =>
