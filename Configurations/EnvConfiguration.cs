@@ -8,24 +8,33 @@ namespace PBGame.Configurations
 {
     public class EnvConfiguration : IEnvConfiguration
     {
-        public bool IsDevelopment { get; private set; }
+        public EnvType EnvironmentType { get; private set; }
+
+        public bool IsDevelopment => EnvironmentType != EnvType.Production;
 
         public bool IsLoaded => Variables != null;
 
         public EnvVariables Variables { get; private set;}
 
 
-        public EnvConfiguration(bool isDevelopment)
+        public EnvConfiguration(EnvType envType)
         {
-            this.IsDevelopment = isDevelopment;
+            this.EnvironmentType = envType;
         }
 
         public void Load(string path)
         {
             if(string.IsNullOrEmpty(path))
                 path = "";
-            if(IsDevelopment)
-                path += "Dev";
+            switch (EnvironmentType)
+            {
+                case EnvType.Development:
+                    path += "Dev";
+                    break;
+                case EnvType.LocalDevelopment:
+                    path += "Local";
+                    break;
+            }
 
             var textAsset = Resources.Load(path, typeof(TextAsset)) as TextAsset;
             Variables = JsonConvert.DeserializeObject<EnvVariables>(textAsset.text);
