@@ -25,7 +25,9 @@ using PBFramework.Audio;
 using PBFramework.Assets.Fonts;
 using PBFramework.Assets.Atlasing;
 using PBFramework.Inputs;
+using PBFramework.Platforms;
 using PBFramework.Threading;
+using PBFramework.Networking.Linking;
 using PBFramework.Dependencies;
 
 namespace PBGame
@@ -35,6 +37,9 @@ namespace PBGame
         public event Action<bool> OnAppFocus;
         public event Action<bool> OnAppPause;
         
+        protected IPlatformHost platformHost;
+        protected DeepLinker deepLinker;
+
         protected EnvConfiguration envConfiguration;
 
         protected ModeManager modeManager;
@@ -111,6 +116,9 @@ namespace PBGame
             UnityThread.Initialize();
 
             Dependencies.CacheAs<IGame>(this);
+            
+            Dependencies.CacheAs<IPlatformHost>(platformHost = PlatformHost.CreateHost());
+            Dependencies.CacheAs<DeepLinker>(deepLinker = platformHost.CreateDeepLinker());
 
             Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(true));
 
@@ -145,7 +153,7 @@ namespace PBGame
             });
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
-            Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox));
+            Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));
 
             Dependencies.CacheAs<IUserManager>(userManager = new UserManager(Dependencies));
             Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager(Dependencies));
@@ -194,7 +202,5 @@ namespace PBGame
         {
             metronome.Update();
         }
-
-
     }
 }
