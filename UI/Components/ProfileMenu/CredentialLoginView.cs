@@ -22,7 +22,6 @@ namespace PBGame.UI.Components.ProfileMenu
         private LoginInput password;
         private LabelledToggle remember;
         private BoxButton loginButton;
-        private Loader loader;
 
         private AuthRequest authRequest;
 
@@ -31,6 +30,9 @@ namespace PBGame.UI.Components.ProfileMenu
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
+
+        [ReceivesDependency]
+        private LoggedOutView LoggedOutView { get; set; }
 
 
         [InitWithDependency]
@@ -89,26 +91,13 @@ namespace PBGame.UI.Components.ProfileMenu
                     DoLogin();
                 };
             }
-            loader = CreateChild<Loader>("loader", 5);
-            {
-                loader.Anchor = AnchorType.Fill;
-                loader.RawSize = Vector2.zero;
-            }
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            DisposeRequest(true);
         }
 
         public override void Setup(IApiProvider provider)
         {
-            DisposeRequest(true);
             base.Setup(provider);
 
-            if (GameConfiguration.LastLoginApi.Value == provider.Type && GameConfiguration.SaveCredentials.Value)
+            if (GameConfiguration.SaveCredentials.Value)
             {
                 remember.IsFocused = true;
                 username.Text = GameConfiguration.Username.Value;
@@ -122,61 +111,35 @@ namespace PBGame.UI.Components.ProfileMenu
             }
         }
 
-        /// <summary>
-        /// Performs login process.
-        /// </summary>
-        private void DoLogin()
+        public override void OnAuthSuccess()
         {
-            loader.Show();
-
-            username.IsFocused = false;
-            password.IsFocused = false;
-
-            // Start request.
-            DisposeRequest(true);
-            authRequest = ApiProvider.Auth();
-            authRequest.Username = username.Text;
-            authRequest.Password = password.Text;
-            authRequest.Response.OnNewValue += OnLoginResponse;
-            Api.Request(authRequest);
-        }
-
-        /// <summary>
-        /// Event called on login API response.
-        /// </summary>
-        private void OnLoginResponse(AuthResponse response)
-        {
-            loader.Hide();
-            DisposeRequest(false);
-            
-            if (!response.IsSuccess)
-            {
-                username.ShowInvalid();
-                password.ShowInvalid();
-
-                // TODO: Display quick message "response.ErrorMessage"
-            }
-            else
-            {
                 if (remember.IsFocused)
                 {
                     GameConfiguration.Username.Value = username.Text;
                     GameConfiguration.Password.Value = password.Text;
                     GameConfiguration.Save();
                 }
-            }
+        }
+
+        public override void OnAuthFailed()
+        {
+            username.ShowInvalid();
+            password.ShowInvalid();
         }
 
         /// <summary>
-        /// Disposes currently ongoing request.
+        /// Performs login process.
         /// </summary>
-        private void DisposeRequest(bool callDispose)
+        private void DoLogin()
         {
-            if(authRequest == null)
-                return;
-            if(callDispose)
-                authRequest.Dispose();
-            authRequest = null;
+            username.IsFocused = false;
+            password.IsFocused = false;
+
+            // Start request.
+            authRequest = ApiProvider.Auth();
+            authRequest.Username = username.Text;
+            authRequest.Password = password.Text;
+            LoggedOutView?.RequestAuth(authRequest);
         }
     }
 }

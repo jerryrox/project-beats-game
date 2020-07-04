@@ -7,6 +7,7 @@ using PBGame.Data.Users;
 using PBGame.Graphics;
 using PBGame.Configurations;
 using PBGame.Networking.API;
+using PBGame.Networking.API.Requests;
 using PBGame.Networking.API.Responses;
 using PBFramework.UI;
 using PBFramework.Data.Bindables;
@@ -16,6 +17,8 @@ using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
+
+using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
@@ -29,8 +32,11 @@ namespace PBGame.UI.Components.ProfileMenu
         private DropdownButton apiDropdown;
         private CredentialLoginView credentialLogin;
         private OAuthLoginView oAuthLogin;
+        private Loader loader;
 
         private DropdownContext dropdownContext;
+
+        private IApiRequest curRequest;
 
 
         public float Alpha
@@ -61,7 +67,6 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Returns the provider currently selected.
         /// </summary>
-        /// <returns></returns>
         private IApiProvider CurProvider => Api.GetProvider(GameConfiguration.LastLoginApi.Value);
 
         [ReceivesDependency]
@@ -77,6 +82,9 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
+            Dependencies = Dependencies.Clone();
+            Dependencies.Cache(this);
+
             canvasGroup = myObject.AddComponent<CanvasGroup>();
             
             CurLoginView.TriggerWhenDifferent = true;
@@ -127,6 +135,11 @@ namespace PBGame.UI.Components.ProfileMenu
                 oAuthLogin.Height = oAuthLogin.DesiredHeight;
                 oAuthLogin.Active = false;
             }
+            loader = CreateChild<Loader>("loader");
+            {
+                loader.Anchor = AnchorType.Fill;
+                loader.Offset = new Offset(0f, BaseHeight, 0f, 0f);
+            }
 
             OnEnableInited();
         }
@@ -135,8 +148,20 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
+            // Listen to API authentication state change.
+            Api.Authentication.OnValueChanged += OnApiAuthenticated;
+
             // Setup view for the currently selected API provider.
             SelectApi((ApiProviderType)dropdownContext.Selection.ExtraData);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Api.Authentication.OnValueChanged -= OnApiAuthenticated;
+
+            FinishCurRequest(true);
         }
 
         /// <summary>
@@ -146,6 +171,9 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             GameConfiguration.LastLoginApi.Value = apiType;
             GameConfiguration.Save();
+
+            // Current auth request must be stopped.
+            FinishCurRequest(true);
 
             // Display OAuth or Credential login based on API information.
             var provider = Api.GetProvider(apiType);
@@ -164,6 +192,86 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             loginView.Setup(provider);
             CurLoginView.Value = loginView;
+        }
+
+        /// <summary>
+        /// Starts authentication request routine.
+        /// </summary>
+        public void RequestAuth(IApiRequest request)
+        {
+            if(request == null)
+                return;
+
+            loader.Show();
+
+            curRequest = request;
+            request.RawResponse.OnNewRawValue += OnAuthResponse;
+            Api.Request(request);
+        }
+
+        /// <summary>
+        /// Requests for online Me information from API.
+        /// </summary>
+        private void RequestMe()
+        {
+            if(Api.Authentication.Value == null)
+                return;
+
+            loader.Show();
+            curRequest = CurProvider.Me();
+            curRequest.RawResponse.OnNewRawValue += OnMeResponse;
+            Api.Request(curRequest);
+        }
+
+        /// <summary>
+        /// Aborts current auth API request.
+        /// </summary>
+        private void FinishCurRequest(bool disposeRequest)
+        {
+            if(curRequest == null)
+                return;
+
+            loader.Hide();
+
+            if(disposeRequest)
+                curRequest.Dispose();
+            curRequest = null;
+        }
+
+        /// <summary>
+        /// Event called on initial authentication response.
+        /// </summary>
+        private void OnAuthResponse(object rawResponse)
+        {
+            FinishCurRequest(false);
+
+            if(!(rawResponse is OAuthResponse) && !(rawResponse is AuthResponse))
+            {
+                Logger.LogError($"Invalid auth response type: {rawResponse.GetType().Name}");
+            }
+        }
+
+        /// <summary>
+        /// Event called on online Me information response.
+        /// </summary>
+        private void OnMeResponse(object rawResponse)
+        {
+            FinishCurRequest(false);
+
+            if (!(rawResponse is MeResponse))
+            {
+                Logger.LogError($"Invalid me response type: {rawResponse.GetType().Name}");
+            }
+        }
+
+        /// <summary>
+        /// Event called when the authentication state has been changed in the API.
+        /// </summary>
+        private void OnApiAuthenticated(Authentication newAuth, Authentication oldAuth)
+        {
+            // Became authenticated.
+            if (newAuth != null && newAuth != oldAuth)
+                RequestMe();
         }
     }
 }

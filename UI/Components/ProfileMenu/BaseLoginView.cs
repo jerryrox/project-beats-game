@@ -79,19 +79,36 @@ namespace PBGame.UI.Components.ProfileMenu
             }
         }
 
+        /// <summary>
+        /// Prepares the view for the specified provider.
+        /// </summary>
         public virtual void Setup(IApiProvider provider)
         {
             this.ApiProvider = provider;
         }
 
-        public void Show()
+        /// <summary>
+        /// Event called on auth response success.
+        /// </summary>
+        public virtual void OnAuthSuccess()
         {
-            showAni.PlayFromStart();
         }
 
-        public void Hide()
+        /// <summary>
+        /// Event called on auth response fail.
+        /// </summary>
+        public virtual void OnAuthFailed()
         {
-            hideAni.PlayFromStart();
         }
+
+        /// <summary>
+        /// Shows the view with animation.
+        /// </summary>
+        public void Show() => showAni.PlayFromStart();
+
+        /// <summary>
+        /// Hides the view with animation.
+        /// </summary>
+        public void Hide() => hideAni.PlayFromStart();
     }
 }
