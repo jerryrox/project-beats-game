@@ -21,8 +21,10 @@ Slowly making progress 🧩
 - Allow selection of different API providers for logging in.
 - Added view component for OAuth login.
 - Integrated DeepLinker with API.
+- Display a message when mapset download has initiated.
 #### Changes
 - Reworked on networking API to adapt to project-beats-api.
+- Moved local user data loading routine away from UI to ProjectBeatsGame event.
 - Upgraded Unity to 2019.4 LTS
 #### Fixes
 - Fixed mapsets result list keep on refreshing when there are no more results.

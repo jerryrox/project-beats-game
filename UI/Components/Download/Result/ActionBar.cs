@@ -5,6 +5,7 @@ using PBGame.UI.Components.Common;
 using PBGame.Stores;
 using PBGame.Networking.API;
 using PBGame.Networking.Maps;
+using PBGame.Notifications;
 using PBFramework.UI;
 using PBFramework.Audio;
 using PBFramework.Graphics;
@@ -39,6 +40,9 @@ namespace PBGame.UI.Components.Download.Result
 
         [ReceivesDependency]
         private IDownloadStore DownloadStore { get; set; }
+
+        [ReceivesDependency]
+        private INotificationBox NotificationBox { get; set; }
 
 
         [InitWithDependency]
@@ -121,6 +125,13 @@ namespace PBGame.UI.Components.Download.Result
             var request = api.MapsetDownload();
             request.DownloadStore = DownloadStore;
             request.MapsetId = mapset.Id.ToString();
+
+            NotificationBox.Add(new Notification()
+            {
+                Type = NotificationType.Passive,
+                Message = $"Download started for {mapset.Artist} - {mapset.Title}.",
+                Scope = NotificationScope.Temporary,
+            });
 
             Api.Request(request);
             request.InnerRequest.OnProgress += (progress) =>
