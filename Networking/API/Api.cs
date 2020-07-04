@@ -78,7 +78,7 @@ namespace PBGame.Networking.API
                 throw new Exception("Attempted to request an API request under the Api when it has already been requested.");
 
             // Attach authorization header.
-            if (authentication != null)
+            if (authentication.Value != null)
                 request.InnerRequest.SetHeader("Authorization", $"Bearer {authentication.Value.AccessToken}");
 
             // TODO: Display request as notification.
