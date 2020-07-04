@@ -135,17 +135,8 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            // TODO: Bind to online user state change.
-
             // Setup view for the currently selected API provider.
             SelectApi((ApiProviderType)dropdownContext.Selection.ExtraData);
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-
-            // TODO: Unbind from online user state change.
         }
 
         /// <summary>
@@ -174,22 +165,5 @@ namespace PBGame.UI.Components.ProfileMenu
             loginView.Setup(provider);
             CurLoginView.Value = loginView;
         }
-
-        // /// <summary>
-        // /// Starts loading the user data in accordance to the currently logged-in online user.
-        // /// </summary>
-        // private void LoadUserData(IOnlineUser onlineUser, IOnlineUser _ = null)
-        // {
-        //     if (onlineUser.IsOnline)
-        //     {
-        //         var progress = new ReturnableProgress<IUser>();
-        //         progress.OnFinished += OnUserDataLoaded;
-        //         UserManager.SetUser(onlineUser, progress);
-        //     }
-        //     else
-        //     {
-        //         loader.Hide();
-        //     }
-        // }
     }
 }
