@@ -19,11 +19,14 @@ Slowly making progress 🧩
 ### 0.9.3 (WIP)
 #### New features
 - Allow selection of different API providers for logging in.
-- Added fragment view fore OAuth login.
+- Added view component for OAuth login.
+- Integrated DeepLinker with API.
 #### Changes
 - Reworked on networking API to adapt to project-beats-api.
+- Upgraded Unity to 2019.4 LTS
 #### Fixes
 - Fixed mapsets result list keep on refreshing when there are no more results.
+- API provider will now be passed without lowered case due to parsing issues using JSON.
 
 ### 0.9.2
 #### New features
