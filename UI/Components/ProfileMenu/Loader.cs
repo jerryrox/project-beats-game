@@ -37,12 +37,13 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
-            blocker = CreateChild<Blocker>("blocker", 0);
+            blocker = CreateChild<Blocker>("blocker");
             {
-                blocker.Background.SpriteName = "Null";
+                blocker.Anchor = AnchorType.Fill;
+                blocker.Offset = Offset.Zero;
                 blocker.Background.Color = new Color(0f, 0f, 0f, 0.5f);
 
-                loader = blocker.CreateChild<LoaderIcon>("loader", 1);
+                loader = blocker.CreateChild<LoaderIcon>("loader");
                 {
                     loader.Size = new Vector2(72f, 72f);
                 }
