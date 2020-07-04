@@ -19,6 +19,9 @@ namespace PBGame.UI.Components.ProfileMenu
 
         public override float DesiredHeight => 68f;
 
+        [ReceivesDependency]
+        private LoggedOutView LoggedOutView { get; set; }
+
 
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
@@ -43,6 +46,6 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Starts performing OAuth login.
         /// </summary>
-        private void DoLogin() => Api.Request(ApiProvider.OAuth());
+        private void DoLogin() => LoggedOutView?.RequestAuth(ApiProvider.OAuth());
     }
 }
