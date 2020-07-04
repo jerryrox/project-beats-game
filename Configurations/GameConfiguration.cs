@@ -5,6 +5,7 @@ using PBGame.Maps;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
 using PBGame.Graphics;
+using PBGame.Networking.API;
 using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
 using PBFramework.Storages;
@@ -36,6 +37,7 @@ namespace PBGame.Configurations
         public ProxyBindable<string> Username { get; private set; }
         public ProxyBindable<string> Password { get; private set; }
         public ProxyBindable<bool> SaveCredentials { get; private set; }
+        public ProxyBindable<ApiProviderType> LastLoginApi { get; private set; }
 
         // ============================================================
         // General settings
@@ -83,6 +85,7 @@ namespace PBGame.Configurations
             Username = InitStringBindable(nameof(Username), "");
             Password = InitStringBindable(nameof(Password), "");
             SaveCredentials = InitBoolBindable(nameof(SaveCredentials), false);
+            LastLoginApi = InitEnumBindable(nameof(LastLoginApi), ApiProviderType.Osu);
 
             // General settings
             SettingsTab generalTab = Settings.AddTabData(new SettingsTab("General", "icon-settings"));

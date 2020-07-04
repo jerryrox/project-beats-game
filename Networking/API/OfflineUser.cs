@@ -2,7 +2,7 @@ namespace PBGame.Networking.API
 {
     public class OfflineUser : IOnlineUser {
 
-        public IApi Api => null;
+        public IApiProvider Provider => null;
 
         public string Id => "";
 

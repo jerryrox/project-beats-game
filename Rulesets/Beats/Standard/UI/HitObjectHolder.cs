@@ -12,7 +12,7 @@ using PBGame.Rulesets.Judgements;
 using PBFramework;
 using PBFramework.Audio;
 using PBFramework.Graphics;
-using PBFramework.Services;
+using PBFramework.Threading;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -244,11 +244,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
             Coroutine loadRoutine = null;
             IExplicitPromise promise = new ProxyPromise(
-                (p) => loadRoutine = UnityThreadService.StartCoroutine(LoadHitObjects(p)),
+                (p) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(p)),
                 () =>
                 {
                     if(loadRoutine != null)
-                        UnityThreadService.StopCoroutine(loadRoutine);
+                        UnityThread.StopCoroutine(loadRoutine);
                 }
             );
             State.AddInitialLoader(promise);

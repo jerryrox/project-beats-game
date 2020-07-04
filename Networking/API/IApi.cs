@@ -1,93 +1,58 @@
-using System.Collections.Generic;
-using PBGame.Rulesets;
-using PBGame.Rulesets.Maps;
-using PBGame.Notifications;
+using PBGame.Networking.API.Requests;
+using PBGame.Networking.API.Responses;
 using PBFramework.Data.Bindables;
-using PBFramework.Networking;
 
 namespace PBGame.Networking.API
 {
+    /// <summary>
+    /// Networking bridge between PB Game and PB Api server.
+    /// </summary>
     public interface IApi {
 
         /// <summary>
-        /// Returns the base url used for requests.
+        /// Returns the current online user.
         /// </summary>
-        string BaseUrl { get; }
+        IReadOnlyBindable<IOnlineUser> User { get; }
 
         /// <summary>
-        /// Returns the provider type of this api.
+        /// Returns the current authentication session.
         /// </summary>
-        ApiProviderType ApiType { get; }
+        IReadOnlyBindable<Authentication> Authentication { get; }
 
         /// <summary>
-        /// The displayed name of the API provider.
+        /// Returns whether the user is currently logged in.
         /// </summary>
-        string Name { get; }
+        bool IsLoggedIn { get; }
 
         /// <summary>
-        /// Returns the spritename of the icon representing the API.
+        /// Returns the provider instance which the user is currently authenticated for.
         /// </summary>
-        string IconName { get; }
-
-        /// <summary>
-        /// Returns the adaptor for this api.
-        /// </summary>
-        IApiAdaptor Adaptor { get; }
-
-        /// <summary>
-        /// Returns the request factory of the api.
-        /// </summary>
-        IRequestFactory RequestFactory { get; }
-
-        /// <summary>
-        /// Returns whether the user is currently logged into the API server.
-        /// </summary>
-        BindableBool IsOnline { get; }
-
-        /// <summary>
-        /// Returns the user logged into the API server.
-        /// </summary>
-        Bindable<IOnlineUser> User { get; }
-
-        /// <summary>
-        /// Returns the cookie container instance.
-        /// </summary>
-        CookieContainer Cookies { get; }
-
-        /// <summary>
-        /// An optional notification box for notifying certain events happening in API.
-        /// </summary>
-        INotificationBox NotificationBox { get; set; }
+        IApiProvider AuthenticatedProvider { get; }
 
 
         /// <summary>
-        /// Returns the complete url for the specified API path.
+        /// Returns the provider instance for the specified type.
         /// </summary>
-        string GetUrl(string path);
+        IApiProvider GetProvider(ApiProviderType type);
 
         /// <summary>
-        /// Starts the specified request.
+        /// Returns the full endpoint url using the specified provider type and path.
         /// </summary>
-        void Request(IApiRequest request);
+        string GetUrl(IApiProvider type, string path);
 
         /// <summary>
-        /// Logs out from current online session.
+        /// Logs the user out of current online session.
         /// </summary>
         void Logout();
 
         /// <summary>
-        /// Returns all game modes which is linked to the provider of this api.
+        /// Processes the specified request under monitoring of the API.
         /// </summary>
-        IEnumerable<GameModeType> GetGameModes();
+        void Request(IApiRequest request);
 
         /// <summary>
-        /// Returns whether the specified game mode is relevant to this api's provider.
+        /// Handles additional actions based on the given response.
         /// </summary>
-        bool IsRelevantMode(GameModeType gameMode);
-
-        /// <summary>
-        /// Returns whether the specified map is relevant to this api's provider.
-        /// </summary>
-        bool IsRelevantMap(IMap map);
+        void HandleResponse(IApiResponse response);
     }
 }

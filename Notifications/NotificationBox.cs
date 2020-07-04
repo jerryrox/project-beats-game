@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBFramework.Services;
+using PBFramework.Threading;
 
 namespace PBGame.Notifications
 {
@@ -16,7 +16,7 @@ namespace PBGame.Notifications
 
         public void Add(INotification notification)
         {
-            UnityThreadService.DispatchUnattended(() =>
+            UnityThread.DispatchUnattended(() =>
             {
                 if (notification.Scope != NotificationScope.Temporary)
                     notifications.Add(notification);
@@ -27,7 +27,7 @@ namespace PBGame.Notifications
 
         public void Remove(INotification notification)
         {
-            UnityThreadService.DispatchUnattended(() =>
+            UnityThread.DispatchUnattended(() =>
             {
                 if (notifications.Remove(notification))
                     OnRemoveNotification?.Invoke(notification);
@@ -40,7 +40,7 @@ namespace PBGame.Notifications
             if(string.IsNullOrEmpty(id))
                 return;
 
-            UnityThreadService.DispatchUnattended(() =>
+            UnityThread.DispatchUnattended(() =>
             {
                 for (int i = notifications.Count - 1; i >= 0; i--)
                 {

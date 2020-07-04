@@ -3,6 +3,7 @@ using PBGame.Maps;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
 using PBGame.Graphics;
+using PBGame.Networking.API;
 using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
 
@@ -52,6 +53,11 @@ namespace PBGame.Configurations
         /// Whether the login credentials should be stored.
         /// </summary>
 		ProxyBindable<bool> SaveCredentials { get; }
+
+        /// <summary>
+        /// The API provider last used to log in with.
+        /// </summary>
+        ProxyBindable<ApiProviderType> LastLoginApi { get; }
 
         // ============================================================
         // General settings

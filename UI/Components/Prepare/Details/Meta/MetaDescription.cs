@@ -22,7 +22,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         private IMapSelection MapSelection { get; set; }
 
         [ReceivesDependency]
-        private IApiManager ApiManager { get; set; }
+        private IApi Api { get; set; }
 
 
         [InitWithDependency]

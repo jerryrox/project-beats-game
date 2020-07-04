@@ -26,19 +26,9 @@ namespace PBGame.UI.Components.Download
 
 
         /// <summary>
-        /// The name of the cursor associated with cursor value.
+        /// The current search cursor.
         /// </summary>
-        public string CursorName { get; set; }
-
-        /// <summary>
-        /// The value of cursor.
-        /// </summary>
-        public string CursorValue { get; set; }
-
-        /// <summary>
-        /// Map identifier the cursor is on.
-        /// </summary>
-        public int CursorId { get; set; }
+        public string Cursor { get; set; }
 
         /// <summary>
         /// Returns whether the search request is requesting for the next page.
@@ -48,7 +38,7 @@ namespace PBGame.UI.Components.Download
         /// <summary>
         /// Returns the current search request in progress.
         /// </summary>
-        public Bindable<IMapsetListRequest> SearchRequest { get; } = new Bindable<IMapsetListRequest>();
+        public Bindable<MapsetsRequest> SearchRequest { get; } = new Bindable<MapsetsRequest>();
 
         /// <summary>
         /// Returns the current API provider type.
@@ -117,6 +107,7 @@ namespace PBGame.UI.Components.Download
             ResetState();
 
             // Trigger mapset list request when any of these values change.
+            ApiProvider.OnValueChanged += delegate { RequestMapsetList(); };
             Mode.OnValueChanged += delegate { RequestMapsetList(); };
             Category.OnValueChanged += delegate { RequestMapsetList(); };
             Genre.OnValueChanged += delegate { RequestMapsetList(); };
@@ -133,9 +124,7 @@ namespace PBGame.UI.Components.Download
         /// </summary>
         public void ResetState()
         {
-            CursorName = null;
-            CursorValue = null;
-            CursorId = 0;
+            Cursor = null;
             IsRequestingNextPage = false;
             SearchRequest.Value = null;
             ApiProvider.Value = ApiProviderType.Osu;
@@ -158,9 +147,7 @@ namespace PBGame.UI.Components.Download
         public void RequestMapsetList()
         {
             IsRequestingNextPage = false;
-            CursorName = null;
-            CursorValue = null;
-            CursorId = 0;
+            Cursor = null;
             OnRequestList?.Invoke();
         }
 

@@ -25,7 +25,9 @@ using PBFramework.Audio;
 using PBFramework.Assets.Fonts;
 using PBFramework.Assets.Atlasing;
 using PBFramework.Inputs;
-using PBFramework.Services;
+using PBFramework.Platforms;
+using PBFramework.Threading;
+using PBFramework.Networking.Linking;
 using PBFramework.Dependencies;
 
 namespace PBGame
@@ -34,6 +36,11 @@ namespace PBGame
 
         public event Action<bool> OnAppFocus;
         public event Action<bool> OnAppPause;
+        
+        protected IPlatformHost platformHost;
+        protected DeepLinker deepLinker;
+
+        protected EnvConfiguration envConfiguration;
 
         protected ModeManager modeManager;
 
@@ -63,7 +70,7 @@ namespace PBGame
         protected Metronome metronome;
 
         protected DownloadStore downloadStore;
-        protected ApiManager apiManager;
+        protected Api api;
 
         protected IUserManager userManager;
         protected IRecordManager recordManager;
@@ -106,9 +113,14 @@ namespace PBGame
         /// </summary>
         protected virtual void InitializeModules()
         {
-            UnityThreadService.Initialize();
+            UnityThread.Initialize();
 
             Dependencies.CacheAs<IGame>(this);
+            
+            Dependencies.CacheAs<IPlatformHost>(platformHost = PlatformHost.CreateHost());
+            Dependencies.CacheAs<DeepLinker>(deepLinker = platformHost.CreateDeepLinker());
+
+            Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(true));
 
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
@@ -141,7 +153,7 @@ namespace PBGame
             });
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
-            Dependencies.CacheAs<IApiManager>(apiManager = new ApiManager());
+            Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));
 
             Dependencies.CacheAs<IUserManager>(userManager = new UserManager(Dependencies));
             Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager(Dependencies));
@@ -170,9 +182,8 @@ namespace PBGame
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = 60;
 
-            // Inject notification box into api manager
-            foreach(var api in apiManager.GetAllApi())
-                api.NotificationBox = notificationBox;
+            // Load environment
+            envConfiguration.Load("Configurations/Env");
 
             // Apply accelerator to input manager
             inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());
@@ -191,7 +202,5 @@ namespace PBGame
         {
             metronome.Update();
         }
-
-
     }
 }
