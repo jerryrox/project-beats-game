@@ -16,7 +16,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.9.3 (WIP)
+### 0.9.3
 #### New features
 - Allow selection of different API providers for logging in.
 - Added view component for OAuth login.
