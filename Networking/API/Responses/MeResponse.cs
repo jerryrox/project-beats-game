@@ -41,6 +41,7 @@ namespace PBGame.Networking.API.Responses
             else
             {
                 this.User = user;
+                this.User.Provider = provider;
                 EvaluateSuccess();
             }
         }

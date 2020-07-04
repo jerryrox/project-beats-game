@@ -62,18 +62,11 @@ namespace PBGame.UI.Components.ProfileMenu
                 {
                     loggedInView.Anchor = AnchorType.Fill;
                     loggedInView.Offset = Offset.Zero;
-                    // loggedInView.Pivot = PivotType.Top;
-                    // loggedInView.SetOffsetHorizontal(0f);
-                    // loggedInView.Y = 0f;
-                    // loggedInView.Height = LoggedInHeight;
                 }
                 loggedOutView = mask.CreateChild<LoggedOutView>("logged-out", 0);
                 {
                     loggedOutView.Anchor = AnchorType.Fill;
                     loggedOutView.Offset = Offset.Zero;
-                    // loggedOutView.Pivot = PivotType.Top;
-                    // loggedOutView.SetOffsetHorizontal(0f);
-                    // loggedOutView.Y = 0f;
 
                     loggedOutView.CurLoginView.OnNewValue += OnLoginProviderViewChange;
                 }
@@ -132,7 +125,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void BindEvents()
         {
-            UserManager.CurrentUser.OnValueChanged += OnUserChange;
+            UserManager.CurrentUser.OnNewValue += OnUserChange;
 
             SwitchView(UserManager.CurrentUser.Value != null, false);
         }
@@ -142,7 +135,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void UnbindEvents()
         {
-            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
+            UserManager.CurrentUser.OnNewValue -= OnUserChange;
         }
 
         private void SwitchView(bool isLoggedIn, bool animate = true)
@@ -193,7 +186,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Event called on online user change.
         /// </summary>
-        private void OnUserChange(IUser user, IUser _ = null)
+        private void OnUserChange(IUser user)
         {
             SwitchView(user != null);
         }

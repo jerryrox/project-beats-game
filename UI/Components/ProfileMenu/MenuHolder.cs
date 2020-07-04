@@ -95,11 +95,13 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            var user = UserManager.CurrentUser.Value;
-            if(user != null && user.OnlineUser.Provider != null)
-                accountLabel.Text = $"Logged in using {user.OnlineUser.Provider.Name}";
-            else
-                accountLabel.Text = $"You are currently offline.";
+            UserManager.CurrentUser.BindAndTrigger(OnUserChange);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            UserManager.CurrentUser.OnNewValue -= OnUserChange;
         }
 
         /// <summary>
@@ -118,6 +120,17 @@ namespace PBGame.UI.Components.ProfileMenu
                 UserManager.SaveUser(user);
                 UserManager.RemoveUser();
             });
+        }
+
+        /// <summary>
+        /// Event called on local user change.
+        /// </summary>
+        private void OnUserChange(IUser user)
+        {
+            if(user != null && user.OnlineUser.Provider != null)
+                accountLabel.Text = $"Logged in using {user.OnlineUser.Provider.Name}";
+            else
+                accountLabel.Text = $"You are currently offline.";
         }
     }
 }
