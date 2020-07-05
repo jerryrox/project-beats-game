@@ -70,10 +70,9 @@ namespace PBGame.UI.Navigations
             }
 
             model = CreateModel();
-            if (model != null)
-            {
-                Dependencies.Cache(model);
-            }
+            if(model == null)
+                throw new NullReferenceException("A navigation view's model mustn't be null!");
+            Dependencies.Cache(model);
 
             Depth = ViewDepth;
         }
@@ -82,5 +81,29 @@ namespace PBGame.UI.Navigations
         /// Creates a new UI model for this view.
         /// </summary>
         protected abstract TModel CreateModel();
+
+        protected override void OnPreShow()
+        {
+            base.OnPreShow();
+            model.OnPreShow();
+        }
+
+        protected override void OnPostShow()
+        {
+            base.OnPostShow();
+            model.OnPostShow();
+        }
+
+        protected override void OnPreHide()
+        {
+            base.OnPreHide();
+            model.OnPreHide();
+        }
+
+        protected override void OnPostHide()
+        {
+            base.OnPostHide();
+            model.OnPostHide();
+        }
     }
 }
