@@ -69,11 +69,16 @@ namespace PBGame.UI.Navigations
                 myTransform.ResetTransform();
             }
 
-            model = new TModel();
+            model = CreateModel() ?? new TModel();
             Dependencies.Cache(model);
 
             Depth = ViewDepth;
         }
+
+        /// <summary>
+        /// Manually creates a new navigation view model.
+        /// </summary>
+        protected virtual TModel CreateModel() => null;
 
         protected override void OnPreShow()
         {
