@@ -1,17 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Stores;
 using PBGame.Networking.API;
 using PBGame.Networking.Maps;
 using PBGame.Notifications;
 using PBFramework.UI;
-using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Result
 {
@@ -27,22 +26,10 @@ namespace PBGame.UI.Components.Download.Result
         /// <summary>
         /// Returns whether the previewing mapset is equal to mapset being represented.
         /// </summary>
-        private bool IsPreviewing => mapset == State.PreviewingMapset.Value;
+        private bool IsPreviewing => mapset == Model.PreviewingMapset.Value;
 
         [ReceivesDependency]
-        private IMusicController MusicController { get; set; }
-
-        [ReceivesDependency]
-        private IApi Api { get; set; }
-
-        [ReceivesDependency]
-        private DownloadState State { get; set; }
-
-        [ReceivesDependency]
-        private IDownloadStore DownloadStore { get; set; }
-
-        [ReceivesDependency]
-        private INotificationBox NotificationBox { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -62,7 +49,7 @@ namespace PBGame.UI.Components.Download.Result
 
                     downloadButton.IsClickToTrigger = true;
 
-                    downloadButton.OnTriggered += OnDownloadButton;
+                    downloadButton.OnTriggered += () => Model.DownloadMapset(mapset);
                 }
                 playButton = grid.CreateChild<HoverableTrigger>("play", 1);
                 {
@@ -71,7 +58,7 @@ namespace PBGame.UI.Components.Download.Result
 
                     playButton.IsClickToTrigger = true;
 
-                    playButton.OnTriggered += OnPlayButton;
+                    playButton.OnTriggered += () => Model.SetPreview(mapset);
                 }
             }
         }
@@ -95,7 +82,7 @@ namespace PBGame.UI.Components.Download.Result
 
             this.mapset = mapset;
 
-            State.PreviewingMapset.BindAndTrigger(OnPreviewMapsetChange);
+            Model.PreviewingMapset.BindAndTrigger(OnPreviewMapsetChange);
         }
 
         /// <summary>
@@ -106,57 +93,9 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            State.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
+            Model.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
 
             mapset = null;
-        }
-
-        /// <summary>
-        /// Event called on download button trigger.
-        /// </summary>
-        private void OnDownloadButton()
-        {
-            if(mapset == null)
-                return;
-
-            var api = Api.GetProvider(State.ApiProvider.Value);
-            if(api == null)
-                return;
-            var request = api.MapsetDownload();
-            request.DownloadStore = DownloadStore;
-            request.MapsetId = mapset.Id.ToString();
-
-            NotificationBox.Add(new Notification()
-            {
-                Type = NotificationType.Passive,
-                Message = $"Download started for {mapset.Artist} - {mapset.Title}.",
-                Scope = NotificationScope.Temporary,
-            });
-
-            Api.Request(request);
-            request.InnerRequest.OnProgress += (progress) =>
-            {
-                Debug.Log("Download progress: " + progress);
-            };
-        }
-
-        /// <summary>
-        /// Event called on play button trigger.
-        /// </summary>
-        private void OnPlayButton()
-        {
-            if(mapset == null)
-                return;
-
-            State.PreviewingMapset.Value = IsPreviewing ? null : mapset;
-        }
-
-        /// <summary>
-        /// Sets previewing state on play button icon to display whether it's currently previewing.
-        /// </summary>
-        private void SetPreviewing(bool isPlaying)
-        {
-            playButton.IconName = isPlaying ? "icon-stop" : "icon-play";
         }
 
         /// <summary>
@@ -164,7 +103,7 @@ namespace PBGame.UI.Components.Download.Result
         /// </summary>
         private void OnPreviewMapsetChange(OnlineMapset mapset)
         {
-            SetPreviewing(IsPreviewing);
+            playButton.IconName = IsPreviewing ? "icon-stop" : "icon-play";
         }
     }
 }

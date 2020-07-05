@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models.Download;
 using PBGame.Maps;
+using PBGame.Stores;
 using PBGame.Assets.Caching;
 using PBGame.Networking.API;
 using PBGame.Networking.API.Requests;
@@ -73,6 +74,9 @@ namespace PBGame.UI.Models
 
         [ReceivesDependency]
         private INotificationBox NotificationBox { get; set; }
+
+        [ReceivesDependency]
+        private IDownloadStore DownloadStore { get; set; }
 
 
         [InitWithDependency]
@@ -157,6 +161,41 @@ namespace PBGame.UI.Models
                 previewingMapset.Value = mapset;
                 musicAgent.Request(mapset.PreviewAudio);
             }
+        }
+
+        /// <summary>
+        /// Starts downloading the specified mapset.
+        /// </summary>
+        public void DownloadMapset(OnlineMapset mapset)
+        {
+            if(mapset == null)
+                return;
+
+            // Ensure the provider exists
+            var provider = SelectedProvider;
+            if(provider == null)
+                return;
+
+            // Setup request.
+            var request = provider.MapsetDownload();
+            request.DownloadStore = DownloadStore;
+            request.MapsetId = mapset.Id.ToString();
+
+            // Show a notification.
+            NotificationBox.Add(new Notification()
+            {
+                Type = NotificationType.Passive,
+                Message = $"Download started for {mapset.Artist} - {mapset.Title}.",
+                Scope = NotificationScope.Temporary,
+            });
+
+            // Start request
+            Api.Request(request);
+            // TODO: Remove when notification overlay is implemented.
+            request.InnerRequest.OnProgress += (progress) =>
+            {
+                Debug.Log("Download progress: " + progress);
+            };
         }
 
         /// <summary>
