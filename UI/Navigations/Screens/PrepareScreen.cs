@@ -16,7 +16,6 @@ namespace PBGame.UI.Navigations.Screens
         private InfoContainer infoContainer;
         private VersionContainer versionContainer;
 
-        private bool isInfoDetailed = false;
         private IAnime infoDetailAni;
         private IAnime infoBriefAni;
 
