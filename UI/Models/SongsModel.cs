@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Components.Common.Dropdown;
+using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
@@ -79,6 +80,9 @@ namespace PBGame.UI.Models
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -159,6 +163,31 @@ namespace PBGame.UI.Models
             mapsetForDropdown = mapset;
             DropdownProvider.OpenAt(dropdownContext, worldPos);
         }
+
+        /// <summary>
+        /// Selects a random mapset from the visible mapsets list.
+        /// </summary>
+        public void SelectRandomMapset() => MapSelection.SelectMapset(MapManager.DisplayedMapsets.GetRandom());
+
+        /// <summary>
+        /// Selects the previous mapset from the visible mapsets list relative to the current selection.
+        /// </summary>
+        public void SelectPrevMapset() => MapSelection.SelectMapset(MapManager.DisplayedMapsets.GetPrevious(SelectedMapset.Value));
+
+        /// <summary>
+        /// Selects the next mapset from the visible mapsets list relative to the current selection.
+        /// </summary>
+        public void SelectNextMapset() => MapSelection.SelectMapset(MapManager.DisplayedMapsets.GetNext(SelectedMapset.Value));
+
+        /// <summary>
+        /// Navigates away to prepare screen.
+        /// </summary>
+        public void NavigateToPrepare() => ScreenNavigator.Show<PrepareScreen>();
+
+        /// <summary>
+        /// Navigates away to home screen.
+        /// </summary>
+        public void NavigateToHome() => ScreenNavigator.Show<HomeScreen>();
 
         /// <summary>
         /// Returns the index of the currently selected mapset within the visible mapsets list.
