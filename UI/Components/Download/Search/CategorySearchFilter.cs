@@ -65,9 +65,12 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on rank state filter change.
         /// </summary>
-        private void OnRankStateChange(MapCategoryType status)
+        private void OnRankStateChange(MapCategoryType category)
         {
-            dropdown.LabelText = status.ToString();
+            dropdown.LabelText = category.ToString();
+
+            // Making sure the dropdown selection is synchronized with the option.
+            context.SelectDataWithText(category.ToString());
         }
     }
 }
