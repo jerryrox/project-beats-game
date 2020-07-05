@@ -77,7 +77,7 @@ namespace PBGame.UI.Components.Prepare
         {
             base.OnEnableInited();
 
-            Model.SelectedMap.OnNewValue += OnMapChange;
+            Model.SelectedMap.BindAndTrigger(OnMapChange);
             Model.PreferUnicode.OnNewValue += OnPreferUnicode;
         }
         
