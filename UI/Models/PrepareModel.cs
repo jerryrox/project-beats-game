@@ -19,6 +19,7 @@ namespace PBGame.UI.Models
 
         private BindableBool isDetailedMode = new BindableBool(false);
         private Bindable<List<IOriginalMap>> mapList = new Bindable<List<IOriginalMap>>();
+        private Bindable<string> mapsetDescription = new Bindable<string>("");
 
 
         /// <summary>
@@ -50,6 +51,11 @@ namespace PBGame.UI.Models
         /// Returns the list of maps included in the selected mapset.
         /// </summary>
         public IReadOnlyBindable<List<IOriginalMap>> MapList => mapList;
+
+        /// <summary>
+        /// Returns the description of the mapset.
+        /// </summary>
+        public IReadOnlyBindable<string> MapsetDescription => mapsetDescription;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -140,6 +146,8 @@ namespace PBGame.UI.Models
 
             SelectedMapset.OnNewValue -= OnMapsetChange;
             GameMode.OnNewValue -= OnGameModeChange;
+
+            mapsetDescription.Value = "";
         }
 
         /// <summary>
@@ -157,9 +165,22 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Starts requesting for selected mapset's description from API.
+        /// </summary>
+        private void RequestMapsetDescription()
+        {
+            mapsetDescription.Value = "";
+            // TODO:
+        }
+
+        /// <summary>
         /// Event called on current mapset change.
         /// </summary>
-        private void OnMapsetChange(IMapset mapset) => SetMapList();
+        private void OnMapsetChange(IMapset mapset)
+        {
+            SetMapList();
+            RequestMapsetDescription();
+        }
 
         /// <summary>
         /// Event called on game mode change.

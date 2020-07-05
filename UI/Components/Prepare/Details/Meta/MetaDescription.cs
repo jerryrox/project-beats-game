@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Maps;
-using PBGame.Rulesets.Maps;
-using PBGame.Networking.API;
+using PBGame.UI.Models;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -19,10 +14,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IApi Api { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -62,29 +54,15 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.MapsetDescription.BindAndTrigger(OnDescriptionChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Map.BindAndTrigger(OnMapChange);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Map.OnNewValue -= OnMapChange;
+            Model.MapsetDescription.OnNewValue -= OnDescriptionChange;
         }
 
         /// <summary>
@@ -98,28 +76,8 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         }
 
         /// <summary>
-        /// Event called on map selection change.
+        /// Event called on mapset description change.
         /// </summary>
-        private void OnMapChange(IPlayableMap map)
-        {
-            if (map == null)
-            {
-                SetContent("");
-            }
-            else
-            {
-                SetContent("");
-                // TODO: Fetch map description from server. There is currently no easy way to do this, so I'll do this some other time.
-                // var api = ApiManager.GetRelevantApi(map);
-                // if (api == null)
-                // {
-                //     SetContent("");
-                // }
-                // else
-                // {
-                //     // api.Request();
-                // }
-            }
-        }
+        private void OnDescriptionChange(string description) => SetContent(description);
     }
 }
