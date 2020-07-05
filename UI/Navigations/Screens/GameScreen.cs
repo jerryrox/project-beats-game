@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Game;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
@@ -22,7 +23,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class GameScreen : BaseScreen, IGameScreen {
+    public class GameScreen : BaseScreen<GameModel>, IGameScreen {
 
         public event Action<bool> OnPreInit;
 
