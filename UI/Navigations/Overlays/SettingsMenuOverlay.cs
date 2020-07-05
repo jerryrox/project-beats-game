@@ -21,7 +21,7 @@ namespace PBGame.UI.Navigations.Overlays
         private ContentHolder contentHolder;
 
 
-        protected override int OverlayDepth => ViewDepths.SettingsMenuOverlay;
+        protected override int ViewDepth => ViewDepths.SettingsMenuOverlay;
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }

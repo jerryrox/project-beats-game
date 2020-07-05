@@ -35,7 +35,7 @@ namespace PBGame.UI.Navigations.Screens
         private DownloadState state;
 
 
-        protected override int ScreenDepth => ViewDepths.DownloadScreen;
+        protected override int ViewDepth => ViewDepths.DownloadScreen;
 
         [ReceivesDependency]
         private IMusicController MusicController { get; set; }
@@ -53,7 +53,6 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init(IColorPreset colorPreset, IWebMusicCacher musicCacher)
         {
-            Dependencies = Dependencies.Clone();
             Dependencies.Cache(state = new DownloadState());
 
             musicAgent = new CacherAgent<IMusicAudio>(musicCacher);

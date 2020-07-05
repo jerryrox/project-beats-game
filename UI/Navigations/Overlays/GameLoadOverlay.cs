@@ -35,7 +35,7 @@ namespace PBGame.UI.Navigations.Overlays
         private IKey escapeKey;
 
 
-        protected override int OverlayDepth => ViewDepths.GameLoadOverlay;
+        protected override int ViewDepth => ViewDepths.GameLoadOverlay;
 
         /// <summary>
         /// Returns the game screen instance.

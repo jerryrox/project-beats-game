@@ -35,7 +35,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         public MusicButton MusicButton { get; set; }
 
-        protected override int OverlayDepth => ViewDepths.MusicMenuOverlay;
+        protected override int ViewDepth => ViewDepths.MusicMenuOverlay;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }

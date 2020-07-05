@@ -19,7 +19,7 @@ namespace PBGame.UI.Navigations.Screens
 
         public Background Background { get; set; }
 
-        protected override int ScreenDepth => ViewDepths.SongsScreen;
+        protected override int ViewDepth => ViewDepths.SongsScreen;
 
 
         [InitWithDependency]

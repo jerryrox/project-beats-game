@@ -28,7 +28,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         public FpsDisplayer FpsDisplayer { get; private set; }
 
-        protected override int OverlayDepth => ViewDepths.SystemOverlay;
+        protected override int ViewDepth => ViewDepths.SystemOverlay;
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }

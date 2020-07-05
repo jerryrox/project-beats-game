@@ -16,7 +16,7 @@ namespace PBGame.UI.Navigations.Overlays
         private ISprite darkSprite;
 
 
-        protected override int OverlayDepth => ViewDepths.QuitOverlay;
+        protected override int ViewDepth => ViewDepths.QuitOverlay;
 
 
         [InitWithDependency]

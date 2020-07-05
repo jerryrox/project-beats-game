@@ -16,7 +16,7 @@ namespace PBGame.UI.Navigations.Screens
 
         public LogoDisplay LogoDisplay { get; private set; }
 
-        protected override int ScreenDepth => ViewDepths.HomeScreen;
+        protected override int ViewDepth => ViewDepths.HomeScreen;
 
         private IBackgroundOverlay BackgroundOverlay => OverlayNavigator.Get<BackgroundOverlay>();
 

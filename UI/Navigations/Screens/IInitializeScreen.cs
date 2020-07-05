@@ -2,7 +2,7 @@ using PBGame.UI.Components.Initialize;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public interface IInitializeScreen : IBaseScreen {
+    public interface IInitializeScreen {
     
         /// <summary>
         /// Returns the logo displayer on the screen.

@@ -24,7 +24,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         protected virtual bool IsDerived => false;
 
-        protected override int OverlayDepth => ViewDepths.DialogOverlay;
+        protected override int ViewDepth => ViewDepths.DialogOverlay;
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }

@@ -82,7 +82,6 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            Dependencies = Dependencies.Clone();
             Dependencies.Cache(this);
 
             canvasGroup = myObject.AddComponent<CanvasGroup>();

@@ -16,7 +16,7 @@ namespace PBGame.UI.Navigations.Overlays
         private ContentHolder content;
 
 
-        protected override int OverlayDepth => ViewDepths.ProfileMenuOverlay;
+        protected override int ViewDepth => ViewDepths.ProfileMenuOverlay;
 
 
         [InitWithDependency]

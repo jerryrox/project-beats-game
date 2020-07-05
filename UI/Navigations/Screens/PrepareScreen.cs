@@ -20,14 +20,13 @@ namespace PBGame.UI.Navigations.Screens
         private IAnime infoBriefAni;
 
 
-        protected override int ScreenDepth => ViewDepths.PrepareScreen;
+        protected override int ViewDepth => ViewDepths.PrepareScreen;
 
 
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
             // Cache this container for inner component.
-            Dependencies = Dependencies.Clone();
             Dependencies.CacheAs<IPrepareScreen>(this);
 
             infoContainer = CreateChild<InfoContainer>("info", 0);

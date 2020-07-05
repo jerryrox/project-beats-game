@@ -25,7 +25,7 @@ namespace PBGame.UI.Navigations.Overlays
         private MapConfig mapConfig;
 
 
-        protected override int OverlayDepth => ViewDepths.OffsetOverlay;
+        protected override int ViewDepth => ViewDepths.OffsetOverlay;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }

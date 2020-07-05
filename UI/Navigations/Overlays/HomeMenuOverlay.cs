@@ -31,7 +31,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         public MenuButton DownloadButton { get; private set; }
 
-        protected override int OverlayDepth => ViewDepths.HomeMenuOverlay;
+        protected override int ViewDepth => ViewDepths.HomeMenuOverlay;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }

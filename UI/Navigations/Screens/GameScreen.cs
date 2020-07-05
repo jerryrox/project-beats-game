@@ -42,7 +42,7 @@ namespace PBGame.UI.Navigations.Screens
 
         public override int InputLayer => InputLayers.GameScreen;
 
-        protected override int ScreenDepth => ViewDepths.GameScreen;
+        protected override int ViewDepth => ViewDepths.GameScreen;
 
         protected override bool IsRoot3D => true;
 
@@ -62,7 +62,6 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init()
         {
-            Dependencies = Dependencies.Clone();
             Dependencies.Cache(gameState = new GameState());
         }
 

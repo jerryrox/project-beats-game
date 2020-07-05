@@ -30,7 +30,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         public BaseMenuButton NotificationMenuButton { get; private set; }
 
-        protected override int OverlayDepth => ViewDepths.MenuBarOverlay;
+        protected override int ViewDepth => ViewDepths.MenuBarOverlay;
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }

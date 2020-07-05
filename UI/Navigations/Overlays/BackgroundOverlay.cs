@@ -36,7 +36,7 @@ namespace PBGame.UI.Navigations.Overlays
             }
         }
 
-        protected override int OverlayDepth => ViewDepths.BackgroundOverlay;
+        protected override int ViewDepth => ViewDepths.BackgroundOverlay;
 
         protected override bool IsRoot3D => true;
 

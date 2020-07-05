@@ -22,7 +22,7 @@ namespace PBGame.UI.Navigations.Overlays
         private List<BaseMenuButton> menuButtons = new List<BaseMenuButton>();
 
 
-        protected override int OverlayDepth => ViewDepths.QuickMenuOverlay;
+        protected override int ViewDepth => ViewDepths.QuickMenuOverlay;
 
         [ReceivesDependency]
         private IGame Game { get; set; }

@@ -2,7 +2,7 @@
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public interface ISplashScreen : IBaseScreen {
+    public interface ISplashScreen {
     
         
     }
