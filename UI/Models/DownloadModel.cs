@@ -45,6 +45,11 @@ namespace PBGame.UI.Models
         public IReadOnlyBindable<OnlineMapset> PreviewingMapset => previewingMapset;
 
         /// <summary>
+        /// Returns whether there is an on-going mapset request.
+        /// </summary>
+        public bool IsRequestingMapset => mapsetsRequest.Value != null;
+
+        /// <summary>
         /// Returns the mapset search option holder instance.
         /// </summary>
         public SearchOptions Options { get; private set; }
