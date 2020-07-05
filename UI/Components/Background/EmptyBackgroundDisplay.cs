@@ -1,3 +1,4 @@
+using PBGame.UI.Models.Background;
 using PBGame.Maps;
 using PBFramework.Graphics;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace PBGame.UI.Components.Background
         public Color Color { get; set; }
 
         public float Alpha { get; set; }
+
+        public BackgroundType Type => BackgroundType.Empty;
 
 
         public void MountBackground(IMapBackground background)

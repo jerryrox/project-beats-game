@@ -1,3 +1,4 @@
+using PBGame.UI.Models.Background;
 using PBGame.Maps;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -21,6 +22,8 @@ namespace PBGame.UI.Components.Background
             get => canvasGroup.alpha;
             set => canvasGroup.alpha = value;
         }
+
+        public abstract BackgroundType Type { get; }
 
         public abstract Color Color { get; set; }
 
