@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
@@ -21,7 +22,7 @@ namespace PBGame.UI.Components.Songs
 
 
         [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private SongsModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -57,38 +58,21 @@ namespace PBGame.UI.Components.Songs
                     button.SortType = sortType;
                     button.LabelText = sortType.ToString();
 
-                    button.OnTriggered += () => SetSort(button.SortType);
+                    button.OnTriggered += () => Model.SetSort(button.SortType);
                 }
                 sortButtons.Add(button);
             }
 
-            // Set initial selection
-            SetSort(GameConfiguration.MapsetSort.Value);
+            Model.SortType.OnNewValue += OnSortTypeChange;
         }
 
         /// <summary>
-        /// Sets the sorting method of the mapsets.
+        /// Event called from model when the sorting type has changed.
         /// </summary>
-        public void SetSort(MapsetSortType sort)
+        private void OnSortTypeChange(MapsetSortType type)
         {
-            // Apply on button.
             for (int i = 0; i < sortButtons.Count; i++)
-                sortButtons[i].IsFocused = sortButtons[i].SortType == sort;
-
-            // Notify change
-            OnSortChange(sort);
-        }
-
-        /// <summary>
-        /// Event called when the current sort type has been changed.
-        /// </summary>
-        private void OnSortChange(MapsetSortType sort)
-        {
-            if (GameConfiguration.MapsetSort.Value != sort)
-            {
-                GameConfiguration.MapsetSort.Value = sort;
-                GameConfiguration.Save();
-            }
+                sortButtons[i].IsFocused = sortButtons[i].SortType == type;
         }
     }
 }
