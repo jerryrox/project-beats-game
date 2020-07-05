@@ -1,9 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Components.Common.Dropdown;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
+using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
+using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Graphics;
 using PBFramework.Threading;
@@ -16,6 +20,16 @@ namespace PBGame.UI.Models
     public class SongsModel : BaseModel {
 
         /// <summary>
+        /// Deletion action represented in the dropdown menu.
+        /// </summary>
+        private const int SongDeleteAction = 0;
+
+        /// <summary>
+        /// Offset action represented in the dropdown menu.
+        /// </summary>
+        private const int SongOffsetAction = 1;
+
+        /// <summary>
         /// Amount of delay to add before automatically filtering the results even when not submitted.
         /// </summary>
         private const float SearchDelay = 1f;
@@ -25,11 +39,26 @@ namespace PBGame.UI.Models
         private ITimer searchScheduler;
         private string scheduledTerm;
 
+        private Bindable<List<IMapset>> mapsets;
+
+        private IMapset mapsetForDropdown;
+        private DropdownContext dropdownContext;
+
 
         /// <summary>
         /// Returns the current mapset sorting type.
         /// </summary>
         public IReadOnlyBindable<MapsetSortType> SortType => sortType;
+
+        /// <summary>
+        /// Returns the list of maps that should be displayed in the list.
+        /// </summary>
+        public IReadOnlyBindable<List<IMapset>> Mapsets => mapsets;
+
+        /// <summary>
+        /// Returns the currently selected mapset.
+        /// </summary>
+        public IReadOnlyBindable<IMapset> SelectedMapset => MapSelection.Mapset;
 
         /// <summary>
         /// Returns the last search term used for filtering.
@@ -45,6 +74,12 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
+        [ReceivesDependency]
+        private IDropdownProvider DropdownProvider { get; set; }
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -55,6 +90,12 @@ namespace PBGame.UI.Models
                 Limit = SearchDelay
             };
             searchScheduler.OnFinished += OnSearchSchedulerEnd;
+
+            // Init dropdown context.
+            dropdownContext = new DropdownContext() { IsSelectionMenu = false };
+            dropdownContext.OnSelection += OnDropdownSelection;
+            dropdownContext.Datas.Add(new DropdownData("Offset", SongOffsetAction));
+            dropdownContext.Datas.Add(new DropdownData("Delete", SongDeleteAction));
 
             // Set initial selection
             SetSort(GameConfiguration.MapsetSort.Value);
@@ -108,6 +149,26 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Triggers the dropdown menu to show for specified mapset.
+        /// </summary>
+        public void TriggerDropdown(IMapset mapset, Vector2 worldPos)
+        {
+            if(mapset == null)
+                return;
+
+            mapsetForDropdown = mapset;
+            DropdownProvider.OpenAt(dropdownContext, worldPos);
+        }
+
+        /// <summary>
+        /// Returns the index of the currently selected mapset within the visible mapsets list.
+        /// </summary>
+        public int GetSelectedMapsetIndex()
+        {
+            return mapsets.Value.IndexOf(SelectedMapset.Value);
+        }
+
+        /// <summary>
         /// Stops any scheduled search.
         /// </summary>
         private void StopScheduledSearch()
@@ -124,6 +185,31 @@ namespace PBGame.UI.Models
         {
             if(scheduledTerm != null)
                 ApplySearch(scheduledTerm);
+        }
+
+        /// <summary>
+        /// Event called from dropdown context when a menu iten has been selected.
+        /// </summary>
+        private void OnDropdownSelection(DropdownData data)
+        {
+            if (mapsetForDropdown == null)
+                return;
+
+            int action = (int)data.ExtraData;
+            switch (action)
+            {
+                case SongDeleteAction:
+                    // TODO: Come back when mapset deletion is implemented.
+                    Debug.LogWarning("Delete mapset: " + mapsetForDropdown.Metadata.Title);
+                    break;
+                case SongOffsetAction:
+                    // If not the selected mapset, make it selected.
+                    if(mapsetForDropdown != MapSelection.Mapset.Value)
+                        MapSelection.SelectMapset(mapsetForDropdown);
+                    // Now show the offsets overlay.
+                    OverlayNavigator.Show<OffsetsOverlay>().Setup();
+                    break;
+            }
         }
     }
 }
