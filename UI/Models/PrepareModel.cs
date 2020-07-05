@@ -7,13 +7,11 @@ using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
-using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Models
 {
@@ -77,6 +75,32 @@ namespace PBGame.UI.Models
         public void SetDetailedMode(bool isDetailed) => isDetailedMode.Value = isDetailed;
 
         /// <summary>
+        /// Selects the next map in the map list.
+        /// </summary>
+        public void SelectNextMap()
+        {
+            var maps = mapList.Value;
+            int index = GetSelectedMapIndex() + 1;
+            if(index >= maps.Count)
+                MapSelection.SelectMap(maps[0]);
+            else
+                MapSelection.SelectMap(maps[index]);
+        }
+
+        /// <summary>
+        /// Selects the previous map in the map list.
+        /// </summary>
+        public void SelectPrevMap()
+        {
+            var maps = mapList.Value;
+            int index = GetSelectedMapIndex() - 1;
+            if(index < 0)
+                MapSelection.SelectMap(maps[maps.Count - 1]);
+            else
+                MapSelection.SelectMap(maps[index]);
+        }
+
+        /// <summary>
         /// Navigates back to songs screen.
         /// </summary>
         public void NavigateToSongs() => ScreenNavigator.Show<SongsScreen>();
@@ -88,6 +112,16 @@ namespace PBGame.UI.Models
         {
             ScreenNavigator.Hide<PrepareScreen>();
             OverlayNavigator.Show<GameLoadOverlay>();
+        }
+
+        /// <summary>
+        /// Returns the index of the selected map.
+        /// </summary>
+        public int GetSelectedMapIndex()
+        {
+            var maps = mapList.Value;
+            var curMap = SelectedMap.Value.OriginalMap;
+            return maps.IndexOf(curMap);
         }
 
         protected override void OnPreShow()
