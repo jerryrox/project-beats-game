@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Models;
-using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Search
 {
