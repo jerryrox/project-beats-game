@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Rulesets;
 using PBGame.Networking.Maps;
@@ -18,6 +19,11 @@ namespace PBGame.UI.Components.Download.Search
         private WebTexture bannerTexture;
         private IGrid grid;
         private Blocker blocker;
+        private DropdownFilter modeFilter;
+        private DropdownFilter genreFilter;
+        private DropdownFilter languageFilter;
+        private ToggleFilter hasVideoFilter;
+        private ToggleFilter hasStoryboardFilter;
 
 
         public bool IsInteractible
@@ -27,7 +33,7 @@ namespace PBGame.UI.Components.Download.Search
         }
 
         [ReceivesDependency]
-        private DownloadState State { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -49,30 +55,25 @@ namespace PBGame.UI.Components.Download.Search
                 grid.SpaceHeight = 16f;
                 grid.Limit = 0;
 
-                var modeFilter = grid.CreateChild<DropdownFilter>("mode", 0);
+                modeFilter = grid.CreateChild<DropdownFilter>("mode", 0);
                 {
                     modeFilter.LabelText = "Mode";
-                    modeFilter.Setup<GameModeType>(State.Mode);
                 }
-                var genreFilter = grid.CreateChild<DropdownFilter>("genre", 2);
+                genreFilter = grid.CreateChild<DropdownFilter>("genre", 2);
                 {
                     genreFilter.LabelText = "Genre";
-                    genreFilter.Setup<MapGenreType>(State.Genre);
                 }
-                var languageFilter = grid.CreateChild<DropdownFilter>("language", 3);
+                languageFilter = grid.CreateChild<DropdownFilter>("language", 3);
                 {
                     languageFilter.LabelText = "Language";
-                    languageFilter.Setup<MapLanguageType>(State.Language);
                 }
-                var hasVideoFilter = grid.CreateChild<ToggleFilter>("hasVideo", 4);
+                hasVideoFilter = grid.CreateChild<ToggleFilter>("hasVideo", 4);
                 {
                     hasVideoFilter.LabelText = "Has Video";
-                    hasVideoFilter.Setup(State.HasVideo);
                 }
-                var hasStoryboardFilter = grid.CreateChild<ToggleFilter>("hasStoryboard", 5);
+                hasStoryboardFilter = grid.CreateChild<ToggleFilter>("hasStoryboard", 5);
                 {
                     hasStoryboardFilter.LabelText = "Has Storyboard";
-                    hasStoryboardFilter.Setup(State.HasStoryboard);
                 }
             }
             blocker = CreateChild<Blocker>("blocker", 2);
@@ -88,13 +89,21 @@ namespace PBGame.UI.Components.Download.Search
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            State.Results.BindAndTrigger(OnResultsChange);
+
+            modeFilter.Setup<GameModeType>(Model.Options.Mode);
+            genreFilter.Setup<MapGenreType>(Model.Options.Genre);
+            languageFilter.Setup<MapLanguageType>(Model.Options.Language);
+            hasVideoFilter.Setup(Model.Options.HasVideo);
+            hasStoryboardFilter.Setup(Model.Options.HasStoryboard);
+
+            Model.MapsetList.BindAndTrigger(OnResultsChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            State.Results.OnValueChanged -= OnResultsChange;
+
+            Model.MapsetList.OnNewValue -= OnResultsChange;
         }
 
         /// <summary>
@@ -116,11 +125,8 @@ namespace PBGame.UI.Components.Download.Search
         /// <summary>
         /// Event called on result mapset list change.
         /// </summary>
-        private void OnResultsChange(List<OnlineMapset> mapsets, List<OnlineMapset> _)
+        private void OnResultsChange(List<OnlineMapset> mapsets)
         {
-            if(State.IsRequestingNextPage)
-                return;
-                
             bannerTexture.Unload();
             if(mapsets != null && mapsets.Count > 0)
                 bannerTexture.Load(mapsets[0].CoverImage);
