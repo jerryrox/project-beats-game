@@ -184,6 +184,8 @@ namespace PBGame.UI.Models
             RankDisplay.OnNewValue -= OnRankDisplayChange;
 
             mapsetDescription.Value = "";
+            // TODO: Stop mapset description api request
+            // TODO: Stop rankings request
         }
 
         /// <summary>
