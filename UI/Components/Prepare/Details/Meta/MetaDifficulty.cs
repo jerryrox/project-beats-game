@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using PBGame.UI.Models;
-using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Graphics;
