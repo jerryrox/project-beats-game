@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Download.Search
             context = new DropdownContext();
             context.OnSelection += (data) =>
             {
-                if(bindable != null && data != null && bindable.RawValue.ToString().Equals(data.ExtraData.ToString()))
+                if(bindable != null && data != null && !bindable.RawValue.ToString().Equals(data.ExtraData.ToString()))
                     bindable.RawValue = data.ExtraData;
             };
 
