@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Networking.Maps;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Search
 {
@@ -19,18 +15,19 @@ namespace PBGame.UI.Components.Download.Search
 
 
         [ReceivesDependency]
-        private DownloadState State { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
             context = new DropdownContext();
-            context.ImportFromEnum<MapCategoryType>(State.Category.Value);
+            context.ImportFromEnum<MapCategoryType>(Model.Options.Category.Value);
             context.OnSelection += (data) =>
             {
-                if(data != null && State.Category.RawValue.ToString() != data.ExtraData.ToString())
-                    State.Category.RawValue = data.ExtraData;
+                var category = Model.Options.Category;
+                if(data != null && !category.RawValue.ToString().Equals(data.ExtraData.ToString()))
+                    category.RawValue = data.ExtraData;
             };
 
             label.Text = "Rank state";
@@ -52,14 +49,14 @@ namespace PBGame.UI.Components.Download.Search
         {
             base.OnEnableInited();
 
-            State.Category.BindAndTrigger(OnRankStateChange);
+            Model.Options.Category.BindAndTrigger(OnRankStateChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            State.Category.OnNewValue -= OnRankStateChange;
+            Model.Options.Category.OnNewValue -= OnRankStateChange;
         }
 
         /// <summary>
