@@ -61,6 +61,8 @@ namespace PBGame.UI.Components.Download.Search
         public void Setup<T>(IBindable bindable)
             where T : Enum
         {
+            UnbindEvents();
+
             // Reset previous context.
             context.Datas.Clear();
             context.SelectData(null);
@@ -87,6 +89,9 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
+            if(bindable == null)
+                return;
+                
             bindable.OnNewRawValue -= OnFilterValueChange;
         }
 

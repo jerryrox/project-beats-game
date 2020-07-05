@@ -61,6 +61,8 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         public void Setup(BindableBool bindable)
         {
+            UnbindEvents();
+
             AdjustTouchArea();
 
             this.bindable = bindable;
@@ -97,6 +99,9 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
+            if(bindable == null)
+                return;
+                
             bindable.OnNewValue -= OnBoolValueChange;
         }
 
