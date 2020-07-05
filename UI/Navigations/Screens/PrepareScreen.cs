@@ -1,3 +1,4 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Prepare;
 using PBGame.Graphics;
 using PBFramework.Graphics;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class PrepareScreen : BaseScreen, IPrepareScreen {
+    public class PrepareScreen : BaseScreen<PrepareModel>, IPrepareScreen {
 
         private const float InfoDetailedYDiff = 720f - 640f;
         private const float InfoBriefY = 250f;
@@ -26,9 +27,6 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
-            // Cache this container for inner component.
-            Dependencies.CacheAs<IPrepareScreen>(this);
-
             infoContainer = CreateChild<InfoContainer>("info", 0);
             {
                 infoContainer.Anchor = AnchorType.BottomStretch;
@@ -58,23 +56,15 @@ namespace PBGame.UI.Navigations.Screens
                 .AddTime(0.25f, InfoBriefY)
                 .Build();
 
-            OnEnableInited();
+            model.IsDetailedMode.BindAndTrigger(OnDetailedModeChange);
         }
 
-        protected override void OnEnableInited()
+        /// <summary>
+        /// Event called when the detailed information display mode is changed.
+        /// </summary>
+        private void OnDetailedModeChange(bool isDetailed)
         {
-            base.OnEnableInited();
-
-            // For the info container in brief mode.
-            isInfoDetailed = false;
-            infoContainer.Y = InfoBriefY;
-        }
-
-        public void ToggleInfoDetail()
-        {
-            isInfoDetailed = !isInfoDetailed;
-
-            if (isInfoDetailed)
+            if (isDetailed)
             {
                 infoBriefAni.Stop();
                 infoDetailAni.PlayFromStart();
