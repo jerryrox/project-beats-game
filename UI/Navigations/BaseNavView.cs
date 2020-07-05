@@ -14,9 +14,11 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations
 {
-    public abstract class BaseNavView : UguiNavigationView, INavigationView {
+    public abstract class BaseNavView<TModel> : UguiNavigationView, INavigationView
+        where TModel : class, IModel
+    {
 
-        protected IModel model;
+        protected TModel model;
 
         private float? menuBarHeight = null;
 
@@ -79,6 +81,6 @@ namespace PBGame.UI.Navigations
         /// <summary>
         /// Creates a new UI model for this view.
         /// </summary>
-        protected virtual IModel CreateModel() { return null; }
+        protected abstract TModel CreateModel();
     }
 }

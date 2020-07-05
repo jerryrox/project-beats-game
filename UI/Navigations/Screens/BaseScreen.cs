@@ -1,10 +1,13 @@
+using PBGame.UI.Models;
 using PBGame.Animations;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public abstract class BaseScreen : BaseNavView {
+    public abstract class BaseScreen<TModel> : BaseNavView<TModel>
+        where TModel : class, IModel
+    {
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {
