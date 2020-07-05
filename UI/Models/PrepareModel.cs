@@ -136,6 +136,15 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Sets the type of rank display source.
+        /// </summary>
+        public void SetRankDisplay(RankDisplayType type)
+        {
+            GameConfiguration.RankDisplay.Value = type;
+            GameConfiguration.Save();
+        }
+
+        /// <summary>
         /// Returns the index of the selected map.
         /// </summary>
         public int GetSelectedMapIndex()
