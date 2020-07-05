@@ -37,8 +37,6 @@ namespace PBGame.UI.Navigations.Screens
             model.IsHomeMenuShown.OnNewValue += OnHomeMenuToggle;
         }
 
-        protected override HomeModel CreateModel() => new HomeModel();
-
         /// <summary>
         /// Event called from model when the home menu overlay's toggle state has changed.
         /// </summary>

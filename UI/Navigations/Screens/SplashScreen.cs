@@ -24,7 +24,5 @@ namespace PBGame.UI.Navigations.Screens
             base.OnPostShow();
             model.WaitSplash();
         }
-
-        protected override SplashModel CreateModel() => new SplashModel();
     }
 }

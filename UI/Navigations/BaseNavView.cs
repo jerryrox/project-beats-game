@@ -15,7 +15,7 @@ using UnityEngine.UI;
 namespace PBGame.UI.Navigations
 {
     public abstract class BaseNavView<TModel> : UguiNavigationView, INavigationView
-        where TModel : class, IModel
+        where TModel : class, IModel, new()
     {
 
         protected TModel model;
@@ -69,18 +69,11 @@ namespace PBGame.UI.Navigations
                 myTransform.ResetTransform();
             }
 
-            model = CreateModel();
-            if(model == null)
-                throw new NullReferenceException("A navigation view's model mustn't be null!");
+            model = new TModel();
             Dependencies.Cache(model);
 
             Depth = ViewDepth;
         }
-
-        /// <summary>
-        /// Creates a new UI model for this view.
-        /// </summary>
-        protected abstract TModel CreateModel();
 
         protected override void OnPreShow()
         {

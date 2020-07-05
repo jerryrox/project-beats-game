@@ -58,8 +58,6 @@ namespace PBGame.UI.Navigations.Screens
             model.StartLoad();
         }
 
-        protected override InitializeModel CreateModel() => new InitializeModel();
-
         /// <summary>
         /// Event called from logo display when startup animation has finished.
         /// </summary>

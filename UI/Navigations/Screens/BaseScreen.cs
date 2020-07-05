@@ -6,7 +6,7 @@ using PBFramework.Dependencies;
 namespace PBGame.UI.Navigations.Screens
 {
     public abstract class BaseScreen<TModel> : BaseNavView<TModel>
-        where TModel : class, IModel
+        where TModel : class, IModel, new()
     {
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
