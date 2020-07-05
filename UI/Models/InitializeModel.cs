@@ -81,9 +81,9 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
-        /// Event called from screen when the logo ending animation has finished.
+        /// Navigates away to the next view.
         /// </summary>
-        public void OnLogoEnd()
+        public void NavigateToNext()
         {
             OverlayNavigator.Show<SystemOverlay>();
             OverlayNavigator.Show<BackgroundOverlay>();

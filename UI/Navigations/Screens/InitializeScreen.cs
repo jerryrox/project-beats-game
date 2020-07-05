@@ -35,7 +35,7 @@ namespace PBGame.UI.Navigations.Screens
                 LogoDisplay.Size = new Vector2(320f, 320f);
 
                 LogoDisplay.OnStartup = OnLogoStartup;
-                LogoDisplay.OnEnd = model.OnLogoEnd;
+                LogoDisplay.OnEnd = model.NavigateToNext;
             }
 
             // Initialize load displayer,
