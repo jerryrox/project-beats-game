@@ -44,6 +44,21 @@ namespace PBGame.UI.Components.Common.Dropdown
         }
 
         /// <summary>
+        /// Invokes selection of the dropdown data matching the specified text.
+        /// </summary>
+        public void SelectDataWithText(string key)
+        {
+            for (int i = 0; i < Datas.Count; i++)
+            {
+                if (Datas[i].Text.Equals(key, StringComparison.Ordinal))
+                {
+                    SelectData(Datas[i]);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
         /// Imports data from specified enum.
         /// </summary>
         public void ImportFromEnum<T>(T initialValue = default)
