@@ -49,6 +49,11 @@ namespace PBGame.UI.Models
         /// </summary>
         public SearchOptions Options { get; private set; }
 
+        /// <summary>
+        /// Returns the api provider instance related to current option's provider.
+        /// </summary>
+        public IApiProvider SelectedProvider => Api.GetProvider(Options.ApiProvider.Value);
+
         [ReceivesDependency]
         private IWebMusicCacher MusicCacher { get; set; }
 
