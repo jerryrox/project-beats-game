@@ -160,6 +160,14 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Returns the sprite name of the api provider icon.
+        /// </summary>
+        public string GetProviderIcon(ApiProviderType type)
+        {
+            return Api.GetProvider(type).IconName;
+        }
+
+        /// <summary>
         /// Resets search option to initial state.
         /// </summary>
         private void ResetOptions()

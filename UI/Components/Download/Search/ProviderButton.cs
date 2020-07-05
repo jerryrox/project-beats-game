@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBGame.Networking.API;
@@ -21,7 +22,7 @@ namespace PBGame.UI.Components.Download.Search
         private IApi Api { get; set; }
 
         [ReceivesDependency]
-        private DownloadState State { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -29,7 +30,7 @@ namespace PBGame.UI.Components.Download.Search
         {
             OnTriggered += () =>
             {
-                State.ApiProvider.Value = provider;
+                Model.Options.ApiProvider.Value = provider;
             };
 
             highlightSprite.Color = colorPreset.SecondaryFocus;
@@ -53,13 +54,15 @@ namespace PBGame.UI.Components.Download.Search
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+            
+            Model.Options.ApiProvider.BindAndTrigger(OnProviderChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
+            
+            Model.Options.ApiProvider.OnNewValue -= OnProviderChange;
         }
 
         /// <summary>
@@ -68,27 +71,9 @@ namespace PBGame.UI.Components.Download.Search
         public void SetProvider(ApiProviderType provider)
         {
             this.provider = provider;
-
-            var api = Api.GetProvider(provider);
-            iconSprite.SpriteName = api.IconName;
+            iconSprite.SpriteName = Model.GetProviderIcon(provider);
             
             RefreshFocus();
-        }
-
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            State.ApiProvider.BindAndTrigger(OnProviderChange);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            State.ApiProvider.OnNewValue -= OnProviderChange;
         }
 
         /// <summary>
@@ -96,7 +81,7 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void RefreshFocus()
         {
-            IsFocused = this.provider == State.ApiProvider.Value;
+            IsFocused = (this.provider == Model.Options.ApiProvider.Value);
         }
 
         /// <summary>
