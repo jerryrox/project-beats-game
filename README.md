@@ -19,6 +19,8 @@ Slowly making progress 🧩
 ### 0.9.4 (WIP)
 #### New features
 - Added ability to test using localhost api server.
+#### Changes
+- Abstracted away shared logics of BaseScreen/BaseOverlay views into BaseNavView.
 
 ### 0.9.3
 #### New features
