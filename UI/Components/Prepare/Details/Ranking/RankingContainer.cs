@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
-using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
@@ -19,10 +16,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
 
         [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
-
-        [ReceivesDependency]
-        private IModeManager ModeManager { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -57,58 +51,34 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.RankList.BindAndTrigger(OnRankListChange);
+            Model.GameMode.BindAndTrigger(OnGameModeChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
+
+            Model.RankList.OnNewValue -= OnRankListChange;
+            Model.GameMode.OnNewValue -= OnGameModeChange;
         }
 
         /// <summary>
         /// Starts reloading ranking info cells from appropriate sources.
         /// </summary>
-        private void ReloadRankInfos()
+        private void OnRankListChange(List<IRankInfo> rankings)
         {
             rankingList.Clear();
-            
-            // TODO: Load rank infos from appropriate sources.
-            // rankingList
-        }
-
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            GameConfiguration.RulesetMode.OnValueChanged += OnGameModeChange;
-            GameConfiguration.RankDisplay.OnValueChanged += OnRankDisplayChange;
-
-            OnGameModeChange(GameConfiguration.RulesetMode.Value);
-        }
-
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            GameConfiguration.RulesetMode.OnValueChanged -= OnGameModeChange;
-            GameConfiguration.RankDisplay.OnValueChanged -= OnRankDisplayChange;
+            rankingList.Setup(rankings);
         }
 
         /// <summary>
         /// Event called on game mode configuration change.
         /// </summary>
-        private void OnGameModeChange(GameModeType newMode, GameModeType oldMode = GameModeType.BeatsStandard)
+        private void OnGameModeChange(GameModeType newMode)
         {
-            column.RefreshColumns(ModeManager.GetService(newMode));
-            ReloadRankInfos();
-        }
-
-        private void OnRankDisplayChange(RankDisplayType newType, RankDisplayType oldType = RankDisplayType.Local)
-        {
-            ReloadRankInfos();
+            column.RefreshColumns(Model.GetSelectedModeService());
         }
     }
 }

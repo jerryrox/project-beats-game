@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Data.Rankings;
 using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
@@ -20,6 +21,7 @@ namespace PBGame.UI.Models
         private BindableBool isDetailedMode = new BindableBool(false);
         private Bindable<List<IOriginalMap>> mapList = new Bindable<List<IOriginalMap>>();
         private Bindable<string> mapsetDescription = new Bindable<string>("");
+        private Bindable<List<IRankInfo>> rankList = new Bindable<List<IRankInfo>>();
 
 
         /// <summary>
@@ -48,9 +50,19 @@ namespace PBGame.UI.Models
         public IReadOnlyBindable<GameModeType> GameMode => GameConfiguration.RulesetMode;
 
         /// <summary>
+        /// Returns the currently selected rank display type.
+        /// </summary>
+        public IReadOnlyBindable<RankDisplayType> RankDisplay => GameConfiguration.RankDisplay;
+
+        /// <summary>
         /// Returns the list of maps included in the selected mapset.
         /// </summary>
         public IReadOnlyBindable<List<IOriginalMap>> MapList => mapList;
+
+        /// <summary>
+        /// Returns the list of ranks loaded.
+        /// </summary>
+        public IReadOnlyBindable<List<IRankInfo>> RankList => rankList;
 
         /// <summary>
         /// Returns the description of the mapset.
@@ -68,6 +80,9 @@ namespace PBGame.UI.Models
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IModeManager ModeManager { get; set; }
 
 
         /// <summary>
@@ -130,14 +145,24 @@ namespace PBGame.UI.Models
             return maps.IndexOf(curMap);
         }
 
+        /// <summary>
+        /// Returns the mode servicer for currently selected game mode.
+        /// </summary>
+        public IModeService GetSelectedModeService() => ModeManager.GetService(GameMode.Value);
+
         protected override void OnPreShow()
         {
             base.OnPreShow();
 
-            SelectedMapset.BindAndTrigger(OnMapsetChange);
+            SelectedMapset.OnNewValue += OnMapsetChange;
+            SelectedMap.OnNewValue += OnMapChange;
             GameMode.OnNewValue += OnGameModeChange;
+            RankDisplay.OnNewValue += OnRankDisplayChange;
 
             SetDetailedMode(false);
+            SetMapList();
+            RequestMapsetDescription();
+            RequestRankings();
         }
 
         protected override void OnPreHide()
@@ -145,7 +170,9 @@ namespace PBGame.UI.Models
             base.OnPreHide();
 
             SelectedMapset.OnNewValue -= OnMapsetChange;
+            SelectedMap.OnNewValue -= OnMapChange;
             GameMode.OnNewValue -= OnGameModeChange;
+            RankDisplay.OnNewValue -= OnRankDisplayChange;
 
             mapsetDescription.Value = "";
         }
@@ -174,6 +201,23 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Requests for the ranking list.
+        /// </summary>
+        private void RequestRankings()
+        {
+            rankList.Value = new List<IRankInfo>();
+            // TODO:
+        }
+
+        /// <summary>
+        /// Event called on current map change.
+        /// </summary>
+        private void OnMapChange(IPlayableMap map)
+        {
+            RequestRankings();
+        }
+
+        /// <summary>
         /// Event called on current mapset change.
         /// </summary>
         private void OnMapsetChange(IMapset mapset)
@@ -185,6 +229,18 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called on game mode change.
         /// </summary>
-        private void OnGameModeChange(GameModeType mode) => SetMapList();
+        private void OnGameModeChange(GameModeType mode)
+        {
+            SetMapList();
+            RequestRankings();
+        }
+
+        /// <summary>
+        /// Event clled on rank display change.
+        /// </summary>
+        private void OnRankDisplayChange(RankDisplayType type)
+        {
+            RequestRankings();
+        }
     }
 }
