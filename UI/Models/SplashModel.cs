@@ -5,7 +5,7 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Models
 {
-    public class SplashModel : IModel {
+    public class SplashModel : BaseModel {
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }

@@ -16,7 +16,7 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Models
 {
-    public class InitializeModel : IModel {
+    public class InitializeModel : BaseModel {
 
         private Bindable<string> state = new Bindable<string>("");
         private BindableFloat progress = new BindableFloat(0f);
