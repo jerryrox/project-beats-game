@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Networking.Maps;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Search
 {
@@ -20,18 +16,19 @@ namespace PBGame.UI.Components.Download.Search
 
 
         [ReceivesDependency]
-        private DownloadState State { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
             context = new DropdownContext();
-            context.ImportFromEnum<MapSortType>(State.Sort.Value);
+            context.ImportFromEnum<MapSortType>(Model.Options.Sort.Value);
             context.OnSelection += (data) =>
             {
-                if(data != null && State.Sort.RawValue.ToString() != data.ExtraData.ToString())
-                    State.Sort.RawValue = data.ExtraData;
+                var sort = Model.Options.Sort;
+                if(data != null && !sort.RawValue.ToString().Equals(data.ExtraData.ToString()))
+                    sort.RawValue = data.ExtraData;
             };
 
             label.Text = "Sort by";
@@ -55,7 +52,7 @@ namespace PBGame.UI.Components.Download.Search
 
                 toggle.LabelText = "Descending";
 
-                toggle.OnTriggered += () => State.IsDescending.Value = !State.IsDescending.Value;
+                toggle.OnTriggered += Model.Options.ToggleIsDescending;
             }
 
             OnEnableInited();
@@ -65,16 +62,16 @@ namespace PBGame.UI.Components.Download.Search
         {
             base.OnEnableInited();
 
-            State.IsDescending.BindAndTrigger(OnIsDescendingChange);
-            State.Sort.BindAndTrigger(OnSortChange);
+            Model.Options.IsDescending.BindAndTrigger(OnIsDescendingChange);
+            Model.Options.Sort.BindAndTrigger(OnSortChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            State.IsDescending.OnNewValue -= OnIsDescendingChange;
-            State.Sort.OnNewValue -= OnSortChange;
+            Model.Options.IsDescending.OnNewValue -= OnIsDescendingChange;
+            Model.Options.Sort.OnNewValue -= OnSortChange;
         }
 
         /// <summary>
@@ -91,6 +88,9 @@ namespace PBGame.UI.Components.Download.Search
         private void OnSortChange(MapSortType type)
         {
             dropdown.LabelText = type.ToString();
+
+            // Making sure the dropdown selection is synchronized with the option.
+            context.SelectDataWithText(type.ToString());
         }
     }
 }

@@ -69,5 +69,14 @@ namespace PBGame.UI.Models.Download
         /// Returns the current search term.
         /// </summary>
         public Bindable<string> SearchTerm { get; } = new Bindable<string>("");
+
+
+        /// <summary>
+        /// Toggles IsDescending value on/off.
+        /// </summary>
+        public void ToggleIsDescending()
+        {
+            IsDescending.Value = !IsDescending.Value;
+        }
     }
 }
