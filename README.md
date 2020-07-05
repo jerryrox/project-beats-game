@@ -19,6 +19,8 @@ Slowly making progress 🧩
 ### 0.9.4 (WIP)
 #### New features
 - Added ability to test using localhost api server.
+#### Fixes
+- Fixed input box's hover sprite being able to receive raycast.
 
 ### 0.9.3
 #### New features
