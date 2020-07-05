@@ -199,6 +199,24 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Returns whether the specified mapset is a previewing mapset.
+        /// </summary>
+        public bool IsPreviewingMapset(OnlineMapset mapset)
+        {
+            return mapset != null && mapset == previewingMapset.Value;
+        }
+
+        /// <summary>
+        /// Returns the music preview progress value for specified mapset.
+        /// </summary>
+        public float GetPreviewProgress(OnlineMapset mapset)
+        {
+            if(!IsPreviewingMapset(mapset))
+                return 0f;
+            return MusicController.Progress;
+        }
+
+        /// <summary>
         /// Returns the sprite name of the api provider icon.
         /// </summary>
         public string GetProviderIcon(ApiProviderType type)
