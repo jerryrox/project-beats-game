@@ -55,8 +55,18 @@ namespace PBGame.UI.Navigations.Screens
                 .AddTime(0f, () => infoContainer.Y)
                 .AddTime(0.25f, InfoBriefY)
                 .Build();
+        }
 
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
             model.IsDetailedMode.BindAndTrigger(OnDetailedModeChange);
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            model.IsDetailedMode.OnNewValue -= OnDetailedModeChange;
         }
 
         /// <summary>

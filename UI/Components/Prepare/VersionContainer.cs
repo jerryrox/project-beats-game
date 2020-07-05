@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBGame.Rulesets;
@@ -20,21 +21,8 @@ namespace PBGame.UI.Components.Prepare
         private IListView versionList;
 
 
-        /// <summary>
-        /// Returns the current mapset selected.
-        /// </summary>
-        private IMapset CurMapset => MapSelection.Mapset.Value;
-
-        /// <summary>
-        /// Returns the list of original maps in current mapset.
-        /// </summary>
-        private List<IOriginalMap> MapList => CurMapset == null ? null : CurMapset.Maps;
-
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -72,41 +60,21 @@ namespace PBGame.UI.Components.Prepare
             }
 
             // Call after a frame due to unity ui limitations.
-            var timer = new SynchronizedTimer() { Limit = 0f, WaitFrameOnStart = true };
-            timer.OnFinished += delegate { OnEnableInited(); };
-            timer.Start();
+            InvokeAfterFrames(1, OnEnableInited);
         }
 
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.MapList.BindAndTrigger(OnMapListChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Mapset.OnNewValue += OnMapsetChange;
-            GameConfiguration.RulesetMode.OnValueChanged += OnModeChange;
-
-            RefreshList();
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Mapset.OnNewValue -= OnMapsetChange;
-            GameConfiguration.RulesetMode.OnValueChanged -= OnModeChange;
+            Model.MapList.OnNewValue -= OnMapListChange;
         }
 
         /// <summary>
@@ -125,9 +93,9 @@ namespace PBGame.UI.Components.Prepare
         /// </summary>
         private void SetupVersionCell(IListItem item)
         {
-            var maps = MapList;
+            var maps = Model.MapList.Value;
             var cell = item as VersionButton;
-            var gameMode = GameConfiguration.RulesetMode.Value;
+            var gameMode = Model.GameMode.Value;
 
             cell.Setup(maps[cell.ItemIndex].GetPlayable(gameMode));
         }
@@ -137,22 +105,13 @@ namespace PBGame.UI.Components.Prepare
         /// </summary>
         private void RefreshList()
         {
-            // Sort the maps list.
-            if(CurMapset != null)
-                CurMapset.SortMapsByMode(GameConfiguration.RulesetMode.Value);
-
-            versionList.TotalItems = MapList.Count;
+            versionList.TotalItems = Model.MapList.Value.Count;
             versionList.ForceUpdate();
         }
 
         /// <summary>
-        /// Event called on mapset selection change.
+        /// Event called on map list change.
         /// </summary>
-        private void OnMapsetChange(IMapset mapset) => RefreshList();
-
-        /// <summary>
-        /// Event called on game mode configuration change.
-        /// </summary>
-        private void OnModeChange(GameModeType gameMode, GameModeType _ = GameModeType.BeatsStandard) => RefreshList();
+        private void OnMapListChange(List<IOriginalMap> maps) => RefreshList();
     }
 }
