@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
+using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -56,6 +59,12 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
 
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
 
         /// <summary>
         /// Toggles between detailed/brief information display mode.
@@ -66,6 +75,20 @@ namespace PBGame.UI.Models
         /// Sets the detailed/brief display mode.
         /// </summary>
         public void SetDetailedMode(bool isDetailed) => isDetailedMode.Value = isDetailed;
+
+        /// <summary>
+        /// Navigates back to songs screen.
+        /// </summary>
+        public void NavigateToSongs() => ScreenNavigator.Show<SongsScreen>();
+
+        /// <summary>
+        /// Navigates away toward game screen.
+        /// </summary>
+        public void NavigateToGame()
+        {
+            ScreenNavigator.Hide<PrepareScreen>();
+            OverlayNavigator.Show<GameLoadOverlay>();
+        }
 
         protected override void OnPreShow()
         {
