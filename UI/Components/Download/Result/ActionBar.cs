@@ -23,11 +23,6 @@ namespace PBGame.UI.Components.Download.Result
         private OnlineMapset mapset;
 
 
-        /// <summary>
-        /// Returns whether the previewing mapset is equal to mapset being represented.
-        /// </summary>
-        private bool IsPreviewing => mapset == Model.PreviewingMapset.Value;
-
         [ReceivesDependency]
         private DownloadModel Model { get; set; }
 
@@ -101,9 +96,9 @@ namespace PBGame.UI.Components.Download.Result
         /// <summary>
         /// Event called on previewing mapset change.
         /// </summary>
-        private void OnPreviewMapsetChange(OnlineMapset mapset)
+        private void OnPreviewMapsetChange(OnlineMapset newMapset)
         {
-            playButton.IconName = IsPreviewing ? "icon-stop" : "icon-play";
+            playButton.IconName = Model.IsPreviewingMapset(this.mapset) ? "icon-stop" : "icon-play";
         }
     }
 }
