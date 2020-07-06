@@ -37,6 +37,8 @@ namespace PBGame.UI.Navigations.Screens
         private IExplicitPromise gameLoader;
 
 
+        public IGameSession CurSession => curSession;
+
         public bool IsGameLoaded { get; private set; }
 
         public bool IsLoading => gameLoader != null;
