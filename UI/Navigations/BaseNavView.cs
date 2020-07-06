@@ -17,11 +17,15 @@ namespace PBGame.UI.Navigations
     public abstract class BaseNavView<TModel> : UguiNavigationView, INavigationView
         where TModel : class, IModel, new()
     {
-
         protected TModel model;
 
         private float? menuBarHeight = null;
 
+
+        /// <summary>
+        /// Returns the model of the view.
+        /// </summary>
+        public TModel Model => model;
 
         /// <summary>
         /// Returns the height of the menu bar overlay's container.
