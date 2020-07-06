@@ -66,8 +66,8 @@ namespace PBGame
         {
             // Confirm quit
             var dialog = overlayNavigator.Show<DialogOverlay>();
-            dialog.SetMessage("Are you sure you want to quit Project: Beats?");
-            dialog.AddConfirmCancel(OnConfirmQuit, null);
+            dialog.Model.SetMessage("Are you sure you want to quit Project: Beats?");
+            dialog.Model.AddConfirmCancel(OnConfirmQuit, null);
         }
 
         public override void ForceQuit()
@@ -85,12 +85,7 @@ namespace PBGame
         /// </summary>
         private void OnConfirmQuit()
         {
-            var quitView = overlayNavigator.Show<QuitOverlay>();
-            quitView.OnQuitAniEnd += () =>
-            {
-                Debug.LogWarning("Quit");
-                base.ForceQuit();
-            };
+            overlayNavigator.Show<QuitOverlay>();
         }
 
         /// <summary>
