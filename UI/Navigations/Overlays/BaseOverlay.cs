@@ -6,7 +6,7 @@ using PBFramework.Dependencies;
 namespace PBGame.UI.Navigations.Overlays
 {
     public abstract class BaseOverlay<TModel> : BaseNavView<TModel>
-        where TModel : class, IModel
+        where TModel : class, IModel, new()
     {
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {

@@ -1,4 +1,5 @@
 using System;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Dialog;
 using PBGame.UI.Components.Common;
 using PBGame.Graphics;
@@ -10,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class DialogOverlay : BaseOverlay, IDialogOverlay {
+    public class DialogOverlay : BaseOverlay<DialogModel>, IDialogOverlay {
 
         private BlurDisplay blurDisplay;
         private ISprite bgSprite;
@@ -25,12 +26,6 @@ namespace PBGame.UI.Navigations.Overlays
         protected virtual bool IsDerived => false;
 
         protected override int ViewDepth => ViewDepths.DialogOverlay;
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IColorPreset ColorPreset { get; set; }
 
 
         [InitWithDependency]
@@ -68,55 +63,29 @@ namespace PBGame.UI.Navigations.Overlays
             }
             blocker = CreateChild<Blocker>("blocker", 4);
 
-            if(!IsDerived)
-                OnEnableInited();
+            OnEnableInited();
         }
 
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            blocker.Active = false;
+
+            model.IsShowing.BindAndTrigger(OnShowingChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            selectionHolder.RemoveSelections();
-        }
-
-        public void SetMessage(string message)
-        {
-            messageLabel.Text = message;
-        }
-
-        public void AddConfirmCancel(Action onConfirm = null, Action onCancel = null)
-        {
-            AddSelection("Confirm", ColorPreset.Positive, onConfirm);
-            AddSelection("Cancel", ColorPreset.Negative, onCancel);
-        }
-
-        public void AddSelection(string label, Color color, Action callback = null)
-        {
-            // Inject closing action.
-            Action newCallback = () =>
-            {
-                callback?.Invoke();
-                CloseOverlay();
-            };
-            selectionHolder.AddSelection(label, color, newCallback);
+            model.IsShowing.OnNewValue -= OnShowingChange;
         }
 
         /// <summary>
-        /// Closes this overlay.
+        /// Event called on isShowing state change.
         /// </summary>
-        private void CloseOverlay()
+        private void OnShowingChange(bool isShowing)
         {
-            if(HideAnime.IsPlaying)
-                return;
-
-            blocker.Active = true;
-            OverlayNavigator.Hide(this);
+            blocker.Active = !isShowing;
         }
     }
 }
