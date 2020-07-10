@@ -1,4 +1,4 @@
-using System;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.HomeMenu;
 using PBGame.UI.Navigations.Screens;
@@ -14,7 +14,7 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class HomeMenuOverlay : BaseOverlay, IHomeMenuOverlay {
+    public class HomeMenuOverlay : BaseOverlay<HomeMenuModel>, IHomeMenuOverlay {
 
         private GradientEffect gradientEffect;
 
@@ -32,18 +32,6 @@ namespace PBGame.UI.Navigations.Overlays
         public MenuButton DownloadButton { get; private set; }
 
         protected override int ViewDepth => ViewDepths.HomeMenuOverlay;
-
-        [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IScreenNavigator ScreenNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IGame Game { get; set; }
 
 
         [InitWithDependency]
@@ -106,49 +94,35 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnEnableInited();
 
-            MapSelection.Background.BindAndTrigger(OnBackgroundChange);
+            Model.Background.BindAndTrigger(OnBackgroundChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            MapSelection.Background.OnNewValue -= OnBackgroundChange;
+            Model.Background.OnNewValue -= OnBackgroundChange;
         }
 
         /// <summary>
         /// Event called on quit button press.
         /// </summary>
-        private void OnQuitButton()
-        {
-            Game.GracefulQuit();
-        }
+        private void OnQuitButton() => model.QuitGame();
 
         /// <summary>
         /// Event called on back button press.
         /// </summary>
-        private void OnBackButton()
-        {
-            OverlayNavigator.Hide(this);
-        }
+        private void OnBackButton() => model.HideMenu();
 
         /// <summary>
         /// Event called on play button press.
         /// </summary>
-        private void OnPlayButton()
-        {
-            ScreenNavigator.Show<SongsScreen>();
-            OverlayNavigator.Hide(this);
-        }
+        private void OnPlayButton() => model.PlayGame();
 
         /// <summary>
         /// Event called on download button press.
         /// </summary>
-        private void OnDownloadButton()
-        {
-            ScreenNavigator.Show<DownloadScreen>();
-            OverlayNavigator.Hide(this);
-        }
+        private void OnDownloadButton() => model.DownloadMaps();
 
         /// <summary>
         /// Event called when the map background has changed.
