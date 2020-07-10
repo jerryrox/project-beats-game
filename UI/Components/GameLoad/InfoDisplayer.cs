@@ -83,6 +83,8 @@ namespace PBGame.UI.Components.GameLoad
 
             Model.PreferUnicode.OnNewValue += OnPreferUnicodeChange;
             Model.SelectedMap.OnNewValue += OnMapChange;
+
+            SetupDisplays();
         }
 
         protected override void OnDisable()
