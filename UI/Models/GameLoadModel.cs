@@ -6,6 +6,7 @@ using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Rulesets;
+using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
@@ -35,6 +36,16 @@ namespace PBGame.UI.Models
         /// Returns the current game loading state.
         /// </summary>
         public IReadOnlyBindable<GameLoadState> LoadingState => loadingState;
+
+        /// <summary>
+        /// Returns whether unicode text is preferred.
+        /// </summary>
+        public IReadOnlyBindable<bool> PreferUnicode => GameConfiguration.PreferUnicode;
+
+        /// <summary>
+        /// Returns the currently selected map.
+        /// </summary>
+        public IReadOnlyBindable<IPlayableMap> SelectedMap => MapSelection.Map;
 
         [ReceivesDependency]
         public IMusicController MusicController { get; set; }

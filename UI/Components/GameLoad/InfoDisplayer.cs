@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Components.Common;
-using PBGame.Maps;
+using PBGame.UI.Models;
 using PBGame.Rulesets.Maps;
-using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Utils;
 using PBFramework.Graphics;
@@ -31,10 +26,7 @@ namespace PBGame.UI.Components.GameLoad
         public float HideAniDuration => hideAni.Duration;
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private GameLoadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -89,31 +81,19 @@ namespace PBGame.UI.Components.GameLoad
         {
             base.OnEnableInited();
 
-            BindEvents();
+            Model.PreferUnicode.OnNewValue += OnPreferUnicodeChange;
+            Model.SelectedMap.OnNewValue += OnMapChange;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+
+            Model.PreferUnicode.OnNewValue -= OnPreferUnicodeChange;
+            Model.SelectedMap.OnNewValue -= OnMapChange;
+
             showAni.Stop();
             hideAni.Stop();
-            UnbindEvents();
-        }
-
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            GameConfiguration.PreferUnicode.BindAndTrigger(OnPreferUnicodeChange);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicodeChange;
         }
 
         public void Show() => showAni.PlayFromStart();
@@ -125,7 +105,7 @@ namespace PBGame.UI.Components.GameLoad
         /// </summary>
         private void SetupDisplays()
         {
-            var map = MapSelection.Map.Value;
+            var map = Model.SelectedMap.Value;
             if (map == null)
             {
                 titleLabel.Text = "";
@@ -135,7 +115,7 @@ namespace PBGame.UI.Components.GameLoad
             }
             else
             {
-                var preferUnicode = GameConfiguration.PreferUnicode.Value;
+                var preferUnicode = Model.PreferUnicode.Value;
                 titleLabel.Text = map.Metadata.GetTitle(preferUnicode);
                 artistLabel.Text = map.Metadata.GetArtist(preferUnicode);
                 versionLabel.Text = map.Detail.Version;
@@ -179,9 +159,11 @@ namespace PBGame.UI.Components.GameLoad
         /// <summary>
         /// Event called on prefer unicode preference change.
         /// </summary>
-        private void OnPreferUnicodeChange(bool preferUnicode)
-        {
-            SetupDisplays();
-        }
+        private void OnPreferUnicodeChange(bool preferUnicode) => SetupDisplays();
+
+        /// <summary>
+        /// Event called on selected map change.
+        /// </summary>
+        private void OnMapChange(IPlayableMap map) => SetupDisplays();
     }
 }
