@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Notifications;
 using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
@@ -15,6 +16,11 @@ using UnityEngine.UI;
 namespace PBGame.UI.Models
 {
     public class SystemModel : BaseModel {
+
+        /// <summary>
+        /// Event called on new notification from the notification box.
+        /// </summary>
+        public event Action<INotification> OnNewNotification;
 
         private BindableBool isMenuBarActive = new BindableBool();
         private BindableBool isGameScreen = new BindableBool();
@@ -54,6 +60,18 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
 
+        [ReceivesDependency]
+        private INotificationBox NotificationBox { get; set; }
+
+
+        /// <summary>
+        /// Removes the specified notification from the notification box.
+        /// </summary>
+        public void RemoveNotification(INotification notification)
+        {
+            if(notification.Scope == NotificationScope.Temporary)
+                NotificationBox.Remove(notification);
+        }
 
         protected override void OnPreShow()
         {
@@ -66,6 +84,8 @@ namespace PBGame.UI.Models
             OverlayNavigator.OnHideView += OnOverlayHide;
 
             ScreenNavigator.OnShowView += OnScreenShow;
+
+            NotificationBox.OnNewNotification += OnNotification;
         }
 
         protected override void OnPreHide()
@@ -76,6 +96,8 @@ namespace PBGame.UI.Models
             OverlayNavigator.OnHideView -= OnOverlayHide;
 
             ScreenNavigator.OnShowView -= OnScreenShow;
+
+            NotificationBox.OnNewNotification -= OnNotification;
         }
 
         /// <summary>
@@ -102,6 +124,14 @@ namespace PBGame.UI.Models
         private void OnScreenShow(INavigationView view)
         {
             isGameScreen.Value = view is GameScreen;
+        }
+
+        /// <summary>
+        /// Event called when a new notification arrives.
+        /// </summary>
+        private void OnNotification(INotification notification)
+        {
+            OnNewNotification?.Invoke(notification);
         }
     }
 }

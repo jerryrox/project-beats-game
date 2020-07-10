@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Notifications;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.System
 {
@@ -23,7 +19,7 @@ namespace PBGame.UI.Components.System
 
 
         [ReceivesDependency]
-        private INotificationBox NotificationBox { get; set; }
+        private SystemModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -52,13 +48,15 @@ namespace PBGame.UI.Components.System
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            NotificationBox.OnNewNotification += OnNotification;
+
+            Model.OnNewNotification += OnNotification;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            NotificationBox.OnNewNotification -= OnNotification;
+
+            Model.OnNewNotification -= OnNotification;
 
             cellRecycler.ReturnAll();
         }
@@ -120,8 +118,7 @@ namespace PBGame.UI.Components.System
             cell.Width = this.Width;
             cell.OnHidden += (c) => {
                 // Remove from notifications automatically if hidden.
-                if(c.Notification.Scope == NotificationScope.Temporary)
-                    NotificationBox.Remove(c.Notification);
+                Model.RemoveNotification(c.Notification);
                 cellRecycler.Return(c);
                 AdjustCellPos();
             };
