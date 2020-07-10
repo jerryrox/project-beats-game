@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Components.Common;
+using PBGame.UI.Models;
 using PBGame.Maps;
-using PBGame.Rulesets.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Components;
@@ -29,7 +25,7 @@ namespace PBGame.UI.Components.GameLoad
         }
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
+        private GameLoadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -69,14 +65,15 @@ namespace PBGame.UI.Components.GameLoad
         {
             base.OnEnableInited();
 
-            MapSelection.Background.BindAndTrigger(OnBackgroundLoad);
+            Model.Background.BindAndTrigger(OnBackgroundLoad);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            MapSelection.Background.OnNewValue -= OnBackgroundLoad;
+            Model.Background.OnNewValue -= OnBackgroundLoad;
+
             OnBackgroundLoad(MapBackground.Empty);
         }
 

@@ -47,6 +47,11 @@ namespace PBGame.UI.Models
         /// </summary>
         public IReadOnlyBindable<IPlayableMap> SelectedMap => MapSelection.Map;
 
+        /// <summary>
+        /// Returns the currently selected map's background.
+        /// </summary>
+        public IReadOnlyBindable<IMapBackground> Background => MapSelection.Background;
+
         [ReceivesDependency]
         public IMusicController MusicController { get; set; }
 
