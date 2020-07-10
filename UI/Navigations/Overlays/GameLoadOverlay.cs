@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
+using PBGame.UI.Models.GameLoad;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.GameLoad;
 using PBGame.UI.Navigations.Screens;
@@ -19,12 +21,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class GameLoadOverlay : BaseOverlay, IGameLoadOverlay {
-
-        /// <summary>
-        /// Amount of extra delay to add before considering component show ani as finished playing.
-        /// </summary>
-        private const float ShowAniEndDelay = 1.5f;
+    public class GameLoadOverlay : BaseOverlay<GameLoadModel>, IGameLoadOverlay {
 
         private InfoDisplayer infoDisplayer;
         private LoadIndicator loadIndicator;
@@ -32,33 +29,8 @@ namespace PBGame.UI.Navigations.Overlays
         private IAnime componentShowAni;
         private IAnime componentHideAni;
 
-        private IKey escapeKey;
-
 
         protected override int ViewDepth => ViewDepths.GameLoadOverlay;
-
-        /// <summary>
-        /// Returns the game screen instance.
-        /// </summary>
-        private GameScreen GameScreen => ScreenNavigator.Get<GameScreen>();
-
-        [ReceivesDependency]
-        private IModeManager ModeManager { get; set; }
-
-        [ReceivesDependency]
-        private IScreenNavigator ScreenNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
-
-        [ReceivesDependency]
-        private IMusicController MusicController { get; set; }
 
 
         [InitWithDependency]
@@ -92,11 +64,7 @@ namespace PBGame.UI.Navigations.Overlays
                 infoDisplayer.Show();
                 loadIndicator.Show();
             });
-            componentShowAni.AnimateFloat(v => MusicController.SetFade(v))
-                .AddTime(0f, 1f, EaseType.QuadEaseOut)
-                .AddTime(showDur, 0.5f)
-                .Build();
-            componentShowAni.AddEvent(showDur + ShowAniEndDelay, OnShowAniEnd);
+            componentShowAni.AddEvent(showDur + model.MinimumLoadTime, OnShowAniEnd);
 
             float hideDur = Mathf.Max(infoDisplayer.HideAniDuration, loadIndicator.HideAniDuration);
             componentHideAni = new Anime();
@@ -105,155 +73,62 @@ namespace PBGame.UI.Navigations.Overlays
                 infoDisplayer.Hide();
                 loadIndicator.Hide();
             });
-            componentHideAni.AnimateFloat(v => MusicController.SetFade(v))
+            componentHideAni.AnimateFloat(v => model.MusicController.SetFade(v))
                 .AddTime(0f, 0.5f, EaseType.QuadEaseOut)
                 .AddTime(hideDur, 0f)
                 .Build();
             componentHideAni.AddEvent(hideDur, () =>
             {
-                MusicController.SetFade(1f);
+                model.MusicController.SetFade(1f);
                 OnHideAniEnd();
             });
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            model.LoadingState.OnNewValue += OnLoadingStateChange;
+
+            componentShowAni.PlayFromStart();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            SetBindEscape(false);
-        }
-
-        public override bool ProcessInput()
-        {
-            if (escapeKey.State.Value == InputState.Press)
-            {
-                ChangeScreen(false);
-            }
-            return false;
-        }
-
-        protected override void OnPreShow()
-        {
-            base.OnPreShow();
-
-            componentShowAni.PlayFromStart();
-
-            var modeServicer = ModeManager.GetService(GameConfiguration.RulesetMode.Value);
-            var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
-
-            // Receive an event when the loading is complete.
-            SetBindGameScreen(true);
-
-            // Start loading the game.
-            gameScreen.PreInitialize(MapSelection.Map.Value, modeServicer);
-
-            // User may escape out of the game at any time.
-            SetBindEscape(true);
+            model.LoadingState.OnNewValue -= OnLoadingStateChange;
         }
 
         /// <summary>
-        /// Changes to the next screen based on specified flag.
+        /// Event called on game loading state change.
         /// </summary>
-        private void ChangeScreen(bool toGame)
+        private void OnLoadingStateChange(GameLoadState state)
         {
-            // Don't listen to escape key anymore.
-            SetBindEscape(false);
-
-            if (toGame)
+            if (state == GameLoadState.Success)
             {
                 // If the hide animation is playing, the player must've navigated out before this was executed.
                 if (HideAnime.IsPlaying)
                     return;
                 componentHideAni.PlayFromStart();
             }
-            else
+            else if(state == GameLoadState.Fail)
             {
-                // Stop everything related to game load.
-                GameScreen.CancelLoad();
                 componentShowAni.Stop();
                 componentHideAni.Stop();
-
-                // Revert volume fade.
-                MusicController.SetFade(1f);
-
-                NavigateToScreen<PrepareScreen>();
             }
-        }
-
-        /// <summary>
-        /// Navigates the specified screen while hiding this overlay.
-        /// </summary>
-        private void NavigateToScreen<T>()
-            where T : BaseScreen
-        {
-            ScreenNavigator.Show<T>();
-            OverlayNavigator.Hide(this);
-
-            // Start the game straight away.
-            if(typeof(T) == typeof(GameScreen))
-                GameScreen.StartInitialGame();
-        }
-
-        /// <summary>
-        /// Binds escape key event.
-        /// </summary>
-        private void SetBindEscape(bool bind)
-        {
-            if (bind)
-            {
-                if (escapeKey == null)
-                {
-                    escapeKey = InputManager.AddKey(KeyCode.Escape);
-                    SetReceiveInputs(true);
-                }
-            }
-            else
-            {
-                if (escapeKey != null)
-                {
-                    InputManager.RemoveKey(KeyCode.Escape);
-                    SetReceiveInputs(false);
-                }
-                escapeKey = null;
-            }
-        }
-
-        /// <summary>
-        /// Sets binding to game screen.
-        /// </summary>
-        private void SetBindGameScreen(bool bind)
-        {
-            if(bind)
-                GameScreen.OnPreInit += OnGameLoadEnd;
-            else
-                GameScreen.OnPreInit -= OnGameLoadEnd;
         }
 
         /// <summary>
         /// Event called from component show ani when it has finished animating.
         /// </summary>
-        private void OnShowAniEnd()
-        {
-            if(GameScreen.IsGameLoaded)
-                ChangeScreen(true);
-        }
+        private void OnShowAniEnd() => model.OnShowAniEnd();
 
         /// <summary>
         /// Event called from component hide ani when it has finished animating.
         /// </summary>
-        private void OnHideAniEnd() => NavigateToScreen<GameScreen>();
-
-        /// <summary>
-        /// Event called when the game has been loaded and is ready to play.
-        /// </summary>
-        private void OnGameLoadEnd(bool isSuccess)
-        {
-            // Unbind from game screen.
-            SetBindGameScreen(false);
-
-            if(componentShowAni.IsPlaying)
-                return;
-            ChangeScreen(isSuccess);
-        }
+        private void OnHideAniEnd() => model.NavigateToGame();
     }
 }
