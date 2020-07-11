@@ -8,7 +8,6 @@ using PBFramework.Data.Bindables;
 using PBFramework.Allocation.Caching;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Models
 {
