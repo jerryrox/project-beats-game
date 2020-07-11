@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Audio;
+using PBGame.UI.Models;
+using PBGame.UI.Models.MenuBar;
 using PBGame.UI.Components.Common;
-using PBFramework.UI;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.UI.Components.MenuBar
 {
@@ -16,6 +12,19 @@ namespace PBGame.UI.Components.MenuBar
         /// </summary>
         protected abstract string IconSpritename { get; }
 
+        /// <summary>
+        /// Returns the type of the menu this button represents.
+        /// </summary>
+        protected abstract MenuType Type { get; }
+
+        /// <summary>
+        /// Returns whether OnEnableInited call will be overridden by the sub button type.
+        /// </summary>
+        protected virtual bool OverrideEnableInitCall => false;
+
+        [ReceivesDependency]
+        protected MenuBarModel Model { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -24,12 +33,37 @@ namespace PBGame.UI.Components.MenuBar
 
             UseDefaultHoverAni();
             UseDefaultFocusAni();
+
+            if(!OverrideEnableInitCall)
+                OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            Model.FocusedMenu.OnNewValue += OnMenuFocusChange;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.FocusedMenu.OnNewValue -= OnMenuFocusChange;
         }
 
         protected override void OnClickTriggered()
         {
             base.OnClickTriggered();
-            IsFocused = !IsFocused;
+            Model.SetMenu(Type);
+        }
+
+        /// <summary>
+        /// Event called when the currently focused menu is changed.
+        /// </summary>
+        protected virtual void OnMenuFocusChange(MenuType type)
+        {
+            this.IsFocused = (this.Type == type);
         }
     }
 }
