@@ -1,12 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Models.MenuBar;
 using PBGame.UI.Navigations.Overlays;
-using PBFramework.UI;
+using PBGame.Data.Users;
+using PBGame.Assets.Caching;
+using PBGame.Networking.API;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
-using PBFramework.Graphics;
+using PBFramework.Allocation.Caching;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,9 +14,11 @@ namespace PBGame.UI.Models
 {
     public class MenuBarModel : BaseModel {
 
-        private Bindable<MenuType> focusedMenu = new Bindable<MenuType>(MenuType.None);
+        private CacherAgent<Texture2D> profileImageCacher;
 
+        private Bindable<MenuType> focusedMenu = new Bindable<MenuType>(MenuType.None);
         private Bindable<INavigationView> currentOverlay = new Bindable<INavigationView>();
+        private Bindable<Texture2D> profileImage = new Bindable<Texture2D>();
 
 
         /// <summary>
@@ -30,9 +31,35 @@ namespace PBGame.UI.Models
         /// </summary>
         public IReadOnlyBindable<INavigationView> CurrentOverlay => currentOverlay;
 
+        /// <summary>
+        /// Returns the profile image of the current online user.
+        /// </summary>
+        public IReadOnlyBindable<Texture2D> ProfileImage => profileImage;
+
+        /// <summary>
+        /// Returns the current user loaded.
+        /// </summary>
+        public IReadOnlyBindable<IUser> CurrentUser => UserManager.CurrentUser;
+
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
+        [ReceivesDependency]
+        private IUserManager UserManager { get; set; }
+
+        [ReceivesDependency]
+        private IApi Api { get; set; }
+
+        [ReceivesDependency]
+        private IWebImageCacher WebImageCacher { get; set; }
+
+
+        [InitWithDependency]
+        private void Init()
+        {
+            profileImageCacher = new CacherAgent<Texture2D>(WebImageCacher);
+            profileImageCacher.OnFinished += OnProfileImageLoaded;
+        }
 
         /// <summary>
         /// Sets the current menu type.
@@ -56,6 +83,8 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
+            CurrentUser.BindAndTrigger(OnUserChange);
+
             SetMenu(MenuType.None);
         }
 
@@ -63,7 +92,16 @@ namespace PBGame.UI.Models
         {
             base.OnPreHide();
 
+            CurrentUser.OnNewValue -= OnUserChange;
+
             HideMenu();
+        }
+
+        protected override void OnPostHide()
+        {
+            base.OnPostHide();
+
+            RemoveProfileImage();
         }
 
         /// <summary>
@@ -108,6 +146,15 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Removes current profile image.
+        /// </summary>
+        private void RemoveProfileImage()
+        {
+            profileImage.Value = null;
+            profileImageCacher.Remove();
+        }
+
+        /// <summary>
         /// Returns the appropriate menu overlay for the specified type.
         /// </summary>
         private INavigationView GetMenuFor(MenuType type)
@@ -130,6 +177,24 @@ namespace PBGame.UI.Models
         {
             focusedMenu.Value = MenuType.None;
             ReleaseMenu();
+        }
+
+        /// <summary>
+        /// Event called when the web image cacher has returned a new proile image.
+        /// </summary>
+        private void OnProfileImageLoaded(Texture2D image)
+        {
+            profileImage.Value = image;
+        }
+
+        /// <summary>
+        /// Event called on user profile change.
+        /// </summary>
+        private void OnUserChange(IUser user)
+        {
+            RemoveProfileImage();
+            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
+                profileImageCacher.Request(user.OnlineUser.AvatarImage);
         }
     }
 }

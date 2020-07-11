@@ -17,6 +17,11 @@ namespace PBGame.UI.Components.MenuBar
         /// </summary>
         protected abstract MenuType Type { get; }
 
+        /// <summary>
+        /// Returns whether the deriving class with handle on enable init call.
+        /// </summary>
+        protected virtual bool OverrideEnableInitCall => false;
+
         [ReceivesDependency]
         protected MenuBarModel Model { get; set; }
 
@@ -29,7 +34,8 @@ namespace PBGame.UI.Components.MenuBar
             UseDefaultHoverAni();
             UseDefaultFocusAni();
 
-            OnEnableInited();
+            if(!OverrideEnableInitCall)
+                OnEnableInited();
         }
 
         protected override void OnEnableInited()
