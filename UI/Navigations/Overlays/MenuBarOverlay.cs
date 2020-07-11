@@ -1,18 +1,20 @@
-using System;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.MenuBar;
-using PBGame.UI.Navigations.Screens;
-using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class MenuBarOverlay : BaseOverlay, IMenuBarOverlay {
+    public class MenuBarOverlay : BaseOverlay<MenuBarModel>, IMenuBarOverlay {
         
         private UguiObject container;
 
+        private ComboMenuButton comboMenuButton;
+        private ProfileMenuButton profileButton;
+        private MusicButton musicButton;
+        private SettingsMenuButton settingsMenuButton;
+        private NotificationMenuButton notificationMenuButton;
         private BaseMenuButton[] menuButtons;
 
 
@@ -20,20 +22,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         public BackgroundSprite BackgroundSprite { get; private set; }
 
-        public BaseMenuButton ComboMenuButton { get; private set; }
-
-        public BaseMenuButton ProfileButton { get; private set; }
-
-        public MusicButton MusicButton { get; private set; }
-
-        public BaseMenuButton SettingsMenuButton { get; private set; }
-
-        public BaseMenuButton NotificationMenuButton { get; private set; }
-
         protected override int ViewDepth => ViewDepths.MenuBarOverlay;
-
-        [ReceivesDependency]
-        private IScreenNavigator ScreenNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -53,78 +42,49 @@ namespace PBGame.UI.Navigations.Overlays
                     BackgroundSprite.RawSize = Vector2.zero;
                     BackgroundSprite.SetOffsetVertical(0f);
                 }
-                ComboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu", 1);
+                comboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu", 1);
                 {
-                    ComboMenuButton.Anchor = AnchorType.LeftStretch;
-                    ComboMenuButton.Pivot = PivotType.Left;
-                    ComboMenuButton.SetOffsetVertical(0f);
-                    ComboMenuButton.X = 0f;
-                    ComboMenuButton.Width = 80f;
+                    comboMenuButton.Anchor = AnchorType.LeftStretch;
+                    comboMenuButton.Pivot = PivotType.Left;
+                    comboMenuButton.SetOffsetVertical(0f);
+                    comboMenuButton.X = 0f;
+                    comboMenuButton.Width = 80f;
                 }
-                ProfileButton = container.CreateChild<ProfileMenuButton>("profile-menu", 2);
+                profileButton = container.CreateChild<ProfileMenuButton>("profile-menu", 2);
                 {
-                    ProfileButton.Anchor = AnchorType.LeftStretch;
-                    ProfileButton.Pivot = PivotType.Left;
-                    ProfileButton.SetOffsetVertical(0f);
-                    ProfileButton.X = 80f;
-                    ProfileButton.Width = 220f;
+                    profileButton.Anchor = AnchorType.LeftStretch;
+                    profileButton.Pivot = PivotType.Left;
+                    profileButton.SetOffsetVertical(0f);
+                    profileButton.X = 80f;
+                    profileButton.Width = 220f;
                 }
-                MusicButton = container.CreateChild<MusicButton>("music", 3);
+                musicButton = container.CreateChild<MusicButton>("music", 3);
                 {
-                    MusicButton.Anchor = AnchorType.RightStretch;
-                    MusicButton.Pivot = PivotType.Right;
-                    MusicButton.SetOffsetVertical(0f);
-                    MusicButton.X = -160f;
-                    MusicButton.Width = 80f;
+                    musicButton.Anchor = AnchorType.RightStretch;
+                    musicButton.Pivot = PivotType.Right;
+                    musicButton.SetOffsetVertical(0f);
+                    musicButton.X = -160f;
+                    musicButton.Width = 80f;
                 }
-                SettingsMenuButton = container.CreateChild<SettingsMenuButton>("settings-menu", 4);
+                settingsMenuButton = container.CreateChild<SettingsMenuButton>("settings-menu", 4);
                 {
-                    SettingsMenuButton.Anchor = AnchorType.RightStretch;
-                    SettingsMenuButton.Pivot = PivotType.Right;
-                    SettingsMenuButton.SetOffsetVertical(0f);
-                    SettingsMenuButton.X = -80f;
-                    SettingsMenuButton.Width = 80f;
+                    settingsMenuButton.Anchor = AnchorType.RightStretch;
+                    settingsMenuButton.Pivot = PivotType.Right;
+                    settingsMenuButton.SetOffsetVertical(0f);
+                    settingsMenuButton.X = -80f;
+                    settingsMenuButton.Width = 80f;
                 }
-                NotificationMenuButton = container.CreateChild<NotificationMenuButton>("notification-menu", 5);
+                notificationMenuButton = container.CreateChild<NotificationMenuButton>("notification-menu", 5);
                 {
-                    NotificationMenuButton.Anchor = AnchorType.RightStretch;
-                    NotificationMenuButton.Pivot = PivotType.Right;
-                    NotificationMenuButton.SetOffsetVertical(0f);
-                    NotificationMenuButton.X = 0f;
-                    NotificationMenuButton.Width = 80f;
+                    notificationMenuButton.Anchor = AnchorType.RightStretch;
+                    notificationMenuButton.Pivot = PivotType.Right;
+                    notificationMenuButton.SetOffsetVertical(0f);
+                    notificationMenuButton.X = 0f;
+                    notificationMenuButton.Width = 80f;
                 }
             }
 
             menuButtons = GetComponentsInChildren<BaseMenuButton>(true);
-            HookMenuButtonFocus();
-        }
-
-        /// <summary>
-        /// Listens to all menu buttons' focus events to automatically unfocus other menu buttons.
-        /// </summary>
-        private void HookMenuButtonFocus()
-        {
-            for (int i = 0; i < menuButtons.Length; i++)
-            {
-                var menu = menuButtons[i];
-                menu.OnFocused += (isFocused) =>
-                {
-                    if (isFocused)
-                        UnfocusAllMenu(menu);
-                };
-            }
-        }
-
-        /// <summary>
-        /// Unfocuses all menu buttons except the specified button, if specified.
-        /// </summary>
-        private void UnfocusAllMenu(BaseMenuButton exception)
-        {
-            for (int i = 0; i < menuButtons.Length; i++)
-            {
-                if(menuButtons[i] != exception)
-                    menuButtons[i].IsFocused = false;
-            }
         }
     }
 }
