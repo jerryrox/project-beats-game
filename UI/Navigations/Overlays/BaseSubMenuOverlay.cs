@@ -86,14 +86,6 @@ namespace PBGame.UI.Navigations.Overlays
                 .Build();
         }
 
-        protected override void OnPreHide()
-        {
-            base.OnPreHide();
-
-            OnClose?.Invoke();
-            OnClose = null;
-        }
-
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
         {
             return dependencies.Get<IAnimePreset>().GetSubMenuOverlayShow(this);
