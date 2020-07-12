@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBGame.Configurations.Maps;
 using PBFramework.UI;
+using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -39,6 +41,17 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IMapConfiguration MapConfiguration { get; set; }
 
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
+
+        /// <summary>
+        /// Hides the offsets overlay.
+        /// </summary>
+        public void CloseOffsets()
+        {
+            OverlayNavigator.Hide<OffsetsOverlay>();
+        }
 
         protected override void OnPreShow()
         {
