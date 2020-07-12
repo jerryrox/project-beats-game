@@ -1,25 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components;
-using PBGame.UI.Components.MenuBar;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Animations;
-using PBGame.Configurations;
 using PBFramework.UI;
-using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class MusicMenuOverlay : BaseSubMenuOverlay, IMusicMenuOverlay {
+    public class MusicMenuOverlay : BaseSubMenuOverlay<MusicMenuModel>, IMusicMenuOverlay {
 
         private new ISprite mask;
         private MapImageDisplay imageDisplay;
@@ -33,18 +30,7 @@ namespace PBGame.UI.Navigations.Overlays
         private TimeBar timeBar;
 
 
-        public MusicButton MusicButton { get; set; }
-
         protected override int ViewDepth => ViewDepths.MusicMenuOverlay;
-
-        [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IMusicController MusicController { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
 
 
         [InitWithDependency]
@@ -105,10 +91,7 @@ namespace PBGame.UI.Navigations.Overlays
                     randomButton.IconName = "icon-random";
                     randomButton.IconSize = 24f;
 
-                    randomButton.OnTriggered += () =>
-                    {
-                        MusicButton.SetRandomMusic();
-                    };
+                    randomButton.OnTriggered += model.RandomizeMusic;
                 }
                 prevButton = mask.CreateChild<ControlButton>("prev", 5);
                 {
@@ -119,10 +102,7 @@ namespace PBGame.UI.Navigations.Overlays
                     prevButton.IconName = "icon-backward";
                     prevButton.IconSize = 24f;
 
-                    prevButton.OnTriggered += () =>
-                    {
-                        MusicButton.SetPrevMusic();
-                    };
+                    prevButton.OnTriggered += model.PrevMusic;
                 }
                 playButton = mask.CreateChild<ControlButton>("play", 6);
                 {
@@ -132,13 +112,7 @@ namespace PBGame.UI.Navigations.Overlays
                     playButton.IconName = "icon-play";
                     playButton.IconSize = 32f;
 
-                    playButton.OnTriggered += () =>
-                    {
-                        if(MusicController.IsPlaying)
-                            MusicController.Pause();
-                        else if(MusicController.IsPaused)
-                            MusicController.Play();
-                    };
+                    playButton.OnTriggered += model.TogglePlaying;
                 }
                 nextButton = mask.CreateChild<ControlButton>("next", 7);
                 {
@@ -149,10 +123,7 @@ namespace PBGame.UI.Navigations.Overlays
                     nextButton.IconName = "icon-forward";
                     nextButton.IconSize = 24f;
 
-                    nextButton.OnTriggered += () =>
-                    {
-                        MusicButton.SetNextMusic();
-                    };
+                    nextButton.OnTriggered += model.NextMusic;
                 }
                 timeBar = mask.CreateChild<TimeBar>("timebar", 8);
                 {
@@ -171,14 +142,20 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnEnableInited();
 
-            BindEvents();
+            model.IsPlaying.OnNewValue += OnPlayingChange;
+            model.SelectedMap.BindAndTrigger(OnMapChange);
+            model.Background.BindAndTrigger(OnBackgroundChange);
+            model.PreferUnicode.OnNewValue += OnPreferUnicode;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            UnbindEvents();
+            model.IsPlaying.OnNewValue -= OnPlayingChange;
+            model.SelectedMap.OnNewValue -= OnMapChange;
+            model.Background.OnNewValue -= OnBackgroundChange;
+            model.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
@@ -192,56 +169,14 @@ namespace PBGame.UI.Navigations.Overlays
         }
 
         /// <summary>
-        /// Binds to events from external dependencies.
-        /// </summary>
-        private void BindEvents()
-        {
-            MusicController.OnPlay += OnMusicPlay;
-            MusicController.OnPause += OnMusicPause;
-            MusicController.OnUnpause += OnMusicUnpause;
-
-            MapSelection.Map.OnNewValue += OnMapChange;
-            MapSelection.Background.OnNewValue += OnBackgroundChange;
-
-            GameConfiguration.PreferUnicode.OnNewValue += OnPreferUnicode;
-
-            SetPlayButtonIcon();
-            SetLabelText();
-            OnBackgroundChange(MapSelection.Background.Value);
-        }
-
-        /// <summary>
-        /// Unbinds from events from external dependencies.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MusicController.OnPlay -= OnMusicPlay;
-            MusicController.OnPause -= OnMusicPause;
-            MusicController.OnUnpause -= OnMusicUnpause;
-
-            MapSelection.Map.OnNewValue -= OnMapChange;
-            MapSelection.Background.OnNewValue -= OnBackgroundChange;
-
-            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
-        }
-
-        /// <summary>
-        /// Refreshes the play button icon.
-        /// </summary>
-        private void SetPlayButtonIcon()
-        {
-            playButton.IconName = MusicController.IsPlaying ? "icon-pause" : "icon-play";
-        }
-
-        /// <summary>
         /// Refreshes the song info label texts.
         /// </summary>
         private void SetLabelText()
         {
-            var map = MapSelection.Map.Value;
+            var map = model.SelectedMap.Value;
             if (map != null)
             {
-                var preferUnicode = GameConfiguration.PreferUnicode.Value;
+                var preferUnicode = model.PreferUnicode.Value;
 
                 title.Text = map.Metadata.GetTitle(preferUnicode);
                 artist.Text = map.Metadata.GetArtist(preferUnicode);
@@ -272,18 +207,11 @@ namespace PBGame.UI.Navigations.Overlays
         private void OnPreferUnicode(bool preferUnicode) => SetLabelText();
 
         /// <summary>
-        /// Event called from music controller when music is playing.
+        /// Event called when the music playing state has changed.
         /// </summary>
-        private void OnMusicPlay(float time) => SetPlayButtonIcon();
-
-        /// <summary>
-        /// Event called from music controller when music is paused.
-        /// </summary>
-        private void OnMusicPause() => SetPlayButtonIcon();
-
-        /// <summary>
-        /// Event called from music controller when music is unpaused.
-        /// </summary>
-        private void OnMusicUnpause(float time) => SetPlayButtonIcon();
+        private void OnPlayingChange(bool isPlaying)
+        {
+            playButton.IconName = isPlaying ? "icon-pause" : "icon-play";
+        }
     }
 }
