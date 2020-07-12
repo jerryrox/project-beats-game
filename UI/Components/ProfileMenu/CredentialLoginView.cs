@@ -1,15 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Graphics;
-using PBGame.Networking.API;
-using PBGame.Networking.API.Requests;
-using PBGame.Networking.API.Responses;
-using PBGame.Configurations;
-using PBFramework.UI;
 using PBFramework.Graphics;
-using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,16 +15,14 @@ namespace PBGame.UI.Components.ProfileMenu
         private LabelledToggle remember;
         private BoxButton loginButton;
 
-        private AuthRequest authRequest;
-
 
         public override float DesiredHeight => 200f;
 
         [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private LoggedOutView LoggedOutView { get; set; }
 
         [ReceivesDependency]
-        private LoggedOutView LoggedOutView { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -64,17 +54,6 @@ namespace PBGame.UI.Components.ProfileMenu
                 remember.Position = new Vector3(0f, -104f);
                 remember.Size = new Vector2(170f, 24f);
                 remember.LabelText = "Remember me";
-
-                remember.OnFocused += (isFocused) =>
-                {
-                    if (!isFocused)
-                    {
-                        GameConfiguration.Username.Value = "";
-                        GameConfiguration.Password.Value = "";
-                    }
-                    GameConfiguration.SaveCredentials.Value = isFocused;
-                    GameConfiguration.Save();
-                };
             }
             loginButton = CreateChild<BoxButton>("login", 4);
             {
@@ -86,45 +65,45 @@ namespace PBGame.UI.Components.ProfileMenu
                 loginButton.Color = colorPreset.Positive;
                 loginButton.LabelText = "Log in";
 
-                loginButton.OnTriggered += () =>
-                {
-                    DoLogin();
-                };
+                loginButton.OnTriggered += DoLogin;
             }
+
+            OnEnableInited();
         }
 
-        public override void Setup(IApiProvider provider)
+        protected override void OnEnableInited()
         {
-            base.Setup(provider);
+            base.OnEnableInited();
 
-            if (GameConfiguration.SaveCredentials.Value)
+            Model.OnLoginFailed += OnLoginFailed;
+
+            SetupComponents();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.OnLoginFailed -= OnLoginFailed;
+        }
+
+        /// <summary>
+        /// Sets up inner components based on model state.
+        /// </summary>
+        private void SetupComponents()
+        {
+            var saveCredentials = Model.IsSaveCredentials.Value;
+            remember.IsFocused = saveCredentials;
+            if (saveCredentials)
             {
-                remember.IsFocused = true;
-                username.Text = GameConfiguration.Username.Value;
-                password.Text = GameConfiguration.Password.Value;
+                username.Text = Model.SavedUsername.Value;
+                password.Text = Model.SavedPassword.Value;
             }
             else
             {
-                remember.IsFocused = false;
                 username.Text = "";
                 password.Text = "";
             }
-        }
-
-        public override void OnAuthSuccess()
-        {
-                if (remember.IsFocused)
-                {
-                    GameConfiguration.Username.Value = username.Text;
-                    GameConfiguration.Password.Value = password.Text;
-                    GameConfiguration.Save();
-                }
-        }
-
-        public override void OnAuthFailed()
-        {
-            username.ShowInvalid();
-            password.ShowInvalid();
         }
 
         /// <summary>
@@ -134,12 +113,16 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             username.IsFocused = false;
             password.IsFocused = false;
+            Model.RequestCredentialAuth(username.Text, password.Text);
+        }
 
-            // Start request.
-            authRequest = ApiProvider.Auth();
-            authRequest.Username = username.Text;
-            authRequest.Password = password.Text;
-            LoggedOutView?.RequestAuth(authRequest);
+        /// <summary>
+        /// Event called when the login has failed.
+        /// </summary>
+        private void OnLoginFailed()
+        {
+            username.ShowInvalid();
+            password.ShowInvalid();
         }
     }
 }

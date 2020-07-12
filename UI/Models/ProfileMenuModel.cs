@@ -14,6 +14,12 @@ namespace PBGame.UI.Models
 {
     public class ProfileMenuModel : BaseModel {
 
+        /// <summary>
+        /// Event called when the login request has failed.
+        /// </summary>
+        public event Action OnLoginFailed;
+
+
         private DropdownContext apiDropdownContext;
 
         private Bindable<IApiProvider> currentProvider = new Bindable<IApiProvider>(null);
@@ -62,6 +68,21 @@ namespace PBGame.UI.Models
         /// </summary>
         public IReadOnlyBindable<ApiProviderType> CurProviderType => GameConfiguration.LastLoginApi;
 
+        /// <summary>
+        /// Returns whether credentials are being saved.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsSaveCredentials => GameConfiguration.SaveCredentials;
+
+        /// <summary>
+        /// Returns the username credential saved in the configuration.
+        /// </summary>
+        public IReadOnlyBindable<string> SavedUsername => GameConfiguration.Username;
+
+        /// <summary>
+        /// Returns the password credential saved in the configuration.
+        /// </summary>
+        public IReadOnlyBindable<string> SavedPassword => GameConfiguration.Password;
+
         [ReceivesDependency]
         private IApi Api { get; set; }
 
@@ -94,9 +115,25 @@ namespace PBGame.UI.Models
         public void RequestCredentialAuth(string username, string password)
         {
             var request = currentProvider.Value.Auth();
-            request.Username = username;
-            request.Password = password;
+            request.Username = username.Trim();
+            request.Password = password.Trim();
             RequestAuth(request);
+        }
+
+        /// <summary>
+        /// Toggles credential save configuration.
+        /// </summary>
+        public void ToggleSaveCredentials()
+        {
+            bool newValue = !IsSaveCredentials.Value;
+            // If not saving
+            if (!newValue)
+            {
+                GameConfiguration.Username.Value = "";
+                GameConfiguration.Password.Value = "";
+            }
+            GameConfiguration.SaveCredentials.Value = newValue;
+            GameConfiguration.Save();
         }
 
         /// <summary>
@@ -207,6 +244,16 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Saves the specified credentials to the configuration.
+        /// </summary>
+        private void SaveCredentials(string username, string password)
+        {
+            GameConfiguration.Username.Value = username;
+            GameConfiguration.Password.Value = password;
+            GameConfiguration.Save();
+        }
+
+        /// <summary>
         /// Event called when the last login api setting has been changed.
         /// </summary>
         private void OnLastLoginApiChange(ApiProviderType type)
@@ -238,12 +285,31 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called when the authentication response has been returned.
         /// </summary>
-        private void OnAuthResponse(object response) => DisposeAuthRequest(true);
+        private void OnAuthResponse(object rawResponse)
+        {
+            var response = rawResponse as ApiResponse;
+            if (response.IsSuccess)
+            {
+                if (authRequest.Value is AuthRequest credentialAuth)
+                    SaveCredentials(credentialAuth.Username, credentialAuth.Password);
+            }
+            else
+                OnLoginFailed?.Invoke();
+
+            DisposeAuthRequest(true);
+        }
 
         /// <summary>
         /// Event called when the me response has been returned.
         /// </summary>
-        private void OnMeResponse(object response) => DisposeMeRequest(true);
+        private void OnMeResponse(object rawResponse)
+        {
+            var response = rawResponse as ApiResponse;
+            if (!response.IsSuccess)
+                OnLoginFailed?.Invoke();
+
+            DisposeMeRequest(true);
+        }
 
     }
 }
