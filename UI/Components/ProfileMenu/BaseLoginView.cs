@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public abstract class BaseLoginView : UguiObject, ILoginView {
+    public abstract class BaseLoginView : UguiObject, IHasAlpha {
 
         private CanvasGroup canvasGroup;
 
