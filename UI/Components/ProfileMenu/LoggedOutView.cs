@@ -8,8 +8,6 @@ using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-using Logger = PBFramework.Debugging.Logger;
-
 namespace PBGame.UI.Components.ProfileMenu
 {
     public class LoggedOutView : UguiObject, IHasAlpha
