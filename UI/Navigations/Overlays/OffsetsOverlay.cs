@@ -1,40 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Offsets;
-using PBGame.Maps;
-using PBGame.Rulesets.Maps;
-using PBGame.Configurations;
 using PBGame.Configurations.Maps;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class OffsetsOverlay : BaseOverlay, IOffsetsOverlay {
+    public class OffsetsOverlay : BaseOverlay<OffsetsModel>, IOffsetsOverlay {
 
         private BackgroundDisplay backgroundDisplay;
         private MetronomeContainer metronomeContainer;
         private OffsetSlider mapsetSlider;
         private OffsetSlider mapSlider;
 
-        private MapsetConfig mapsetConfig;
-        private MapConfig mapConfig;
-
 
         protected override int ViewDepth => ViewDepths.OffsetOverlay;
-
-        [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IMapsetConfiguration MapsetConfiguration { get; set; }
-
-        [ReceivesDependency]
-        private IMapConfiguration MapConfiguration { get; set; }
 
 
         [InitWithDependency]
@@ -70,39 +51,39 @@ namespace PBGame.UI.Navigations.Overlays
             OnEnableInited();
         }
 
-        public void Setup() => Setup(MapSelection.Mapset.Value, MapSelection.Map.Value, MapSelection.MapsetConfig.Value, MapSelection.MapConfig.Value);
-
-        public void Setup(IMapset mapset, IMap map) => Setup(mapset, map, MapsetConfiguration.GetConfig(mapset), MapConfiguration.GetConfig(map));
-
-        protected override void OnPreHide()
+        protected override void OnEnableInited()
         {
-            base.OnPreHide();
-            Dispose();
+            base.OnEnableInited();
+
+            model.MapsetConfig.OnNewValue += OnMapsetConfigChange;
+            model.MapConfig.OnNewValue += OnMapConfigChange;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            model.MapsetConfig.OnNewValue -= OnMapsetConfigChange;
+            model.MapConfig.OnNewValue -= OnMapConfigChange;
+
+            mapsetSlider.SetSource(null);
+            mapSlider.SetSource(null);
         }
 
         /// <summary>
-        /// Internally handles setup actions.
+        /// Event called when the selected mapset configuration has changed.
         /// </summary>
-        private void Setup(IMapset mapset, IMap map, MapsetConfig mapsetConfig, MapConfig mapConfig)
+        private void OnMapsetConfigChange(MapsetConfig config)
         {
-            Dispose();
-            
-            mapsetSlider.SetSource(this.mapsetConfig = mapsetConfig);
-            mapSlider.SetSource(this.mapConfig = mapConfig);
+            mapsetSlider.SetSource(config);
         }
 
         /// <summary>
-        /// Disposes current mapset/map offset configuration.
+        /// Event called when the selected map configuration has changed.
         /// </summary>
-        private void Dispose()
+        private void OnMapConfigChange(MapConfig config)
         {
-            if(mapsetConfig != null)
-                MapsetConfiguration.SetConfig(mapsetConfig);
-            if(mapConfig != null)
-                MapConfiguration.SetConfig(mapConfig);
-
-            mapsetSlider.SetSource(mapsetConfig = null);
-            mapSlider.SetSource(mapConfig = null);
+            mapSlider.SetSource(config);
         }
     }
 }
