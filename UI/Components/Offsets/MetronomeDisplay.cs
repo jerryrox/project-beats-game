@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Audio;
 using PBGame.Graphics;
 using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -36,6 +33,9 @@ namespace PBGame.UI.Components.Offsets
         [ReceivesDependency]
         private IColorPreset ColorPreset { get; set; }
 
+        [ReceivesDependency]
+        private OffsetsModel Model { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -45,6 +45,22 @@ namespace PBGame.UI.Components.Offsets
             CellSize = new Vector2(24f, 24f);
             Axis = GridLayoutGroup.Axis.Horizontal;
             Alignment = TextAnchor.MiddleCenter;
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            SetMetronome(Model?.Metronome);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            RemoveMetronome();
         }
 
         /// <summary>

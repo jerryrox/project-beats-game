@@ -1,13 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Audio;
-using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Offsets
 {
@@ -37,6 +31,9 @@ namespace PBGame.UI.Components.Offsets
         /// </summary>
         public IMetronome CurMetronome { get; private set; }
 
+        [ReceivesDependency]
+        private OffsetsModel Model { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -46,6 +43,20 @@ namespace PBGame.UI.Components.Offsets
                 if(CurMetronome != null)
                     CurMetronome.Frequency.Value = frequency;
             };
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            SetMetronome(Model?.Metronome);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            RemoveMetronome();
         }
 
         /// <summary>

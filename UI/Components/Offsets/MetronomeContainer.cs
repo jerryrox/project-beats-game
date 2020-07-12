@@ -44,7 +44,6 @@ namespace PBGame.UI.Components.Offsets
                     metronomeDisplay.X = 120f;
                     metronomeDisplay.SetOffsetVertical(0f);
                     metronomeDisplay.Width = 500f;
-                    metronomeDisplay.SetMetronome(metronome);
                 }
                 modeGrid = AvailableView.CreateChild<UguiGrid>("modes", 1);
                 {
@@ -59,12 +58,10 @@ namespace PBGame.UI.Components.Offsets
                     fullMode = modeGrid.CreateChild<MetronomeMode>("full", 0);
                     {
                         fullMode.Frequency = BeatFrequency.Full;
-                        fullMode.SetMetronome(metronome);
                     }
                     halfMode = modeGrid.CreateChild<MetronomeMode>("half", 1);
                     {
                         halfMode.Frequency = BeatFrequency.Half;
-                        halfMode.SetMetronome(metronome);
                     }
                 }
             }
