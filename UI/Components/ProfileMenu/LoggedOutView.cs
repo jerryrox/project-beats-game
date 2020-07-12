@@ -115,6 +115,7 @@ namespace PBGame.UI.Components.ProfileMenu
             base.OnEnableInited();
 
             Model.CurrentProvider.BindAndTrigger(OnProviderChange);
+            Model.IsLoggingIn.BindAndTrigger(OnLoggingInChange);
         }
 
         protected override void OnDisable()
@@ -122,6 +123,7 @@ namespace PBGame.UI.Components.ProfileMenu
             base.OnDisable();
 
             Model.CurrentProvider.OnNewValue -= OnProviderChange;
+            Model.IsLoggingIn.OnNewValue -= OnLoggingInChange;
         }
 
         /// <summary>
@@ -145,6 +147,17 @@ namespace PBGame.UI.Components.ProfileMenu
             }
             loginView.Setup(provider);
             CurLoginView.Value = loginView;
+        }
+
+        /// <summary>
+        /// Event called when the loggin in state has changed.
+        /// </summary>
+        private void OnLoggingInChange(bool isLoggingIn)
+        {
+            if(isLoggingIn)
+                loader.Show();
+            else
+                loader.Hide();
         }
     }
 }

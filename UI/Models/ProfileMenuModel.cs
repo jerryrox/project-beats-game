@@ -19,6 +19,7 @@ namespace PBGame.UI.Models
         private Bindable<IApiProvider> currentProvider = new Bindable<IApiProvider>(null);
         private Bindable<IApiRequest> authRequest = new Bindable<IApiRequest>();
         private Bindable<IApiRequest> meRequest = new Bindable<IApiRequest>();
+        private BindableBool isLoggingIn = new BindableBool(false);
 
 
         /// <summary>
@@ -50,6 +51,11 @@ namespace PBGame.UI.Models
         /// Returns the currently on-going me request, if exists.
         /// </summary>
         public IReadOnlyBindable<IApiRequest> MeRequest => meRequest;
+
+        /// <summary>
+        /// Returns whether the user is currently loggin in.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsLoggingIn => isLoggingIn;
 
         /// <summary>
         /// Returns the type of the currently selected provider.
@@ -122,8 +128,15 @@ namespace PBGame.UI.Models
             Auth.OnNewValue -= OnAuthenticationChange;
             apiDropdownContext.OnSelection -= OnApiDropdownSelection;
 
-            DisposeAuthRequest();
-            DisposeMeRequest();
+            DisposeAuthRequest(false);
+            DisposeMeRequest(false);
+        }
+
+        protected override void OnPostHide()
+        {
+            base.OnPostHide();
+
+            isLoggingIn.Value = false;
         }
 
         /// <summary>
@@ -131,10 +144,14 @@ namespace PBGame.UI.Models
         /// </summary>
         private void RequestAuth(IApiRequest request)
         {
-            DisposeAuthRequest();
-            DisposeMeRequest();
+            DisposeAuthRequest(false);
+            DisposeMeRequest(false);
 
+            request.RawResponse.OnNewRawValue += OnAuthResponse;
+            authRequest.Value = request;
             Api.Request(request);
+
+            CheckIsLoggingIn();
         }
 
         /// <summary>
@@ -142,34 +159,51 @@ namespace PBGame.UI.Models
         /// </summary>
         private void RequestMe()
         {
-            DisposeMeRequest();
+            DisposeMeRequest(false);
 
             var request = currentProvider.Value.Me();
+
+            request.Response.OnNewRawValue += OnMeResponse;
+            meRequest.Value = request;
             Api.Request(request);
+
+            CheckIsLoggingIn();
         }
 
         /// <summary>
         /// Disposes currently on-going auth request, if exists.
         /// </summary>
-        private void DisposeAuthRequest()
+        private void DisposeAuthRequest(bool softDispose)
         {
             var request = authRequest.Value;
             if(request == null)
                 return;
-            request.Dispose();
+            if(softDispose)
+                request.Dispose();
             authRequest.Value = null;
+            CheckIsLoggingIn();
         }
 
         /// <summary>
         /// Disposes currently on-going me request, if exists.
         /// </summary>
-        private void DisposeMeRequest()
+        private void DisposeMeRequest(bool softDispose)
         {
             var request = meRequest.Value;
             if(request == null)
                 return;
-            request.Dispose();
+            if(softDispose)
+                request.Dispose();
             meRequest.Value = null;
+            CheckIsLoggingIn();
+        }
+        
+        /// <summary>
+        /// Evaluates whether the user is considered loggin in or not.
+        /// </summary>
+        private void CheckIsLoggingIn()
+        {
+            isLoggingIn.Value = authRequest.Value != null && meRequest.Value != null;
         }
 
         /// <summary>
@@ -179,8 +213,8 @@ namespace PBGame.UI.Models
         {
             currentProvider.Value = Api.GetProvider(type);
 
-            DisposeAuthRequest();
-            DisposeMeRequest();
+            DisposeAuthRequest(false);
+            DisposeMeRequest(false);
         }
 
         /// <summary>
@@ -200,5 +234,16 @@ namespace PBGame.UI.Models
             if(data != null && data.ExtraData != null)
                 SelectApi((ApiProviderType)data.ExtraData);
         }
+
+        /// <summary>
+        /// Event called when the authentication response has been returned.
+        /// </summary>
+        private void OnAuthResponse(object response) => DisposeAuthRequest(true);
+
+        /// <summary>
+        /// Event called when the me response has been returned.
+        /// </summary>
+        private void OnMeResponse(object response) => DisposeMeRequest(true);
+
     }
 }
