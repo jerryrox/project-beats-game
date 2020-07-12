@@ -1,13 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Navigations.Screens;
-using PBGame.Maps;
+using PBGame.UI.Models;
 using PBGame.Audio;
-using PBGame.Rulesets.Maps;
 using PBFramework.UI;
-using PBFramework.UI.Navigations;
-using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -22,8 +15,6 @@ namespace PBGame.UI.Components.Offsets
         private MetronomeMode fullMode;
         private MetronomeMode halfMode;
 
-        private IMetronome metronome;
-
 
         /// <summary>
         /// View which is displayed when the metronome is currently available.
@@ -35,29 +26,13 @@ namespace PBGame.UI.Components.Offsets
         /// </summary>
         public IGraphicObject UnavailableView { get; private set; }
 
-        /// <summary>
-        /// Returns whether the metronome should be available.
-        /// </summary>
-        private bool ShouldBeAvailable => !ScreenNavigator.IsShowing(typeof(GameScreen));
-
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IMusicController MusicController { get; set; }
-
-        [ReceivesDependency]
-        private IScreenNavigator ScreenNavigator { get; set; }
+        private OffsetsModel Model { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
-            metronome = new Metronome()
-            {
-                AudioController = MusicController
-            };
-
             AvailableView = CreateChild("available", 0);
             {
                 AvailableView.Anchor = AnchorType.Fill;
@@ -119,10 +94,24 @@ namespace PBGame.UI.Components.Offsets
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            if (ShouldBeAvailable)
+
+            Model.IsMetronomeAvailable.OnNewValue += OnMetronomeAvailable;
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.IsMetronomeAvailable.OnNewValue -= OnMetronomeAvailable;
+        }
+
+        /// <summary>
+        /// Event called when the metronome availability has changed.
+        /// </summary>
+        private void OnMetronomeAvailable(bool isAvailable)
+        {
+            if (isAvailable)
             {
-                metronome.AudioController = MusicController;
-                MapSelection.Map.BindAndTrigger(OnMapChange);
                 AvailableView.Active = true;
                 UnavailableView.Active = false;
             }
@@ -132,26 +121,5 @@ namespace PBGame.UI.Components.Offsets
                 UnavailableView.Active = true;
             }
         }
-        
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            if (ShouldBeAvailable)
-            {
-                metronome.AudioController = null;
-                metronome.CurrentMap = null;
-                MapSelection.Map.OnNewValue -= OnMapChange;
-            }
-        }
-
-        protected void Update()
-        {
-            metronome.Update();
-        }
-
-        /// <summary>
-        /// Event called from MapSelection when current map has changed.
-        /// </summary>
-        private void OnMapChange(IPlayableMap map) => metronome.CurrentMap = map;
     }
 }
