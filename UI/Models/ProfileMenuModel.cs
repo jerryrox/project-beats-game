@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models.ProfileMenu;
 using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Data.Users;
 using PBGame.Networking.API;

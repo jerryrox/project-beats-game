@@ -46,7 +46,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Current login provider view in use.
         /// </summary>
-        public Bindable<ILoginView> CurLoginView { get; private set; } = new Bindable<ILoginView>();
+        public Bindable<BaseLoginView> CurLoginView { get; private set; } = new Bindable<BaseLoginView>();
 
         [ReceivesDependency]
         private ProfileMenuModel Model { get; set; }
@@ -130,7 +130,7 @@ namespace PBGame.UI.Components.ProfileMenu
         private void OnProviderChange(IApiProvider provider)
         {
             // Display OAuth or Credential login based on API information.
-            ILoginView loginView = null;
+            BaseLoginView loginView = null;
             if (provider.IsOAuthLogin)
             {
                 loginView = oAuthLogin;
@@ -143,7 +143,6 @@ namespace PBGame.UI.Components.ProfileMenu
                 oAuthLogin.Hide();
                 credentialLogin.Show();
             }
-            loginView.Setup(provider);
             CurLoginView.Value = loginView;
         }
 

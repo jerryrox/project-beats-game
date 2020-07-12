@@ -174,7 +174,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Event called from logged out view when its current login provider view has changed.
         /// </summary>
-        private void OnLoginProviderViewChange(ILoginView loginView)
+        private void OnLoginProviderViewChange(BaseLoginView loginView)
         {
             // Animate height change.
             loggedOutAni.PlayFromStart();
