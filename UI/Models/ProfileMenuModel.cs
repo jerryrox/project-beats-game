@@ -1,13 +1,15 @@
 using System;
-using PBGame.UI.Models.ProfileMenu;
 using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Data.Users;
+using PBGame.Assets.Caching;
 using PBGame.Networking.API;
 using PBGame.Networking.API.Requests;
 using PBGame.Networking.API.Responses;
 using PBGame.Configurations;
 using PBFramework.Data.Bindables;
+using PBFramework.Allocation.Caching;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.UI.Models
 {
@@ -18,6 +20,7 @@ namespace PBGame.UI.Models
         /// </summary>
         public event Action OnLoginFailed;
 
+        private CacherAgent<Texture2D> coverImageAgent;
 
         private DropdownContext apiDropdownContext;
 
@@ -25,6 +28,7 @@ namespace PBGame.UI.Models
         private Bindable<IApiRequest> authRequest = new Bindable<IApiRequest>();
         private Bindable<IApiRequest> meRequest = new Bindable<IApiRequest>();
         private BindableBool isLoggingIn = new BindableBool(false);
+        private Bindable<Texture2D> coverImage = new Bindable<Texture2D>();
 
 
         /// <summary>
@@ -82,6 +86,14 @@ namespace PBGame.UI.Models
         /// </summary>
         public IReadOnlyBindable<string> SavedPassword => GameConfiguration.Password;
 
+        /// <summary>
+        /// Returns the cover image of the currently logged in usedr.
+        /// </summary>
+        public IReadOnlyBindable<Texture2D> CoverImage => coverImage;
+
+        [ReceivesDependency]
+        private IWebImageCacher WebImageCacher { get; set; }
+
         [ReceivesDependency]
         private IApi Api { get; set; }
 
@@ -97,6 +109,8 @@ namespace PBGame.UI.Models
         {
             apiDropdownContext = new DropdownContext();
             apiDropdownContext.ImportFromEnum<ApiProviderType>(CurProviderType.Value);
+
+            coverImageAgent = new CacherAgent<Texture2D>(WebImageCacher);
         }
 
         /// <summary>
@@ -149,11 +163,14 @@ namespace PBGame.UI.Models
             base.OnPreShow();
 
             CurProviderType.BindAndTrigger(OnLastLoginApiChange);
-            Auth.BindAndTrigger(OnAuthenticationChange);
+            Auth.OnNewValue += OnAuthenticationChange;
 
             // Synchronize selection with the actual value in configuration.
             apiDropdownContext.SelectDataWithText(CurProviderType.Value.ToString());
             apiDropdownContext.OnSelection += OnApiDropdownSelection;
+
+            CurrentUser.BindAndTrigger(OnUserChange);
+            coverImageAgent.OnFinished += OnCoverImageLoaded;
         }
 
         protected override void OnPreHide()
@@ -163,6 +180,8 @@ namespace PBGame.UI.Models
             CurProviderType.OnNewValue -= OnLastLoginApiChange;
             Auth.OnNewValue -= OnAuthenticationChange;
             apiDropdownContext.OnSelection -= OnApiDropdownSelection;
+            CurrentUser.OnNewValue -= OnUserChange;
+            coverImageAgent.OnFinished -= OnCoverImageLoaded;
 
             DisposeAuthRequest(false);
             DisposeMeRequest(false);
@@ -173,6 +192,8 @@ namespace PBGame.UI.Models
             base.OnPostHide();
 
             isLoggingIn.Value = false;
+
+            DisposeCoverImage();
         }
 
         /// <summary>
@@ -253,6 +274,27 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Requests cover image for current user.
+        /// </summary>
+        private void RequestCoverImage()
+        {
+            DisposeCoverImage();
+
+            var user = CurrentUser.Value;
+            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.CoverImage))
+                coverImageAgent.Request(user.OnlineUser.CoverImage);
+        }
+
+        /// <summary>
+        /// Disposes current cover image request and the state.
+        /// </summary>
+        private void DisposeCoverImage()
+        {
+            coverImage.Value = null;
+            coverImageAgent.Remove();
+        }
+
+        /// <summary>
         /// Event called when the last login api setting has been changed.
         /// </summary>
         private void OnLastLoginApiChange(ApiProviderType type)
@@ -310,5 +352,20 @@ namespace PBGame.UI.Models
             DisposeMeRequest(true);
         }
 
+        /// <summary>
+        /// Event called when the current user has changed.
+        /// </summary>
+        private void OnUserChange(IUser user)
+        {
+            RequestCoverImage();
+        }
+
+        /// <summary>
+        /// Event called when the user's cover image has been loaded.
+        /// </summary>
+        private void OnCoverImageLoaded(Texture2D image)
+        {
+            coverImage.Value = image;
+        }
     }
 }
