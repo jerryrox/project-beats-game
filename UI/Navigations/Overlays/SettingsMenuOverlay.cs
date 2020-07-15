@@ -18,7 +18,6 @@ namespace PBGame.UI.Navigations.Overlays
         protected override int ViewDepth => ViewDepths.SettingsMenuOverlay;
 
 
-
         [InitWithDependency]
         private void Init()
         {
