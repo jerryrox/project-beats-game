@@ -134,8 +134,6 @@ namespace PBGame.UI.Models
         {
             // Show the offset overlay.
             OffsetsOverlay overlay = OverlayNavigator.Show<OffsetsOverlay>();
-            // TODO: Call offset overlay's Setup method from OffsetModel, not OffsetOverlay
-            overlay.Setup();
 
             // Bind temporary hide event listener to overlay.
             EventBinder<Action> closeBinder = new EventBinder<Action>(

@@ -236,7 +236,7 @@ namespace PBGame.UI.Models
                     if(mapsetForDropdown != MapSelection.Mapset.Value)
                         MapSelection.SelectMapset(mapsetForDropdown);
                     // Now show the offsets overlay.
-                    OverlayNavigator.Show<OffsetsOverlay>().Setup();
+                    OverlayNavigator.Show<OffsetsOverlay>();
                     break;
             }
         }
