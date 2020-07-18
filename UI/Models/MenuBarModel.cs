@@ -20,6 +20,7 @@ namespace PBGame.UI.Models
         private Bindable<INavigationView> currentOverlay = new Bindable<INavigationView>();
         private Bindable<Texture2D> profileImage = new Bindable<Texture2D>();
         private BindableBool isMusicButtonActive = new BindableBool(false);
+        private Bindable<Color> barColor = new Bindable<Color>();
 
 
         /// <summary>
@@ -41,6 +42,11 @@ namespace PBGame.UI.Models
         /// Returns whether the music button should be activated.
         /// </summary>
         public IReadOnlyBindable<bool> IsMusicButtonActive => isMusicButtonActive;
+
+        /// <summary>
+        /// Returns the menu bar background color.
+        /// </summary>
+        public IReadOnlyBindable<Color> BarColor => barColor;
 
         /// <summary>
         /// Returns the current user loaded.
@@ -214,6 +220,7 @@ namespace PBGame.UI.Models
         private void OnScreenChange(INavigationView screen)
         {
             isMusicButtonActive.Value = (screen is HomeScreen);
+            barColor.Value = new Color();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace PBGame.UI.Navigations.Overlays
         
         private UguiObject container;
 
+        private BackgroundSprite backgroundSprite;
         private ComboMenuButton comboMenuButton;
         private ProfileMenuButton profileButton;
         private MusicButton musicButton;
@@ -18,9 +19,10 @@ namespace PBGame.UI.Navigations.Overlays
         private BaseMenuButton[] menuButtons;
 
 
+        /// <summary>
+        /// Returns the height of the container.
+        /// </summary>
         public float ContainerHeight => 64f;
-
-        public BackgroundSprite BackgroundSprite { get; private set; }
 
         protected override int ViewDepth => ViewDepths.MenuBarOverlay;
 
@@ -36,11 +38,11 @@ namespace PBGame.UI.Navigations.Overlays
                 container.Height = ContainerHeight;
                 container.Y = 0f;
 
-                BackgroundSprite = container.CreateChild<BackgroundSprite>("background");
+                backgroundSprite = container.CreateChild<BackgroundSprite>("background");
                 {
-                    BackgroundSprite.Anchor = AnchorType.Fill;
-                    BackgroundSprite.RawSize = Vector2.zero;
-                    BackgroundSprite.SetOffsetVertical(0f);
+                    backgroundSprite.Anchor = AnchorType.Fill;
+                    backgroundSprite.RawSize = Vector2.zero;
+                    backgroundSprite.SetOffsetVertical(0f);
                 }
                 comboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu", 1);
                 {
@@ -94,6 +96,7 @@ namespace PBGame.UI.Navigations.Overlays
             base.OnEnableInited();
 
             Model.IsMusicButtonActive.BindAndTrigger(OnMusicButtonChange);
+            Model.BarColor.BindAndTrigger(OnBarColorChange);
         }
 
         protected override void OnDisable()
@@ -101,6 +104,7 @@ namespace PBGame.UI.Navigations.Overlays
             base.OnDisable();
 
             Model.IsMusicButtonActive.OnNewValue -= OnMusicButtonChange;
+            model.BarColor.OnNewValue -= OnBarColorChange;
         }
 
         /// <summary>
@@ -109,6 +113,14 @@ namespace PBGame.UI.Navigations.Overlays
         private void OnMusicButtonChange(bool isActive)
         {
             musicButton.Active = isActive;
+        }
+
+        /// <summary>
+        /// Event called on bar background color change.
+        /// </summary>
+        private void OnBarColorChange(Color color)
+        {
+            backgroundSprite.Color = color;
         }
     }
 }
