@@ -24,6 +24,9 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override int ViewDepth => ViewDepths.MenuBarOverlay;
 
+        [ReceivesDependency]
+        private MenuBarModel Model { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -85,6 +88,30 @@ namespace PBGame.UI.Navigations.Overlays
             }
 
             menuButtons = GetComponentsInChildren<BaseMenuButton>(true);
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            Model.IsMusicButtonActive.BindAndTrigger(OnMusicButtonChange);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.IsMusicButtonActive.OnNewValue -= OnMusicButtonChange;
+        }
+
+        /// <summary>
+        /// Event called when the music button's active state should change.
+        /// </summary>
+        private void OnMusicButtonChange(bool isActive)
+        {
+            musicButton.Active = isActive;
         }
     }
 }

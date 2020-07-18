@@ -1,4 +1,5 @@
 using PBGame.UI.Models.MenuBar;
+using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Data.Users;
 using PBGame.Assets.Caching;
@@ -18,6 +19,7 @@ namespace PBGame.UI.Models
         private Bindable<MenuType> focusedMenu = new Bindable<MenuType>(MenuType.None);
         private Bindable<INavigationView> currentOverlay = new Bindable<INavigationView>();
         private Bindable<Texture2D> profileImage = new Bindable<Texture2D>();
+        private BindableBool isMusicButtonActive = new BindableBool(false);
 
 
         /// <summary>
@@ -36,12 +38,20 @@ namespace PBGame.UI.Models
         public IReadOnlyBindable<Texture2D> ProfileImage => profileImage;
 
         /// <summary>
+        /// Returns whether the music button should be activated.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsMusicButtonActive => isMusicButtonActive;
+
+        /// <summary>
         /// Returns the current user loaded.
         /// </summary>
         public IReadOnlyBindable<IUser> CurrentUser => UserManager.CurrentUser;
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
         private IUserManager UserManager { get; set; }
@@ -83,6 +93,7 @@ namespace PBGame.UI.Models
             base.OnPreShow();
 
             CurrentUser.BindAndTrigger(OnUserChange);
+            ScreenNavigator.CurrentScreen.BindAndTrigger(OnScreenChange);
 
             SetMenu(MenuType.None);
         }
@@ -92,6 +103,7 @@ namespace PBGame.UI.Models
             base.OnPreHide();
 
             CurrentUser.OnNewValue -= OnUserChange;
+            ScreenNavigator.CurrentScreen.OnNewValue -= OnScreenChange;
 
             HideMenu();
         }
@@ -194,6 +206,14 @@ namespace PBGame.UI.Models
             RemoveProfileImage();
             if(user != null && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
                 profileImageCacher.Request(user.OnlineUser.AvatarImage);
+        }
+
+        /// <summary>
+        /// Event called when the current screen changes.
+        /// </summary>
+        private void OnScreenChange(INavigationView screen)
+        {
+            isMusicButtonActive.Value = (screen is HomeScreen);
         }
     }
 }
