@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Models;
-using PBFramework.UI;
-using PBFramework.UI.Navigations;
-using PBFramework.Threading;
+﻿using PBGame.UI.Models;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 
@@ -18,11 +12,5 @@ namespace PBGame.UI.Navigations.Screens
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies) => null;
 
         protected override IAnime CreateHideAnime(IDependencyContainer dependencies) => null;
-
-        protected override void OnPostShow()
-        {
-            base.OnPostShow();
-            model.WaitSplash();
-        }
     }
 }
