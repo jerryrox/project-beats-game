@@ -99,8 +99,7 @@ namespace PBGame.UI.Components.Songs
                     highlight.SpriteName = "glow-128";
                     highlight.Alpha = UnfocusedHighlightAlpha;
 
-                    if(highlight is IRaycastable raycastable)
-                        raycastable.IsRaycastTarget = false;
+                    highlight.IsRaycastTarget = false;
 
                     highlight.AddEffect(new AdditiveShaderEffect());
                 }

@@ -24,6 +24,7 @@ Slowly making progress 🧩
 #### Changes
 - Abstracted away shared logics of BaseScreen/BaseOverlay views into BaseNavView.
 - Removed UI screen/overlay interfaces as they are now useless.
+- Access IRaycastable directly instead of casting.
 #### Fixes
 - Fixed input box's hover sprite being able to receive raycast.
 - Fixed bug where focusing on song search bar and releasing without change triggers a search.

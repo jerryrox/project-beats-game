@@ -102,7 +102,7 @@ namespace PBGame.UI.Components.Common
                 hoverSprite.Color = tint;
                 hoverSprite.Alpha = 0f;
 
-                (hoverSprite as IRaycastable).IsRaycastTarget = false;
+                hoverSprite.IsRaycastTarget = false;
             }
             focusSprite = CreateChild<UguiSprite>("focus", 4);
             {

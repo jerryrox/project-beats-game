@@ -83,7 +83,7 @@ namespace PBGame.UI.Components.Prepare
                     glow.RawSize = new Vector2(56f, 56f);
                     glow.SpriteName = "glow-circle-32";
 
-                    (glow as IRaycastable).IsRaycastTarget = false;
+                    glow.IsRaycastTarget = false;
                 }
                 bg = holder.CreateChild<UguiSprite>("bg", 1);
                 {
