@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBFramework.Threading;
+using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Models
@@ -9,6 +10,10 @@ namespace PBGame.UI.Models
     public abstract class BaseModel : IModel {
 
         private Coroutine updateCoroutine;
+
+
+        [ReceivesDependency]
+        protected IDependencyContainer Dependency { get; set; }
 
 
         /// <summary>

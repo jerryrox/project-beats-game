@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Game;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
@@ -69,7 +70,7 @@ namespace PBGame.Rulesets
         protected IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
-        private GameState GameState { get; set; }
+        private GameModel Model { get; set; }
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
@@ -245,7 +246,7 @@ namespace PBGame.Rulesets
             onDispose.SetHandler(() =>
             {
                 OnForceQuit?.Invoke();
-                GameScreen.ExitGame<PrepareScreen>();
+                Model.ExitGameForceful();
             });
             InvokeSoftDispose();
         }
@@ -258,16 +259,13 @@ namespace PBGame.Rulesets
             {
                 OnCompletion?.Invoke();
 
-                // TODO: Wait for completion timeout to auto navigate to results.
+                // Wait for completion timeout to auto navigate to results.
                 SynchronizedTimer autoExitTimer = new SynchronizedTimer()
                 {
                     Limit = 2f,
                 };
-                autoExitTimer.OnFinished += delegate { GameScreen.ExitGame<PrepareScreen>(); };
+                autoExitTimer.OnFinished += delegate { Model.ExitGameWithClear(); };
                 autoExitTimer.Start();
-
-                // TODO: Navigate to ResultScreen.
-                // GameScreen.ExitGame<ResultScreen>();
             });
 
             SynchronizedTimer initialTimer = new SynchronizedTimer()
