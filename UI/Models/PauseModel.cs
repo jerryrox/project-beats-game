@@ -115,8 +115,7 @@ namespace PBGame.UI.Models
             var game = ScreenNavigator.Get<GameScreen>();
             if(game == null)
                 return null;
-            // TODO: This should be retrieved from game model.
-            return game.CurSession;
+            return game.Model.CurrentSession;
         }
 
         /// <summary>

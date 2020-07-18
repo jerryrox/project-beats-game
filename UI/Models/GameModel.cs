@@ -40,6 +40,11 @@ namespace PBGame.UI.Models
         public bool IsLoaded => loadState.Value == GameLoadState.Success;
 
         /// <summary>
+        /// Returns the current game session.
+        /// </summary>
+        public IGameSession CurrentSession => currentSession;
+
+        /// <summary>
         /// Returns the current game loading state.
         /// </summary>
         public IReadOnlyBindable<GameLoadState> LoadState => loadState;

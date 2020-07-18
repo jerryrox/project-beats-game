@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using PBGame.UI.Models;
-using PBGame.UI.Components.Game;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Audio;
@@ -21,7 +20,6 @@ using UnityEngine;
 
 namespace PBGame.Rulesets
 {
-    // TODO: Integrate music controller.
     public abstract class GameSession<T> : IGameSession<T>
         where T : BaseHitObject
     {
@@ -135,7 +133,7 @@ namespace PBGame.Rulesets
 
             // Load map hitsounds only if enabled in configuration.
             if(GameConfiguration.UseBeatmapHitsounds.Value)
-                GameState.AddInitialLoader(MapAssetStore.LoadHitsounds());
+                Model.AddAsLoader(MapAssetStore.LoadHitsounds());
         }
 
         public void InvokeSoftInit()
@@ -175,7 +173,7 @@ namespace PBGame.Rulesets
             Game.OnAppFocus -= OnAppFocused;
 
             // Record score.
-            var recordPromise = GameScreen?.RecordScore(ScoreProcessor, playTime);
+            var recordPromise = Model?.RecordScore(ScoreProcessor, playTime);
             recordPromise.OnFinished += () =>
             {
                 // Dispose score processor.
@@ -210,7 +208,6 @@ namespace PBGame.Rulesets
                 MusicController.Pause();
 
             var pauseOverlay = OverlayNavigator.Show<PauseOverlay>();
-            pauseOverlay.GameSession = this;
 
             IsPaused = true;
             OnPause?.Invoke();
