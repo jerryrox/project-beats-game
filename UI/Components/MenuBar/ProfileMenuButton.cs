@@ -103,7 +103,7 @@ namespace PBGame.UI.Components.MenuBar
             if(user != null)
                 nicknameLabel.Text = user.Username;
             else
-                nicknameLabel.Text = "";
+                nicknameLabel.Text = "offline user";
         }
 
         /// <summary>

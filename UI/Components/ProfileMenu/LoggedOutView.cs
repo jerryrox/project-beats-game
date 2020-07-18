@@ -129,6 +129,9 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnProviderChange(IApiProvider provider)
         {
+            if(provider == null)
+                return;
+
             // Display OAuth or Credential login based on API information.
             BaseLoginView loginView = null;
             if (provider.IsOAuthLogin)

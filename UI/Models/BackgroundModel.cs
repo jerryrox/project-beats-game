@@ -16,7 +16,7 @@ namespace PBGame.UI.Models
 {
     public class BackgroundModel : BaseModel {
 
-        private Bindable<BackgroundType> bgType;
+        private Bindable<BackgroundType> bgType = new Bindable<BackgroundType>();
 
 
         /// <summary>

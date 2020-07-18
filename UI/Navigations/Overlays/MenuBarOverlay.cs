@@ -24,9 +24,6 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected override int ViewDepth => ViewDepths.MenuBarOverlay;
 
-        [ReceivesDependency]
-        private MenuBarModel Model { get; set; }
-
 
         [InitWithDependency]
         private void Init()
