@@ -51,6 +51,14 @@ namespace PBGame.UI.Components.QuickMenu
             OnEnableInited();
         }
 
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            if(menuInfo != null)
+                IsFocused = menuInfo.ShouldHighlight;
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
