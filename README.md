@@ -2,7 +2,6 @@
 Implementation of Project: Beats game
   
 ## This project is a huge WIP.
-Currently, I'm restructuring my original source to make things more organized and scalable.  
 Slowly making progress 🧩
 
 ## Dependencies
