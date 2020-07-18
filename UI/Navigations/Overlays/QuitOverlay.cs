@@ -35,7 +35,7 @@ namespace PBGame.UI.Navigations.Overlays
                 .AddTime(2f, 1f)
                 .AddTime(2.5f, 1f)
                 .Build();
-            anime.AddEvent(anime.Duration, model.Quit);
+            anime.AddEvent(anime.Duration, () => model.Quit());
             return anime;
         }
     }

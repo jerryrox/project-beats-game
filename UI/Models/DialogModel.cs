@@ -18,7 +18,7 @@ namespace PBGame.UI.Models
 
         private BindableBool isShowing = new BindableBool(false);
         private Bindable<string> message = new Bindable<string>();
-        private Bindable<List<DialogOption>> options = new Bindable<List<DialogOption>>();
+        private Bindable<List<DialogOption>> options = new Bindable<List<DialogOption>>(new List<DialogOption>());
 
 
         /// <summary>

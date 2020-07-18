@@ -71,6 +71,7 @@ namespace PBGame.UI.Navigations.Overlays
             base.OnEnableInited();
 
             model.IsShowing.BindAndTrigger(OnShowingChange);
+            model.Message.BindAndTrigger(OnMessageChange);
         }
 
         protected override void OnDisable()
@@ -78,6 +79,7 @@ namespace PBGame.UI.Navigations.Overlays
             base.OnDisable();
 
             model.IsShowing.OnNewValue -= OnShowingChange;
+            model.Message.OnNewValue -= OnMessageChange;
         }
 
         /// <summary>
@@ -86,6 +88,14 @@ namespace PBGame.UI.Navigations.Overlays
         private void OnShowingChange(bool isShowing)
         {
             blocker.Active = !isShowing;
+        }
+
+        /// <summary>
+        /// Event called on dialog message change.
+        /// </summary>
+        private void OnMessageChange(string message)
+        {
+            messageLabel.Text = message;
         }
     }
 }

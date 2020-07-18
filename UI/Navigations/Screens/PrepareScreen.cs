@@ -26,6 +26,8 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
+            Dependencies.Cache(this);
+
             infoContainer = CreateChild<InfoContainer>("info", 0);
             {
                 infoContainer.Anchor = AnchorType.BottomStretch;

@@ -40,7 +40,7 @@ namespace PBGame.UI.Models
         private ITimer searchScheduler;
         private string scheduledTerm;
 
-        private Bindable<List<IMapset>> mapsets;
+        private Bindable<List<IMapset>> mapsets = new Bindable<List<IMapset>>();
 
         private IMapset mapsetForDropdown;
         private DropdownContext dropdownContext;

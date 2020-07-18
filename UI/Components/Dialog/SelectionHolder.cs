@@ -56,7 +56,7 @@ namespace PBGame.UI.Components.Dialog
         /// </summary>
         private void BuildItems(List<DialogOption> options)
         {
-            if(options == null || options.Count == 0)
+            if(options == null)
                 return;
 
             float height = 0f;
@@ -66,13 +66,12 @@ namespace PBGame.UI.Components.Dialog
                 {
                     button.Anchor = AnchorType.Top;
                     button.Pivot = PivotType.Top;
-                    button.Y = Height == 0f ? 0f : -Height - 2f;
+                    button.Y = height == 0f ? 0f : -height - 2f;
                     
                     button.LabelText = option.Label;
                     button.Tint = option.Color;
 
-                    if(option.Callback != null)
-                        button.OnTriggered += option.Callback;
+                    button.OnTriggered += () => Model.SelectOption(option);
                 }
                 buttons.Add(button);
 

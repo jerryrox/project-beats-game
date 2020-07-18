@@ -21,7 +21,7 @@ namespace PBGame.UI.Models
         private BindableBool isDetailedMode = new BindableBool(false);
         private Bindable<List<IOriginalMap>> mapList = new Bindable<List<IOriginalMap>>();
         private Bindable<string> mapsetDescription = new Bindable<string>("");
-        private Bindable<List<IRankInfo>> rankList = new Bindable<List<IRankInfo>>();
+        private Bindable<List<IRankInfo>> rankList = new Bindable<List<IRankInfo>>(new List<IRankInfo>());
 
 
         /// <summary>

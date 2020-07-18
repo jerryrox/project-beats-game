@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Prepare
 
 
         [InitWithDependency]
-        private void Init(IPrepareScreen prepareScreen)
+        private void Init(PrepareScreen prepareScreen)
         {
             gradient = CreateChild<UguiSprite>("gradient", 0);
             {
@@ -41,7 +41,7 @@ namespace PBGame.UI.Components.Prepare
                 listContainer.Pivot = PivotType.Top;
                 listContainer.RawWidth = 0f;
                 listContainer.Height = 64f;
-                listContainer.Y = -(prepareScreen as PrepareScreen).MenuBarHeight;
+                listContainer.Y = -prepareScreen.MenuBarHeight;
 
                 versionList = listContainer.CreateChild<UguiListView>("version-list", 0);
                 {

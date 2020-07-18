@@ -26,7 +26,7 @@ namespace PBGame.UI.Models
         private CacherAgent<IMusicAudio> musicAgent;
 
         private Bindable<MapsetsRequest> mapsetsRequest = new Bindable<MapsetsRequest>();
-        private Bindable<List<OnlineMapset>> mapsetList = new Bindable<List<OnlineMapset>>();
+        private Bindable<List<OnlineMapset>> mapsetList = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
         private Bindable<OnlineMapset> previewingMapset = new Bindable<OnlineMapset>();
 
 
@@ -38,7 +38,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Returns the list of mapsets returned by the API.
         /// </summary>
-        public IReadOnlyBindable<List<OnlineMapset>> MapsetList => MapsetList;
+        public IReadOnlyBindable<List<OnlineMapset>> MapsetList => mapsetList;
 
         /// <summary>
         /// Returns the mapset currently playing the preview audio.
