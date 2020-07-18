@@ -29,7 +29,8 @@ namespace PBGame.UI.Models
         private IScreenNavigator ScreenNavigator { get; set; }
 
 
-        public PauseModel()
+        [InitWithDependency]
+        private void Init()
         {
             options = new List<DialogOption>()
             {
