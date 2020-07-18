@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Components.Common;
+using PBGame.UI.Models;
 using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Search
 {
@@ -23,10 +20,7 @@ namespace PBGame.UI.Components.Download.Search
 
 
         [ReceivesDependency]
-        private DownloadState State { get; set; }
-
-        [ReceivesDependency]
-        private IApi Api { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -78,29 +72,15 @@ namespace PBGame.UI.Components.Download.Search
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.Options.ApiProvider.BindAndTrigger(OnProviderChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            State.ApiProvider.BindAndTrigger(OnProviderChange);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            State.ApiProvider.OnNewValue -= OnProviderChange;
+            Model.Options.ApiProvider.OnNewValue -= OnProviderChange;
         }
 
         /// <summary>
@@ -108,8 +88,7 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void RefreshStatus()
         {
-            var api = Api.GetProvider(State.ApiProvider.Value);
-            statusLabel.Text = $"using {api.Name}";
+            statusLabel.Text = $"using {Model.SelectedProvider.Name}";
         }
 
         /// <summary>

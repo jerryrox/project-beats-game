@@ -16,11 +16,16 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.9.4 (WIP)
+### 0.10.0 (WIP)
 #### New features
 - Added ability to test using localhost api server.
+#### Improvements
+- Decoupled logics away from most UI elements.
+#### Changes
+- Abstracted away shared logics of BaseScreen/BaseOverlay views into BaseNavView.
 #### Fixes
 - Fixed input box's hover sprite being able to receive raycast.
+- Fixed bug where focusing on song search bar and releasing without change triggers a search.
 
 ### 0.9.3
 #### New features

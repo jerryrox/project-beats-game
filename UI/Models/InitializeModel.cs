@@ -1,29 +1,48 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using PBGame.UI.Navigations.Screens;
+using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Configurations;
+using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
 
-namespace PBGame.UI.Navigations.Screens.Initialize
+namespace PBGame.UI.Models
 {
-    public class InitLoader : IInitLoader {
+    public class InitializeModel : BaseModel {
 
-        public event Action OnComplete;
+        private Bindable<string> state = new Bindable<string>("");
+        private BindableFloat progress = new BindableFloat(0f);
+        private BindableBool isComplete = new BindableBool(false);
 
-        private Bindable<string> bindableState = new Bindable<string>("");
-        private BindableFloat bindableProgress = new BindableFloat(0.0f);
 
+        /// <summary>
+        /// Returns whether the loading is finished.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsComplete => isComplete;
 
-        public bool IsComplete { get; private set; }
+        /// <summary>
+        /// Returns the current state of the loader.
+        /// </summary>
+        public IReadOnlyBindable<string> State => state;
 
-        public IReadOnlyBindable<string> State => bindableState;
+        /// <summary>
+        /// Returns the current loader progress.
+        /// </summary>
+        public IReadOnlyBindable<float> Progress => progress;
 
-        public IReadOnlyBindable<float> Progress => bindableProgress;
+        [ReceivesDependency]
+        private IOverlayNavigator OverlayNavigator { get; set; }
+
+        [ReceivesDependency]
+        private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
@@ -53,16 +72,22 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         private IDownloadStore DownloadStore { get; set; }
 
 
-        public InitLoader(IDependencyContainer dependencies)
-        {
-            if(dependencies == null) throw new ArgumentNullException(nameof(dependencies));
-
-            dependencies.Inject(this);
-        }
-
-        public void Load()
+        /// <summary>
+        /// Starts the game loading process.
+        /// </summary>
+        public void StartLoad()
         {
             LoadConfigurations();
+        }
+
+        /// <summary>
+        /// Navigates away to the next view.
+        /// </summary>
+        public void NavigateToNext()
+        {
+            OverlayNavigator.Show<SystemOverlay>();
+            OverlayNavigator.Show<BackgroundOverlay>();
+            ScreenNavigator.Show<HomeScreen>();
         }
 
         /// <summary>
@@ -137,8 +162,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         {
             UnityThread.DispatchUnattended(() =>
             {
-                IsComplete = true;
-                OnComplete?.Invoke();
+                isComplete.Value = true;
                 return null;
             });
         }
@@ -148,7 +172,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void SetState(string state)
         {
-            UnityThread.DispatchUnattended(() => bindableState.Value = state);
+            UnityThread.DispatchUnattended(() => this.state.Value = state);
         }
 
         /// <summary>
@@ -156,7 +180,7 @@ namespace PBGame.UI.Navigations.Screens.Initialize
         /// </summary>
         private void SetProgress(float progress)
         {
-            UnityThread.DispatchUnattended(() => bindableProgress.Value = progress);
+            UnityThread.DispatchUnattended(() => this.progress.Value = progress);
         }
     }
 }

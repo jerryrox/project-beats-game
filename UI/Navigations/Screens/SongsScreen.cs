@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Songs;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class SongsScreen : BaseScreen, ISongScreen {
+    public class SongsScreen : BaseScreen<SongsModel>, ISongScreen {
 
         public SearchMenu SearchMenu { get; private set; }
 
@@ -19,7 +20,7 @@ namespace PBGame.UI.Navigations.Screens
 
         public Background Background { get; set; }
 
-        protected override int ScreenDepth => ViewDepths.SongsScreen;
+        protected override int ViewDepth => ViewDepths.SongsScreen;
 
 
         [InitWithDependency]

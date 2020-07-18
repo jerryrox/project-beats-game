@@ -1,3 +1,4 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Prepare;
 using PBGame.Graphics;
 using PBFramework.Graphics;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class PrepareScreen : BaseScreen, IPrepareScreen {
+    public class PrepareScreen : BaseScreen<PrepareModel>, IPrepareScreen {
 
         private const float InfoDetailedYDiff = 720f - 640f;
         private const float InfoBriefY = 250f;
@@ -15,20 +16,17 @@ namespace PBGame.UI.Navigations.Screens
         private InfoContainer infoContainer;
         private VersionContainer versionContainer;
 
-        private bool isInfoDetailed = false;
         private IAnime infoDetailAni;
         private IAnime infoBriefAni;
 
 
-        protected override int ScreenDepth => ViewDepths.PrepareScreen;
+        protected override int ViewDepth => ViewDepths.PrepareScreen;
 
 
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
-            // Cache this container for inner component.
-            Dependencies = Dependencies.Clone();
-            Dependencies.CacheAs<IPrepareScreen>(this);
+            Dependencies.Cache(this);
 
             infoContainer = CreateChild<InfoContainer>("info", 0);
             {
@@ -66,16 +64,22 @@ namespace PBGame.UI.Navigations.Screens
         {
             base.OnEnableInited();
 
-            // For the info container in brief mode.
-            isInfoDetailed = false;
-            infoContainer.Y = InfoBriefY;
+            model.IsDetailedMode.BindAndTrigger(OnDetailedModeChange);
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            
+            model.IsDetailedMode.OnNewValue -= OnDetailedModeChange;
         }
 
-        public void ToggleInfoDetail()
+        /// <summary>
+        /// Event called when the detailed information display mode is changed.
+        /// </summary>
+        private void OnDetailedModeChange(bool isDetailed)
         {
-            isInfoDetailed = !isInfoDetailed;
-
-            if (isInfoDetailed)
+            if (isDetailed)
             {
                 infoBriefAni.Stop();
                 infoDetailAni.PlayFromStart();

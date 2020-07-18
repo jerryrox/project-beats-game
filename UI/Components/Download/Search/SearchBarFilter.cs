@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Search
 {
@@ -16,7 +12,7 @@ namespace PBGame.UI.Components.Download.Search
 
 
         [ReceivesDependency]
-        private DownloadState State { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -34,8 +30,8 @@ namespace PBGame.UI.Components.Download.Search
                 input.OnSubmitted += (value) =>
                 {
                     value = value.Trim();
-                    if (!string.IsNullOrEmpty(value) || value != State.SearchTerm.Value)
-                        State.SearchTerm.Value = value;
+                    if (!string.IsNullOrEmpty(value) || !value.Equals(Model.Options.SearchTerm.Value))
+                        Model.Options.SearchTerm.Value = value;
                 };
             }
         }
@@ -43,13 +39,15 @@ namespace PBGame.UI.Components.Download.Search
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            State.SearchTerm.BindAndTrigger(OnSearchTermChange);
+
+            Model.Options.SearchTerm.BindAndTrigger(OnSearchTermChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            State.SearchTerm.OnNewValue -= OnSearchTermChange;
+
+            Model.Options.SearchTerm.OnNewValue -= OnSearchTermChange;
         }
 
         /// <summary>

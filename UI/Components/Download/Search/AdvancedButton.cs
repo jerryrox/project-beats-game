@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.Graphics;
-using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;

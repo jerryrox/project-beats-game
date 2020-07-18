@@ -1,28 +1,19 @@
-using PBGame.Data.Users;
-using PBGame.Assets.Caching;
+using PBGame.UI.Models;
 using PBGame.Graphics;
-using PBGame.Networking.API;
 using PBFramework.UI;
-using PBFramework.Allocation.Caching;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    // TODO: Support for logging in using other API providers.
     public class CoverDisplay : UguiObject
     {
         private ITexture image;
 
-        private CacherAgent<Texture2D> imageAgent;
-
 
         [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
-
-        [ReceivesDependency]
-        private IWebImageCacher WebImageCacher { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
         [ReceivesDependency]
         private IColorPreset ColorPreset { get; set; }
@@ -31,13 +22,6 @@ namespace PBGame.UI.Components.ProfileMenu
         [InitWithDependency]
         private void Init()
         {
-            imageAgent = new CacherAgent<Texture2D>(WebImageCacher);
-            imageAgent.OnFinished += (profileImage) =>
-            {
-                image.Texture = profileImage;
-                image.Active = profileImage != null;
-            };
-
             var bg = CreateChild<UguiSprite>("bg");
             {
                 bg.Anchor = AnchorType.Fill;
@@ -66,51 +50,26 @@ namespace PBGame.UI.Components.ProfileMenu
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.CoverImage.BindAndTrigger(OnCoverImageChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-            RemoveImage();
-        }
+            
+            Model.CoverImage.OnNewValue -= OnCoverImageChange;
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            UserManager.CurrentUser.OnValueChanged += OnUserChange;
-
-            OnUserChange(UserManager.CurrentUser.Value);
-        }
-
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
-        }
-
-        /// <summary>
-        /// Removes profile image texture from image.
-        /// </summary>
-        private void RemoveImage()
-        {
-            imageAgent.Remove();
             image.Active = false;
         }
 
         /// <summary>
-        /// Event called when the online user has changed.
+        /// Event called when the cover image has changed.
         /// </summary>
-        private void OnUserChange(IUser user, IUser _ = null)
+        private void OnCoverImageChange(Texture2D coverImage)
         {
-            RemoveImage();
-            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.CoverImage))
-                imageAgent.Request(user.OnlineUser.CoverImage);
+            image.Texture = coverImage;
+            image.Active = coverImage != null;
         }
     }
 }

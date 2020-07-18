@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Data.Users;
-using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -10,7 +7,6 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    // TODO: Support for logging in using other API providers.
     public class Header : UguiObject {
 
         private ProfileImage profileImage;
@@ -18,7 +14,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
 
         [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -47,7 +43,21 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            var user = UserManager.CurrentUser.Value;
+            Model.CurrentUser.BindAndTrigger(OnUserChange);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.CurrentUser.OnNewValue -= OnUserChange;
+        }
+
+        /// <summary>
+        /// Event called when the current user has changed.
+        /// </summary>
+        private void OnUserChange(IUser user)
+        {
             if(user != null)
                 nickname.Text = user.Username;
             else

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using PBGame.UI.Models;
 using PBGame.UI.Components.System;
-using PBGame.UI.Navigations.Screens;
-using PBGame.Configurations;
-using PBFramework.UI;
-using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -13,7 +7,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class SystemOverlay : BaseOverlay, ISystemOverlay {
+    public class SystemOverlay : BaseOverlay<SystemModel>, ISystemOverlay {
 
         /// <summary>
         /// Amount of default padding applied for inner display components from overlay rect.
@@ -28,16 +22,7 @@ namespace PBGame.UI.Navigations.Overlays
 
         public FpsDisplayer FpsDisplayer { get; private set; }
 
-        protected override int OverlayDepth => ViewDepths.SystemOverlay;
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IScreenNavigator ScreenNavigator { get; set; }
+        protected override int ViewDepth => ViewDepths.SystemOverlay;
 
 
         [InitWithDependency]
@@ -76,27 +61,23 @@ namespace PBGame.UI.Navigations.Overlays
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            GameConfiguration.ShowFps.BindAndTrigger(OnShowFpsChange);
-            GameConfiguration.DisplayMessages.BindAndTrigger(OnDisplayMessagesChange);
 
-            OverlayNavigator.OnShowView += OnOverlayShow;
-            OverlayNavigator.OnHideView += OnOverlayHide;
-
-            ScreenNavigator.OnShowView += OnScreenShow;
-
-            AdjustForMenubar(OverlayNavigator.IsActive(typeof(MenuBarOverlay)));
+            model.IsFpsEnabled.BindAndTrigger(OnShowFpsChange);
+            model.IsMenuBarActive.BindAndTrigger(OnMenuBarActivate);
+            model.IsMessageEnabled.OnNewValue += OnDisplayMessagesChange;
+            model.IsMessageEnabledGame.OnNewValue += OnDisplayMessagesGameChange;
+            model.IsGameScreen.OnNewValue += OnGameScreen;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            GameConfiguration.ShowFps.OnNewValue -= OnShowFpsChange;
-            GameConfiguration.DisplayMessages.OnNewValue -= OnDisplayMessagesChange;
 
-            OverlayNavigator.OnShowView -= OnOverlayShow;
-            OverlayNavigator.OnHideView -= OnOverlayHide;
-
-            ScreenNavigator.OnShowView -= OnScreenShow;
+            model.IsFpsEnabled.OnNewValue -= OnShowFpsChange;
+            model.IsMenuBarActive.OnNewValue -= OnMenuBarActivate;
+            model.IsMessageEnabled.OnNewValue -= OnDisplayMessagesChange;
+            model.IsMessageEnabledGame.OnNewValue -= OnDisplayMessagesGameChange;
+            model.IsGameScreen.OnNewValue -= OnGameScreen;
         }
 
         /// <summary>
@@ -118,20 +99,19 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private void ToggleMessageDisplayer()
         {
-            if (GameConfiguration.DisplayMessages.Value)
+            bool isMessageEnbled = model.IsMessageEnabled.Value;
+            if (isMessageEnbled)
             {
                 // TODO: Hide when NotificationMenuOverlay is currently displayed.
 
-                // TODO: Uncomment when GameScreen is implemented.
-                // if (ScreenNavigator.CurrentScreen is GameScreen)
-                //     MessageDisplayer.ToggleDisplay(GameConfiguration.DisplayMessagesInGame.Value);
-                // else
-                MessageDisplayer.ToggleDisplay(true);
+                if (model.IsGameScreen.Value)
+                {
+                    MessageDisplayer.ToggleDisplay(model.IsMessageEnabledGame.Value);
+                    return;
+                }
             }
-            else
-            {
-                MessageDisplayer.ToggleDisplay(false);
-            }
+
+            MessageDisplayer.ToggleDisplay(isMessageEnbled);
         }
 
         /// <summary>
@@ -143,33 +123,24 @@ namespace PBGame.UI.Navigations.Overlays
         /// Event called on display messages settings change.
         /// </summary>
         private void OnDisplayMessagesChange(bool show) => ToggleMessageDisplayer();
+        
+        /// <summary>
+        /// Event called on display messages in game settings change.
+        /// </summary>
+        private void OnDisplayMessagesGameChange(bool show) => ToggleMessageDisplayer();
 
         /// <summary>
-        /// Event called on overlay show.
+        /// Event called on menu bar overlay active state change.
         /// </summary>
-        private void OnOverlayShow(INavigationView view)
+        private void OnMenuBarActivate(bool isActive)
         {
             ToggleMessageDisplayer();
-            if(view is MenuBarOverlay)
-                AdjustForMenubar(true);
+            AdjustForMenubar(isActive);
         }
 
         /// <summary>
-        /// Event called on overlay hide.
+        /// Event called when the game screen active state has changed.
         /// </summary>
-        private void OnOverlayHide(INavigationView view)
-        {
-            ToggleMessageDisplayer();
-            if(view is MenuBarOverlay)
-                AdjustForMenubar(false);
-        }
-
-        /// <summary>
-        /// Event called on screen show.
-        /// </summary>
-        private void OnScreenShow(INavigationView view)
-        {
-            ToggleMessageDisplayer();
-        }
+        private void OnGameScreen(bool isActive) => ToggleMessageDisplayer();
     }
 }

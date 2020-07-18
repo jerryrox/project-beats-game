@@ -68,6 +68,7 @@ namespace PBGame
         protected MapSelection mapSelection;
         protected MapManager mapManager;
         protected Metronome metronome;
+        protected MusicPlaylist musicPlaylist;
 
         protected DownloadStore downloadStore;
         protected Api api;
@@ -151,6 +152,7 @@ namespace PBGame
             {
                 AudioController = musicController
             });
+            Dependencies.CacheAs<IMusicPlaylist>(musicPlaylist = new MusicPlaylist(mapManager, mapSelection));
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));

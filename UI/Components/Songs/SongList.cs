@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common.Dropdown;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
@@ -16,42 +17,13 @@ namespace PBGame.UI.Components.Songs
 {
     public class SongList : UguiListView, IListView {
 
-        private const int SongDeleteAction = 0;
-        private const int SongOffsetAction = 1;
-
-
-        private List<IMapset> mapsets;
-
-        private DropdownContext dropdownContext;
-
-        /// <summary>
-        /// The mapset currently under context of dropdown menu.
-        /// </summary>
-        private IMapset heldMapset;
-
-
         [ReceivesDependency]
-        private IMapManager MapManager { get; set; }
-
-        [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IDropdownProvider DropdownProvider { get; set; }
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
+        private SongsModel Model { get; set; }
 
 
         [InitWithDependency]
         private void Init(IRootMain rootMain)
         {
-            // Init dropdown context.
-            dropdownContext = new DropdownContext() { IsSelectionMenu = false };
-            dropdownContext.OnSelection += OnDropdownSelection;
-            dropdownContext.Datas.Add(new DropdownData("Offset", SongOffsetAction));
-            dropdownContext.Datas.Add(new DropdownData("Delete", SongDeleteAction));
-
             // Init the list view.
             Initialize(OnCreateListItem, OnUpdateListItem);
             CellSize = new Vector2(rootMain.Resolution.x, 82f);
@@ -70,58 +42,16 @@ namespace PBGame.UI.Components.Songs
         {
             base.OnEnableInited();
 
-            BindEvents();
+            Model.SelectedMapset.OnNewValue += OnMapsetChange;
+            Model.Mapsets.BindAndTrigger(OnMapsetListChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            UnbindEvents();
-        }
-
-        /// <summary>
-        /// Binds events to external dependencies.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapManager.DisplayedMapsets.OnChange += OnMapsetListChange;
-            MapSelection.Mapset.OnNewValue += OnMapsetChange;
-
-            OnMapsetListChange(MapManager.DisplayedMapsets.RawList);
-        }
-
-        /// <summary>
-        /// Unbinds events from external dependencies.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapManager.DisplayedMapsets.OnChange -= OnMapsetListChange;
-            MapSelection.Mapset.OnNewValue -= OnMapsetChange;
-        }
-
-        /// <summary>
-        /// Event called from dropdown context when a menu iten has been selected.
-        /// </summary>
-        private void OnDropdownSelection(DropdownData data)
-        {
-            if (heldMapset == null)
-                return;
-
-            int action = (int)data.ExtraData;
-            switch (action)
-            {
-                case SongDeleteAction:
-                    Debug.LogWarning("Delete mapset: " + heldMapset.Metadata.Title);
-                    break;
-                case SongOffsetAction:
-                    // If not the selected mapset, make it selected.
-                    if(heldMapset != MapSelection.Mapset.Value)
-                        MapSelection.SelectMapset(heldMapset);
-                        
-                    OverlayNavigator.Show<OffsetsOverlay>().Setup();
-                    break;
-            }
+            Model.Mapsets.OnNewValue -= OnMapsetListChange;
+            Model.SelectedMapset.OnNewValue -= OnMapsetChange;
         }
 
         /// <summary>
@@ -129,11 +59,9 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnItemHold(SongListItem item)
         {
-            if(!item.Active || item.Mapset == null)
+            if(!item.Active)
                 return;
-
-            heldMapset = item.Mapset;
-            DropdownProvider.OpenAt(dropdownContext, item.RawTransform.position);
+            Model.TriggerDropdown(item.Mapset, item.RawTransform.position);
         }
 
         /// <summary>
@@ -154,14 +82,13 @@ namespace PBGame.UI.Components.Songs
         /// </summary>
         private void OnUpdateListItem(IListItem item)
         {
+            var mapsets = Model.Mapsets.Value;
             if(mapsets == null || item.ItemIndex >= mapsets.Count || item.ItemIndex < 0)
                 return;
 
-            var mapset = mapsets[item.ItemIndex];
-
             // Cast the item into SongListItem and refresh it.
             var songListItem = (SongListItem)item;
-            songListItem.SetMapset(mapset);
+            songListItem.SetMapset(mapsets[item.ItemIndex]);
         }
 
         /// <summary>
@@ -178,10 +105,8 @@ namespace PBGame.UI.Components.Songs
         private void OnMapsetListChange(List<IMapset> mapsets)
         {
             // Refresh the list.
-            this.mapsets = mapsets;
             TotalItems = mapsets.Count;
-            
-            CenterOnSelection(MapSelection.Mapset.Value);
+            CenterOnSelection(Model.SelectedMapset.Value);
         }
 
         /// <summary>
@@ -190,12 +115,11 @@ namespace PBGame.UI.Components.Songs
         private void CenterOnSelection(IMapset mapset)
         {
             // If the selected mapset currently exists in the new list, focus on that area.
-            var selection = MapSelection.Mapset.Value;
-            var selectionIndex = mapsets.IndexOf(selection);
-            if (selectionIndex >= 0)
+            int mapsetIndex = Model.GetSelectedMapsetIndex();
+            if (mapsetIndex >= 0)
             {
                 // Smooth transition to selection position.
-                ScrollTo(CalculateSelectionPos(selectionIndex));
+                ScrollTo(CalculateSelectionPos(mapsetIndex));
             }
         }
 

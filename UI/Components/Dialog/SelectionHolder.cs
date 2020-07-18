@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
+using PBGame.UI.Models.Dialog;
 using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -13,8 +15,11 @@ namespace PBGame.UI.Components.Dialog
     public class SelectionHolder : UguiObject {
 
         private ISprite bgSprite;
-
         private List<DialogButton> buttons = new List<DialogButton>();
+
+
+        [ReceivesDependency]
+        private DialogModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -28,39 +33,70 @@ namespace PBGame.UI.Components.Dialog
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.5f);
             }
+
+            OnEnableInited();
         }
 
-        /// <summary>
-        /// Adds a new selection button using specified values.
-        /// </summary>
-        public void AddSelection(string label, Color color, Action callback)
+        protected override void OnEnableInited()
         {
-            DialogButton button = CreateChild<DialogButton>("selection", buttons.Count);
-            {
-                button.Anchor = AnchorType.Top;
-                button.Pivot = PivotType.Top;
-                button.Y = Height == 0f ? 0f : -Height - 2f;
-                
-                button.LabelText = label;
-                button.Tint = color;
+            base.OnEnableInited();
 
-                if(callback != null)
-                    button.OnTriggered += callback;
-            }
-            buttons.Add(button);
+            Model.Options.BindAndTrigger(OnOptionsChange);
+        }
 
-            Height += Height == 0f ? button.Height : button.Height + 2f;
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.Options.OnNewValue -= OnOptionsChange;
         }
 
         /// <summary>
-        /// Clears all selection buttons.
+        /// Builds dialog items using the specified list of options.
         /// </summary>
-        public void RemoveSelections()
+        private void BuildItems(List<DialogOption> options)
+        {
+            if(options == null)
+                return;
+
+            float height = 0f;
+            foreach (var option in options)
+            {
+                DialogButton button = CreateChild<DialogButton>("selection", buttons.Count);
+                {
+                    button.Anchor = AnchorType.Top;
+                    button.Pivot = PivotType.Top;
+                    button.Y = height == 0f ? 0f : -height - 2f;
+                    
+                    button.LabelText = option.Label;
+                    button.Tint = option.Color;
+
+                    button.OnTriggered += () => Model.SelectOption(option);
+                }
+                buttons.Add(button);
+
+                height += button.Height + (height == 0f ? 0f : 2f);
+            }
+            this.Height = height;
+        }
+
+        /// <summary>
+        /// Removes all option items.
+        /// </summary>
+        private void RemoveAll()
         {
             buttons.ForEach(b => b.Destroy());
             buttons.Clear();
-
             Height = 0f;
+        }
+
+        /// <summary>
+        /// Event called on changes in the list of dialog options.
+        /// </summary>
+        private void OnOptionsChange(List<DialogOption> options)
+        {
+            RemoveAll();
+            BuildItems(options);
         }
     }
 }

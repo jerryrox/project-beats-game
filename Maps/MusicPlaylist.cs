@@ -8,15 +8,20 @@ namespace PBGame.Maps
     public class MusicPlaylist : IMusicPlaylist {
 
         private IMapManager mapManager;
+        private IMapSelection mapSelection;
 
         private List<IMapset> playlist = new List<IMapset>();
 
         private int index = 0;
 
 
-        public MusicPlaylist(IMapManager mapManager)
+        public MusicPlaylist(IMapManager mapManager, IMapSelection mapSelection)
         {
             this.mapManager = mapManager;
+            this.mapSelection = mapSelection;
+
+            mapManager.AllMapsets.OnChange += OnAllMapsetsChange;
+            mapSelection.Mapset.OnNewValue += OnSelectedMapsetChange;
         }
 
         public void Refill()
@@ -79,6 +84,22 @@ namespace PBGame.Maps
                 playlist[i] = playlist[targetInx];
                 playlist[targetInx] = backup;
             }
+        }
+
+        /// <summary>
+        /// Event called from map manager when the list of all mapsets have been changed.
+        /// </summary>
+        private void OnAllMapsetsChange(List<IMapset> mapsets)
+        {
+            Refill();
+        }
+
+        /// <summary>
+        /// Event called when the selected mapset has changed.
+        /// </summary>
+        private void OnSelectedMapsetChange(IMapset mapset)
+        {
+            Focus(mapset);
         }
     }
 }

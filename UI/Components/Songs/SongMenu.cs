@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
@@ -22,9 +23,12 @@ namespace PBGame.UI.Components.Songs
         private HoverableTrigger playButton;
         private PreviewBox previewBox;
 
+        [ReceivesDependency]
+        private SongsModel Model { get; set; }
+
 
         [InitWithDependency]
-        private void Init(IScreenNavigator screenNavigator, IMapSelection mapSelection, IMapManager mapManager)
+        private void Init()
         {
             bgSprite = CreateChild<UguiSprite>("bg", -1);
             {
@@ -43,10 +47,7 @@ namespace PBGame.UI.Components.Songs
                 backButton.CreateIconSprite(spriteName: "icon-arrow-left");
                 backButton.UseDefaultHoverAni();
 
-                backButton.OnTriggered += () =>
-                {
-                    screenNavigator.Show<HomeScreen>();
-                };
+                backButton.OnTriggered += Model.NavigateToHome;
             }
             randomButton = CreateChild<HoverableTrigger>("random", 1);
             {
@@ -59,10 +60,7 @@ namespace PBGame.UI.Components.Songs
                 randomButton.CreateIconSprite(spriteName: "icon-random");
                 randomButton.UseDefaultHoverAni();
 
-                randomButton.OnTriggered += () =>
-                {
-                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetRandom());
-                };
+                randomButton.OnTriggered += Model.SelectRandomMapset;
             }
             prevButton = CreateChild<HoverableTrigger>("prev", 2);
             {
@@ -75,10 +73,7 @@ namespace PBGame.UI.Components.Songs
                 prevButton.CreateIconSprite(spriteName: "icon-backward");
                 prevButton.UseDefaultHoverAni();
 
-                prevButton.OnTriggered += () =>
-                {
-                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetPrevious(mapSelection.Mapset.Value));
-                };
+                prevButton.OnTriggered += Model.SelectPrevMapset;
             }
             nextButton = CreateChild<HoverableTrigger>("next", 3);
             {
@@ -91,10 +86,7 @@ namespace PBGame.UI.Components.Songs
                 nextButton.CreateIconSprite(spriteName: "icon-forward");
                 nextButton.UseDefaultHoverAni();
 
-                nextButton.OnTriggered += () =>
-                {
-                    mapSelection.SelectMapset(mapManager.DisplayedMapsets.GetNext(mapSelection.Mapset.Value));
-                };
+                nextButton.OnTriggered += Model.SelectNextMapset;
             }
             playButton = CreateChild<HoverableTrigger>("play", 4);
             {
@@ -107,10 +99,7 @@ namespace PBGame.UI.Components.Songs
                 playButton.CreateIconSprite(spriteName: "icon-play");
                 playButton.UseDefaultHoverAni();
 
-                playButton.OnTriggered += () =>
-                {
-                    screenNavigator.Show<PrepareScreen>();
-                };
+                playButton.OnTriggered += Model.NavigateToPrepare;
             }
             previewBox = CreateChild<PreviewBox>("preview", 5);
             {
@@ -120,10 +109,7 @@ namespace PBGame.UI.Components.Songs
                 previewBox.Width = 560f;
                 previewBox.SetOffsetVertical(-18f, 18f);
 
-                previewBox.OnTriggered += () =>
-                {
-                    screenNavigator.Show<PrepareScreen>();                 
-                };
+                previewBox.OnTriggered += Model.NavigateToPrepare;
             }
         }
     }

@@ -1,29 +1,25 @@
-using System;
 using System.Collections.Generic;
+using PBGame.UI.Models;
+using PBGame.UI.Models.Background;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.Background;
-using PBGame.UI.Navigations.Screens;
 using PBGame.Maps;
 using PBGame.Graphics;
-using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class BackgroundOverlay : BaseOverlay, IBackgroundOverlay {
+    public class BackgroundOverlay : BaseOverlay<BackgroundModel>, IBackgroundOverlay {
 
         private ParallaxContainer parallaxContainer;
+        private IBackgroundDisplay emptyBackground;
+        private IBackgroundDisplay imageBackground;
+        private IBackgroundDisplay gradientBackground;
 
         private Color backgroundTint = Color.white;
 
-
-        public IBackgroundDisplay EmptyBackground { get; private set; }
-
-        public IBackgroundDisplay ImageBackground { get; private set; }
-
-        public IBackgroundDisplay GradientBackground { get; private set; }
 
         public Color Color
         {
@@ -36,7 +32,7 @@ namespace PBGame.UI.Navigations.Overlays
             }
         }
 
-        protected override int OverlayDepth => ViewDepths.BackgroundOverlay;
+        protected override int ViewDepth => ViewDepths.BackgroundOverlay;
 
         protected override bool IsRoot3D => true;
 
@@ -47,17 +43,11 @@ namespace PBGame.UI.Navigations.Overlays
         {
             get
             {
-                yield return EmptyBackground;
-                yield return ImageBackground;
-                yield return GradientBackground;
+                yield return emptyBackground;
+                yield return imageBackground;
+                yield return gradientBackground;
             }
         }
-
-        [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IScreenNavigator ScreenNavigator { get; set; }
 
 
         [InitWithDependency]
@@ -68,22 +58,22 @@ namespace PBGame.UI.Navigations.Overlays
                 parallaxContainer.Anchor = AnchorType.Fill;
                 parallaxContainer.Offset = Offset.Zero;
 
-                EmptyBackground = parallaxContainer.Content.CreateChild<EmptyBackgroundDisplay>("empty", 0);
+                emptyBackground = parallaxContainer.Content.CreateChild<EmptyBackgroundDisplay>("empty", 0);
                 {
-                    EmptyBackground.Anchor = AnchorType.Fill;
-                    EmptyBackground.Offset = Offset.Zero;
+                    emptyBackground.Anchor = AnchorType.Fill;
+                    emptyBackground.Offset = Offset.Zero;
                 }
-                ImageBackground = parallaxContainer.Content.CreateChild<ImageBackgroundDisplay>("image", 1);
+                imageBackground = parallaxContainer.Content.CreateChild<ImageBackgroundDisplay>("image", 1);
                 {
-                    ImageBackground.Anchor = AnchorType.Fill;
-                    ImageBackground.Offset = Offset.Zero;
-                    ImageBackground.Active = false;
+                    imageBackground.Anchor = AnchorType.Fill;
+                    imageBackground.Offset = Offset.Zero;
+                    imageBackground.Active = false;
                 }
-                GradientBackground = parallaxContainer.Content.CreateChild<GradientBackgroundDisplay>("gradient", 2);
+                gradientBackground = parallaxContainer.Content.CreateChild<GradientBackgroundDisplay>("gradient", 2);
                 {
-                    GradientBackground.Anchor = AnchorType.Fill;
-                    GradientBackground.Offset = Offset.Zero;
-                    GradientBackground.Active = false;
+                    gradientBackground.Anchor = AnchorType.Fill;
+                    gradientBackground.Offset = Offset.Zero;
+                    gradientBackground.Active = false;
                 }
             }
 
@@ -93,56 +83,35 @@ namespace PBGame.UI.Navigations.Overlays
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            model.Background.BindAndTrigger(OnBackgroundChange);
+            model.BgType.BindAndTrigger(OnBgTypeChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
+
+            model.Background.OnNewValue -= OnBackgroundChange;
+            model.BgType.OnNewValue -= OnBgTypeChange;
         }
 
-        public void SetBackground(IBackgroundDisplay display)
+        /// <summary>
+        /// Event called on map background change.
+        /// </summary>
+        private void OnBackgroundChange(IMapBackground background)
+        {
+            imageBackground.MountBackground(background);
+            gradientBackground.MountBackground(background);
+        }
+
+        /// <summary>
+        /// Event called on background display variant change.
+        /// </summary>
+        private void OnBgTypeChange(BackgroundType type)
         {
             foreach (var bg in Backgrounds)
-                bg.ToggleDisplay(bg == display);
-        }
-
-        /// <summary>
-        /// Mounts the specified background image to the bg displays.
-        /// </summary>
-        private void MountBackground(IMapBackground background)
-        {
-            ImageBackground.MountBackground(background);
-            GradientBackground.MountBackground(background);
-        }
-
-        /// <summary>
-        /// Adjusts background display matching the specified screen.
-        /// </summary>
-        private void OnScreenChange(INavigationView screen)
-        {
-            // TODO: Display different background if required.
-            SetBackground(ImageBackground);
-        }
-
-        /// <summary>
-        /// Binds events to external dependencies.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Background.BindAndTrigger(MountBackground);
-
-            ScreenNavigator.CurrentScreen.BindAndTrigger(OnScreenChange);
-        }
-
-        /// <summary>
-        /// Unbinds events from external dependencies.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Background.OnNewValue -= MountBackground;
-            ScreenNavigator.CurrentScreen.OnNewValue -= OnScreenChange;
+                bg.ToggleDisplay(bg.Type == type);
         }
     }
 }

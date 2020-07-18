@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -11,6 +9,7 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.System
 {
+    // TODO: Abstract away fps calculation to a separate module.
     public class FpsDisplayer : UguiObject, IHasTint, IDisplayer {
 
         /// <summary>

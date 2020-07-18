@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBGame.UI.Components.Game;
+using PBGame.UI.Models;
 using PBGame.Data;
 using PBGame.Graphics;
 using PBGame.Rulesets.Objects;
@@ -44,7 +44,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private IGameSession GameSession { get; set; }
 
         [ReceivesDependency]
-        private GameState State { get; set; }
+        private GameModel Model { get; set; }
 
         [ReceivesDependency]
         private IMusicController MusicController { get; set; }
@@ -251,7 +251,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                         UnityThread.StopCoroutine(loadRoutine);
                 }
             );
-            State.AddInitialLoader(promise);
+            Model.AddAsLoader(promise);
         }
 
         /// <summary>

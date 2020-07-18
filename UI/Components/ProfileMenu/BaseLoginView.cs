@@ -1,17 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    public abstract class BaseLoginView : UguiObject, ILoginView {
+    public abstract class BaseLoginView : UguiObject, IHasAlpha {
 
         private CanvasGroup canvasGroup;
 
@@ -26,15 +21,7 @@ namespace PBGame.UI.Components.ProfileMenu
             set => canvasGroup.alpha = value;
         }
 
-        /// <summary>
-        /// The API instance assigned to interact with.
-        /// </summary>
-        public IApiProvider ApiProvider { get; private set; }
-
         public abstract float DesiredHeight { get; }
-
-        [ReceivesDependency]
-        protected IApi Api { get; set; }
 
 
         [InitWithDependency]
@@ -77,28 +64,6 @@ namespace PBGame.UI.Components.ProfileMenu
                 showAni.Stop();
                 hideAni.Stop();
             }
-        }
-
-        /// <summary>
-        /// Prepares the view for the specified provider.
-        /// </summary>
-        public virtual void Setup(IApiProvider provider)
-        {
-            this.ApiProvider = provider;
-        }
-
-        /// <summary>
-        /// Event called on auth response success.
-        /// </summary>
-        public virtual void OnAuthSuccess()
-        {
-        }
-
-        /// <summary>
-        /// Event called on auth response fail.
-        /// </summary>
-        public virtual void OnAuthFailed()
-        {
         }
 
         /// <summary>

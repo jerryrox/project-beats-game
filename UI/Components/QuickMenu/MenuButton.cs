@@ -1,19 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models.QuickMenu;
 using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.UI.Components.QuickMenu
 {
-    public abstract class BaseMenuButton : HighlightableTrigger, IHasLabel
+    public class MenuButton : HighlightableTrigger, IHasLabel
     {
-        protected Action triggerAction;
-
         private ILabel label;
+
+        private MenuInfo menuInfo;
 
 
         public string LabelText
@@ -30,7 +27,7 @@ namespace PBGame.UI.Components.QuickMenu
             OnTriggered += () =>
             {
                 if(!IsFocused)
-                    triggerAction?.Invoke();
+                    menuInfo?.Action?.Invoke();
             };
 
             var icon = CreateIconSprite(depth: 4, size: 32f);
@@ -54,6 +51,14 @@ namespace PBGame.UI.Components.QuickMenu
             OnEnableInited();
         }
 
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            if(menuInfo != null)
+                IsFocused = menuInfo.ShouldHighlight;
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -63,8 +68,26 @@ namespace PBGame.UI.Components.QuickMenu
         }
 
         /// <summary>
-        /// Event called from quick menu overlay when the button should be shown.
+        /// Sets the menu info to associate with this button.
         /// </summary>
-        public abstract void OnShowQuickMenu();
+        public void SetMenuInfo(MenuInfo menuInfo)
+        {
+            this.menuInfo = menuInfo;
+            if (menuInfo != null)
+            {
+                LabelText = menuInfo.Label;
+                IconName = menuInfo.Icon;
+                IsFocused = menuInfo.ShouldHighlight;
+            }
+        }
+
+        /// <summary>
+        /// Triggers menu info's action.
+        /// </summary>
+        private void TriggerMenuAction()
+        {
+            if(!IsFocused)
+                menuInfo?.Action?.Invoke();
+        }
     }
 }
