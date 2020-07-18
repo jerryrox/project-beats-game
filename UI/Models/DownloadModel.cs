@@ -225,6 +225,15 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Performs the specified action within a context which triggers bindable change.
+        /// </summary>
+        public void ModifyMapsetsList(Action<List<OnlineMapset>> action)
+        {
+            action?.Invoke(mapsetList.Value);
+            mapsetList.Trigger();
+        }
+
+        /// <summary>
         /// Resets search option to initial state.
         /// </summary>
         private void ResetOptions()
@@ -266,15 +275,6 @@ namespace PBGame.UI.Models
 
             mapsetsRequest.Value.Dispose();
             mapsetsRequest.Value = null;
-        }
-
-        /// <summary>
-        /// Performs the specified action within a context which triggers bindable change.
-        /// </summary>
-        private void ModifyMapsetsList(Action<List<OnlineMapset>> action)
-        {
-            action?.Invoke(mapsetList.Value);
-            mapsetList.Trigger();
         }
 
         /// <summary>
