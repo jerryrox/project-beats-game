@@ -21,7 +21,7 @@ namespace PBGame.UI.Components.Background
             set => sprite.Color = value;
         }
 
-        public override BackgroundType Type => BackgroundType.Empty;
+        public override BackgroundType Type => BackgroundType.Gradient;
 
 
         [InitWithDependency]

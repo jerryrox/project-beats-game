@@ -17,7 +17,7 @@ namespace PBGame.UI.Components.Background
             set => mapImage.Color = value;
         }
 
-        public override BackgroundType Type => BackgroundType.Empty;
+        public override BackgroundType Type => BackgroundType.Image;
 
 
         [InitWithDependency]

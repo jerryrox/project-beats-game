@@ -44,6 +44,7 @@ namespace PBGame.UI.Components.Background
                 .AddTime(0f, () => Alpha)
                 .AddTime(0.35f, 0f)
                 .Build();
+            disableAni.AddEvent(disableAni.Duration, () => Active = false);
         }
 
         public virtual void MountBackground(IMapBackground background) => this.background = background;
