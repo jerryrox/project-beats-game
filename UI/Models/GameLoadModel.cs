@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBGame.UI.Models.GameLoad;
+using PBGame.UI.Models.Game;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
@@ -60,6 +60,11 @@ namespace PBGame.UI.Models
         /// </summary>
         private GameScreen GameScreen => ScreenNavigator.Get<GameScreen>();
 
+        /// <summary>
+        /// Returns the game screen's model instance.
+        /// </summary>
+        public GameModel GameModel => GameScreen.Model;
+
         [ReceivesDependency]
         private IModeManager ModeManager { get; set; }
 
@@ -83,13 +88,12 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
-            loadingState.Value = GameLoadState.Loading;
-
             var modeServicer = ModeManager.GetService(GameConfiguration.RulesetMode.Value);
             var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
+            loadingState.BindTo(GameModel.LoadState);
 
             // Start loading the game.
-            gameScreen.PreInitialize(MapSelection.Map.Value, modeServicer);
+            GameModel.LoadGame(SelectedMap.Value, modeServicer);
 
             // Slightly fade out music.
             MusicController.Fade(0.5f);
@@ -99,18 +103,19 @@ namespace PBGame.UI.Models
             escapeKey.State.OnNewValue += OnEscapeKeyState;
 
             // Listen to game screen init event.
-            GameScreen.OnPreInit += OnGamePreInited;
+            GameModel.LoadState.BindAndTrigger(OnLoadStateChange);
         }
 
         protected override void OnPreHide()
         {
             base.OnPreHide();
 
-            loadingState.Value = GameLoadState.Loading;
+            loadingState.Value = GameLoadState.Idle;
+            loadingState.UnbindFrom(GameModel.LoadState);
 
             UnbindEscape();
-            
-            GameScreen.OnPreInit -= OnGamePreInited;
+
+            GameModel.LoadState.OnNewValue -= OnLoadStateChange;
         }
 
         /// <summary>
@@ -127,7 +132,7 @@ namespace PBGame.UI.Models
         public void NavigateToGame()
         {
             NavigateToScreen<GameScreen>();
-            GameScreen.StartInitialGame();
+            GameScreen.Model.StartGame();
         }
 
         /// <summary>
@@ -170,7 +175,7 @@ namespace PBGame.UI.Models
             UnbindEscape();
 
             // Make the game screen completely stop and dispose current load session.
-            GameScreen.CancelLoad();
+            GameModel.CancelLoad();
 
             loadingState.Value = GameLoadState.Fail;
             NavigateToPrepare();
@@ -199,13 +204,13 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
-        /// Event called on game screen pre init call.
+        /// Event called from GameModel when the game loading state has changed.
         /// </summary>
-        private void OnGamePreInited(bool isLoaded)
+        private void OnLoadStateChange(GameLoadState loadState)
         {
-            if(isLoaded)
+            if(loadState == GameLoadState.Success)
                 SucceedLoading();
-            else
+            else if(loadState == GameLoadState.Fail)
                 CancelLoading();
         }
     }

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models;
-using PBGame.UI.Models.GameLoad;
+using PBGame.UI.Models.Game;
 using PBGame.UI.Components.Common;
 using PBGame.UI.Components.GameLoad;
 using PBGame.UI.Navigations.Screens;
