@@ -19,8 +19,12 @@ Slowly making progress 🧩
 ### 0.9.4 (WIP)
 #### New features
 - Added ability to test using localhost api server.
+#### Improvements
+- Decoupled logics away from most UI elements.
 #### Changes
 - Abstracted away shared logics of BaseScreen/BaseOverlay views into BaseNavView.
+#### Fixes
+- Fix bug where focusing on song search bar and releasing without change triggers a search.
 
 ### 0.9.3
 #### New features

@@ -11,7 +11,8 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Songs
 {
-    public class Sorter : UguiObject {
+    public class Sorter : UguiObject
+    {
 
         private const float ButtonSize = 80f;
 
@@ -63,7 +64,21 @@ namespace PBGame.UI.Components.Songs
                 sortButtons.Add(button);
             }
 
-            Model.SortType.OnNewValue += OnSortTypeChange;
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            Model.SortType.BindAndTrigger(OnSortTypeChange);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.SortType.OnNewValue -= OnSortTypeChange;
         }
 
         /// <summary>

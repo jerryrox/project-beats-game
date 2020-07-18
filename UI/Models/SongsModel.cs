@@ -5,6 +5,7 @@ using PBGame.UI.Components.Common.Dropdown;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
+using PBGame.Assets.Caching;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
@@ -35,21 +36,24 @@ namespace PBGame.UI.Models
         /// </summary>
         private const float SearchDelay = 1f;
 
-        private Bindable<MapsetSortType> sortType = new Bindable<MapsetSortType>(MapsetSortType.Title);
-
         private ITimer searchScheduler;
         private string scheduledTerm;
 
-        private Bindable<List<IMapset>> mapsets = new Bindable<List<IMapset>>();
-
         private IMapset mapsetForDropdown;
         private DropdownContext dropdownContext;
+
+        private Bindable<List<IMapset>> mapsets = new Bindable<List<IMapset>>(new List<IMapset>());
 
 
         /// <summary>
         /// Returns the current mapset sorting type.
         /// </summary>
-        public IReadOnlyBindable<MapsetSortType> SortType => sortType;
+        public IReadOnlyBindable<MapsetSortType> SortType => GameConfiguration.MapsetSort;
+
+        /// <summary>
+        /// Returns whether unicode text should be preferred.
+        /// </summary>
+        public IReadOnlyBindable<bool> PreferUnicode => GameConfiguration.PreferUnicode;
 
         /// <summary>
         /// Returns the list of maps that should be displayed in the list.
@@ -105,20 +109,11 @@ namespace PBGame.UI.Models
             SetSort(GameConfiguration.MapsetSort.Value);
         }
 
-        protected override void OnPreShow()
-        {
-            base.OnPreShow();
-            ApplySearch(LastSearchTerm);
-        }
-
         /// <summary>
         /// Sets the sorting method of the mapsets.
         /// </summary>
         public void SetSort(MapsetSortType sort)
         {
-            sortType.Value = sort;
-
-            // Save to configuration.
             if (GameConfiguration.MapsetSort.Value != sort)
             {
                 GameConfiguration.MapsetSort.Value = sort;
@@ -170,6 +165,11 @@ namespace PBGame.UI.Models
         public void SelectRandomMapset() => MapSelection.SelectMapset(MapManager.DisplayedMapsets.GetRandom());
 
         /// <summary>
+        /// Selects the specified mapset.
+        /// </summary>
+        public void SelectMapset(IMapset mapset) => MapSelection.SelectMapset(mapset);
+
+        /// <summary>
         /// Selects the previous mapset from the visible mapsets list relative to the current selection.
         /// </summary>
         public void SelectPrevMapset() => MapSelection.SelectMapset(MapManager.DisplayedMapsets.GetPrevious(SelectedMapset.Value));
@@ -195,6 +195,23 @@ namespace PBGame.UI.Models
         public int GetSelectedMapsetIndex()
         {
             return mapsets.Value.IndexOf(SelectedMapset.Value);
+        }
+
+        protected override void OnPreShow()
+        {
+            base.OnPreShow();
+
+            MapManager.DisplayedMapsets.OnChange += OnDisplayedMapsetChange;
+
+            ApplySearch(LastSearchTerm);
+            OnDisplayedMapsetChange(MapManager.DisplayedMapsets.RawList);
+        }
+
+        protected override void OnPreHide()
+        {
+            base.OnPreHide();
+
+            MapManager.DisplayedMapsets.OnChange -= OnDisplayedMapsetChange;
         }
 
         /// <summary>
@@ -239,6 +256,18 @@ namespace PBGame.UI.Models
                     OverlayNavigator.Show<OffsetsOverlay>();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Event called on displayed mapsets list change.
+        /// </summary>
+        private void OnDisplayedMapsetChange(List<IMapset> mapsets)
+        {
+            this.mapsets.ModifyValue(list =>
+            {
+                list.Clear();
+                list.AddRange(mapsets);
+            });
         }
     }
 }

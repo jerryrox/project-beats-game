@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Audio;
@@ -69,10 +70,7 @@ namespace PBGame.UI.Components.Songs
         public IMapset Mapset { get; private set; }
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private SongsModel Model { get; set; }
 
         [ReceivesDependency]
         private IBackgroundCacher BackgroundCacher { get; set; }
@@ -86,7 +84,7 @@ namespace PBGame.UI.Components.Songs
             OnTriggered += () =>
             {
                 if(Active && Mapset != null)
-                    MapSelection.SelectMapset(Mapset);
+                    Model.SelectMapset(Mapset);
             };
 
             container = CreateChild<UguiObject>("container", 0);
@@ -197,15 +195,18 @@ namespace PBGame.UI.Components.Songs
         {
             base.OnEnableInited();
 
-            BindEvents();
+            Model.SelectedMapset.BindAndTrigger(OnMapsetChanged);
+            Model.PreferUnicode.BindAndTrigger(OnPreferUnicode);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            
+            Model.SelectedMapset.OnNewValue -= OnMapsetChanged;
+            Model.PreferUnicode.OnNewValue -= OnPreferUnicode;
 
             SetMapset(null);
-            UnbindEvents();
         }
 
         /// <summary>
@@ -222,26 +223,7 @@ namespace PBGame.UI.Components.Songs
             LoadBackground();
 
             // Set mapset focus.
-            SetFocus(MapSelection.Mapset.Value != null && this.Mapset == MapSelection.Mapset.Value);
-        }
-
-        /// <summary>
-        /// Binds events to external dependencies.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Mapset.BindAndTrigger(OnMapsetChanged);
-            
-            GameConfiguration.PreferUnicode.BindAndTrigger(OnPreferUnicode);
-        }
-
-        /// <summary>
-        /// Unbinds events from external dependencies.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Mapset.OnNewValue -= OnMapsetChanged;
-            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
+            SetFocus(Model.SelectedMapset.Value != null && this.Mapset == Model.SelectedMapset.Value);
         }
 
         /// <summary>
@@ -301,7 +283,7 @@ namespace PBGame.UI.Components.Songs
         {
             if (Mapset != null)
             {
-                var useUnicode = GameConfiguration.PreferUnicode.Value;
+                var useUnicode = Model.PreferUnicode.Value;
                 var metadata = Mapset.Metadata;
 
                 titleLabel.Text = metadata.GetTitle(useUnicode);
