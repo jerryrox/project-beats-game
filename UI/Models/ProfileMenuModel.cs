@@ -319,7 +319,7 @@ namespace PBGame.UI.Models
         /// </summary>
         private void CheckIsLoggingIn()
         {
-            isLoggingIn.Value = authRequest.Value != null && meRequest.Value != null;
+            isLoggingIn.Value = authRequest.Value != null || meRequest.Value != null;
         }
 
         /// <summary>
