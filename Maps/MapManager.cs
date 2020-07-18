@@ -22,7 +22,7 @@ namespace PBGame.Maps
         private IMapsetList displayedMapsets = new MapsetList(true);
         private IMapSelection selection;
 
-        private string lastSearch = null;
+        private string lastSearch = "";
 
         private INotificationBox notificationBox;
 
