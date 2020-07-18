@@ -74,7 +74,7 @@ namespace PBGame.UI.Navigations
             }
 
             model = CreateModel() ?? new TModel();
-            Dependencies.Cache(model);
+            Dependencies.CacheAndInject(model);
 
             Depth = ViewDepth;
         }
