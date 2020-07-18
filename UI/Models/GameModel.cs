@@ -31,7 +31,7 @@ namespace PBGame.UI.Models
         private IModeService currentModeService;
         private IGameSession currentSession;
 
-        private Bindable<GameLoadState> loadState = new Bindable<GameLoadState>();
+        private Bindable<GameLoadState> loadState = new Bindable<GameLoadState>(GameLoadState.Idle);
 
 
         /// <summary>
@@ -92,6 +92,7 @@ namespace PBGame.UI.Models
             currentModeService = modeService;
 
             InitSession();
+            InitLoader();
         }
 
         /// <summary>

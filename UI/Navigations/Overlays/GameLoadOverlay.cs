@@ -90,7 +90,8 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnEnableInited();
 
-            model.LoadingState.OnNewValue += OnLoadingStateChange;
+            model.OnLoadSucceed += OnLoadSucceed;
+            model.OnLoadFail += OnLoadFail;
 
             componentShowAni.PlayFromStart();
         }
@@ -99,26 +100,28 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnDisable();
 
-            model.LoadingState.OnNewValue -= OnLoadingStateChange;
+            model.OnLoadSucceed -= OnLoadSucceed;
+            model.OnLoadFail -= OnLoadFail;
         }
 
         /// <summary>
-        /// Event called on game loading state change.
+        /// Event called when the game loading has succeeded.
         /// </summary>
-        private void OnLoadingStateChange(GameLoadState state)
+        private void OnLoadSucceed()
         {
-            if (state == GameLoadState.Success)
-            {
-                // If the hide animation is playing, the player must've navigated out before this was executed.
-                if (HideAnime.IsPlaying)
-                    return;
-                componentHideAni.PlayFromStart();
-            }
-            else if(state == GameLoadState.Fail)
-            {
-                componentShowAni.Stop();
-                componentHideAni.Stop();
-            }
+            // If the hide animation is playing, the player must've navigated out before this was executed.
+            if (HideAnime.IsPlaying)
+                return;
+            componentHideAni.PlayFromStart();
+        }
+
+        /// <summary>
+        /// Event called when the game loading has failed.
+        /// </summary>
+        private void OnLoadFail()
+        {
+            componentShowAni.Stop();
+            componentHideAni.Stop();
         }
 
         /// <summary>

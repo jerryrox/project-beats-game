@@ -21,8 +21,19 @@ using UnityEngine.UI;
 namespace PBGame.UI.Models
 {
     public class GameLoadModel : BaseModel {
-    
+
+        /// <summary>
+        /// Event calld when the game loading has succeeded.
+        /// </summary>
+        public event Action OnLoadSucceed;
+
+        /// <summary>
+        /// Event called when the game loading has failed.
+        /// </summary>
+        public event Action OnLoadFail;
+
         private IKey escapeKey;
+        private bool isShowAniEnded;
 
         private Bindable<GameLoadState> loadingState = new Bindable<GameLoadState>();
 
@@ -33,9 +44,9 @@ namespace PBGame.UI.Models
         public float MinimumLoadTime => 1.5f;
 
         /// <summary>
-        /// Returns the current game loading state.
+        /// Returns whether the game is currently loading.
         /// </summary>
-        public IReadOnlyBindable<GameLoadState> LoadingState => loadingState;
+        public bool IsLoading => loadingState.Value == GameLoadState.Idle || loadingState.Value == GameLoadState.Loading;
 
         /// <summary>
         /// Returns whether unicode text is preferred.
@@ -88,6 +99,8 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
+            isShowAniEnded = false;
+
             var modeServicer = ModeManager.GetService(GameConfiguration.RulesetMode.Value);
             var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
             loadingState.BindTo(GameModel.LoadState);
@@ -110,6 +123,8 @@ namespace PBGame.UI.Models
         {
             base.OnPreHide();
 
+            isShowAniEnded = false;
+
             loadingState.Value = GameLoadState.Idle;
             loadingState.UnbindFrom(GameModel.LoadState);
 
@@ -123,7 +138,8 @@ namespace PBGame.UI.Models
         /// </summary>
         public void OnShowAniEnd()
         {
-            SucceedLoading();
+            isShowAniEnded = true;
+            EvaluateLoadState();
         }
 
         /// <summary>
@@ -156,6 +172,21 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Performs success or cancel actions based on current loading state.
+        /// </summary>
+        private void EvaluateLoadState()
+        {
+            if (loadingState.Value == GameLoadState.Success)
+            {
+                if(IsLoading || !isShowAniEnded)
+                    return;
+                SucceedLoading();
+            }
+            else if (loadingState.Value == GameLoadState.Fail)
+                CancelLoading();
+        }
+
+        /// <summary>
         /// Handles actions for a successful loading of the game session.
         /// </summary>
         private void SucceedLoading()
@@ -163,7 +194,7 @@ namespace PBGame.UI.Models
             // Unbind escape key immediately.
             UnbindEscape();
 
-            loadingState.Value = GameLoadState.Success;
+            OnLoadSucceed?.Invoke();
         }
 
         /// <summary>
@@ -177,8 +208,9 @@ namespace PBGame.UI.Models
             // Make the game screen completely stop and dispose current load session.
             GameModel.CancelLoad();
 
-            loadingState.Value = GameLoadState.Fail;
             NavigateToPrepare();
+
+            OnLoadFail?.Invoke();
         }
 
         /// <summary>
@@ -206,12 +238,6 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called from GameModel when the game loading state has changed.
         /// </summary>
-        private void OnLoadStateChange(GameLoadState loadState)
-        {
-            if(loadState == GameLoadState.Success)
-                SucceedLoading();
-            else if(loadState == GameLoadState.Fail)
-                CancelLoading();
-        }
+        private void OnLoadStateChange(GameLoadState loadState) => EvaluateLoadState();
     }
 }
