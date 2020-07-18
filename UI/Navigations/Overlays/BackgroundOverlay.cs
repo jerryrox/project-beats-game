@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class BackgroundOverlay : BaseOverlay<BackgroundModel>, IBackgroundOverlay {
+    public class BackgroundOverlay : BaseOverlay<BackgroundModel> {
 
         private ParallaxContainer parallaxContainer;
         private IBackgroundDisplay emptyBackground;

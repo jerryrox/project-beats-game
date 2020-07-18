@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class GameScreen : BaseScreen<GameModel>, IGameScreen {
+    public class GameScreen : BaseScreen<GameModel> {
 
         public override int InputLayer => InputLayers.GameScreen;
 

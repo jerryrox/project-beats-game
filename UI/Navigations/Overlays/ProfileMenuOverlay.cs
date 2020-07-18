@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class ProfileMenuOverlay : BaseSubMenuOverlay<ProfileMenuModel>, IProfileMenuOverlay {
+    public class ProfileMenuOverlay : BaseSubMenuOverlay<ProfileMenuModel> {
 
         private ContentHolder content;
 

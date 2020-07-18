@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class PrepareScreen : BaseScreen<PrepareModel>, IPrepareScreen {
+    public class PrepareScreen : BaseScreen<PrepareModel> {
 
         private const float InfoDetailedYDiff = 720f - 640f;
         private const float InfoBriefY = 250f;

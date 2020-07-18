@@ -4,7 +4,7 @@ using PBFramework.Dependencies;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class SplashScreen : BaseScreen<SplashModel>, ISplashScreen {
+    public class SplashScreen : BaseScreen<SplashModel> {
 
         protected override int ViewDepth => ViewDepths.SplashScreen;
 

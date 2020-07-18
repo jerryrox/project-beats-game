@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class MusicMenuOverlay : BaseSubMenuOverlay<MusicMenuModel>, IMusicMenuOverlay {
+    public class MusicMenuOverlay : BaseSubMenuOverlay<MusicMenuModel> {
 
         private new ISprite mask;
         private MapImageDisplay imageDisplay;

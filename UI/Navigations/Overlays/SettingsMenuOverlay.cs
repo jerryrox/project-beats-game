@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class SettingsMenuOverlay : BaseSubMenuOverlay<SettingsModel>, ISettingsMenuOverlay {
+    public class SettingsMenuOverlay : BaseSubMenuOverlay<SettingsModel> {
 
         private NavBar navBar;
         private ContentHolder contentHolder;

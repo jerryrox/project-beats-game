@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class HomeScreen : BaseScreen<HomeModel>, IHomeScreen {
+    public class HomeScreen : BaseScreen<HomeModel> {
 
+        private LogoDisplay logoDisplay;
 
-        public LogoDisplay LogoDisplay { get; private set; }
 
         protected override int ViewDepth => ViewDepths.HomeScreen;
 
@@ -28,10 +28,10 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init()
         {
-            LogoDisplay = CreateChild<LogoDisplay>("logo", 10);
+            logoDisplay = CreateChild<LogoDisplay>("logo", 10);
             {
-                LogoDisplay.Size = new Vector2(352f, 352f);
-                LogoDisplay.OnPress += model.ShowHomeMenuOverlay;
+                logoDisplay.Size = new Vector2(352f, 352f);
+                logoDisplay.OnPress += model.ShowHomeMenuOverlay;
             }
 
             model.IsHomeMenuShown.OnNewValue += OnHomeMenuToggle;
@@ -42,7 +42,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnHomeMenuToggle(bool isShown)
         {
-            LogoDisplay.SetZoom(isShown);
+            logoDisplay.SetZoom(isShown);
         }
     }
 }

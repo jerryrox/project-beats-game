@@ -11,12 +11,9 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public abstract class BaseSubMenuOverlay<T> : BaseOverlay<T>, ISubMenuOverlay
+    public abstract class BaseSubMenuOverlay<T> : BaseOverlay<T>
         where T : class, IModel, new()
     {
-
-        public event Action OnClose;
-
         protected ISprite darkSprite;
         protected ITrigger closeTrigger;
         protected ITrigger container;

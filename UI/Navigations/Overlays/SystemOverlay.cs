@@ -7,20 +7,19 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class SystemOverlay : BaseOverlay<SystemModel>, ISystemOverlay {
+    public class SystemOverlay : BaseOverlay<SystemModel> {
 
         /// <summary>
         /// Amount of default padding applied for inner display components from overlay rect.
         /// </summary>
         private const float DisplayerPadding = 12f;
 
+        private MessageDisplayer messageDisplayer;
+        private FpsDisplayer fpsDisplayer;
+
         private IAnime menubarShowAni;
         private IAnime menubarHideAni;
 
-
-        public MessageDisplayer MessageDisplayer { get; private set; }
-
-        public FpsDisplayer FpsDisplayer { get; private set; }
 
         protected override int ViewDepth => ViewDepths.SystemOverlay;
 
@@ -28,30 +27,30 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init()
         {
-            FpsDisplayer = CreateChild<FpsDisplayer>("fps-displayer", 100);
+            fpsDisplayer = CreateChild<FpsDisplayer>("fps-displayer", 100);
             {
-                FpsDisplayer.Anchor = AnchorType.BottomRight;
-                FpsDisplayer.Pivot = PivotType.BottomRight;
-                FpsDisplayer.Position = new Vector3(-DisplayerPadding, DisplayerPadding);
-                FpsDisplayer.Size = new Vector2(170f, 30f);
+                fpsDisplayer.Anchor = AnchorType.BottomRight;
+                fpsDisplayer.Pivot = PivotType.BottomRight;
+                fpsDisplayer.Position = new Vector3(-DisplayerPadding, DisplayerPadding);
+                fpsDisplayer.Size = new Vector2(170f, 30f);
             }
-            MessageDisplayer = CreateChild<MessageDisplayer>("message-displayer", 1);
+            messageDisplayer = CreateChild<MessageDisplayer>("message-displayer", 1);
             {
-                MessageDisplayer.Anchor = AnchorType.TopRight;
-                MessageDisplayer.Pivot = PivotType.Right;
-                MessageDisplayer.Position = new Vector3(-DisplayerPadding, -DisplayerPadding);
-                MessageDisplayer.Size = new Vector2(320f, 0f);
+                messageDisplayer.Anchor = AnchorType.TopRight;
+                messageDisplayer.Pivot = PivotType.Right;
+                messageDisplayer.Position = new Vector3(-DisplayerPadding, -DisplayerPadding);
+                messageDisplayer.Size = new Vector2(320f, 0f);
             }
 
             menubarShowAni = new Anime();
-            menubarShowAni.AnimateFloat(y => MessageDisplayer.Y = y)
-                .AddTime(0f, () => MessageDisplayer.Y)
+            menubarShowAni.AnimateFloat(y => messageDisplayer.Y = y)
+                .AddTime(0f, () => messageDisplayer.Y)
                 .AddTime(0.25f, () => -DisplayerPadding - MenuBarHeight)
                 .Build();
 
             menubarHideAni = new Anime();
-            menubarHideAni.AnimateFloat(y => MessageDisplayer.Y = y)
-                .AddTime(0f, () => MessageDisplayer.Y)
+            menubarHideAni.AnimateFloat(y => messageDisplayer.Y = y)
+                .AddTime(0f, () => messageDisplayer.Y)
                 .AddTime(0.25f, () => -DisplayerPadding)
                 .Build();
 
@@ -106,18 +105,18 @@ namespace PBGame.UI.Navigations.Overlays
 
                 if (model.IsGameScreen.Value)
                 {
-                    MessageDisplayer.ToggleDisplay(model.IsMessageEnabledGame.Value);
+                    messageDisplayer.ToggleDisplay(model.IsMessageEnabledGame.Value);
                     return;
                 }
             }
 
-            MessageDisplayer.ToggleDisplay(isMessageEnbled);
+            messageDisplayer.ToggleDisplay(isMessageEnbled);
         }
 
         /// <summary>
         /// Event called on show fps settings change.
         /// </summary>
-        private void OnShowFpsChange(bool show) => FpsDisplayer.ToggleDisplay(show);
+        private void OnShowFpsChange(bool show) => fpsDisplayer.ToggleDisplay(show);
 
         /// <summary>
         /// Event called on display messages settings change.

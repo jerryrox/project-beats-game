@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class DownloadScreen : BaseScreen<DownloadModel>, IDownloadScreen
+    public class DownloadScreen : BaseScreen<DownloadModel>
     {
         private UguiSprite bgSprite;
         private SearchMenu searchMenu;

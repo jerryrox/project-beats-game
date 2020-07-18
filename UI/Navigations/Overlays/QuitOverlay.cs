@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class QuitOverlay : BaseOverlay<QuitModel>, IQuitOverlay {
+    public class QuitOverlay : BaseOverlay<QuitModel> {
 
         private ISprite darkSprite;
 

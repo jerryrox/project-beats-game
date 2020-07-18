@@ -9,11 +9,11 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class InitializeScreen : BaseScreen<InitializeModel>, IInitializeScreen {
+    public class InitializeScreen : BaseScreen<InitializeModel> {
 
-        public LogoDisplay LogoDisplay { get; private set; }
+        private LogoDisplay logoDisplay;
+        private LoadDisplay loadDisplay;
 
-        public LoadDisplay LoadDisplay { get; private set; }
 
         protected override int ViewDepth => ViewDepths.InitializeScreen;
 
@@ -30,20 +30,20 @@ namespace PBGame.UI.Navigations.Screens
             Depth = 1000;
 
             // Initialize logo displayer.
-            LogoDisplay = CreateChild<LogoDisplay>("logo", 10);
+            logoDisplay = CreateChild<LogoDisplay>("logo", 10);
             {
-                LogoDisplay.Size = new Vector2(320f, 320f);
+                logoDisplay.Size = new Vector2(320f, 320f);
 
-                LogoDisplay.OnStartup = OnLogoStartup;
-                LogoDisplay.OnEnd = model.NavigateToNext;
+                logoDisplay.OnStartup = OnLogoStartup;
+                logoDisplay.OnEnd = model.NavigateToNext;
             }
 
             // Initialize load displayer,
-            LoadDisplay = CreateChild<LoadDisplay>("load", 9);
+            loadDisplay = CreateChild<LoadDisplay>("load", 9);
             {
-                LoadDisplay.Anchor = AnchorType.BottomStretch;
-                LoadDisplay.SetOffsetHorizontal(0f);
-                LoadDisplay.Y = 0f;
+                loadDisplay.Anchor = AnchorType.BottomStretch;
+                loadDisplay.SetOffsetHorizontal(0f);
+                loadDisplay.Y = 0f;
             }
 
             // Hook state changes in model
@@ -52,7 +52,7 @@ namespace PBGame.UI.Navigations.Screens
             model.IsComplete.OnNewValue += OnLoaderComplete;
 
             // Display logo animation.
-            LogoDisplay.PlayStartup();
+            logoDisplay.PlayStartup();
 
             // Start loading process for dependencies.
             model.StartLoad();
@@ -65,10 +65,10 @@ namespace PBGame.UI.Navigations.Screens
         {
             // If all loading is already complete, skip over to logo end.
             if (model.IsComplete.Value)
-                LogoDisplay.PlayEnd();
+                logoDisplay.PlayEnd();
             // Else, loop breathing animation.
             else
-                LogoDisplay.PlayBreathe();
+                logoDisplay.PlayBreathe();
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLoaderProgress(float progress)
         {
-            LoadDisplay.SetProgress(progress);
+            loadDisplay.SetProgress(progress);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLoaderStatus(string status)
         {
-            LoadDisplay.SetStatus(status);
+            loadDisplay.SetStatus(status);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLoaderComplete(bool isComplete)
         {
-            LogoDisplay.PlayEnd();
+            logoDisplay.PlayEnd();
         }
     }
 }

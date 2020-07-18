@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class MenuBarOverlay : BaseOverlay<MenuBarModel>, IMenuBarOverlay {
+    public class MenuBarOverlay : BaseOverlay<MenuBarModel> {
         
         private UguiObject container;
 

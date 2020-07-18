@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class GameLoadOverlay : BaseOverlay<GameLoadModel>, IGameLoadOverlay {
+    public class GameLoadOverlay : BaseOverlay<GameLoadModel> {
 
         private InfoDisplayer infoDisplayer;
         private LoadIndicator loadIndicator;

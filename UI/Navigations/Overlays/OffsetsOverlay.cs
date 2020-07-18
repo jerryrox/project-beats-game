@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class OffsetsOverlay : BaseOverlay<OffsetsModel>, IOffsetsOverlay {
+    public class OffsetsOverlay : BaseOverlay<OffsetsModel> {
 
         private BackgroundDisplay backgroundDisplay;
         private MetronomeContainer metronomeContainer;

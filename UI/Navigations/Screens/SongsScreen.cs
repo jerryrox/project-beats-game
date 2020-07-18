@@ -10,15 +10,13 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class SongsScreen : BaseScreen<SongsModel>, ISongScreen {
+    public class SongsScreen : BaseScreen<SongsModel> {
 
-        public SearchMenu SearchMenu { get; private set; }
+        private SearchMenu searchMenu;
+        private SongList songList;
+        private SongMenu songMenu;
+        private Background background;
 
-        public SongList SongList { get; private set; }
-
-        public SongMenu SongMenu { get; set; }
-
-        public Background Background { get; set; }
 
         protected override int ViewDepth => ViewDepths.SongsScreen;
 
@@ -26,31 +24,31 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init()
         {
-            Background = CreateChild<Background>("background", 0);
+            background = CreateChild<Background>("background", 0);
             {
-                Background.Anchor = AnchorType.Fill;
-                Background.RawSize = Vector2.zero;
+                background.Anchor = AnchorType.Fill;
+                background.RawSize = Vector2.zero;
             }
-            SongList = CreateChild<SongList>("song-list", 1);
+            songList = CreateChild<SongList>("song-list", 1);
             {
-                SongList.Anchor = AnchorType.Fill;
-                SongList.Offset = new Offset(0f, 120f, 0f, 72f);
+                songList.Anchor = AnchorType.Fill;
+                songList.Offset = new Offset(0f, 120f, 0f, 72f);
             }
-            SongMenu = CreateChild<SongMenu>("song-menu", 2);
+            songMenu = CreateChild<SongMenu>("song-menu", 2);
             {
-                SongMenu.Anchor = AnchorType.BottomStretch;
-                SongMenu.Pivot = PivotType.Bottom;
-                SongMenu.SetOffsetHorizontal(0f);
-                SongMenu.Y = 0f;
-                SongMenu.Height = 72f;
+                songMenu.Anchor = AnchorType.BottomStretch;
+                songMenu.Pivot = PivotType.Bottom;
+                songMenu.SetOffsetHorizontal(0f);
+                songMenu.Y = 0f;
+                songMenu.Height = 72f;
             }
-            SearchMenu = CreateChild<SearchMenu>("search-menu", 3);
+            searchMenu = CreateChild<SearchMenu>("search-menu", 3);
             {
-                SearchMenu.Anchor = AnchorType.TopStretch;
-                SearchMenu.Pivot = PivotType.Top;
-                SearchMenu.SetOffsetHorizontal(0f);
-                SearchMenu.Y = -MenuBarHeight;
-                SearchMenu.Height = 56;
+                searchMenu.Anchor = AnchorType.TopStretch;
+                searchMenu.Pivot = PivotType.Top;
+                searchMenu.SetOffsetHorizontal(0f);
+                searchMenu.Y = -MenuBarHeight;
+                searchMenu.Height = 56;
             }
         }
     }

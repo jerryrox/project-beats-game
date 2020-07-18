@@ -14,22 +14,17 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class HomeMenuOverlay : BaseOverlay<HomeMenuModel>, IHomeMenuOverlay {
+    public class HomeMenuOverlay : BaseOverlay<HomeMenuModel> {
+
+        private BlurDisplay blur;
+        private ISprite gradientSprite;
+        private MenuButton quitButton;
+        private MenuButton backButton;
+        private MenuButton playButton;
+        private MenuButton downloadButton;
 
         private GradientEffect gradientEffect;
 
-
-        public BlurDisplay Blur { get; private set; }
-
-        public ISprite GradientSprite { get; private set; }
-
-        public MenuButton QuitButton { get; private set; }
-
-        public MenuButton BackButton { get; private set; }
-
-        public MenuButton PlayButton { get; private set; }
-
-        public MenuButton DownloadButton { get; private set; }
 
         protected override int ViewDepth => ViewDepths.HomeMenuOverlay;
 
@@ -37,54 +32,54 @@ namespace PBGame.UI.Navigations.Overlays
         [InitWithDependency]
         private void Init(IMapSelection mapSelection)
         {
-            Blur = CreateChild<BlurDisplay>("focus-blur", 0);
+            blur = CreateChild<BlurDisplay>("focus-blur", 0);
             {
-                Blur.Anchor = AnchorType.Fill;
-                Blur.Offset = Offset.Zero;
+                blur.Anchor = AnchorType.Fill;
+                blur.Offset = Offset.Zero;
             }
-            GradientSprite = CreateChild<UguiSprite>("gradient", 1);
+            gradientSprite = CreateChild<UguiSprite>("gradient", 1);
             {
-                GradientSprite.Anchor = AnchorType.Fill;
-                GradientSprite.RawSize = Vector2.zero;
+                gradientSprite.Anchor = AnchorType.Fill;
+                gradientSprite.RawSize = Vector2.zero;
 
-                gradientEffect = GradientSprite.AddEffect(new GradientEffect());
+                gradientEffect = gradientSprite.AddEffect(new GradientEffect());
                 gradientEffect.Component.direction = UIGradient.Direction.Vertical;
             }
-            QuitButton = CreateChild<MenuButton>("quit-button", 2);
+            quitButton = CreateChild<MenuButton>("quit-button", 2);
             {
-                QuitButton.Anchor = AnchorType.Bottom;
-                QuitButton.Y = 100;
-                QuitButton.Size = new Vector2(160f, 160f);
-                QuitButton.LabelText = "Quit";
-                QuitButton.IconName = "icon-power";
+                quitButton.Anchor = AnchorType.Bottom;
+                quitButton.Y = 100;
+                quitButton.Size = new Vector2(160f, 160f);
+                quitButton.LabelText = "Quit";
+                quitButton.IconName = "icon-power";
 
-                QuitButton.OnTriggered += OnQuitButton;
+                quitButton.OnTriggered += OnQuitButton;
             }
-            BackButton = CreateChild<MenuButton>("back-button", 2);
+            backButton = CreateChild<MenuButton>("back-button", 2);
             {
-                BackButton.X = -160f;
-                BackButton.Size = new Vector2(160f, 160f);
-                BackButton.LabelText = "Back";
-                BackButton.IconName = "icon-arrow-left";
+                backButton.X = -160f;
+                backButton.Size = new Vector2(160f, 160f);
+                backButton.LabelText = "Back";
+                backButton.IconName = "icon-arrow-left";
 
-                BackButton.OnTriggered += OnBackButton;
+                backButton.OnTriggered += OnBackButton;
             }
-            PlayButton = CreateChild<MenuButton>("play-button", 2);
+            playButton = CreateChild<MenuButton>("play-button", 2);
             {
-                PlayButton.Size = new Vector2(160f, 160f);
-                PlayButton.LabelText = "Play";
-                PlayButton.IconName = "icon-play";
+                playButton.Size = new Vector2(160f, 160f);
+                playButton.LabelText = "Play";
+                playButton.IconName = "icon-play";
 
-                PlayButton.OnTriggered += OnPlayButton;
+                playButton.OnTriggered += OnPlayButton;
             }
-            DownloadButton = CreateChild<MenuButton>("download-button", 2);
+            downloadButton = CreateChild<MenuButton>("download-button", 2);
             {
-                DownloadButton.X = 160f;
-                DownloadButton.Size = new Vector2(160f, 160f);
-                DownloadButton.LabelText = "Download";
-                DownloadButton.IconName = "icon-download";
+                downloadButton.X = 160f;
+                downloadButton.Size = new Vector2(160f, 160f);
+                downloadButton.LabelText = "Download";
+                downloadButton.IconName = "icon-download";
 
-                DownloadButton.OnTriggered += OnDownloadButton;
+                downloadButton.OnTriggered += OnDownloadButton;
             }
 
             OnEnableInited();

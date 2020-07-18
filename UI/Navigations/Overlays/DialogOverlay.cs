@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class DialogOverlay : BaseOverlay<DialogModel>, IDialogOverlay {
+    public class DialogOverlay : BaseOverlay<DialogModel> {
 
         private BlurDisplay blurDisplay;
         private ISprite bgSprite;

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class QuickMenuOverlay : BaseSubMenuOverlay<QuickMenuModel>, IQuickMenuOverlay {
+    public class QuickMenuOverlay : BaseSubMenuOverlay<QuickMenuModel> {
 
         public static readonly Vector2 ButtonSize = new Vector2(150f, 72f);
 
