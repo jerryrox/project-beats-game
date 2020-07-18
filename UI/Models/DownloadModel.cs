@@ -225,15 +225,6 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
-        /// Performs the specified action within a context which triggers bindable change.
-        /// </summary>
-        public void ModifyMapsetsList(Action<List<OnlineMapset>> action)
-        {
-            action?.Invoke(mapsetList.Value);
-            mapsetList.Trigger();
-        }
-
-        /// <summary>
         /// Resets search option to initial state.
         /// </summary>
         private void ResetOptions()
@@ -302,7 +293,7 @@ namespace PBGame.UI.Models
         {
             if (response.IsSuccess)
             {
-                ModifyMapsetsList(mapsets =>
+                mapsetList.ModifyValue(mapsets =>
                 {
                     // If there was previously no cursor, this must be a fresh search using different options since the last search.
                     if (!Options.HasCursor)
@@ -313,7 +304,7 @@ namespace PBGame.UI.Models
             }
             else
             {
-                ModifyMapsetsList(mapsets => mapsets.Clear());
+                mapsetList.ModifyValue(mapsets => mapsets.Clear());
             }
             StopMapsetRequest();
         }
