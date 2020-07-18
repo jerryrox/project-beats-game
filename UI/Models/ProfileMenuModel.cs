@@ -315,7 +315,7 @@ namespace PBGame.UI.Models
         }
         
         /// <summary>
-        /// Evaluates whether the user is considered loggin in or not.
+        /// Evaluates whether the user is considered logging in or not.
         /// </summary>
         private void CheckIsLoggingIn()
         {

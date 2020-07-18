@@ -76,6 +76,14 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Sets the metronome beat frequency.
+        /// </summary>
+        public void SetFrequency(BeatFrequency frequency)
+        {
+            metronome.Frequency.Value = frequency;
+        }
+
+        /// <summary>
         /// Hides the offsets overlay.
         /// </summary>
         public void CloseOffsets()
