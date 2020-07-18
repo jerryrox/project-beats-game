@@ -91,6 +91,8 @@ namespace PBGame
 
         public string Version => Application.version;
 
+        public virtual bool IsTestMode => false;
+
 
         void Awake()
         {

@@ -9,8 +9,23 @@ namespace PBGame.UI.Models
 {
     public abstract class BaseModel : IModel {
 
+        private bool? isTestEnvironment;
+
         private Coroutine updateCoroutine;
 
+
+        /// <summary>
+        /// Returns whether the model is currently in test environment.
+        /// </summary>
+        public bool IsTestMode
+        {
+            get
+            {
+                if(!isTestEnvironment.HasValue)
+                    isTestEnvironment = Dependency.Get<IGame>().IsTestMode;
+                return isTestEnvironment.Value;
+            }
+        }
 
         [ReceivesDependency]
         protected IDependencyContainer Dependency { get; set; }

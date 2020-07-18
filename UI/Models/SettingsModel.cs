@@ -30,13 +30,17 @@ namespace PBGame.UI.Models
         protected override void OnPreShow()
         {
             base.OnPreShow();
-            SetSettingsData(GameConfiguration.Settings);
+
+            if(!IsTestMode)
+                SetSettingsData(GameConfiguration.Settings);
         }
 
         protected override void OnPreHide()
         {
             base.OnPreHide();
-            GameConfiguration.Save();
+
+            if(!IsTestMode)
+                GameConfiguration.Save();
         }
     }
 }

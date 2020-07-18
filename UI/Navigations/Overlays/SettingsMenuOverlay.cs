@@ -55,15 +55,6 @@ namespace PBGame.UI.Navigations.Overlays
             OnEnableInited();
         }
 
-        /// <summary>
-        /// Displays the specified settings data visually.
-        /// </summary>
-        public void SetSettingsData(ISettingsData data)
-        {
-            navBar.SetSettingsData(data);
-            contentHolder.SetSettingsData(data);
-        }
-
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
@@ -79,6 +70,10 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Event called when the settings data has changed.
         /// </summary>
-        private void OnSettingsDataChange(ISettingsData data) => SetSettingsData(data);
+        private void OnSettingsDataChange(ISettingsData data)
+        {
+            navBar.SetSettingsData(data);
+            contentHolder.SetSettingsData(data);
+        }
     }
 }
