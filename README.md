@@ -15,6 +15,8 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### (WIP)
+
 ### 0.10.0
 #### New features
 - Added ability to test using localhost api server.
