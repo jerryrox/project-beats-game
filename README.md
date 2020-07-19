@@ -9,7 +9,7 @@ Slowly making progress 🧩
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
-- project-beats-api (Only if using Network feature. Tested on 0.4.0) (https://github.com/jerryrox/project-beats-api)
+- project-beats-api (Only if using Network feature. Tested on 0.6.0) (https://github.com/jerryrox/project-beats-api)
 
 ## Development progress
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
