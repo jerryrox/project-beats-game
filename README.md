@@ -18,6 +18,7 @@ Slowly making progress 🧩
 ### 0.10.0 (WIP)
 #### New features
 - Added ability to test using localhost api server.
+- Added ability to check whether game environment is test mode.
 #### Improvements
 - Decoupled logics away from most UI elements.
 #### Changes
