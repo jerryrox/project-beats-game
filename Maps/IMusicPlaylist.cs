@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
 
 namespace PBGame.Maps
@@ -5,9 +6,14 @@ namespace PBGame.Maps
     public interface IMusicPlaylist {
 
         /// <summary>
-        /// Refills the playlist.
+        /// Clears the mapsets in the playlist.
         /// </summary>
-        void Refill();
+        void Clear();
+
+        /// <summary>
+        /// Clears and refills the playlist using the specified list.
+        /// </summary>
+        void Refill(List<IMapset> mapsets);
 
         /// <summary>
         /// Changes focusing cursor on the specified mapset.
@@ -18,17 +24,22 @@ namespace PBGame.Maps
         /// Returns the next mapset in the list.
         /// Moves cursor to the next mapset.
         /// </summary>
-        IMapset GetNext();
+        IMapset Next();
 
         /// <summary>
-        /// Returns the current mapset under cursor.
+        /// Returns the next mapset in the list.
         /// </summary>
-        IMapset GetCurrent();
+        IMapset PeekNext();
 
         /// <summary>
         /// Returns the previous mapset in the list.
         /// Moves cursor to the previous mapset.
         /// </summary>
-        IMapset GetPrevious();
+        IMapset Previous();
+
+        /// <summary>
+        /// Returns the previous mapset in the list.
+        /// </summary>
+        IMapset PeekPrevious();
     }
 }

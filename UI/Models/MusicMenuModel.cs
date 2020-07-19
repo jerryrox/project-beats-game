@@ -72,12 +72,12 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Selects the previous music from the playlist.
         /// </summary>
-        public void PrevMusic() => MapSelection.SelectMapset(MusicPlaylist.GetPrevious());
+        public void PrevMusic() => MapSelection.SelectMapset(MusicPlaylist.PeekPrevious());
 
         /// <summary>
         /// Selects the next music from the playlist.
         /// </summary>
-        public void NextMusic() => MapSelection.SelectMapset(MusicPlaylist.GetNext());
+        public void NextMusic() => MapSelection.SelectMapset(MusicPlaylist.PeekNext());
 
         protected override void OnPreShow()
         {

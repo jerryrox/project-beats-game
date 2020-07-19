@@ -118,15 +118,9 @@ namespace PBGame
                 // Loop the music when not in game screen.
                 if (!(screenNavigator.CurrentScreen.Value is GameScreen))
                 {
-                    if (screenNavigator.CurrentScreen.Value is GameScreen)
+                    if (screenNavigator.CurrentScreen.Value is HomeScreen)
                     {
-                        // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
-                        mapSelection.SelectMapset(musicPlaylist.GetNext());
-                    }
-                    // Else if homescreen, select a random music.
-                    else if (screenNavigator.CurrentScreen.Value is HomeScreen)
-                    {
-                        mapSelection.SelectMapset(mapManager.AllMapsets.GetRandom());
+                        mapSelection.SelectMapset(musicPlaylist.PeekNext());
                     }
                     // Else if download screen, just stop there.
                     else if (screenNavigator.CurrentScreen.Value is DownloadScreen)
@@ -232,6 +226,10 @@ namespace PBGame
             mapSelection.Map.OnNewValue += (map) =>
             {
                 metronome.CurrentMap = map;
+            };
+            mapSelection.Mapset.OnNewValue += (mapset) =>
+            {
+                musicPlaylist.Focus(mapset);
             };
 
             mapSelection.Music.OnNewValue += (music) =>
@@ -351,6 +349,10 @@ namespace PBGame
                 {
                     Message = $"Imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
                 });
+            };
+            mapManager.AllMapsets.OnChange += (mapsets) =>
+            {
+                musicPlaylist.Refill(mapsets);
             };
         }
 
