@@ -437,6 +437,8 @@ namespace PBGame
         /// </summary>
         private void OnUserBecameOffline(IOnlineUser user)
         {
+            if(userManager.CurrentUser.Value != null)
+                userManager.SaveUser(userManager.CurrentUser.Value);
             userManager.RemoveUser();
         }
 
