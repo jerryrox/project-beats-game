@@ -2,20 +2,33 @@
 Implementation of Project: Beats game
   
 ## This project is a huge WIP.
-Currently, I'm restructuring my original source to make things more organized and scalable.  
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.0.3) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.0.4) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
-- project-beats-api (Only if using Network feature. Tested on 0.3.0) (https://github.com/jerryrox/project-beats-api)
+- project-beats-api (Only if using Network feature. Tested on 0.6.0) (https://github.com/jerryrox/project-beats-api)
 
 ## Development progress
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.10.0
+#### New features
+- Added ability to test using localhost api server.
+- Added ability to check whether game environment is test mode.
+#### Improvements
+- Decoupled logics away from most UI elements.
+#### Changes
+- Abstracted away shared logics of BaseScreen/BaseOverlay views into BaseNavView.
+- Removed UI screen/overlay interfaces as they are now useless.
+- Access IRaycastable directly instead of casting.
+#### Fixes
+- Fixed input box's hover sprite being able to receive raycast.
+- Fixed bug where focusing on song search bar and releasing without change triggers a search.
+
 ### 0.9.3
 #### New features
 - Allow selection of different API providers for logging in.

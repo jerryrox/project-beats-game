@@ -1,3 +1,4 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Home;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
@@ -7,18 +8,12 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class HomeScreen : BaseScreen, IHomeScreen {
+    public class HomeScreen : BaseScreen<HomeModel> {
 
-        private bool didHookEventToOverlay = false;
-
-        private bool isHiding;
+        private LogoDisplay logoDisplay;
 
 
-        public LogoDisplay LogoDisplay { get; private set; }
-
-        protected override int ScreenDepth => ViewDepths.HomeScreen;
-
-        private IBackgroundOverlay BackgroundOverlay => OverlayNavigator.Get<BackgroundOverlay>();
+        protected override int ViewDepth => ViewDepths.HomeScreen;
 
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
@@ -33,65 +28,21 @@ namespace PBGame.UI.Navigations.Screens
         [InitWithDependency]
         private void Init()
         {
-            LogoDisplay = CreateChild<LogoDisplay>("logo", 10);
+            logoDisplay = CreateChild<LogoDisplay>("logo", 10);
             {
-                LogoDisplay.Size = new Vector2(352f, 352f);
-                LogoDisplay.OnPress += OnLogoButton;
+                logoDisplay.Size = new Vector2(352f, 352f);
+                logoDisplay.OnPress += model.ShowHomeMenuOverlay;
             }
 
-            // Initially select a random song.
-            SelectRandomMapset();
-
-            OnEnableInited();
-        }
-
-        protected override void OnEnableInited()
-        {
-            base.OnEnableInited();
-
-            isHiding = false;
-        }
-
-        protected override void OnPreHide()
-        {
-            base.OnPreHide();
-            isHiding = true;
-            OverlayNavigator.Hide<HomeMenuOverlay>();
+            model.IsHomeMenuShown.OnNewValue += OnHomeMenuToggle;
         }
 
         /// <summary>
-        /// /// Event called on logo button press.
+        /// Event called from model when the home menu overlay's toggle state has changed.
         /// </summary>
-        private void OnLogoButton()
+        private void OnHomeMenuToggle(bool isShown)
         {
-            LogoDisplay.SetZoom(true);
-            BackgroundOverlay.Color = Color.gray;
-
-            // Show home menu
-            var homeMenuOverlay = OverlayNavigator.Show<HomeMenuOverlay>();
-            if (!didHookEventToOverlay)
-            {
-                didHookEventToOverlay = true;
-                homeMenuOverlay.OnHide += () =>
-                {
-                    LogoDisplay.SetZoom(false);
-                    BackgroundOverlay.Color = Color.white;
-                };
-            }
-        }
-
-        /// <summary>
-        /// Selects a random mapset within the map manager.
-        /// </summary>
-        private void SelectRandomMapset()
-        {
-            // Try get a random mapset.
-            var mapset = MapManager.AllMapsets.GetRandom();
-            if (mapset != null)
-            {
-                // Select the mapset.
-                MapSelection.SelectMapset(mapset);
-            }
+            logoDisplay.SetZoom(isShown);
         }
     }
 }

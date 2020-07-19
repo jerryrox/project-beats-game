@@ -1,5 +1,5 @@
 using System;
-using PBGame.Maps;
+using PBGame.UI.Models;
 using PBGame.Audio;
 using PBGame.Animations;
 using PBFramework.UI;
@@ -36,10 +36,7 @@ namespace PBGame.UI.Components.Home
         }
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IMetronome Metronome { get; set; }
+        private HomeModel Model { get; set; }
 
         [ReceivesDependency]
         private ISoundPool SoundPool { get; set; }
@@ -111,13 +108,17 @@ namespace PBGame.UI.Components.Home
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.OnBeat += PlayPulse;
+            Model.BeatSpeed.BindAndTrigger(OnBeatSpeedChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
+
+            Model.OnBeat -= PlayPulse;
+            Model.BeatSpeed.OnNewValue -= OnBeatSpeedChange;
 
             // The logo should be shrunk to its original size on disable.
             zoomOutAni.Seek(zoomOutAni.Duration);
@@ -159,29 +160,11 @@ namespace PBGame.UI.Components.Home
         }
 
         /// <summary>
-        /// Adjusts the speed of the pulse animation for specified length.
+        /// Event called when the metronome's beat speed changes.
         /// </summary>
-        private void AdjustBeatSpeed(float beatLength)
+        private void OnBeatSpeedChange(float speed)
         {
-            pulseAni.Speed = 1000f / beatLength;
-        }
-
-        /// <summary>
-        /// Binds events to external dependencies.
-        /// </summary>
-        private void BindEvents()
-        {
-            Metronome.OnBeat += PlayPulse;
-            Metronome.BeatLength.OnNewValue += AdjustBeatSpeed;
-        }
-
-        /// <summary>
-        /// Unbinds events hooked to external dependencies.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            Metronome.OnBeat -= PlayPulse;
-            Metronome.BeatLength.OnNewValue -= AdjustBeatSpeed;
+            pulseAni.Speed = speed;
         }
     }
 }

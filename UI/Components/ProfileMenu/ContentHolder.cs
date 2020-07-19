@@ -1,22 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
 using PBGame.Graphics;
-using PBGame.Networking.API;
 using PBFramework.UI;
-using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Components;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
-    // TODO: Support for logging in using other API providers.
     public class ContentHolder : UguiObject {
 
         private const float LoggedInHeight = 480f;
@@ -33,10 +27,10 @@ namespace PBGame.UI.Components.ProfileMenu
 
 
         [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
+        private IColorPreset ColorPreset { get; set; }
 
         [ReceivesDependency]
-        private IColorPreset ColorPreset { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -111,31 +105,17 @@ namespace PBGame.UI.Components.ProfileMenu
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.CurrentUser.OnNewValue += OnUserChange;
+
+            SwitchView(Model.CurrentUser.Value != null, false);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            UserManager.CurrentUser.OnNewValue += OnUserChange;
-
-            SwitchView(UserManager.CurrentUser.Value != null, false);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            UserManager.CurrentUser.OnNewValue -= OnUserChange;
+            Model.CurrentUser.OnNewValue -= OnUserChange;
         }
 
         private void SwitchView(bool isLoggedIn, bool animate = true)
@@ -194,7 +174,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Event called from logged out view when its current login provider view has changed.
         /// </summary>
-        private void OnLoginProviderViewChange(ILoginView loginView)
+        private void OnLoginProviderViewChange(BaseLoginView loginView)
         {
             // Animate height change.
             loggedOutAni.PlayFromStart();

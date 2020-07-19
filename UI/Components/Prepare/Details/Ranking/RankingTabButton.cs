@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Data.Rankings;
 using PBGame.Audio;
@@ -30,7 +31,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             set
             {
                 rankDisplay = value;
-                SetFocused(GameConfiguration.RankDisplay.Value == value, false);
+                SetFocused(Model.RankDisplay.Value == value, false);
             }
         }
 
@@ -41,7 +42,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         }
 
         [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -65,44 +66,29 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.RankDisplay.BindAndTrigger(OnRankDisplayChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
+
+            Model.RankDisplay.OnNewValue -= OnRankDisplayChange;
         }
 
         protected override void OnClickTriggered()
         {
             base.OnClickTriggered();
-            GameConfiguration.RankDisplay.Value = rankDisplay;
-        }
-
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            GameConfiguration.RankDisplay.OnValueChanged += OnRankDisplayChange;
-            SetFocused(rankDisplay == GameConfiguration.RankDisplay.Value, false);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            GameConfiguration.RankDisplay.OnValueChanged -= OnRankDisplayChange;
+            Model.SetRankDisplay(rankDisplay);
         }
 
         /// <summary>
         /// Event called on rank display type change from configuration.
         /// </summary>
-        private void OnRankDisplayChange(RankDisplayType newType, RankDisplayType _ = RankDisplayType.Global)
+        private void OnRankDisplayChange(RankDisplayType newType)
         {
-            IsFocused = newType == rankDisplay;
+            IsFocused = (newType == rankDisplay);
         }
     }
 }

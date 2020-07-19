@@ -1,30 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using PBGame.UI.Models;
 using PBGame.UI.Components.SettingsMenu.Navbars;
 using PBGame.UI.Components.SettingsMenu.Contents;
-using PBGame.Animations;
-using PBGame.Configurations;
 using PBGame.Configurations.Settings;
 using PBFramework.UI;
 using PBFramework.Graphics;
-using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class SettingsMenuOverlay : BaseSubMenuOverlay, ISettingsMenuOverlay {
+    public class SettingsMenuOverlay : BaseSubMenuOverlay<SettingsModel> {
 
         private NavBar navBar;
         private ContentHolder contentHolder;
 
 
-        protected override int OverlayDepth => ViewDepths.SettingsMenuOverlay;
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        protected override int ViewDepth => ViewDepths.SettingsMenuOverlay;
 
 
         [InitWithDependency]
@@ -64,16 +55,25 @@ namespace PBGame.UI.Navigations.Overlays
             OnEnableInited();
         }
 
-        public void SetSettingsData(ISettingsData data)
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+            model.CurrentSettings.BindAndTrigger(OnSettingsDataChange);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            model.CurrentSettings.OnNewValue -= OnSettingsDataChange;
+        }
+
+        /// <summary>
+        /// Event called when the settings data has changed.
+        /// </summary>
+        private void OnSettingsDataChange(ISettingsData data)
         {
             navBar.SetSettingsData(data);
             contentHolder.SetSettingsData(data);
-        }
-
-        protected override void OnPreHide()
-        {
-            base.OnPreHide();
-            GameConfiguration.Save();
         }
     }
 }

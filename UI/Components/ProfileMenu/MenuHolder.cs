@@ -1,13 +1,11 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
-using PBGame.UI.Navigations.Overlays;
 using PBGame.Data.Users;
 using PBGame.Graphics;
-using PBGame.Networking.API;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
@@ -20,13 +18,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
 
         [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
-
-        [ReceivesDependency]
-        private IApi Api { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -41,12 +33,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 detailButton.LabelText = "Detail";
                 detailButton.Color = colorPreset.Positive;
 
-                detailButton.OnTriggered += () =>
-                {
-                    // Hide this overlay
-                    OverlayNavigator.Hide<ProfileMenuOverlay>();
-                    // TODO: Show profile screen.
-                };
+                detailButton.OnTriggered += Model.ShowUserDetail;
             }
             visitButton = CreateChild<BoxButton>("visit", 1);
             {
@@ -57,12 +44,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 visitButton.LabelText = "Visit";
                 visitButton.Color = colorPreset.Warning;
 
-                visitButton.OnTriggered += () =>
-                {
-                    // Open browser to the user homepage.
-                    if(UserManager.CurrentUser.Value != null)
-                        Application.OpenURL(UserManager.CurrentUser.Value.OnlineUser.ProfilePage);
-                };
+                visitButton.OnTriggered += Model.VisitUserPage;
             }
             logoutButton = CreateChild<BoxButton>("logout", 2);
             {
@@ -73,10 +55,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 logoutButton.LabelText = "Log out";
                 logoutButton.Color = colorPreset.Negative;
 
-                logoutButton.OnTriggered += () =>
-                {
-                    DoLogout();
-                };
+                logoutButton.OnTriggered += Model.LogoutUser;
             }
             accountLabel = CreateChild<Label>("account", 3);
             {
@@ -95,31 +74,14 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            UserManager.CurrentUser.BindAndTrigger(OnUserChange);
+            Model.CurrentUser.BindAndTrigger(OnUserChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UserManager.CurrentUser.OnNewValue -= OnUserChange;
-        }
 
-        /// <summary>
-        /// Handles logout process.
-        /// </summary>
-        private void DoLogout()
-        {
-            var dialog = OverlayNavigator.Show<DialogOverlay>();
-            dialog.SetMessage("Would you like to log out?");
-            dialog.AddConfirmCancel(() =>
-            {
-                var user = UserManager.CurrentUser.Value;
-                if(user != null && user.OnlineUser.Provider != null)
-                    Api.Logout();
-
-                UserManager.SaveUser(user);
-                UserManager.RemoveUser();
-            });
+            Model.CurrentUser.OnNewValue -= OnUserChange;
         }
 
         /// <summary>

@@ -1,11 +1,6 @@
-using System;
-using PBGame.UI.Navigations.Overlays;
+using PBGame.UI.Models.MenuBar;
 using PBGame.Data.Users;
-using PBGame.Assets.Caching;
-using PBGame.Networking.API;
 using PBFramework.UI;
-using PBFramework.UI.Navigations;
-using PBFramework.Allocation.Caching;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -20,51 +15,17 @@ namespace PBGame.UI.Components.MenuBar
         private ILabel nicknameLabel;
         private ILabel levelLabel;
 
-        private bool hasOverlay = false;
-        private CacherAgent<Texture2D> cacherAgent;
 
+        protected override MenuType Type => MenuType.Profile;
 
         protected override string IconSpritename => "";
 
-        [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
-
-        [ReceivesDependency]
-        private IApi Api { get; set; }
-
-        [ReceivesDependency]
-        private IWebImageCacher WebImageCacher { get; set; }
-
-        [ReceivesDependency]
-        private IOverlayNavigator OverlayNavigator { get; set; }
+        protected override bool OverrideEnableInitCall => true;
 
 
         [InitWithDependency]
         private void Init()
         {
-            OnFocused += (isFocused) =>
-            {
-                if (isFocused)
-                {
-                    var overlay = OverlayNavigator.Show<ProfileMenuOverlay>();
-                    overlay.OnClose += () =>
-                    {
-                        hasOverlay = false;
-                        IsFocused = false;
-                    };
-                    hasOverlay = true;
-                }
-                else
-                {
-                    if (hasOverlay)
-                        OverlayNavigator.Hide<ProfileMenuOverlay>();
-                    hasOverlay = false;
-                }
-            };
-
-            cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);
-            cacherAgent.OnFinished += OnAvatarLoaded;
-
             background = CreateChild<UguiSprite>("background", -1);
             {
                 background.Anchor = AnchorType.Fill;
@@ -112,45 +73,47 @@ namespace PBGame.UI.Components.MenuBar
 
         protected override void OnEnableInited()
         {
-            // Listen to online user change event.
-            UserManager.CurrentUser.OnValueChanged += OnUserChange;
-            OnUserChange(UserManager.CurrentUser.Value);
+            base.OnEnableInited();
+
+            Model.ProfileImage.OnNewValue += OnProfileImageLoaded;
+            Model.CurrentUser.BindAndTrigger(OnUserChange);
         }
 
         protected override void OnDisable()
         {
-            // Withdraw from online user change event.
-            UserManager.CurrentUser.OnValueChanged -= OnUserChange;
+            base.OnDisable();
+
+            Model.CurrentUser.OnNewValue -= OnUserChange;
+        }
+
+        /// <summary>
+        /// Sets the profile image to the specified texture.
+        /// </summary>
+        private void SetProfileImage(Texture2D texture)
+        {
+            imageTexture.Active = texture != null;
+            imageTexture.Texture = texture;
+        }
+
+        /// <summary>
+        /// Sets the display for specified user profile.
+        /// </summary>
+        private void SetUserProfile(IUser user)
+        {
+            if(user != null)
+                nicknameLabel.Text = user.Username;
+            else
+                nicknameLabel.Text = "offline user";
         }
 
         /// <summary>
         /// Event called from cacher agent when the avatar has been loaded.
         /// </summary>
-        private void OnAvatarLoaded(Texture2D texture)
-        {
-            imageTexture.Active = true;
-            imageTexture.Texture = texture;
-        }
+        private void OnProfileImageLoaded(Texture2D texture) => SetProfileImage(texture);
 
         /// <summary>
         /// Event called when the online user has changed.
         /// </summary>
-        private void OnUserChange(IUser newUser, IUser _ = null)
-        {
-            imageTexture.Active = false;
-
-            // Set infos
-            if(newUser != null)
-                nicknameLabel.Text = newUser.Username;
-            else
-                nicknameLabel.Text = Api.User.Value.Username;
-
-            // Unload profie image using web image cacher.
-            cacherAgent.Remove();
-
-            // Load profile image using web image cacher.
-            if (newUser != null && !string.IsNullOrEmpty(newUser.OnlineUser.AvatarImage))
-                cacherAgent.Request(newUser.OnlineUser.AvatarImage);
-        }
+        private void OnUserChange(IUser user) => SetUserProfile(user);
     }
 }

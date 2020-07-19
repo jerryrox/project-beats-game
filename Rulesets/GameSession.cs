@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using PBGame.UI.Components.Game;
+using PBGame.UI.Models;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Audio;
@@ -20,7 +20,6 @@ using UnityEngine;
 
 namespace PBGame.Rulesets
 {
-    // TODO: Integrate music controller.
     public abstract class GameSession<T> : IGameSession<T>
         where T : BaseHitObject
     {
@@ -69,7 +68,7 @@ namespace PBGame.Rulesets
         protected IMusicController MusicController { get; set; }
 
         [ReceivesDependency]
-        private GameState GameState { get; set; }
+        private GameModel Model { get; set; }
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
@@ -134,7 +133,7 @@ namespace PBGame.Rulesets
 
             // Load map hitsounds only if enabled in configuration.
             if(GameConfiguration.UseBeatmapHitsounds.Value)
-                GameState.AddInitialLoader(MapAssetStore.LoadHitsounds());
+                Model.AddAsLoader(MapAssetStore.LoadHitsounds());
         }
 
         public void InvokeSoftInit()
@@ -174,7 +173,7 @@ namespace PBGame.Rulesets
             Game.OnAppFocus -= OnAppFocused;
 
             // Record score.
-            var recordPromise = GameScreen?.RecordScore(ScoreProcessor, playTime);
+            var recordPromise = Model?.RecordScore(ScoreProcessor, playTime);
             recordPromise.OnFinished += () =>
             {
                 // Dispose score processor.
@@ -209,7 +208,6 @@ namespace PBGame.Rulesets
                 MusicController.Pause();
 
             var pauseOverlay = OverlayNavigator.Show<PauseOverlay>();
-            pauseOverlay.GameSession = this;
 
             IsPaused = true;
             OnPause?.Invoke();
@@ -245,7 +243,7 @@ namespace PBGame.Rulesets
             onDispose.SetHandler(() =>
             {
                 OnForceQuit?.Invoke();
-                GameScreen.ExitGame<PrepareScreen>();
+                Model.ExitGameForceful();
             });
             InvokeSoftDispose();
         }
@@ -258,16 +256,13 @@ namespace PBGame.Rulesets
             {
                 OnCompletion?.Invoke();
 
-                // TODO: Wait for completion timeout to auto navigate to results.
+                // Wait for completion timeout to auto navigate to results.
                 SynchronizedTimer autoExitTimer = new SynchronizedTimer()
                 {
                     Limit = 2f,
                 };
-                autoExitTimer.OnFinished += delegate { GameScreen.ExitGame<PrepareScreen>(); };
+                autoExitTimer.OnFinished += delegate { Model.ExitGameWithClear(); };
                 autoExitTimer.Start();
-
-                // TODO: Navigate to ResultScreen.
-                // GameScreen.ExitGame<ResultScreen>();
             });
 
             SynchronizedTimer initialTimer = new SynchronizedTimer()

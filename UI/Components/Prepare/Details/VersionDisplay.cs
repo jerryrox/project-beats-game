@@ -1,5 +1,5 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
-using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.Prepare.Details
 
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.Prepare.Details
                 backButton.CreateIconSprite(spriteName: "icon-left");
                 backButton.UseDefaultHoverAni();
 
-                backButton.OnTriggered += () => SelectMap(-1);
+                backButton.OnTriggered += Model.SelectPrevMap;
             }
             nextButton = CreateChild<HoverableTrigger>("next", 1);
             {
@@ -50,7 +50,7 @@ namespace PBGame.UI.Components.Prepare.Details
                 nextButton.CreateIconSprite(spriteName: "icon-right");
                 nextButton.UseDefaultHoverAni();
 
-                nextButton.OnTriggered += () => SelectMap(1);
+                nextButton.OnTriggered += Model.SelectNextMap;
             }
             versionIcon = CreateChild<VersionButton>("version", 2);
             {
@@ -86,46 +86,15 @@ namespace PBGame.UI.Components.Prepare.Details
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.SelectedMap.BindAndTrigger(OnMapChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Map.OnNewValue += OnMapChange;
-
-            RefreshDisplays();
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Map.OnNewValue -= OnMapChange;
-        }
-
-        /// <summary>
-        /// Selects the map within the selected mapset after or before current selection by specified offset.
-        /// </summary>
-        private void SelectMap(int offset)
-        {
-            var maps = MapSelection.Mapset.Value.Maps;
-            var curMap = MapSelection.Map.Value.OriginalMap;
-
-            // Determin the index
-            int index = maps.IndexOf(curMap) + offset;
-            // Select it only if valid.
-            if(index >= 0 && index < maps.Count)
-                MapSelection.SelectMap(maps[index]);
+            Model.SelectedMap.OnNewValue -= OnMapChange;
         }
 
         /// <summary>
@@ -133,8 +102,7 @@ namespace PBGame.UI.Components.Prepare.Details
         /// </summary>
         private void RefreshDisplays()
         {
-            var map = MapSelection.Map.Value;
-
+            var map = Model.SelectedMap.Value;
             versionIcon.Setup(map);
             nameLabel.Text = map.Detail.Version;
             scaleLabel.Text = map.Difficulty.Scale.ToString("N2");

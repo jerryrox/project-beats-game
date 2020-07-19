@@ -31,8 +31,6 @@ namespace PBGame
         /// </summary>
         private IMusicOffset mapOffset;
 
-        private Cached<MenuBarOverlay> cachedMenuBar = new Cached<MenuBarOverlay>();
-
 
         /// <summary>
         /// Returns whether the initial splash view should be shown automatically.
@@ -66,8 +64,8 @@ namespace PBGame
         {
             // Confirm quit
             var dialog = overlayNavigator.Show<DialogOverlay>();
-            dialog.SetMessage("Are you sure you want to quit Project: Beats?");
-            dialog.AddConfirmCancel(OnConfirmQuit, null);
+            dialog.Model.SetMessage("Are you sure you want to quit Project: Beats?");
+            dialog.Model.AddConfirmCancel(OnConfirmQuit, null);
         }
 
         public override void ForceQuit()
@@ -85,12 +83,7 @@ namespace PBGame
         /// </summary>
         private void OnConfirmQuit()
         {
-            var quitView = overlayNavigator.Show<QuitOverlay>();
-            quitView.OnQuitAniEnd += () =>
-            {
-                Debug.LogWarning("Quit");
-                base.ForceQuit();
-            };
+            overlayNavigator.Show<QuitOverlay>();
         }
 
         /// <summary>
@@ -125,17 +118,9 @@ namespace PBGame
                 // Loop the music when not in game screen.
                 if (!(screenNavigator.CurrentScreen.Value is GameScreen))
                 {
-                    // TODO: This may have a bug where music won't loop in home screen when there's only one mapset.
-                    // Check whether menu bar exists and try letting the music menu handle music switching.
-                    var menuBar = overlayNavigator.Get<MenuBarOverlay>();
-                    if (menuBar != null && menuBar.MusicButton.Active)
+                    if (screenNavigator.CurrentScreen.Value is HomeScreen)
                     {
-                        menuBar.MusicButton.SetNextMusic();
-                    }
-                    // Else if homescreen, select a random music.
-                    else if (screenNavigator.CurrentScreen.Value is HomeScreen)
-                    {
-                        mapSelection.SelectMapset(mapManager.AllMapsets.GetRandom());
+                        mapSelection.SelectMapset(musicPlaylist.PeekNext());
                     }
                     // Else if download screen, just stop there.
                     else if (screenNavigator.CurrentScreen.Value is DownloadScreen)
@@ -170,7 +155,6 @@ namespace PBGame
                 }
 
                 ApplyMenuBarOverlay();
-                ApplyMenuBarProperties();
             };
             screenNavigator.CurrentScreen.OnValueChanged += (curScreen, prevScreen) =>
             {
@@ -204,14 +188,6 @@ namespace PBGame
 
                 if (!(view is MenuBarOverlay))
                     ApplyMenuBarOverlay();
-                else
-                {
-                    if (!cachedMenuBar.IsValid)
-                    {
-                        cachedMenuBar.Value = view as MenuBarOverlay;
-                        ApplyMenuBarProperties();
-                    }
-                }
             };
             overlayNavigator.OnHideView += (view) =>
             {
@@ -250,6 +226,10 @@ namespace PBGame
             mapSelection.Map.OnNewValue += (map) =>
             {
                 metronome.CurrentMap = map;
+            };
+            mapSelection.Mapset.OnNewValue += (mapset) =>
+            {
+                musicPlaylist.Focus(mapset);
             };
 
             mapSelection.Music.OnNewValue += (music) =>
@@ -370,6 +350,10 @@ namespace PBGame
                     Message = $"Imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
                 });
             };
+            mapManager.AllMapsets.OnChange += (mapsets) =>
+            {
+                musicPlaylist.Refill(mapsets);
+            };
         }
 
         /// <summary>
@@ -413,21 +397,6 @@ namespace PBGame
 
             // Show menu ber by default.
             overlayNavigator.Show<MenuBarOverlay>(true);
-        }
-
-        /// <summary>
-        /// Applies menu bar properties on screen change.
-        /// </summary>
-        private void ApplyMenuBarProperties()
-        {
-            if (!cachedMenuBar.IsValid)
-                return;
-
-            var menuBar = cachedMenuBar.Value;
-            bool isHomeActive = screenNavigator.CurrentScreen.Value is HomeScreen;
-
-            menuBar.MusicButton.Active = isHomeActive;
-            menuBar.BackgroundSprite.Color = new Color(0f, 0f, 0f, 0f);
         }
 
         /// <summary>

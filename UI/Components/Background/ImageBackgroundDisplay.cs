@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models.Background;
 using PBGame.Maps;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -19,6 +16,8 @@ namespace PBGame.UI.Components.Background
             get => mapImage.Color;
             set => mapImage.Color = value;
         }
+
+        public override BackgroundType Type => BackgroundType.Image;
 
 
         [InitWithDependency]

@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Animations;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
-using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -13,10 +11,9 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public abstract class BaseSubMenuOverlay : BaseOverlay, ISubMenuOverlay {
-
-        public event Action OnClose;
-
+    public abstract class BaseSubMenuOverlay<T> : BaseOverlay<T>
+        where T : class, IModel, new()
+    {
         protected ISprite darkSprite;
         protected ITrigger closeTrigger;
         protected ITrigger container;
@@ -84,14 +81,6 @@ namespace PBGame.UI.Navigations.Overlays
                 .AddTime(0f, () => glowSprite.Color)
                 .AddTime(0.25f, Color.black)
                 .Build();
-        }
-
-        protected override void OnPreHide()
-        {
-            base.OnPreHide();
-
-            OnClose?.Invoke();
-            OnClose = null;
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)

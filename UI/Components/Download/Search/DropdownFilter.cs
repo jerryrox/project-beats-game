@@ -26,7 +26,7 @@ namespace PBGame.UI.Components.Download.Search
             context = new DropdownContext();
             context.OnSelection += (data) =>
             {
-                if(bindable != null && data != null && bindable.RawValue.ToString() != data.ExtraData.ToString())
+                if(bindable != null && data != null && !bindable.RawValue.ToString().Equals(data.ExtraData.ToString()))
                     bindable.RawValue = data.ExtraData;
             };
 
@@ -61,6 +61,8 @@ namespace PBGame.UI.Components.Download.Search
         public void Setup<T>(IBindable bindable)
             where T : Enum
         {
+            UnbindEvents();
+
             // Reset previous context.
             context.Datas.Clear();
             context.SelectData(null);
@@ -87,6 +89,9 @@ namespace PBGame.UI.Components.Download.Search
         /// </summary>
         private void UnbindEvents()
         {
+            if(bindable == null)
+                return;
+                
             bindable.OnNewRawValue -= OnFilterValueChange;
         }
 
@@ -96,6 +101,9 @@ namespace PBGame.UI.Components.Download.Search
         private void OnFilterValueChange(object data)
         {
             dropdown.LabelText = data.ToString();
+
+            // Making sure the dropdown selection is synchronized with the option.
+            context.SelectDataWithText(data.ToString());
         }
     }
 }

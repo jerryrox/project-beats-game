@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.Maps;
+using PBGame.UI.Models;
 using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBFramework.UI;
@@ -19,7 +16,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -30,7 +27,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             grid = CreateChild<UguiGrid>("grid");
             {
                 grid.Anchor = AnchorType.Fill;
-                grid.RawSize = Vector2.zero;
+                grid.Offset = Offset.Zero;
                 grid.CellSize = new Vector2(118f, 36f);
 
                 timeInfo = grid.CreateChild<MetaDifficultyInfoCell>("time", 0);
@@ -51,29 +48,15 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.SelectedMap.BindAndTrigger(OnMapChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Map.BindAndTrigger(OnMapChange);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Map.OnNewValue -= OnMapChange;
+            Model.SelectedMap.OnNewValue -= OnMapChange;
         }
 
         /// <summary>

@@ -6,6 +6,11 @@ namespace PBGame.Configurations
     public interface IEnvConfiguration {
         
         /// <summary>
+        /// Returns the type of environment configuration source.
+        /// </summary>
+        EnvType EnvironmentType { get; }
+
+        /// <summary>
         /// Returns whether the configuration is loaded for development environment.
         /// </summary>
         bool IsDevelopment { get; }

@@ -1,24 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
-using PBGame.UI.Components.Common.Dropdown;
-using PBGame.Data.Users;
 using PBGame.Graphics;
-using PBGame.Configurations;
 using PBGame.Networking.API;
-using PBGame.Networking.API.Requests;
-using PBGame.Networking.API.Responses;
 using PBFramework.UI;
 using PBFramework.Data.Bindables;
-using PBFramework.Utils;
 using PBFramework.Graphics;
-using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
-
-using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
@@ -33,10 +21,6 @@ namespace PBGame.UI.Components.ProfileMenu
         private CredentialLoginView credentialLogin;
         private OAuthLoginView oAuthLogin;
         private Loader loader;
-
-        private DropdownContext dropdownContext;
-
-        private IApiRequest curRequest;
 
 
         public float Alpha
@@ -62,27 +46,15 @@ namespace PBGame.UI.Components.ProfileMenu
         /// <summary>
         /// Current login provider view in use.
         /// </summary>
-        public Bindable<ILoginView> CurLoginView { get; private set; } = new Bindable<ILoginView>();
-
-        /// <summary>
-        /// Returns the provider currently selected.
-        /// </summary>
-        private IApiProvider CurProvider => Api.GetProvider(GameConfiguration.LastLoginApi.Value);
+        public Bindable<BaseLoginView> CurLoginView { get; private set; } = new Bindable<BaseLoginView>();
 
         [ReceivesDependency]
-        private IApi Api { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
-
-        [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
 
         [InitWithDependency]
         private void Init(IColorPreset colorPreset)
         {
-            Dependencies = Dependencies.Clone();
             Dependencies.Cache(this);
 
             canvasGroup = myObject.AddComponent<CanvasGroup>();
@@ -107,15 +79,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 apiDropdown.Y = -72f;
                 apiDropdown.Height = 40f;
 
-                dropdownContext = new DropdownContext();
-                dropdownContext.ImportFromEnum<ApiProviderType>(GameConfiguration.LastLoginApi.Value);
-                dropdownContext.OnSelection += (value) =>
-                {
-                    if(value != null && value.ExtraData != null)
-                        SelectApi((ApiProviderType)value.ExtraData);
-                };
-
-                apiDropdown.Context = dropdownContext;
+                apiDropdown.Context = Model.ApiDropdownContext;
             }
             credentialLogin = CreateChild<CredentialLoginView>("credentials");
             {
@@ -148,36 +112,28 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            // Listen to API authentication state change.
-            Api.Authentication.OnValueChanged += OnApiAuthenticated;
-
-            // Setup view for the currently selected API provider.
-            SelectApi((ApiProviderType)dropdownContext.Selection.ExtraData);
+            Model.CurrentProvider.BindAndTrigger(OnProviderChange);
+            Model.IsLoggingIn.BindAndTrigger(OnLoggingInChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            Api.Authentication.OnValueChanged -= OnApiAuthenticated;
-
-            FinishCurRequest(true);
+            Model.CurrentProvider.OnNewValue -= OnProviderChange;
+            Model.IsLoggingIn.OnNewValue -= OnLoggingInChange;
         }
 
         /// <summary>
-        /// Sets the type of API provider to use.
+        /// Event called when the selected api provider has changed.
         /// </summary>
-        public void SelectApi(ApiProviderType apiType)
+        private void OnProviderChange(IApiProvider provider)
         {
-            GameConfiguration.LastLoginApi.Value = apiType;
-            GameConfiguration.Save();
-
-            // Current auth request must be stopped.
-            FinishCurRequest(true);
+            if(provider == null)
+                return;
 
             // Display OAuth or Credential login based on API information.
-            var provider = Api.GetProvider(apiType);
-            ILoginView loginView = null;
+            BaseLoginView loginView = null;
             if (provider.IsOAuthLogin)
             {
                 loginView = oAuthLogin;
@@ -190,88 +146,18 @@ namespace PBGame.UI.Components.ProfileMenu
                 oAuthLogin.Hide();
                 credentialLogin.Show();
             }
-            loginView.Setup(provider);
             CurLoginView.Value = loginView;
         }
 
         /// <summary>
-        /// Starts authentication request routine.
+        /// Event called when the loggin in state has changed.
         /// </summary>
-        public void RequestAuth(IApiRequest request)
+        private void OnLoggingInChange(bool isLoggingIn)
         {
-            if(request == null)
-                return;
-
-            loader.Show();
-
-            curRequest = request;
-            request.RawResponse.OnNewRawValue += OnAuthResponse;
-            Api.Request(request);
-        }
-
-        /// <summary>
-        /// Requests for online Me information from API.
-        /// </summary>
-        private void RequestMe()
-        {
-            if(Api.Authentication.Value == null)
-                return;
-
-            loader.Show();
-            curRequest = CurProvider.Me();
-            curRequest.RawResponse.OnNewRawValue += OnMeResponse;
-            Api.Request(curRequest);
-        }
-
-        /// <summary>
-        /// Aborts current auth API request.
-        /// </summary>
-        private void FinishCurRequest(bool disposeRequest)
-        {
-            if(curRequest == null)
-                return;
-
-            loader.Hide();
-
-            if(disposeRequest)
-                curRequest.Dispose();
-            curRequest = null;
-        }
-
-        /// <summary>
-        /// Event called on initial authentication response.
-        /// </summary>
-        private void OnAuthResponse(object rawResponse)
-        {
-            FinishCurRequest(false);
-
-            if(!(rawResponse is OAuthResponse) && !(rawResponse is AuthResponse))
-            {
-                Logger.LogError($"Invalid auth response type: {rawResponse.GetType().Name}");
-            }
-        }
-
-        /// <summary>
-        /// Event called on online Me information response.
-        /// </summary>
-        private void OnMeResponse(object rawResponse)
-        {
-            FinishCurRequest(false);
-
-            if (!(rawResponse is MeResponse))
-            {
-                Logger.LogError($"Invalid me response type: {rawResponse.GetType().Name}");
-            }
-        }
-
-        /// <summary>
-        /// Event called when the authentication state has been changed in the API.
-        /// </summary>
-        private void OnApiAuthenticated(Authentication newAuth, Authentication oldAuth)
-        {
-            // Became authenticated.
-            if (newAuth != null && newAuth != oldAuth)
-                RequestMe();
+            if(isLoggingIn)
+                loader.Show();
+            else
+                loader.Hide();
         }
     }
 }

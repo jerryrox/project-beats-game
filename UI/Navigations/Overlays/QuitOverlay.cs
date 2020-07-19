@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -9,14 +7,12 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class QuitOverlay : BaseOverlay, IQuitOverlay {
-
-        public event Action OnQuitAniEnd;
+    public class QuitOverlay : BaseOverlay<QuitModel> {
 
         private ISprite darkSprite;
 
 
-        protected override int OverlayDepth => ViewDepths.QuitOverlay;
+        protected override int ViewDepth => ViewDepths.QuitOverlay;
 
 
         [InitWithDependency]
@@ -39,7 +35,7 @@ namespace PBGame.UI.Navigations.Overlays
                 .AddTime(2f, 1f)
                 .AddTime(2.5f, 1f)
                 .Build();
-            anime.AddEvent(anime.Duration, () => OnQuitAniEnd?.Invoke());
+            anime.AddEvent(anime.Duration, () => model.Quit());
             return anime;
         }
     }

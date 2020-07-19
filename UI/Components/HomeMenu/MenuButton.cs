@@ -43,8 +43,7 @@ namespace PBGame.UI.Components.HomeMenu
                 pulseSprite.Size = new Vector2(64f, 64f);
                 pulseSprite.Alpha = 0f;
 
-                if(pulseSprite is IRaycastable raycastable)
-                    raycastable.IsRaycastTarget = false;
+                pulseSprite.IsRaycastTarget = false;
             }
             flashSprite = CreateChild<UguiSprite>("flash", 0);
             {

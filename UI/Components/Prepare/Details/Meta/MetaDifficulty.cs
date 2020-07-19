@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using PBGame.Maps;
+using PBGame.UI.Models;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Graphics;
@@ -23,7 +23,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
 
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
+        private PrepareModel Model { get; set; }
 
         [ReceivesDependency]
         private IColorPreset ColorPreset { get; set; }
@@ -64,29 +64,15 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.SelectedMap.BindAndTrigger(OnMapChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Map.BindAndTrigger(OnMapChange);
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Map.OnNewValue -= OnMapChange;
+            Model.SelectedMap.OnNewValue -= OnMapChange;
         }
 
         /// <summary>

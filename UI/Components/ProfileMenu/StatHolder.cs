@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Data.Users;
-using PBGame.Configurations;
+using PBGame.Rulesets;
 using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -15,12 +12,9 @@ namespace PBGame.UI.Components.ProfileMenu
         private StatDisplay levelDisplay;
         private StatDisplay accuracyDisplay;
 
-        // TODO: Integrate with user data.
-        [ReceivesDependency]
-        private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private ProfileMenuModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -52,13 +46,27 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
+            Model.GameMode.OnNewValue += OnGameModeChange;
+            Model.CurrentUser.OnNewValue += OnUserChange;
+
             SetupDisplays();
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.GameMode.OnNewValue -= OnGameModeChange;
+            Model.CurrentUser.OnNewValue -= OnUserChange;
+        }
+
+        /// <summary>
+        /// Refreshes display for current model state.
+        /// </summary>
         private void SetupDisplays()
         {
-            var gameMode = GameConfiguration.RulesetMode.Value;
-            var user = UserManager.CurrentUser.Value;
+            var gameMode = Model.GameMode.Value;
+            var user = Model.CurrentUser.Value;
             if(user == null)
                 return;
 
@@ -71,5 +79,15 @@ namespace PBGame.UI.Components.ProfileMenu
             var roundedAcc = ((int)(stats.Accuracy * 1000f)) / 1000f;
             accuracyDisplay.CenterText = roundedAcc.ToString("N1");
         }
+
+        /// <summary>
+        /// Event called when the selected game mode has been changed.
+        /// </summary>
+        private void OnGameModeChange(GameModeType gameMode) => SetupDisplays();
+
+        /// <summary>
+        /// Event called when the current user has changed.
+        /// </summary>
+        private void OnUserChange(IUser user) => SetupDisplays();
     }
 }

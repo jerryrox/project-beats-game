@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.ProfileMenu;
 using PBGame.Animations;
-using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
@@ -11,12 +11,12 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Overlays
 {
-    public class ProfileMenuOverlay : BaseSubMenuOverlay, IProfileMenuOverlay {
+    public class ProfileMenuOverlay : BaseSubMenuOverlay<ProfileMenuModel> {
 
         private ContentHolder content;
 
 
-        protected override int OverlayDepth => ViewDepths.ProfileMenuOverlay;
+        protected override int ViewDepth => ViewDepths.ProfileMenuOverlay;
 
 
         [InitWithDependency]

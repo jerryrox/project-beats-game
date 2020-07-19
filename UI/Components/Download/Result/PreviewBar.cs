@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Graphics;
 using PBGame.Networking.Maps;
 using PBFramework.UI;
-using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download.Result
 {
@@ -30,16 +26,8 @@ namespace PBGame.UI.Components.Download.Result
             set => canvasGroup.alpha = value;
         }
 
-        /// <summary>
-        /// Returns whether the preview bar should be displayed.
-        /// </summary>
-        private bool ShouldDisplay => mapset != null && State.PreviewingMapset.Value == mapset;
-
         [ReceivesDependency]
-        private IMusicController MusicController { get; set; }
-
-        [ReceivesDependency]
-        private DownloadState State { get; set; }
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -81,11 +69,10 @@ namespace PBGame.UI.Components.Download.Result
 
             this.mapset = mapset;
 
-            bool isPreviewingMapset = ShouldDisplay;
-            State.PreviewingMapset.OnNewValue += OnPreviewMapsetChange;
-            Toggle(isPreviewingMapset, false);
+            Model.PreviewingMapset.OnNewValue += OnPreviewMapsetChange;
 
-            Value = isPreviewingMapset ? MusicController.Progress : 0f;
+            Toggle(Model.IsPreviewingMapset(mapset), false);
+            Update();
         }
 
         /// <summary>
@@ -99,7 +86,7 @@ namespace PBGame.UI.Components.Download.Result
             if(mapset == null)
                 return;
 
-            State.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
+            Model.PreviewingMapset.OnNewValue -= OnPreviewMapsetChange;
 
             mapset = null;
             Value = 0f;
@@ -108,10 +95,7 @@ namespace PBGame.UI.Components.Download.Result
 
         protected void Update()
         {
-            if(mapset == null || State.PreviewingMapset.Value != mapset)
-                return;
-
-            Value = MusicController.Progress;
+            Value = Model.GetPreviewProgress(mapset);
         }
 
         /// <summary>
@@ -147,7 +131,7 @@ namespace PBGame.UI.Components.Download.Result
         /// </summary>
         private void OnPreviewMapsetChange(OnlineMapset mapset)
         {
-            Toggle(ShouldDisplay, true);
+            Toggle(Model.IsPreviewingMapset(mapset), true);
         }
     }
 }

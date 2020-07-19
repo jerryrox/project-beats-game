@@ -68,6 +68,7 @@ namespace PBGame
         protected MapSelection mapSelection;
         protected MapManager mapManager;
         protected Metronome metronome;
+        protected MusicPlaylist musicPlaylist;
 
         protected DownloadStore downloadStore;
         protected Api api;
@@ -89,6 +90,8 @@ namespace PBGame
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
 
         public string Version => Application.version;
+
+        public virtual bool IsTestMode => false;
 
 
         void Awake()
@@ -120,7 +123,7 @@ namespace PBGame
             Dependencies.CacheAs<IPlatformHost>(platformHost = PlatformHost.CreateHost());
             Dependencies.CacheAs<DeepLinker>(deepLinker = platformHost.CreateDeepLinker());
 
-            Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(false));
+            Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(EnvType.Production));
 
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
@@ -151,6 +154,7 @@ namespace PBGame
             {
                 AudioController = musicController
             });
+            Dependencies.CacheAs<IMusicPlaylist>(musicPlaylist = new MusicPlaylist());
 
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));

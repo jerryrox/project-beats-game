@@ -1,28 +1,11 @@
-using PBFramework.UI.Navigations;
-using PBFramework.Dependencies;
+using PBGame.UI.Models.MenuBar;
 
 namespace PBGame.UI.Components.MenuBar
 {
     public class NotificationMenuButton : BaseMenuButton
     {
+        protected override MenuType Type => MenuType.Notification;
+
         protected override string IconSpritename => "icon-notification";
-
-
-        [InitWithDependency]
-        private void Init(IOverlayNavigator overlayNavigator)
-        {
-            OnFocused += (isFocused) =>
-            {
-                if (isFocused)
-                {
-                    // TODO: Show notification overlay.
-                    // TODO: Toggle off when notification overlay is hidden.
-                }
-                else
-                {
-                    // TODO: Hide notification overlay.
-                }
-            };
-        }
     }
 }

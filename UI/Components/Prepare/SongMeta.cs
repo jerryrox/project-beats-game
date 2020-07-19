@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBGame.Maps;
+using PBGame.UI.Models;
 using PBGame.Rulesets.Maps;
-using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Utils;
 using PBFramework.Graphics;
@@ -22,12 +21,8 @@ namespace PBGame.UI.Components.Prepare
 
         private IAnime fadeAni;
 
-
         [ReceivesDependency]
-        private IMapSelection MapSelection { get; set; }
-
-        [ReceivesDependency]
-        private IGameConfiguration GameConfiguration { get; set; }
+        private PrepareModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -81,33 +76,17 @@ namespace PBGame.UI.Components.Prepare
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
-            BindEvents();
+
+            Model.SelectedMap.BindAndTrigger(OnMapChange);
+            Model.PreferUnicode.OnNewValue += OnPreferUnicode;
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnbindEvents();
-        }
 
-        /// <summary>
-        /// Binds to external dependency events.
-        /// </summary>
-        private void BindEvents()
-        {
-            MapSelection.Map.OnNewValue += OnMapChange;
-            GameConfiguration.PreferUnicode.OnNewValue += OnPreferUnicode;
-
-            SetupLabels();
-        }
-        
-        /// <summary>
-        /// Unbinds from external dependency events.
-        /// </summary>
-        private void UnbindEvents()
-        {
-            MapSelection.Map.OnNewValue -= OnMapChange;
-            GameConfiguration.PreferUnicode.OnNewValue -= OnPreferUnicode;
+            Model.SelectedMap.OnNewValue -= OnMapChange;
+            Model.PreferUnicode.OnNewValue -= OnPreferUnicode;
         }
 
         /// <summary>
@@ -115,8 +94,8 @@ namespace PBGame.UI.Components.Prepare
         /// </summary>
         private void SetupLabels()
         {
-            var map = MapSelection.Map.Value;
-            bool preferUnicode = GameConfiguration.PreferUnicode.Value;
+            var map = Model.SelectedMap.Value;
+            bool preferUnicode = Model.PreferUnicode.Value;
 
             if (map == null)
             {

@@ -1,5 +1,5 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Initialize;
-using PBGame.UI.Navigations.Screens.Initialize;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBFramework.UI.Navigations;
@@ -9,16 +9,13 @@ using UnityEngine;
 
 namespace PBGame.UI.Navigations.Screens
 {
-    public class InitializeScreen : BaseScreen, IInitializeScreen {
+    public class InitializeScreen : BaseScreen<InitializeModel> {
 
-        private IInitLoader initLoader;
+        private LogoDisplay logoDisplay;
+        private LoadDisplay loadDisplay;
 
 
-        public LogoDisplay LogoDisplay { get; private set; }
-
-        public LoadDisplay LoadDisplay { get; private set; }
-
-        protected override int ScreenDepth => ViewDepths.InitializeScreen;
+        protected override int ViewDepth => ViewDepths.InitializeScreen;
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
@@ -33,31 +30,32 @@ namespace PBGame.UI.Navigations.Screens
             Depth = 1000;
 
             // Initialize logo displayer.
-            LogoDisplay = CreateChild<LogoDisplay>("logo", 10);
+            logoDisplay = CreateChild<LogoDisplay>("logo", 10);
             {
-                LogoDisplay.Size = new Vector2(320f, 320f);
+                logoDisplay.Size = new Vector2(320f, 320f);
 
-                LogoDisplay.OnStartup = OnLogoStartup;
-                LogoDisplay.OnEnd = OnLogoEnd;
+                logoDisplay.OnStartup = OnLogoStartup;
+                logoDisplay.OnEnd = model.NavigateToNext;
             }
 
             // Initialize load displayer,
-            LoadDisplay = CreateChild<LoadDisplay>("load", 9);
+            loadDisplay = CreateChild<LoadDisplay>("load", 9);
             {
-                LoadDisplay.Anchor = AnchorType.BottomStretch;
-                LoadDisplay.SetOffsetHorizontal(0f);
-                LoadDisplay.Y = 0f;
+                loadDisplay.Anchor = AnchorType.BottomStretch;
+                loadDisplay.SetOffsetHorizontal(0f);
+                loadDisplay.Y = 0f;
             }
 
-            // Initialize loader
-            initLoader = new InitLoader(Dependencies);
-            initLoader.Progress.OnNewValue += OnLoaderProgress;
-            initLoader.State.OnNewValue += OnLoaderStatus;
-            initLoader.OnComplete += LogoDisplay.PlayEnd;
-            initLoader.Load();
+            // Hook state changes in model
+            model.Progress.OnNewValue += OnLoaderProgress;
+            model.State.OnNewValue += OnLoaderStatus;
+            model.IsComplete.OnNewValue += OnLoaderComplete;
 
             // Display logo animation.
-            LogoDisplay.PlayStartup();
+            logoDisplay.PlayStartup();
+
+            // Start loading process for dependencies.
+            model.StartLoad();
         }
 
         /// <summary>
@@ -66,21 +64,11 @@ namespace PBGame.UI.Navigations.Screens
         private void OnLogoStartup()
         {
             // If all loading is already complete, skip over to logo end.
-            if (initLoader.IsComplete)
-                LogoDisplay.PlayEnd();
+            if (model.IsComplete.Value)
+                logoDisplay.PlayEnd();
             // Else, loop breathing animation.
             else
-                LogoDisplay.PlayBreathe();
-        }
-
-        /// <summary>
-        /// Event called from logo display when end animation has finished.
-        /// </summary>
-        private void OnLogoEnd()
-        {
-            OverlayNavigator.Show<SystemOverlay>();
-            OverlayNavigator.Show<BackgroundOverlay>();
-            ScreenNavigator.Show<HomeScreen>();
+                logoDisplay.PlayBreathe();
         }
 
         /// <summary>
@@ -88,7 +76,7 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLoaderProgress(float progress)
         {
-            LoadDisplay.SetProgress(progress);
+            loadDisplay.SetProgress(progress);
         }
 
         /// <summary>
@@ -96,7 +84,15 @@ namespace PBGame.UI.Navigations.Screens
         /// </summary>
         private void OnLoaderStatus(string status)
         {
-            LoadDisplay.SetStatus(status);
+            loadDisplay.SetStatus(status);
+        }
+
+        /// <summary>
+        /// Event called from loader when the loading completion has changed.
+        /// </summary>
+        private void OnLoaderComplete(bool isComplete)
+        {
+            logoDisplay.PlayEnd();
         }
     }
 }

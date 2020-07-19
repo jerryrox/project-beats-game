@@ -28,6 +28,11 @@ namespace PBGame
         /// </summary>
         string Version { get; }
 
+        /// <summary>
+        /// Returns whether the game is in test mode.
+        /// </summary>
+        bool IsTestMode { get; }
+
 
         /// <summary>
         /// Gracefully quits the game.

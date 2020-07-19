@@ -101,6 +101,8 @@ namespace PBGame.UI.Components.Common
                 hoverSprite.ImageType = Image.Type.Sliced;
                 hoverSprite.Color = tint;
                 hoverSprite.Alpha = 0f;
+
+                hoverSprite.IsRaycastTarget = false;
             }
             focusSprite = CreateChild<UguiSprite>("focus", 4);
             {

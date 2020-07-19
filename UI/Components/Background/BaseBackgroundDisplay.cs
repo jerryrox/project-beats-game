@@ -1,3 +1,4 @@
+using PBGame.UI.Models.Background;
 using PBGame.Maps;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -22,6 +23,8 @@ namespace PBGame.UI.Components.Background
             set => canvasGroup.alpha = value;
         }
 
+        public abstract BackgroundType Type { get; }
+
         public abstract Color Color { get; set; }
 
 
@@ -41,6 +44,7 @@ namespace PBGame.UI.Components.Background
                 .AddTime(0f, () => Alpha)
                 .AddTime(0.35f, 0f)
                 .Build();
+            disableAni.AddEvent(disableAni.Duration, () => Active = false);
         }
 
         public virtual void MountBackground(IMapBackground background) => this.background = background;

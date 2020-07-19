@@ -1,13 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Audio;
-using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Offsets
 {
@@ -29,53 +23,52 @@ namespace PBGame.UI.Components.Offsets
             {
                 frequency = value;
                 LabelText = $"x{(int)value}";
+                RefreshFocus();
             }
         }
 
-        /// <summary>
-        /// Returns the current metronome being referenced.
-        /// </summary>
-        public IMetronome CurMetronome { get; private set; }
+        [ReceivesDependency]
+        private OffsetsModel Model { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
-            OnTriggered += () =>
-            {
-                if(CurMetronome != null)
-                    CurMetronome.Frequency.Value = frequency;
-            };
+            OnTriggered += () => Model.SetFrequency(frequency);
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            if(Model != null)
+                Model.Metronome.Frequency.BindAndTrigger(OnFrequencyChange);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            if(Model != null)
+                Model.Metronome.Frequency.OnNewValue -= OnFrequencyChange;
         }
 
         /// <summary>
-        /// Sets the metronome instance to listen to.
+        /// Refreshes focused state.
         /// </summary>
-        public void SetMetronome(IMetronome metronome)
+        private void RefreshFocus()
         {
-            RemoveMetronome();
-
-            CurMetronome = metronome;
-            if(metronome != null)
-                metronome.Frequency.BindAndTrigger(OnFrequencyChange);
-        }
-
-        /// <summary>
-        /// Removes current metronome association
-        /// </summary>
-        public void RemoveMetronome()
-        {
-            if(CurMetronome != null)
-                CurMetronome.Frequency.OnNewValue -= OnFrequencyChange;
-            CurMetronome = null;
+            if(Model == null)
+                SetFocused(!IsFocused, true);
+            else
+                SetFocused(this.frequency == Model.Metronome.Frequency.Value, true);
         }
 
         /// <summary>
         /// Event called on beat frequency change.
         /// </summary>
-        private void OnFrequencyChange(BeatFrequency frequency)
-        {
-            SetFocused(frequency == this.frequency, true);
-        }
+        private void OnFrequencyChange(BeatFrequency frequency) => RefreshFocus();
     }
 }

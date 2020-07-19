@@ -1,3 +1,4 @@
+using PBGame.UI.Models.Background;
 using PBGame.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -19,6 +20,8 @@ namespace PBGame.UI.Components.Background
             get => sprite.Color;
             set => sprite.Color = value;
         }
+
+        public override BackgroundType Type => BackgroundType.Gradient;
 
 
         [InitWithDependency]
