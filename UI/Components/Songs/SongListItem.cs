@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Maps;
-using PBGame.Audio;
 using PBGame.Assets.Caching;
 using PBGame.Rulesets.Maps;
-using PBGame.Configurations;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Shaders;
@@ -83,8 +78,13 @@ namespace PBGame.UI.Components.Songs
 
             OnTriggered += () =>
             {
-                if(Active && Mapset != null)
-                    Model.SelectMapset(Mapset);
+                if (Active && Mapset != null)
+                {
+                    if(Model.SelectedMapset.Value != Mapset)
+                        Model.SelectMapset(Mapset);
+                    else
+                        Model.NavigateToPrepare();
+                }
             };
 
             container = CreateChild<UguiObject>("container", 0);
