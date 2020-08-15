@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using PBFramework;
+using PBFramework.Threading.Futures;
 
 namespace PBGame.Notifications
 {
@@ -41,9 +41,9 @@ namespace PBGame.Notifications
         NotificationType Type { get; set; }
 
         /// <summary>
-        /// Promise instance bound to the notification.
+        /// Future instance bound to the notification.
         /// </summary>
-        IPromise Promise { get; set; }
+        IFuture Future { get; set; }
 
 
         /// <summary>

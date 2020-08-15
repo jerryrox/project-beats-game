@@ -15,7 +15,11 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### (WIP)
+### 0.11.0 (WIP)
+#### New features
+- Navigate to prepare screen when the selected song list item has been selected again.
+#### Changes
+- Changed all code using Promises to Future.
 
 ### 0.10.0
 #### New features

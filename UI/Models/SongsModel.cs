@@ -97,7 +97,11 @@ namespace PBGame.UI.Models
             {
                 Limit = SearchDelay
             };
-            searchScheduler.OnFinished += OnSearchSchedulerEnd;
+            searchScheduler.IsCompleted.OnNewValue += (completed) =>
+            {
+                if(completed)
+                    OnSearchSchedulerEnd();
+            };
 
             // Init dropdown context.
             dropdownContext = new DropdownContext() { IsSelectionMenu = false };
@@ -227,7 +231,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called when the scheduled search should occur.
         /// </summary>
-        private void OnSearchSchedulerEnd(ITimer timer)
+        private void OnSearchSchedulerEnd()
         {
             if(scheduledTerm != null)
                 ApplySearch(scheduledTerm);

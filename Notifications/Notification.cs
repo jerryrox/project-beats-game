@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PBFramework;
+using PBFramework.Threading.Futures;
 
 namespace PBGame.Notifications
 {
@@ -24,7 +24,7 @@ namespace PBGame.Notifications
 
         public NotificationType Type { get; set; } = NotificationType.Passive;
 
-        public IPromise Promise { get; set; }
+        public IFuture Future { get; set; }
 
 
         public void AddAction(NotificationAction action)
