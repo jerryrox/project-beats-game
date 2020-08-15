@@ -18,6 +18,8 @@ Slowly making progress 🧩
 ### 0.11.0 (WIP)
 #### New features
 - Navigate to prepare screen when the selected song list item has been selected again.
+#### Changes
+- Changed all code using Promises to Future.
 
 ### 0.10.0
 #### New features
