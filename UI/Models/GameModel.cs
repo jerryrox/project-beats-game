@@ -10,12 +10,11 @@ using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
 using PBGame.Notifications;
-using PBFramework;
 using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
-using PBFramework.Graphics;
 using PBFramework.Threading;
+using PBFramework.Threading.Futures;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,8 +23,8 @@ namespace PBGame.UI.Models
 {
     public class GameModel : BaseModel
     {
-        private List<IExplicitPromise> gameLoaders = new List<IExplicitPromise>();
-        private MultiPromise gameLoader;
+        private List<IControlledFuture> gameLoaders = new List<IControlledFuture>();
+        private MultiFuture gameLoader;
 
         private IPlayableMap currentMap;
         private IModeService currentModeService;
@@ -68,12 +67,12 @@ namespace PBGame.UI.Models
 
 
         /// <summary>
-        /// Adds the specified promise as one of the game loaders.
+        /// Adds the specified future as one of the game loaders.
         /// </summary>
-        public void AddAsLoader(IExplicitPromise promise)
+        public void AddAsLoader(IControlledFuture future)
         {
-            if (promise != null)
-                gameLoaders.Add(promise);
+            if (future != null)
+                gameLoaders.Add(future);
         }
 
         /// <summary>
@@ -126,22 +125,22 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Records the specified play record under the current player.
         /// </summary>
-        public IExplicitPromise RecordScore(IScoreProcessor scoreProcessor, int playTime)
+        public IControlledFuture RecordScore(IScoreProcessor scoreProcessor, int playTime)
         {
             if(scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
-                return new ProxyPromise();
+                return new Future();
 
             // Retrieve user and user stats.
             var user = UserManager.CurrentUser.Value;
             if(user == null)
-                return new ProxyPromise();
+                return new Future();
             var userStats = user.GetStatistics(currentMap.PlayableMode);
             if (userStats == null)
-                return new ProxyPromise();
+                return new Future();
 
             // Record the play result to records database and user statistics.
             Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
-            return new ProxyPromise(resolve =>
+            return new Future(future =>
             {
                 var recordProgress = new ReturnableProgress<IEnumerable<IRecord>>();
                 recordProgress.OnFinished += (records) =>
@@ -225,10 +224,11 @@ namespace PBGame.UI.Models
             if(gameLoader != null)
                 throw new InvalidOperationException("Attempted to initialize a redundant game loader process.");
 
-            gameLoader = new MultiPromise(gameLoaders);
-            gameLoader.OnFinished += () =>
+            gameLoader = new MultiFuture(gameLoaders);
+            gameLoader.IsCompleted.OnNewValue += (completed) =>
             {
-                loadState.Value = GameLoadState.Success;
+                if(completed)
+                    loadState.Value = GameLoadState.Success;
             };
             gameLoader.Start();
         }
@@ -239,12 +239,12 @@ namespace PBGame.UI.Models
         private void DisposeLoader()
         {
             // Cancel all game loaders.
-            gameLoaders.ForEach(p => p.Revoke());
+            gameLoaders.ForEach(p => p.Dispose());
             gameLoaders.Clear();
             // Dispose game loader
             if (gameLoader != null)
             {
-                gameLoader.Revoke();
+                gameLoader.Dispose();
                 gameLoader = null;
             }
         }

@@ -1,7 +1,7 @@
 using System;
 using PBGame.Audio;
 using PBGame.Rulesets.Maps;
-using PBFramework;
+using PBFramework.Threading.Futures;
 
 namespace PBGame.Stores
 {
@@ -23,8 +23,8 @@ namespace PBGame.Stores
         MapSoundTable SoundTable { get; }
 
         /// <summary>
-        /// Returns a promise which loads the hit sounds from the map.
+        /// Returns a future which loads the hit sounds from the map.
         /// </summary>
-        IExplicitPromise LoadHitsounds();
+        IControlledFuture LoadHitsounds();
     }
 }

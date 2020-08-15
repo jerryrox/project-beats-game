@@ -47,8 +47,8 @@ namespace PBGame.Networking.API.Requests
                 throw new Exception("This request has already been disposed!");
 
             DidRequest = true;
-            
-            InnerRequest.OnFinished += OnHttpResponse;
+
+            InnerRequest.IsCompleted.OnNewValue += OnHttpResponse;
 
             OnPreRequest();
             InnerRequest.Start();
@@ -58,7 +58,7 @@ namespace PBGame.Networking.API.Requests
         {
             if (InnerRequest != null)
             {
-                InnerRequest.OnFinished -= OnHttpResponse;
+                InnerRequest.IsCompleted.OnNewValue -= OnHttpResponse;
                 InnerRequest.Response?.Dispose();
                 InnerRequest = null;
             }
@@ -82,8 +82,11 @@ namespace PBGame.Networking.API.Requests
         /// <summary>
         /// Event called on inner request response.
         /// </summary>
-        private void OnHttpResponse()
+        private void OnHttpResponse(bool completed)
         {
+            if(!completed)
+                return;
+
             T response = CreateResponse(InnerRequest);
             response.OnEvaluated += () =>
             {

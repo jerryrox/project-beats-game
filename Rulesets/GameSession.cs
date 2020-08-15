@@ -173,16 +173,18 @@ namespace PBGame.Rulesets
             Game.OnAppFocus -= OnAppFocused;
 
             // Record score.
-            var recordPromise = Model?.RecordScore(ScoreProcessor, playTime);
-            recordPromise.OnFinished += () =>
+            var recordFuture = Model?.RecordScore(ScoreProcessor, playTime);
+            recordFuture.IsCompleted.OnNewValue += (completed) =>
             {
-                // Dispose score processor.
-                ScoreProcessor = null;
-
-                // Hide game gui
-                GameGui.HideGame(() => OnSoftDispose?.Invoke());
+                if (completed)
+                {
+                    // Dispose score processor.
+                    ScoreProcessor = null;
+                    // Hide game gui
+                    GameGui.HideGame(() => OnSoftDispose?.Invoke());
+                }
             };
-            recordPromise.Start();
+            recordFuture.Start();
         }
 
         public void InvokeHardDispose()
@@ -261,7 +263,10 @@ namespace PBGame.Rulesets
                 {
                     Limit = 2f,
                 };
-                autoExitTimer.OnFinished += delegate { Model.ExitGameWithClear(); };
+                autoExitTimer.IsCompleted.OnNewValue += (completed) =>
+                {
+                    Model.ExitGameWithClear();
+                };
                 autoExitTimer.Start();
             });
 
@@ -269,7 +274,10 @@ namespace PBGame.Rulesets
             {
                 Limit = 0.5f
             };
-            initialTimer.OnFinished += (t) => InvokeSoftDispose();
+            initialTimer.IsCompleted.OnNewValue += (completed) =>
+            {
+                InvokeSoftDispose();
+            };
             initialTimer.Start();
         }
 

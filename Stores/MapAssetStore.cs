@@ -1,13 +1,12 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
-using PBFramework;
 using PBFramework.Utils;
 using PBFramework.Audio;
+using PBFramework.Threading.Futures;
 using PBFramework.Networking;
 
 namespace PBGame.Stores
@@ -15,7 +14,7 @@ namespace PBGame.Stores
     public class MapAssetStore : AssetStore, IMapAssetStore, IDisposable
     {
         private Dictionary<string, HitsoundLoadInfo> hitsoundInfos = new Dictionary<string, HitsoundLoadInfo>();
-        private MultiPromise hitsoundLoader;
+        private MultiFuture hitsoundLoader;
 
 
         public bool IsHitsoundLoaded { get; private set; }
@@ -31,23 +30,26 @@ namespace PBGame.Stores
             SoundTable = new MapSoundTable(fallbackSoundTable);
         }
 
-        public IExplicitPromise LoadHitsounds()
+        public IControlledFuture LoadHitsounds()
         {
             DisposeHitsoundLoader();
 
             if(IsHitsoundLoaded)
-                return new ProxyPromise((resolve) => resolve(null));
+                return new Future();
 
             FindHitsounds();
 
             // Load all audio clips from storage.
-            hitsoundLoader = new MultiPromise(CreateHitsoundLoaders());
-            hitsoundLoader.OnFinished += () =>
+            hitsoundLoader = new MultiFuture(CreateHitsoundLoaders());
+            hitsoundLoader.IsCompleted.OnNewValue += (completed) =>
             {
-                IsHitsoundLoaded = true;
-                hitsoundLoader = null;
+                if (completed)
+                {
+                    IsHitsoundLoaded = true;
+                    hitsoundLoader = null;
+                }
             };
-            // Return the loader promise.
+            // Return the loader future.
             return hitsoundLoader;
         }
 
@@ -60,7 +62,7 @@ namespace PBGame.Stores
         /// <summary>
         /// Creates a new loader for map hitsound.
         /// </summary>
-        private IEnumerable<IExplicitPromise> CreateHitsoundLoaders()
+        private IEnumerable<IControlledFuture> CreateHitsoundLoaders()
         {
             foreach (var info in hitsoundInfos.Values)
             {
@@ -68,7 +70,7 @@ namespace PBGame.Stores
                     continue;
 
                 var loader = new EffectAudioRequest(PathUtils.LocalRequestPath(info.File.FullName));
-                loader.OnFinishedResult += (audio) => SoundTable.SetSound(info.LookupName, audio);
+                loader.Output.OnNewValue += (audio) => SoundTable.SetSound(info.LookupName, audio);
                 yield return loader;
             }
         }
@@ -79,7 +81,7 @@ namespace PBGame.Stores
         private void DisposeHitsoundLoader()
         {
             if(hitsoundLoader != null)
-                hitsoundLoader.Revoke();
+                hitsoundLoader.Dispose();
             hitsoundLoader = null;
         }
 

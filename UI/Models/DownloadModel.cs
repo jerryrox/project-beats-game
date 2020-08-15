@@ -192,7 +192,7 @@ namespace PBGame.UI.Models
             // Start request
             Api.Request(request);
             // TODO: Remove when notification overlay is implemented.
-            request.InnerRequest.OnProgress += (progress) =>
+            request.InnerRequest.Progress.OnNewValue += (progress) =>
             {
                 Debug.Log("Download progress: " + progress);
             };

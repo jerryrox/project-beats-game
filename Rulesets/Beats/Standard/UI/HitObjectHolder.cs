@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models;
@@ -9,14 +8,13 @@ using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
-using PBFramework;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
+using PBFramework.Threading.Futures;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
@@ -183,9 +181,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         }
 
         /// <summary>
-        /// Starts loading hit object to resolve for specified promise.
+        /// Starts loading hit object to resolve for specified future.
         /// </summary>
-        private IEnumerator LoadHitObjects(ProxyPromise promise)
+        private IEnumerator LoadHitObjects(Future future)
         {
             int createCount = 0;
             int lastLoads = 0;
@@ -229,7 +227,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                         hitObjView.Tint = GetComboColor(combo);
                 }
             }
-            promise.Resolve(null);
+            future.SetComplete();
         }
 
         /// <summary>
@@ -243,15 +241,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 comboColors = ColorPreset.DefaultComboColors;
 
             Coroutine loadRoutine = null;
-            IExplicitPromise promise = new ProxyPromise(
-                (p) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(p)),
-                () =>
-                {
-                    if(loadRoutine != null)
-                        UnityThread.StopCoroutine(loadRoutine);
-                }
-            );
-            Model.AddAsLoader(promise);
+            IControlledFuture future = new Future((f) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(f)));
+            future.IsDisposed.OnNewValue += (disposed) =>
+            {
+                if (disposed && loadRoutine != null)
+                    UnityThread.StopCoroutine(loadRoutine);
+            };
+            Model.AddAsLoader(future);
         }
 
         /// <summary>

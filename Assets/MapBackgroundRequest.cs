@@ -1,26 +1,16 @@
 using PBGame.Maps;
-using PBFramework;
+using PBFramework.Threading.Futures;
 using PBFramework.Networking;
+using UnityEngine;
 
 namespace PBGame.Assets
 {
-    public class MapBackgroundRequest : ProxyPromise<IMapBackground> {
+    public class MapBackgroundRequest : ProxyFuture<Texture2D, IMapBackground> {
 
-        /// <summary>
-        /// The inner request being wrapped over.
-        /// </summary>
-        private TextureRequest textureRequest;
-
-
-        public MapBackgroundRequest(string url)
+        public MapBackgroundRequest(string url) : base(new TextureRequest(url, false))
         {
-            textureRequest = new TextureRequest(url, false);
-
-            StartAction = (promise) => textureRequest.Start();
-            RevokeAction = textureRequest.Revoke;
-
-            textureRequest.OnProgress += SetProgress;
-            textureRequest.OnFinishedResult += (texture) => Resolve(new MapBackground(texture));
         }
+
+        protected override IMapBackground ConvertOutput(Texture2D source) => new MapBackground(source);
     }
 }
