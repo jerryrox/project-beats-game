@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using PBGame.IO;
 using PBGame.Rulesets.Maps;
 using PBFramework.Threading;
 
 namespace PBGame.Maps
 {
-    public interface IMapManager : IImportsFile {
+    public interface IMapManager {
 
         /// <summary>
         /// Event called when a mapset has been imported.
@@ -34,12 +33,17 @@ namespace PBGame.Maps
         /// <summary>
         /// Clears loaded maps from memory and reloads from disk.
         /// </summary>
-        Task Reload(IEventProgress progress);
+        Task Reload(TaskListener listener = null);
 
         /// <summary>
         /// Loads only a single mapset from disk.
         /// </summary>
-        Task Load(Guid id, IReturnableProgress<IMapset> progress);
+        Task<IMapset> Load(Guid id, TaskListener<IMapset> listener = null);
+
+        /// <summary>
+        /// Imports the specified file as a mapset.
+        /// </summary>
+        Task<IMapset> Import(FileInfo file, TaskListener<IMapset> listener = null);
 
         /// <summary>
         /// Filters out mapsets that does not fulfil the specified filter.

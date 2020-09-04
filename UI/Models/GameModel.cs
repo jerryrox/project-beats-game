@@ -142,8 +142,8 @@ namespace PBGame.UI.Models
             Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
             return new Future(future =>
             {
-                var recordProgress = new ReturnableProgress<IEnumerable<IRecord>>();
-                recordProgress.OnFinished += (records) =>
+                var recordListener = new TaskListener<List<IRecord>>();
+                recordListener.OnFinished += (records) =>
                 {
                     if (scoreProcessor.IsFinished)
                     {
@@ -157,7 +157,7 @@ namespace PBGame.UI.Models
                         userStats.RecordIncompletePlay(newRecord);
                     }
                 };
-                RecordManager.GetRecords(currentMap, recordProgress);
+                RecordManager.GetRecords(currentMap, recordListener);
             });
         }
 

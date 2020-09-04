@@ -42,15 +42,59 @@ namespace PBGame.Maps
             this.notificationBox = notificationBox;
         }
 
-        public Task<bool> Import(FileInfo file)
+        public Task Reload(TaskListener listener = null)
         {
             return Task.Run(async () =>
             {
+                // Wait for store reloading.
+                await store.Reload(listener?.CreateSubListener());
+
+                // Run on the main thread
+                UnityThread.DispatchUnattended(() =>
+                {
+                    // Refill the mapset list
+                    allMapsets.Clear();
+                    allMapsets.AddRange(store.Mapsets);
+
+                    // TODO: Process for a case where the previously selected map no longer exists.
+
+                    // Fill the displayed mapsets list using last search term.
+                    Search(lastSearch);
+                    // Finished
+                    listener?.SetFinished();
+                    return null;
+                });
+            });
+        }
+
+        public Task<IMapset> Load(Guid id, TaskListener<IMapset> listener = null)
+        {
+            return Task.Run(() =>
+            {
+                IMapset mapset = store.Load(id);
+
+                UnityThread.DispatchUnattended(() =>
+                {
+                    // If already loaded within all mapsets, replace it.
+                    allMapsets.AddOrReplace(mapset);
+                    // Search again.
+                    Search(lastSearch);
+                    // Finished.
+                    listener?.SetFinished(mapset);
+                    return null;
+                });
+                return mapset;
+            });
+        }
+
+        public Task<IMapset> Import(FileInfo file, TaskListener<IMapset> listener = null)
+        {
+            return Task.Run<IMapset>(async () =>
+            {
                 try
                 {
-                    var returnableProgress = new ReturnableProgress<Mapset>();
                     // Start importing the file
-                    Mapset mapset = await store.Import(file, progress: returnableProgress);
+                    Mapset mapset = await store.Import(file, listener: listener?.CreateSubListener<Mapset>());
                     if (mapset != null)
                     {
                         // Mapset must be fully loaded.
@@ -67,7 +111,6 @@ namespace PBGame.Maps
                                 OnImportMapset?.Invoke(loadedMapset);
                                 return null;
                             });
-                            return true;
                         }
                         else
                         {
@@ -86,6 +129,8 @@ namespace PBGame.Maps
                             Type = NotificationType.Negative
                         });
                     }
+                    listener?.SetFinished(mapset);
+                    return mapset;
                 }
                 catch (Exception e)
                 {
@@ -95,54 +140,9 @@ namespace PBGame.Maps
                         Message = $"Error while importing mapset: ({e.Message})\n{e.StackTrace}",
                         Type = NotificationType.Negative
                     });
+                    listener?.SetFinished();
+                    return null;
                 }
-                return false;
-            });
-        }
-
-        public Task Reload(IEventProgress progress)
-        {
-            return Task.Run(async () =>
-            {
-                // Wait for store reloading.
-                await store.Reload(progress);
-
-                // Run on the main thread
-                UnityThread.DispatchUnattended(() =>
-                {
-                    // Refill the mapset list
-                    allMapsets.Clear();
-                    allMapsets.AddRange(store.Mapsets);
-
-                    // TODO: Process for a case where the previously selected map no longer exists.
-
-                    // Fill the displayed mapsets list using last search term.
-                    Search(lastSearch);
-                    // Finished
-                    progress.InvokeFinished();
-                    return null;
-                });
-            });
-        }
-
-        public Task Load(Guid id, IReturnableProgress<IMapset> progress)
-        {
-            return Task.Run(() =>
-            {
-                progress?.Report(0f);
-                IMapset mapset = store.Load(id);
-
-                UnityThread.DispatchUnattended(() =>
-                {
-                    // If already loaded within all mapsets, replace it.
-                    allMapsets.AddOrReplace(mapset);
-                    // Search again.
-                    Search(lastSearch);
-                    // Finished.
-                    progress?.Report(1f);
-                    progress.InvokeFinished(mapset);
-                    return null;
-                });
             });
         }
 

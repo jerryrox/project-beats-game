@@ -41,28 +41,30 @@ namespace PBGame.Stores
             osuParser = new OsuMapsetParser(modeManager);
         }
 
-        public override async Task Reload(ISimpleProgress progress)
+        public override Task Reload(TaskListener listener = null)
         {
-            // Perform internal reloading routine.
-            await base.Reload(progress);
-
-            // Load all mapsets from the storage.
-            lock (mapsets)
+            return Task.Run(async () =>
             {
-                mapsets.Clear();
-                var rawMapsets = GetAll().ToList();
+                // Perform internal reloading routine.
+                await base.Reload(listener?.CreateSubListener());
 
-                progress.Report(0f);
-                for (int i = 0; i < rawMapsets.Count; i++)
+                // Load all mapsets from the storage.
+                lock (mapsets)
                 {
-                    var loadedMapset = LoadData(rawMapsets[i]);
-                    if (loadedMapset != null)
-                        mapsets.Add(loadedMapset);
+                    mapsets.Clear();
+                    var rawMapsets = GetAll().ToList();
 
-                    progress.Report((float)i / rawMapsets.Count);
+                    for (int i = 0; i < rawMapsets.Count; i++)
+                    {
+                        var loadedMapset = LoadData(rawMapsets[i]);
+                        if (loadedMapset != null)
+                            mapsets.Add(loadedMapset);
+
+                        listener?.SetProgress((float)i / rawMapsets.Count);
+                    }
+                    listener?.SetFinished();
                 }
-                progress.Report(1f);
-            }
+            });
         }
 
         public Mapset Load(Guid id)

@@ -19,8 +19,8 @@ namespace PBGame.Maps
 
         private IMusicCacher musicCacher;
         private IBackgroundCacher backgroundCacher;
-        private ICacherAgent<IMap, IMusicAudio> musicAgent;
-        private ICacherAgent<IMap, IMapBackground> backgroundAgent;
+        private CacherAgent<IMap, IMusicAudio> musicAgent;
+        private CacherAgent<IMap, IMapBackground> backgroundAgent;
         private IMapsetConfiguration mapsetConfiguration;
         private IMapConfiguration mapConfiguration;
 

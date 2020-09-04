@@ -9,9 +9,9 @@ namespace PBGame.Assets.Caching
 {
     public class MusicCacher : Cacher<IMusicAudio>, IMusicCacher {
 
-        public uint Request(IMap key, IReturnableProgress<IMusicAudio> progress)
+        public uint Request(IMap key, TaskListener<IMusicAudio> listener)
         {
-            return base.Request(key.Detail.GetFullAudioPath(), progress);
+            return base.Request(key.Detail.GetFullAudioPath(), listener);
         }
 
         public void Remove(IMap key, uint id)

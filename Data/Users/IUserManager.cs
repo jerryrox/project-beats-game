@@ -16,12 +16,12 @@ namespace PBGame.Data.Users
         /// <summary>
         /// Starts loading user data from user store.
         /// </summary>
-        Task Reload(IEventProgress progress);
+        Task Reload(TaskListener listener = null);
 
         /// <summary>
         /// Switches current user to the user of specified online user.
         /// </summary>
-        Task SetUser(IOnlineUser onlineUser, IReturnableProgress<IUser> progress);
+        Task<IUser> SetUser(IOnlineUser onlineUser, TaskListener<IUser> listener = null);
 
         /// <summary>
         /// Saves the specified user to store.

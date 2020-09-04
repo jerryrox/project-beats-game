@@ -8,9 +8,9 @@ namespace PBGame.Assets.Caching
 {
     public class BackgroundCacher : Cacher<IMapBackground>, IBackgroundCacher {
 
-        public uint Request(IMap key, IReturnableProgress<IMapBackground> progress)
+        public uint Request(IMap key, TaskListener<IMapBackground> listener)
         {
-            return base.Request(key.Detail.GetFullBackgroundPath(), progress);
+            return base.Request(key.Detail.GetFullBackgroundPath(), listener);
         }
 
         public void Remove(IMap key, uint id)

@@ -117,16 +117,16 @@ namespace PBGame.UI.Models
         {
             SetState("Loading maps");
 
-            IEventProgress progress = new EventProgress();
-            progress.OnProgress += SetProgress;
-            progress.OnFinished += () =>
+            TaskListener listener = new TaskListener();
+            listener.OnProgress += SetProgress;
+            listener.OnFinished += () =>
             {
                 // Load any downloaded mapset files that weren't imported concurrently.
                 foreach(var archive in DownloadStore.MapStorage.GetAllFiles())
                     MapManager.Import(archive);
                 LoadUserData();
             };
-            MapManager.Reload(progress);
+            MapManager.Reload(listener);
         }
 
         /// <summary>
@@ -136,10 +136,10 @@ namespace PBGame.UI.Models
         {
             SetState("Loading user data");
 
-            IEventProgress progress = new EventProgress();
-            progress.OnProgress += SetProgress;
-            progress.OnFinished += LoadRecordData;
-            UserManager.Reload(progress);
+            TaskListener listener = new TaskListener();
+            listener.OnProgress += SetProgress;
+            listener.OnFinished += LoadRecordData;
+            UserManager.Reload(listener);
         }
 
         /// <summary>
@@ -149,10 +149,10 @@ namespace PBGame.UI.Models
         {
             SetState("Loading record data");
 
-            IEventProgress progress = new EventProgress();
-            progress.OnProgress += SetProgress;
-            progress.OnFinished += FinalizeLoad;
-            RecordManager.Reload(progress);
+            TaskListener listener = new TaskListener();
+            listener.OnProgress += SetProgress;
+            listener.OnFinished += FinalizeLoad;
+            RecordManager.Reload(listener);
         }
 
         /// <summary>
