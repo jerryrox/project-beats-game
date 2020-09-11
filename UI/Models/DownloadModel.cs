@@ -298,7 +298,7 @@ namespace PBGame.UI.Models
                     // If there was previously no cursor, this must be a fresh search using different options since the last search.
                     if (!Options.HasCursor)
                         mapsets.Clear();
-                    mapsets.AddRange(mapsets);
+                    mapsets.AddRange(response.Mapsets);
                     Options.Cursor = response.Cursor;
                 });
             }

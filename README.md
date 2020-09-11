@@ -20,6 +20,9 @@ Slowly making progress 🧩
 - Navigate to prepare screen when the selected song list item has been selected again.
 #### Changes
 - Changed all code using Promises to Future.
+- Increased timeout time for mapset download.
+#### Fixes
+- Fixed online mapset list not showing.
 
 ### 0.10.0
 #### New features
