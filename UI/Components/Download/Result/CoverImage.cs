@@ -64,13 +64,10 @@ namespace PBGame.UI.Components.Download.Result
                 {
                     Limit = 1f
                 };
-                loadDelay.IsCompleted.OnNewValue += (completed) =>
+                loadDelay.OnFinished += () =>
                 {
-                    if (completed)
-                    {
-                        loadDelay = null;
-                        cacherAgent.Request(mapset.CardImage);
-                    }
+                    loadDelay = null;
+                    cacherAgent.Request(mapset.CardImage);
                 };
                 loadDelay.Start();
             }

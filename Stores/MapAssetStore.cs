@@ -6,7 +6,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBFramework.Utils;
 using PBFramework.Audio;
-using PBFramework.Threading.Futures;
+using PBFramework.Threading;
 using PBFramework.Networking;
 
 namespace PBGame.Stores
@@ -14,7 +14,7 @@ namespace PBGame.Stores
     public class MapAssetStore : AssetStore, IMapAssetStore, IDisposable
     {
         private Dictionary<string, HitsoundLoadInfo> hitsoundInfos = new Dictionary<string, HitsoundLoadInfo>();
-        private MultiFuture hitsoundLoader;
+        private MultiTask hitsoundLoader;
 
 
         public bool IsHitsoundLoaded { get; private set; }
@@ -30,26 +30,21 @@ namespace PBGame.Stores
             SoundTable = new MapSoundTable(fallbackSoundTable);
         }
 
-        public IControlledFuture LoadHitsounds()
+        public ITask LoadHitsounds()
         {
             DisposeHitsoundLoader();
 
             if(IsHitsoundLoaded)
-                return new Future();
+                return new ManualTask();
 
             FindHitsounds();
 
-            // Load all audio clips from storage.
-            hitsoundLoader = new MultiFuture(CreateHitsoundLoaders());
-            hitsoundLoader.IsCompleted.OnNewValue += (completed) =>
+            hitsoundLoader = new MultiTask(CreateHitsoundLoaders());
+            hitsoundLoader.OnFinished += () =>
             {
-                if (completed)
-                {
-                    IsHitsoundLoaded = true;
-                    hitsoundLoader = null;
-                }
+                IsHitsoundLoaded = true;
+                hitsoundLoader = null;
             };
-            // Return the loader future.
             return hitsoundLoader;
         }
 
@@ -60,18 +55,18 @@ namespace PBGame.Stores
         }
 
         /// <summary>
-        /// Creates a new loader for map hitsound.
+        /// Creates a range of hitsound loading tasks.
         /// </summary>
-        private IEnumerable<IControlledFuture> CreateHitsoundLoaders()
+        private IEnumerable<ITask> CreateHitsoundLoaders()
         {
             foreach (var info in hitsoundInfos.Values)
             {
                 if(string.IsNullOrEmpty(info.LookupName))
                     continue;
 
-                var loader = new EffectAudioRequest(PathUtils.LocalRequestPath(info.File.FullName));
-                loader.Output.OnNewValue += (audio) => SoundTable.SetSound(info.LookupName, audio);
-                yield return loader;
+                var request = new EffectAudioRequest(PathUtils.LocalRequestPath(info.File.FullName));
+                request.OnFinished += (audio) => SoundTable.SetSound(info.LookupName, audio);
+                yield return request;
             }
         }
 
@@ -81,7 +76,7 @@ namespace PBGame.Stores
         private void DisposeHitsoundLoader()
         {
             if(hitsoundLoader != null)
-                hitsoundLoader.Dispose();
+                hitsoundLoader.RevokeTask(true);
             hitsoundLoader = null;
         }
 

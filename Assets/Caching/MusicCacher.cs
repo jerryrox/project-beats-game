@@ -1,7 +1,6 @@
 using PBGame.Rulesets.Maps;
 using PBFramework.Audio;
 using PBFramework.Threading;
-using PBFramework.Threading.Futures;
 using PBFramework.Networking;
 using PBFramework.Allocation.Caching;
 
@@ -29,7 +28,7 @@ namespace PBGame.Assets.Caching
             return base.IsCached(key.Detail.GetFullAudioPath());
         }
 
-        protected override IControlledFuture<IMusicAudio> CreateRequest(string key)
+        protected override ITask<IMusicAudio> CreateRequest(string key)
         {
             return new MusicAudioRequest(key, true);
         }

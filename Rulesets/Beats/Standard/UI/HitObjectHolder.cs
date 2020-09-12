@@ -11,7 +11,6 @@ using PBGame.Rulesets.Judgements;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
-using PBFramework.Threading.Futures;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -183,7 +182,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// <summary>
         /// Starts loading hit object to resolve for specified future.
         /// </summary>
-        private IEnumerator LoadHitObjects(Future future)
+        private IEnumerator LoadHitObjects(ManualTask task)
         {
             int createCount = 0;
             int lastLoads = 0;
@@ -227,7 +226,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                         hitObjView.Tint = GetComboColor(combo);
                 }
             }
-            future.SetComplete();
+            task.SetFinished();
         }
 
         /// <summary>
@@ -241,13 +240,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 comboColors = ColorPreset.DefaultComboColors;
 
             Coroutine loadRoutine = null;
-            IControlledFuture future = new Future((f) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(f)));
-            future.IsDisposed.OnNewValue += (disposed) =>
+            ManualTask task = new ManualTask((t) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(t)));
+            task.IsRevoked.OnNewValue += (revoked) =>
             {
-                if (disposed && loadRoutine != null)
+                if (revoked && loadRoutine != null)
                     UnityThread.StopCoroutine(loadRoutine);
             };
-            Model.AddAsLoader(future);
+            Model.AddAsLoader(task);
         }
 
         /// <summary>

@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Networking.API.Responses;
 using PBFramework.Data.Bindables;
-using PBFramework.Threading;
+using PBFramework.Networking;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Requests
@@ -48,17 +46,17 @@ namespace PBGame.Networking.API.Requests
 
             DidRequest = true;
 
-            InnerRequest.IsCompleted.OnNewValue += OnHttpResponse;
+            InnerRequest.OnFinished += OnHttpResponse;
 
             OnPreRequest();
-            InnerRequest.Start();
+            InnerRequest.Request();
         }
 
         public void Dispose()
         {
             if (InnerRequest != null)
             {
-                InnerRequest.IsCompleted.OnNewValue -= OnHttpResponse;
+                InnerRequest.OnFinished -= OnHttpResponse;
                 InnerRequest.Response?.Dispose();
                 InnerRequest = null;
             }
@@ -82,11 +80,8 @@ namespace PBGame.Networking.API.Requests
         /// <summary>
         /// Event called on inner request response.
         /// </summary>
-        private void OnHttpResponse(bool completed)
+        private void OnHttpResponse(IWebRequest request)
         {
-            if(!completed)
-                return;
-
             T response = CreateResponse(InnerRequest);
             response.OnEvaluated += () =>
             {

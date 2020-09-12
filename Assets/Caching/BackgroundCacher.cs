@@ -1,7 +1,6 @@
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;
 using PBFramework.Threading;
-using PBFramework.Threading.Futures;
 using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
@@ -28,7 +27,7 @@ namespace PBGame.Assets.Caching
             return base.IsCached(key.Detail.GetFullBackgroundPath());
         }
 
-        protected override IControlledFuture<IMapBackground> CreateRequest(string key)
+        protected override ITask<IMapBackground> CreateRequest(string key)
         {
             return new MapBackgroundRequest(key);
         }
