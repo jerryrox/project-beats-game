@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PBGame.Assets.Caching
 {
-    public class WebImageCacher : Cacher<Texture2D>, IWebImageCacher
+    public class WebImageCacher : Cacher<string, Texture2D>, IWebImageCacher
     {
         protected override ITask<Texture2D> CreateRequest(string key)
         {

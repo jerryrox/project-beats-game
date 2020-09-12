@@ -5,31 +5,13 @@ using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
 {
-    public class BackgroundCacher : Cacher<IMapBackground>, IBackgroundCacher {
+    public class BackgroundCacher : Cacher<IMap, IMapBackground>, IBackgroundCacher {
 
-        public uint Request(IMap key, TaskListener<IMapBackground> listener)
-        {
-            return base.Request(key.Detail.GetFullBackgroundPath(), listener);
-        }
+        protected override object ConvertKey(IMap key) => key.Detail.GetFullBackgroundPath();
 
-        public void Remove(IMap key, uint id)
+        protected override ITask<IMapBackground> CreateRequest(IMap key)
         {
-            base.Remove(key.Detail.GetFullBackgroundPath(), id);
-        }
-
-        public void RemoveDelayed(IMap key, uint id, float delay = 2f)
-        {
-            base.RemoveDelayed(key.Detail.GetFullBackgroundPath(), id, delay);
-        }
-
-        public bool IsCached(IMap key)
-        {
-            return base.IsCached(key.Detail.GetFullBackgroundPath());
-        }
-
-        protected override ITask<IMapBackground> CreateRequest(string key)
-        {
-            return new MapBackgroundRequest(key);
+            return new MapBackgroundRequest(key.Detail.GetFullBackgroundPath());
         }
 
         protected override void DestroyData(IMapBackground data) => data.Dispose();

@@ -4,7 +4,7 @@ using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
 {
-    public interface IMusicCacher : ICacher<IMusicAudio>, ICacher<IMap, IMusicAudio> {
+    public interface IMusicCacher : ICacher<IMap, IMusicAudio> {
 
     }
 }

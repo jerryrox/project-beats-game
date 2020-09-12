@@ -23,7 +23,7 @@ namespace PBGame.UI.Models
 {
     public class DownloadModel : BaseModel {
 
-        private CacherAgent<IMusicAudio> musicAgent;
+        private CacherAgent<string, IMusicAudio> musicAgent;
 
         private Bindable<MapsetsRequest> mapsetsRequest = new Bindable<MapsetsRequest>();
         private Bindable<List<OnlineMapset>> mapsetList = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
@@ -83,7 +83,7 @@ namespace PBGame.UI.Models
         private void Init()
         {
             // Initialize music cacher agent.
-            musicAgent = new CacherAgent<IMusicAudio>(MusicCacher);
+            musicAgent = new CacherAgent<string, IMusicAudio>(MusicCacher);
             musicAgent.OnFinished += OnMusicAudioLoaded;
 
             ResetOptions();

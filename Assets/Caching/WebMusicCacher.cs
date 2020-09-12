@@ -5,7 +5,7 @@ using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
 {
-    public class WebMusicCacher : Cacher<IMusicAudio>, IWebMusicCacher {
+    public class WebMusicCacher : Cacher<string, IMusicAudio>, IWebMusicCacher {
 
         protected override ITask<IMusicAudio> CreateRequest(string key)
         {
