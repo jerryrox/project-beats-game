@@ -317,7 +317,7 @@ namespace PBGame.UI.Components.Songs
         {
             if(Mapset == null)
                 return;
-            if (backgroundAgent.CurrentKey != Mapset.Maps[0])
+            if (backgroundAgent.Key != Mapset.Maps[0])
             {
                 LoadBackground();
                 return;
@@ -366,7 +366,7 @@ namespace PBGame.UI.Components.Songs
             }
 
             // Determine target transition values.
-            var background = backgroundAgent.Value;
+            var background = backgroundAgent.Listener?.Value;
 
             float highlightAlpha, containerWidth;
             Color glowColor, thumbColor;

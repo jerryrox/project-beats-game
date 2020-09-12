@@ -15,7 +15,7 @@ namespace PBGame.UI.Components.Common
 {
     public class WebTexture : UguiTexture {
 
-        private CacherAgent<Texture2D> cacherAgent;
+        private CacherAgent<string, Texture2D> cacherAgent;
 
         private IAnime showAni;
 
@@ -27,7 +27,7 @@ namespace PBGame.UI.Components.Common
         [InitWithDependency]
         private void Init()
         {
-            cacherAgent = new CacherAgent<Texture2D>(WebImageCacher);
+            cacherAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             cacherAgent.OnFinished += OnImageLoaded;
             cacherAgent.OnProgress += OnLoadProgress;
 

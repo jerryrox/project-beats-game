@@ -23,8 +23,8 @@ namespace PBGame.UI.Models
         /// </summary>
         public event Action OnLoginFailed;
 
-        private CacherAgent<Texture2D> profileImageAgent;
-        private CacherAgent<Texture2D> coverImageAgent;
+        private CacherAgent<string, Texture2D> profileImageAgent;
+        private CacherAgent<string, Texture2D> coverImageAgent;
 
         private DropdownContext apiDropdownContext;
 
@@ -128,10 +128,10 @@ namespace PBGame.UI.Models
             apiDropdownContext = new DropdownContext();
             apiDropdownContext.ImportFromEnum<ApiProviderType>(CurProviderType.Value);
 
-            coverImageAgent = new CacherAgent<Texture2D>(WebImageCacher);
+            coverImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             coverImageAgent.OnFinished += OnCoverImageLoaded;
 
-            profileImageAgent = new CacherAgent<Texture2D>(WebImageCacher);
+            profileImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             profileImageAgent.OnFinished += OnProfileImageLoaded;
         }
 

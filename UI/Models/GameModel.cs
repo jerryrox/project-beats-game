@@ -1,30 +1,26 @@
 using System;
-using System.Collections;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.UI.Models.Game;
 using PBGame.UI.Navigations.Screens;
-using PBGame.Maps;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
 using PBGame.Notifications;
-using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Threading;
-using PBFramework.Threading.Futures;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Models
 {
     public class GameModel : BaseModel
     {
-        private List<IControlledFuture> gameLoaders = new List<IControlledFuture>();
-        private MultiFuture gameLoader;
+        private List<ITask> gameLoaders = new List<ITask>();
+        private MultiTask gameLoader;
 
         private IPlayableMap currentMap;
         private IModeService currentModeService;
@@ -67,12 +63,12 @@ namespace PBGame.UI.Models
 
 
         /// <summary>
-        /// Adds the specified future as one of the game loaders.
+        /// Adds the specified task as one of the game loaders.
         /// </summary>
-        public void AddAsLoader(IControlledFuture future)
+        public void AddAsLoader(ITask task)
         {
-            if (future != null)
-                gameLoaders.Add(future);
+            if (task != null)
+                gameLoaders.Add(task);
         }
 
         /// <summary>
@@ -125,39 +121,48 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Records the specified play record under the current player.
         /// </summary>
-        public IControlledFuture RecordScore(IScoreProcessor scoreProcessor, int playTime)
+        public Task RecordScore(IScoreProcessor scoreProcessor, int playTime, TaskListener listener = null)
         {
-            if(scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
-                return new Future();
-
-            // Retrieve user and user stats.
-            var user = UserManager.CurrentUser.Value;
-            if(user == null)
-                return new Future();
-            var userStats = user.GetStatistics(currentMap.PlayableMode);
-            if (userStats == null)
-                return new Future();
-
-            // Record the play result to records database and user statistics.
-            Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
-            return new Future(future =>
+            return Task.Run(async () =>
             {
-                var recordProgress = new ReturnableProgress<IEnumerable<IRecord>>();
-                recordProgress.OnFinished += (records) =>
+                if (scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
                 {
-                    if (scoreProcessor.IsFinished)
-                    {
-                        RecordManager.SaveRecord(newRecord);
+                    listener?.SetFinished();
+                    return;
+                }
 
-                        var bestRecord = RecordManager.GetBestRecord(records);
-                        userStats.RecordPlay(newRecord, bestRecord);
-                    }
-                    else
-                    {
-                        userStats.RecordIncompletePlay(newRecord);
-                    }
-                };
-                RecordManager.GetRecords(currentMap, recordProgress);
+                // Retrieve user and user stats.
+                var user = UserManager.CurrentUser.Value;
+                if(user == null)
+                {
+                    listener?.SetFinished();
+                    return;
+                }
+                var userStats = user.GetStatistics(currentMap.PlayableMode);
+                if (userStats == null)
+                {
+                    listener?.SetFinished();
+                    return;
+                }
+
+                // Record the play result to records database and user statistics.
+                Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
+                var records = await RecordManager.GetRecords(currentMap, listener?.CreateSubListener<List<IRecord>>());
+
+                // Save as cleared play.
+                if (scoreProcessor.IsFinished)
+                {
+                    RecordManager.SaveRecord(newRecord);
+
+                    var bestRecord = RecordManager.GetBestRecord(records);
+                    userStats.RecordPlay(newRecord, bestRecord);
+                }
+                // Save as failed play.
+                else
+                {
+                    userStats.RecordIncompletePlay(newRecord);
+                }
+                listener?.SetFinished();
             });
         }
 
@@ -224,13 +229,12 @@ namespace PBGame.UI.Models
             if(gameLoader != null)
                 throw new InvalidOperationException("Attempted to initialize a redundant game loader process.");
 
-            gameLoader = new MultiFuture(gameLoaders);
-            gameLoader.IsCompleted.OnNewValue += (completed) =>
+            gameLoader = new MultiTask(gameLoaders);
+            gameLoader.OnFinished += () =>
             {
-                if(completed)
-                    loadState.Value = GameLoadState.Success;
+                loadState.Value = GameLoadState.Success;
             };
-            gameLoader.Start();
+            gameLoader.StartTask();
         }
 
         /// <summary>
@@ -239,12 +243,12 @@ namespace PBGame.UI.Models
         private void DisposeLoader()
         {
             // Cancel all game loaders.
-            gameLoaders.ForEach(p => p.Dispose());
+            gameLoaders.ForEach(p => p.RevokeTask(true));
             gameLoaders.Clear();
             // Dispose game loader
             if (gameLoader != null)
             {
-                gameLoader.Dispose();
+                gameLoader.RevokeTask(true);
                 gameLoader = null;
             }
         }

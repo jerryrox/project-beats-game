@@ -19,7 +19,7 @@ namespace PBGame.UI.Models
             base.OnPostShow();
 
             var timer = new SynchronizedTimer();
-            timer.IsCompleted.OnNewValue += delegate
+            timer.OnFinished += () =>
             {
                 if (ScreenNavigator != null)
                     ScreenNavigator.Show<InitializeScreen>();

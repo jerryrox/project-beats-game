@@ -1,13 +1,13 @@
 using PBFramework.Audio;
-using PBFramework.Threading.Futures;
+using PBFramework.Threading;
 using PBFramework.Networking;
 using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
 {
-    public class WebMusicCacher : Cacher<IMusicAudio>, IWebMusicCacher {
+    public class WebMusicCacher : Cacher<string, IMusicAudio>, IWebMusicCacher {
 
-        protected override IControlledFuture<IMusicAudio> CreateRequest(string key)
+        protected override ITask<IMusicAudio> CreateRequest(string key)
         {
             return new MusicAudioRequest(key);
         }

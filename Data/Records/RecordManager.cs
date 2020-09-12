@@ -27,41 +27,24 @@ namespace PBGame.Data.Records
             recordStore = new RecordStore();
         }
 
-        public Task Reload(IEventProgress progress)
+        public Task Reload(TaskListener listener = null)
         {
-            progress?.Report(0f);
             return Task.Run(() =>
             {
                 recordStore.Reload();
                 // TODO: Reload replay store.
 
-                UnityThread.DispatchUnattended(() =>
-                {
-                    if (progress != null)
-                    {
-                        progress.Report(1f);
-                        progress.InvokeFinished();
-                    }
-                    return null;
-                });
+                listener?.SetFinished();
             });
         }
 
-        public Task GetRecords(IPlayableMap map, IReturnableProgress<IEnumerable<IRecord>> progress)
+        public Task<List<IRecord>> GetRecords(IPlayableMap map, TaskListener<List<IRecord>> listener = null)
         {
-            progress?.Report(0f);
             return Task.Run(() =>
             {
-                var records = GetInjectedRecords(recordStore.GetRecords(map));
-
-                UnityThread.DispatchUnattended(() => {
-                    if (progress != null)
-                    {
-                        progress.Report(1f);
-                        progress.InvokeFinished(records);
-                    }
-                    return null;
-                });
+                var records = GetInjectedRecords(recordStore.GetRecords(map)).ToList();
+                listener?.SetFinished(records);
+                return records;
             });
         }
 

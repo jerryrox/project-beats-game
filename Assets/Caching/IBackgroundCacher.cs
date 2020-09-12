@@ -4,7 +4,7 @@ using PBFramework.Allocation.Caching;
 
 namespace PBGame.Assets.Caching
 {
-    public interface IBackgroundCacher : ICacher<IMapBackground>, ICacher<IMap, IMapBackground> {
+    public interface IBackgroundCacher : ICacher<IMap, IMapBackground> {
     
     }
 }

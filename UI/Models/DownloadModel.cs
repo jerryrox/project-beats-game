@@ -23,7 +23,7 @@ namespace PBGame.UI.Models
 {
     public class DownloadModel : BaseModel {
 
-        private CacherAgent<IMusicAudio> musicAgent;
+        private CacherAgent<string, IMusicAudio> musicAgent;
 
         private Bindable<MapsetsRequest> mapsetsRequest = new Bindable<MapsetsRequest>();
         private Bindable<List<OnlineMapset>> mapsetList = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
@@ -83,7 +83,7 @@ namespace PBGame.UI.Models
         private void Init()
         {
             // Initialize music cacher agent.
-            musicAgent = new CacherAgent<IMusicAudio>(MusicCacher);
+            musicAgent = new CacherAgent<string, IMusicAudio>(MusicCacher);
             musicAgent.OnFinished += OnMusicAudioLoaded;
 
             ResetOptions();
@@ -192,7 +192,7 @@ namespace PBGame.UI.Models
             // Start request
             Api.Request(request);
             // TODO: Remove when notification overlay is implemented.
-            request.InnerRequest.Progress.OnNewValue += (progress) =>
+            request.InnerRequest.OnProgress += (progress) =>
             {
                 Debug.Log("Download progress: " + progress);
             };
@@ -298,7 +298,7 @@ namespace PBGame.UI.Models
                     // If there was previously no cursor, this must be a fresh search using different options since the last search.
                     if (!Options.HasCursor)
                         mapsets.Clear();
-                    mapsets.AddRange(mapsets);
+                    mapsets.AddRange(response.Mapsets);
                     Options.Cursor = response.Cursor;
                 });
             }

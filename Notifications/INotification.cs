@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using PBFramework.Threading.Futures;
+using PBFramework.Threading;
 
 namespace PBGame.Notifications
 {
@@ -41,9 +41,9 @@ namespace PBGame.Notifications
         NotificationType Type { get; set; }
 
         /// <summary>
-        /// Future instance bound to the notification.
+        /// Listener instance that listens to the completion of a task.
         /// </summary>
-        IFuture Future { get; set; }
+        TaskListener Listener { get; set; }
 
 
         /// <summary>

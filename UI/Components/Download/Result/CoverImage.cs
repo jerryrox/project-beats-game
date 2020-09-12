@@ -17,7 +17,7 @@ namespace PBGame.UI.Components.Download.Result
 
         private IAnime showAni;
 
-        private CacherAgent<Texture2D> cacherAgent;
+        private CacherAgent<string, Texture2D> cacherAgent;
         private OnlineMapset mapset;
         private SynchronizedTimer loadDelay;
 
@@ -29,7 +29,7 @@ namespace PBGame.UI.Components.Download.Result
         [InitWithDependency]
         private void Init()
         {
-            cacherAgent = new CacherAgent<Texture2D>(Cacher);
+            cacherAgent = new CacherAgent<string, Texture2D>(Cacher);
             cacherAgent.OnFinished += OnImageLoaded;
 
             Color = new Color(0.75f, 0.75f, 0.75f);
@@ -64,13 +64,10 @@ namespace PBGame.UI.Components.Download.Result
                 {
                     Limit = 1f
                 };
-                loadDelay.IsCompleted.OnNewValue += (completed) =>
+                loadDelay.OnFinished += () =>
                 {
-                    if (completed)
-                    {
-                        loadDelay = null;
-                        cacherAgent.Request(mapset.CardImage);
-                    }
+                    loadDelay = null;
+                    cacherAgent.Request(mapset.CardImage);
                 };
                 loadDelay.Start();
             }

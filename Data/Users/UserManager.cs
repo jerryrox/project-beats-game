@@ -30,31 +30,21 @@ namespace PBGame.Data.Users
             currentUser = new Bindable<IUser>();
         }
 
-        public Task Reload(IEventProgress progress)
+        public Task Reload(TaskListener listener = null)
         {
-            progress?.Report(0f);
             return Task.Run(() =>
             {
                 userStore.Reload();
 
-                UnityThread.DispatchUnattended(() =>
-                {
-                    if (progress != null)
-                    {
-                        progress.Report(1f);
-                        progress.InvokeFinished();
-                    }
-                    return null;
-                });
+                listener?.SetFinished();
             });
         }
 
-        public Task SetUser(IOnlineUser onlineUser, IReturnableProgress<IUser> progress)
+        public Task<IUser> SetUser(IOnlineUser onlineUser, TaskListener<IUser> listener = null)
         {
-            if(onlineUser == null) throw new ArgumentNullException(nameof(onlineUser));
-
-            progress?.Report(0f);
-            return Task.Run(() =>
+            if(onlineUser == null)
+                throw new ArgumentNullException(nameof(onlineUser));
+            return Task.Run<IUser>(() =>
             {
                 var user = userStore.LoadUser(onlineUser) as User;
 
@@ -63,13 +53,10 @@ namespace PBGame.Data.Users
                     dependencies.Inject(user);
                     currentUser.Value = user;
 
-                    if (progress != null)
-                    {
-                        progress.Report(1f);
-                        progress.InvokeFinished(user);
-                    }
+                    listener?.SetFinished(user);
                     return null;
                 });
+                return user;
             });
         }
 
