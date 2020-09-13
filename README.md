@@ -19,6 +19,7 @@ Slowly making progress 🧩
 #### New features
 - Navigate to prepare screen when the selected song list item has been selected again.
 #### Changes
+- Refactored Cacher.
 - Removed dependency to `Promise` and `Progress` and replaced with `ITask` and `TaskListener`.
 - Increased timeout time for mapset download.
 #### Fixes
