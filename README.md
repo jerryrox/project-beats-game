@@ -24,6 +24,7 @@ Slowly making progress 🧩
 - Increased timeout time for mapset download.
 #### Fixes
 - Fixed online mapset list not showing.
+- Fixed issue where game freezes after the play when logged in.
 
 ### 0.10.0
 #### New features

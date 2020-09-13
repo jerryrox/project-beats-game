@@ -94,11 +94,11 @@ namespace PBGame
             // TODO: These don't really help at early development yet. Come back when game is ready for play.
 
             // Start listening to any exceptions that occurs during game.
-            // AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
-            // {
-            //     var exception = e.ExceptionObject as Exception;
-            //     Debug.LogError($"Unhandled exception: {exception.ToString()}");
-            // };
+            AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
+            {
+                var exception = e.ExceptionObject as Exception;
+                Debug.LogError($"Unhandled exception: {exception.ToString()}");
+            };
             // Application.logMessageReceived += (condition, stackTrace, type) =>
             // {
             //     if (type == LogType.Exception)
