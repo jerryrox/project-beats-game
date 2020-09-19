@@ -55,8 +55,8 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnEnableInited();
 
-            model.MapsetConfig.OnNewValue += OnMapsetConfigChange;
-            model.MapConfig.OnNewValue += OnMapConfigChange;
+            model.MapsetConfig.BindAndTrigger(OnMapsetConfigChange);
+            model.MapConfig.BindAndTrigger(OnMapConfigChange);
         }
 
         protected override void OnDisable()

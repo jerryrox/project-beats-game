@@ -23,7 +23,13 @@ namespace PBGame.UI.Models
 {
     public class DownloadModel : BaseModel {
 
-        private CacherAgent<IMusicAudio> musicAgent;
+        /// <summary>
+        /// Event called when the online mapset list has changed.
+        /// The second option provides whether a search cursor was involved in this change.
+        /// </summary>
+        public event Action<List<OnlineMapset>, bool> OnMapsetListChange;
+
+        private CacherAgent<string, IMusicAudio> musicAgent;
 
         private Bindable<MapsetsRequest> mapsetsRequest = new Bindable<MapsetsRequest>();
         private Bindable<List<OnlineMapset>> mapsetList = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
@@ -83,7 +89,7 @@ namespace PBGame.UI.Models
         private void Init()
         {
             // Initialize music cacher agent.
-            musicAgent = new CacherAgent<IMusicAudio>(MusicCacher);
+            musicAgent = new CacherAgent<string, IMusicAudio>(MusicCacher);
             musicAgent.OnFinished += OnMusicAudioLoaded;
 
             ResetOptions();
@@ -93,6 +99,8 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
+            MusicController.Stop();
+            MusicController.MountAudio(null);
             MusicController.OnEnd += OnMusicEnd;
 
             RequestMapsets();
@@ -154,9 +162,10 @@ namespace PBGame.UI.Models
         /// </summary>
         public void SetPreview(OnlineMapset mapset)
         {
+            bool isPreviewing = mapset == previewingMapset.Value;
             ResetPreviewingMapset();
 
-            if (mapset != null && !string.IsNullOrEmpty(mapset.PreviewAudio))
+            if (!isPreviewing && mapset != null && !string.IsNullOrEmpty(mapset.PreviewAudio))
             {
                 previewingMapset.Value = mapset;
                 musicAgent.Request(mapset.PreviewAudio);
@@ -291,6 +300,7 @@ namespace PBGame.UI.Models
         /// </summary>
         private void OnMapsetsResponse(MapsetsResponse response)
         {
+            bool hadCursor = Options.HasCursor;
             if (response.IsSuccess)
             {
                 mapsetList.ModifyValue(mapsets =>
@@ -298,7 +308,7 @@ namespace PBGame.UI.Models
                     // If there was previously no cursor, this must be a fresh search using different options since the last search.
                     if (!Options.HasCursor)
                         mapsets.Clear();
-                    mapsets.AddRange(mapsets);
+                    mapsets.AddRange(response.Mapsets);
                     Options.Cursor = response.Cursor;
                 });
             }
@@ -306,6 +316,7 @@ namespace PBGame.UI.Models
             {
                 mapsetList.ModifyValue(mapsets => mapsets.Clear());
             }
+            OnMapsetListChange?.Invoke(mapsetList.Value, hadCursor);
             StopMapsetRequest();
         }
 

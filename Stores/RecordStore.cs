@@ -13,15 +13,12 @@ namespace PBGame.Stores
     public class RecordStore : DatabaseBackedStore<Record>, IRecordStore {
 
 
-        public IEnumerable<IRecord> GetRecords(IPlayableMap map)
+        public IDatabaseResult<Record> GetRecords(IPlayableMap map)
         {
-            using (var results = Database.Query()
+            return Database.Query()
                 .FilterMap(map)
                 .Preload()
-                .GetResult())
-            {
-                return results;
-            }
+                .GetResult();
         }
 
         public void SaveRecord(Record record)

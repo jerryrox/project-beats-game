@@ -15,6 +15,24 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.11.0
+#### New features
+- Added offset menu button in `PrepareScreen`.
+- Added version information in settings menu.
+- Navigate to prepare screen when the selected song list item has been selected again.
+#### Changes
+- Refactored Cacher.
+- Removed dependency to `Promise` and `Progress` and replaced with `ITask` and `TaskListener`.
+- Increased timeout time for mapset download.
+#### Fixes
+- Fixed online mapset result cell's label not being constrained.
+- Fixed online mapset list not resetting to the beginning after search caused by changing one of the search options.
+- Fixed music continuously playing when entering DownloadScreen.
+- Fixed bug where pressing preview stop button on DownloadScreen makes it replay instead.
+- Fixed offset not applying immediately when changing via OffsetOverlay.
+- Fixed online mapset list not showing.
+- Fixed issue where game freezes after the play when logged in.
+
 ### 0.10.0
 #### New features
 - Added ability to test using localhost api server.

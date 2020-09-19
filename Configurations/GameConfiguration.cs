@@ -153,6 +153,19 @@ namespace PBGame.Configurations
                 soundTab.AddEntry(new SettingsEntryBool("Button hover sound", UseButtonHoverSound = InitBoolBindable(nameof(UseButtonHoverSound), true)));
             }
 
+            // Version settings
+            SettingsTab versionTab = Settings.AddTabData(new SettingsTab("Version", "icon-version"));
+            {
+                versionTab.AddEntry(new SettingsEntryAction($"Game version ({App.GameVersion})", () =>
+                {
+                    UnityEngine.Application.OpenURL(App.GameRepository);
+                }));
+                versionTab.AddEntry(new SettingsEntryAction($"Framework version ({App.FrameworkVersion})", () =>
+                {
+                    UnityEngine.Application.OpenURL(App.FrameworkRepository);
+                }));
+            }
+
             // Trigger change for all configurations on load.
             OnLoad += delegate
             {

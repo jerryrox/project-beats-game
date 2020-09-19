@@ -227,7 +227,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called when the scheduled search should occur.
         /// </summary>
-        private void OnSearchSchedulerEnd(ITimer timer)
+        private void OnSearchSchedulerEnd()
         {
             if(scheduledTerm != null)
                 ApplySearch(scheduledTerm);

@@ -63,14 +63,15 @@ namespace PBGame.UI.Components.Download
 
             requestedNextPage = false;
 
-            Model.MapsetList.BindAndTrigger(OnResultChange);
+            Model.OnMapsetListChange += OnResultChange;
+            OnResultChange(Model.MapsetList.Value, false);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            Model.MapsetList.OnValueChanged -= OnResultChange;
+            Model.OnMapsetListChange -= OnResultChange;
         }
 
         protected override void Update()
@@ -110,10 +111,10 @@ namespace PBGame.UI.Components.Download
         /// <summary>
         /// Event called on result list change.
         /// </summary>
-        private void OnResultChange(List<OnlineMapset> result, List<OnlineMapset> _)
+        private void OnResultChange(List<OnlineMapset> result, bool hadCursor)
         {
             Vector2? lastDelta = null;
-            if (Model.Options.HasCursor)
+            if (hadCursor)
             {
                 lastDelta = container.Position;
                 lastDelta -= ContainerStartPos;

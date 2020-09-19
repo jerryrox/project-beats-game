@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models;
@@ -9,14 +8,12 @@ using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
-using PBFramework;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
@@ -183,9 +180,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         }
 
         /// <summary>
-        /// Starts loading hit object to resolve for specified promise.
+        /// Starts loading hit object to resolve for specified future.
         /// </summary>
-        private IEnumerator LoadHitObjects(ProxyPromise promise)
+        private IEnumerator LoadHitObjects(ManualTask task)
         {
             int createCount = 0;
             int lastLoads = 0;
@@ -229,7 +226,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                         hitObjView.Tint = GetComboColor(combo);
                 }
             }
-            promise.Resolve(null);
+            task.SetFinished();
         }
 
         /// <summary>
@@ -243,15 +240,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 comboColors = ColorPreset.DefaultComboColors;
 
             Coroutine loadRoutine = null;
-            IExplicitPromise promise = new ProxyPromise(
-                (p) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(p)),
-                () =>
-                {
-                    if(loadRoutine != null)
-                        UnityThread.StopCoroutine(loadRoutine);
-                }
-            );
-            Model.AddAsLoader(promise);
+            ManualTask task = new ManualTask((t) => loadRoutine = UnityThread.StartCoroutine(LoadHitObjects(t)));
+            task.IsRevoked.OnNewValue += (revoked) =>
+            {
+                if (revoked && loadRoutine != null)
+                    UnityThread.StopCoroutine(loadRoutine);
+            };
+            Model.AddAsLoader(task);
         }
 
         /// <summary>

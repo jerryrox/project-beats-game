@@ -59,6 +59,7 @@ namespace PBGame.UI.Components.Download.Result
                     titleLabel.Pivot = PivotType.Bottom;
                     titleLabel.SetOffsetHorizontal(8f);
                     titleLabel.Y = 74f;
+                    titleLabel.Height = 50f;
                     titleLabel.IsBold = true;
                     titleLabel.FontSize = 18;
                     titleLabel.WrapText = true;
@@ -72,6 +73,7 @@ namespace PBGame.UI.Components.Download.Result
                     artistLabel.Pivot = PivotType.Bottom;
                     artistLabel.SetOffsetHorizontal(8f);
                     artistLabel.Y = 58f;
+                    artistLabel.Height = 20f;
                     artistLabel.IsBold = true;
                     artistLabel.FontSize = 16;
                     artistLabel.WrapText = true;
@@ -85,6 +87,7 @@ namespace PBGame.UI.Components.Download.Result
                     mapperLabel.Pivot = PivotType.Bottom;
                     mapperLabel.SetOffsetHorizontal(8f);
                     mapperLabel.Y = 42f;
+                    mapperLabel.Height = 20f;
                     mapperLabel.IsBold = true;
                     mapperLabel.FontSize = 16;
                     mapperLabel.WrapText = true;
@@ -137,9 +140,9 @@ namespace PBGame.UI.Components.Download.Result
             metaDisplayer.Setup(mapset);
             actionBar.Setup(mapset);
 
-            titleLabel.Text = mapset.Title;
-            artistLabel.Text = mapset.Artist;
-            mapperLabel.Text = mapset.Creator;
+            titleLabel.Text = mapset?.Title;
+            artistLabel.Text = mapset?.Artist;
+            mapperLabel.Text = mapset?.Creator;
         }
 
 #if UNITY_EDITOR

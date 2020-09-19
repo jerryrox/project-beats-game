@@ -11,12 +11,12 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Reloads all data stores required by the manager.
         /// </summary>
-        Task Reload(IEventProgress progress);
+        Task Reload(TaskListener listener = null);
 
         /// <summary>
         /// Returns all records for the specified map.
         /// </summary>
-        Task GetRecords(IPlayableMap map, IReturnableProgress<IEnumerable<IRecord>> progress);
+        Task<List<IRecord>> GetRecords(IPlayableMap map, TaskListener<List<IRecord>> listener = null);
 
         /// <summary>
         /// Returns the number of records for the specified map and user.
@@ -36,7 +36,7 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns the best record among the specified series of records.
         /// </summary>
-        IRecord GetBestRecord(IEnumerable<IRecord> records);
+        IRecord GetBestRecord(List<IRecord> records);
 
         // TODO: Create a method for retrieving replay.
     }

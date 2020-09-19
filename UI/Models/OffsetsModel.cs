@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
@@ -8,14 +5,11 @@ using PBGame.Audio;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBGame.Configurations.Maps;
-using PBFramework.UI;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Audio;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Models
 {
@@ -23,8 +17,6 @@ namespace PBGame.UI.Models
     {
         private IMetronome metronome;
 
-        private Bindable<MapsetConfig> mapsetConfig = new Bindable<MapsetConfig>();
-        private Bindable<MapConfig> mapConfig = new Bindable<MapConfig>();
         private BindableBool isMetronomeAvailable = new BindableBool(false);
 
         private Coroutine updateRoutine;
@@ -38,12 +30,12 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Returns the configuration for the currently selected mapset.
         /// </summary>
-        public IReadOnlyBindable<MapsetConfig> MapsetConfig => mapsetConfig;
+        public IReadOnlyBindable<MapsetConfig> MapsetConfig => MapSelection.MapsetConfig;
 
         /// <summary>
         /// Returns the configuration for the currently selected map.
         /// </summary>
-        public IReadOnlyBindable<MapConfig> MapConfig => mapConfig;
+        public IReadOnlyBindable<MapConfig> MapConfig => MapSelection.MapConfig;
 
         /// <summary>
         /// Returns whether the metronome is available in current state.
@@ -130,7 +122,7 @@ namespace PBGame.UI.Models
         /// </summary>
         private void DisposeMapsetConfig()
         {
-            var config = mapsetConfig.Value;
+            var config = MapsetConfig.Value;
             if (config != null)
                 MapsetConfiguration.SetConfig(config);
         }
@@ -140,7 +132,7 @@ namespace PBGame.UI.Models
         /// </summary>
         private void DisposeMapConfig()
         {
-            var config = mapConfig.Value;
+            var config = MapConfig.Value;
             if (config != null)
                 MapConfiguration.SetConfig(config);
         }
@@ -151,7 +143,6 @@ namespace PBGame.UI.Models
         private void OnMapsetChange(IMapset mapset)
         {
             DisposeMapsetConfig();
-            mapsetConfig.Value = MapsetConfiguration.GetConfig(mapset);
         }
 
         /// <summary>
@@ -160,8 +151,6 @@ namespace PBGame.UI.Models
         private void OnMapChange(IPlayableMap map)
         {
             DisposeMapConfig();
-            mapConfig.Value = MapConfiguration.GetConfig(map);
-
             metronome.CurrentMap = map;
         }
 

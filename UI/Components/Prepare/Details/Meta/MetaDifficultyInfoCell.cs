@@ -40,7 +40,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
             {
                 icon.X = -24f;
                 icon.Size = new Vector2(32f, 32f);
-                icon.SpriteName = "icon-time";
+                icon.SpriteName = "icon-clock";
             }
             label = CreateChild<Label>("label", 1);
             {

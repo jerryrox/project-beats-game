@@ -27,41 +27,27 @@ namespace PBGame.Data.Records
             recordStore = new RecordStore();
         }
 
-        public Task Reload(IEventProgress progress)
+        public Task Reload(TaskListener listener = null)
         {
-            progress?.Report(0f);
             return Task.Run(() =>
             {
                 recordStore.Reload();
                 // TODO: Reload replay store.
 
-                UnityThread.DispatchUnattended(() =>
-                {
-                    if (progress != null)
-                    {
-                        progress.Report(1f);
-                        progress.InvokeFinished();
-                    }
-                    return null;
-                });
+                listener?.SetFinished();
             });
         }
 
-        public Task GetRecords(IPlayableMap map, IReturnableProgress<IEnumerable<IRecord>> progress)
+        public Task<List<IRecord>> GetRecords(IPlayableMap map, TaskListener<List<IRecord>> listener = null)
         {
-            progress?.Report(0f);
             return Task.Run(() =>
             {
-                var records = GetInjectedRecords(recordStore.GetRecords(map));
-
-                UnityThread.DispatchUnattended(() => {
-                    if (progress != null)
-                    {
-                        progress.Report(1f);
-                        progress.InvokeFinished(records);
-                    }
-                    return null;
-                });
+                using (var records = recordStore.GetRecords(map))
+                {
+                    var injectedRecords = GetInjectedRecords(records).ToList();
+                    listener?.SetFinished(injectedRecords);
+                    return injectedRecords;
+                }
             });
         }
 
@@ -77,18 +63,26 @@ namespace PBGame.Data.Records
         // TODO: Implement when replay store is implemented.
         public bool HasReplay(IRecord record) => false;
 
-        public IRecord GetBestRecord(IEnumerable<IRecord> records)
+        public IRecord GetBestRecord(List<IRecord> records)
         {
-            return records.Aggregate((x, y) =>
+            if(records.Count == 0)
+                return null;
+
+            IRecord bestRecord = records[0];
+            for (int i = 1; i < records.Count; i++)
             {
-                int scoreComp = x.Score.CompareTo(y.Score);
-                if(scoreComp != 0)
-                    return scoreComp > 0 ? x : y;
-                int accComp = x.Accuracy.CompareTo(y.Accuracy);
-                if(accComp != 0)
-                    return accComp > 0 ? x : y;
-                return x.Date.CompareTo(y.Date) <= 0 ? x : y;
-            });
+                IRecord record = records[i];
+                int comp = record.Score.CompareTo(bestRecord.Score);
+                if (comp > 0)
+                    bestRecord = record;
+                else if (comp == 0)
+                {
+                    comp = record.Accuracy.CompareTo(bestRecord.Accuracy);
+                    if(comp > 0 || (comp == 0 && record.Date <= bestRecord.Date))
+                        bestRecord = record;
+                }
+            }
+            return bestRecord;
         }
 
         /// <summary>

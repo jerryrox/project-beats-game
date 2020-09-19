@@ -14,7 +14,7 @@ namespace PBGame.UI.Models
 {
     public class MenuBarModel : BaseModel {
 
-        private CacherAgent<Texture2D> profileImageCacher;
+        private CacherAgent<string, Texture2D> profileImageCacher;
 
         private Bindable<MenuType> focusedMenu = new Bindable<MenuType>(MenuType.None);
         private Bindable<INavigationView> currentOverlay = new Bindable<INavigationView>();
@@ -72,7 +72,7 @@ namespace PBGame.UI.Models
         [InitWithDependency]
         private void Init()
         {
-            profileImageCacher = new CacherAgent<Texture2D>(WebImageCacher);
+            profileImageCacher = new CacherAgent<string, Texture2D>(WebImageCacher);
             profileImageCacher.OnFinished += OnProfileImageLoaded;
         }
 

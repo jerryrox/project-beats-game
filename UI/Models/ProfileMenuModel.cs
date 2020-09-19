@@ -23,8 +23,8 @@ namespace PBGame.UI.Models
         /// </summary>
         public event Action OnLoginFailed;
 
-        private CacherAgent<Texture2D> profileImageAgent;
-        private CacherAgent<Texture2D> coverImageAgent;
+        private CacherAgent<string, Texture2D> profileImageAgent;
+        private CacherAgent<string, Texture2D> coverImageAgent;
 
         private DropdownContext apiDropdownContext;
 
@@ -128,10 +128,10 @@ namespace PBGame.UI.Models
             apiDropdownContext = new DropdownContext();
             apiDropdownContext.ImportFromEnum<ApiProviderType>(CurProviderType.Value);
 
-            coverImageAgent = new CacherAgent<Texture2D>(WebImageCacher);
+            coverImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             coverImageAgent.OnFinished += OnCoverImageLoaded;
 
-            profileImageAgent = new CacherAgent<Texture2D>(WebImageCacher);
+            profileImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             profileImageAgent.OnFinished += OnProfileImageLoaded;
         }
 
@@ -206,16 +206,7 @@ namespace PBGame.UI.Models
         {
             var dialog = OverlayNavigator.Show<DialogOverlay>();
             dialog.Model.SetMessage("Would you like to log out?");
-            dialog.Model.AddConfirmCancel(() =>
-            {
-                var user = CurrentUser.Value;
-                if (user != null)
-                {
-                    UserManager.SaveUser(user);
-                    UserManager.RemoveUser();
-                    Api.Logout();
-                }
-            });
+            dialog.Model.AddConfirmCancel(Api.Logout);
         }
 
         protected override void OnPreShow()

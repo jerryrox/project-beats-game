@@ -1,26 +1,14 @@
 using PBGame.Maps;
-using PBFramework;
 using PBFramework.Networking;
 
 namespace PBGame.Assets
 {
-    public class MapBackgroundRequest : ProxyPromise<IMapBackground> {
+    public class MapBackgroundRequest : WrappedWebRequest<TextureRequest, IMapBackground> {
 
-        /// <summary>
-        /// The inner request being wrapped over.
-        /// </summary>
-        private TextureRequest textureRequest;
-
-
-        public MapBackgroundRequest(string url)
+        public MapBackgroundRequest(string url) : base(new TextureRequest(url, false))
         {
-            textureRequest = new TextureRequest(url, false);
-
-            StartAction = (promise) => textureRequest.Start();
-            RevokeAction = textureRequest.Revoke;
-
-            textureRequest.OnProgress += SetProgress;
-            textureRequest.OnFinishedResult += (texture) => Resolve(new MapBackground(texture));
         }
+
+        protected override IMapBackground GetOutput(TextureRequest request) => new MapBackground(request.Output);
     }
 }
