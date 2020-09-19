@@ -5,7 +5,7 @@ Implementation of Project: Beats game
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.0.4) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.1.0) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
@@ -15,6 +15,8 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### (WIP)
+
 ### 0.11.0
 #### New features
 - Added offset menu button in `PrepareScreen`.
