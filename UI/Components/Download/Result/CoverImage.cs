@@ -55,6 +55,9 @@ namespace PBGame.UI.Components.Download.Result
             Reset();
             
             this.mapset = mapset;
+            if(mapset == null)
+                return;
+                
             if(Cacher.IsCached(mapset.CardImage))
                 cacherAgent.Request(mapset.CardImage);
             else

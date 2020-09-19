@@ -66,6 +66,9 @@ namespace PBGame.UI.Components.Download.Result
         {
             Reset();
 
+            if(mapset == null)
+                return;
+
             rankTag.SetRank(mapset.Status);
             playCountTag.SetPlayCount(mapset.PlayCount);
             favoriteCountTag.SetFavoriteCount(mapset.FavoriteCount);
