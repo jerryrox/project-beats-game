@@ -216,10 +216,10 @@ namespace PBGame
             mapSelection.MapsetConfig.OnValueChanged += (config, prevConfig) =>
             {
                 // Observe offset changes in the mapset.
-                if(prevConfig != null)
+                if (prevConfig != null)
                     prevConfig.Offset.OnValueChanged -= OnMusicOffsetChange;
                 mapsetOffset = config;
-                if(mapsetOffset != null)
+                if (mapsetOffset != null)
                     mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
             };
 
@@ -445,7 +445,10 @@ namespace PBGame
         /// <summary>
         /// Event called when the mapset/map's offset has been changed.
         /// </summary>
-        private void OnMusicOffsetChange(int offset, int prevOffset) => ApplyMusicOffset();
+        private void OnMusicOffsetChange(int offset, int prevOffset)
+        {
+            ApplyMusicOffset();
+        }
 
         /// <summary>
         /// Returns the total music offset applied.
