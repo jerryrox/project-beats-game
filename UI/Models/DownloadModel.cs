@@ -93,6 +93,8 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
+            MusicController.Stop();
+            MusicController.MountAudio(null);
             MusicController.OnEnd += OnMusicEnd;
 
             RequestMapsets();
