@@ -32,7 +32,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
                 timeInfo = grid.CreateChild<MetaDifficultyInfoCell>("time", 0);
                 {
-                    timeInfo.IconName = "icon-time";
+                    timeInfo.IconName = "icon-clock";
                     timeInfo.Tint = colorPreset.SecondaryFocus;
                 }
                 objectsInfo = grid.CreateChild<MetaDifficultyInfoCell>("objects", 1);

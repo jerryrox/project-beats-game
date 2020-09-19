@@ -17,12 +17,14 @@ Slowly making progress 🧩
 ## Versions
 ### 0.11.0 (WIP)
 #### New features
+- Added version information in settings menu.
 - Navigate to prepare screen when the selected song list item has been selected again.
 #### Changes
 - Refactored Cacher.
 - Removed dependency to `Promise` and `Progress` and replaced with `ITask` and `TaskListener`.
 - Increased timeout time for mapset download.
 #### Fixes
+- Fixed online mapset result cell's label not being constrained.
 - Fixed online mapset list not resetting to the beginning after search caused by changing one of the search options.
 - Fixed music continuously playing when entering DownloadScreen.
 - Fixed bug where pressing preview stop button on DownloadScreen makes it replay instead.
