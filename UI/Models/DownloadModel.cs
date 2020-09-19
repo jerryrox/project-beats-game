@@ -154,9 +154,10 @@ namespace PBGame.UI.Models
         /// </summary>
         public void SetPreview(OnlineMapset mapset)
         {
+            bool isPreviewing = mapset == previewingMapset.Value;
             ResetPreviewingMapset();
 
-            if (mapset != null && !string.IsNullOrEmpty(mapset.PreviewAudio))
+            if (!isPreviewing && mapset != null && !string.IsNullOrEmpty(mapset.PreviewAudio))
             {
                 previewingMapset.Value = mapset;
                 musicAgent.Request(mapset.PreviewAudio);
