@@ -23,6 +23,8 @@ Slowly making progress 🧩
 - Removed dependency to `Promise` and `Progress` and replaced with `ITask` and `TaskListener`.
 - Increased timeout time for mapset download.
 #### Fixes
+- Fixed online mapset list not resetting to the beginning after search caused by changing one of the search options.
+- Fixed music continuously playing when entering DownloadScreen.
 - Fixed bug where pressing preview stop button on DownloadScreen makes it replay instead.
 - Fixed offset not applying immediately when changing via OffsetOverlay.
 - Fixed online mapset list not showing.
