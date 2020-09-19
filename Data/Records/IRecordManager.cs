@@ -36,7 +36,7 @@ namespace PBGame.Data.Records
         /// <summary>
         /// Returns the best record among the specified series of records.
         /// </summary>
-        IRecord GetBestRecord(IEnumerable<IRecord> records);
+        IRecord GetBestRecord(List<IRecord> records);
 
         // TODO: Create a method for retrieving replay.
     }

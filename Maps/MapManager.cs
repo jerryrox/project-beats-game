@@ -46,6 +46,9 @@ namespace PBGame.Maps
         {
             return Task.Run(async () =>
             {
+                if(listener != null)
+                    listener.HasOwnProgress = false;
+
                 // Wait for store reloading.
                 await store.Reload(listener?.CreateSubListener());
 

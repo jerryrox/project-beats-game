@@ -125,44 +125,52 @@ namespace PBGame.UI.Models
         {
             return Task.Run(async () =>
             {
-                if (scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
+                try
                 {
+                    if (scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
+                    {
+                        listener?.SetFinished();
+                        return;
+                    }
+
+                    // Retrieve user and user stats.
+                    var user = UserManager.CurrentUser.Value;
+                    if(user == null)
+                    {
+                        listener?.SetFinished();
+                        return;
+                    }
+                    var userStats = user.GetStatistics(currentMap.PlayableMode);
+                    if (userStats == null)
+                    {
+                        listener?.SetFinished();
+                        return;
+                    }
+
+                    // Record the play result to records database and user statistics.
+                    Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
+                    var records = await RecordManager.GetRecords(currentMap, listener?.CreateSubListener<List<IRecord>>());
+
+                    // Save as cleared play.
+                    if (scoreProcessor.IsFinished)
+                    {
+                        RecordManager.SaveRecord(newRecord);
+
+                        var bestRecord = RecordManager.GetBestRecord(records);
+                        userStats.RecordPlay(newRecord, bestRecord);
+                    }
+                    // Save as failed play.
+                    else
+                    {
+                        userStats.RecordIncompletePlay(newRecord);
+                    }
                     listener?.SetFinished();
-                    return;
                 }
-
-                // Retrieve user and user stats.
-                var user = UserManager.CurrentUser.Value;
-                if(user == null)
+                catch (Exception e)
                 {
+                    Debug.LogError(e);
                     listener?.SetFinished();
-                    return;
                 }
-                var userStats = user.GetStatistics(currentMap.PlayableMode);
-                if (userStats == null)
-                {
-                    listener?.SetFinished();
-                    return;
-                }
-
-                // Record the play result to records database and user statistics.
-                Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
-                var records = await RecordManager.GetRecords(currentMap, listener?.CreateSubListener<List<IRecord>>());
-
-                // Save as cleared play.
-                if (scoreProcessor.IsFinished)
-                {
-                    RecordManager.SaveRecord(newRecord);
-
-                    var bestRecord = RecordManager.GetBestRecord(records);
-                    userStats.RecordPlay(newRecord, bestRecord);
-                }
-                // Save as failed play.
-                else
-                {
-                    userStats.RecordIncompletePlay(newRecord);
-                }
-                listener?.SetFinished();
             });
         }
 

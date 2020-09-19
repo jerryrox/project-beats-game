@@ -120,13 +120,7 @@ namespace PBGame.Maps
             }
 
             // Set mapset only if different.
-            var prevMapset = bindableMapset.Value;
-            if (mapset != prevMapset)
-            {
-                bindableMapset.SetWithoutTrigger(mapset);
-                this.MapsetConfig.Value = mapsetConfiguration?.GetConfig(mapset);
-                bindableMapset.TriggerWithPrevious(prevMapset);
-            }
+            SetCurMapset(mapset, true);
 
             // Select the map.
             SelectMap(map);
@@ -146,9 +140,7 @@ namespace PBGame.Maps
             if (map != bindableMap.Value)
             {
                 IPlayableMap prevMap = bindableMap.Value;
-                bindableMap.SetWithoutTrigger(map);
-                this.MapConfig.Value = mapConfiguration?.GetConfig(map);
-                bindableMap.TriggerWithPrevious(prevMap);
+                SetCurMap(map, true);
 
                 // Change background / audio assets when necessary.
                 if (prevMap == null || !prevMap.Detail.IsSameBackground(map.Detail))
@@ -165,6 +157,34 @@ namespace PBGame.Maps
         }
 
         public void SelectMap(IOriginalMap map) => SelectMap(map.GetPlayable(currentMode));
+
+        /// <summary>
+        /// Sets current mapset state.
+        /// </summary>
+        private void SetCurMapset(IMapset mapset, bool onlyIfDifferent)
+        {
+            var previousMapset = bindableMapset.Value;
+            if(onlyIfDifferent && previousMapset == mapset)
+                return;
+
+            bindableMapset.SetWithoutTrigger(mapset);
+            this.MapsetConfig.Value = mapsetConfiguration?.GetConfig(mapset);
+            bindableMapset.TriggerWithPrevious(previousMapset);
+        }
+
+        /// <summary>
+        /// Sets current map state.
+        /// </summary>
+        private void SetCurMap(IPlayableMap map, bool onlyIfDifferent)
+        {
+            var previousMap = bindableMap.Value;
+            if(onlyIfDifferent && previousMap == map)
+                return;
+
+            bindableMap.SetWithoutTrigger(map);
+            this.MapConfig.Value = mapConfiguration?.GetConfig(map);
+            bindableMap.TriggerWithPrevious(previousMap);
+        }
 
         /// <summary>
         /// Loads the music asset for current map.

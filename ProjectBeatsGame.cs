@@ -94,11 +94,11 @@ namespace PBGame
             // TODO: These don't really help at early development yet. Come back when game is ready for play.
 
             // Start listening to any exceptions that occurs during game.
-            // AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
-            // {
-            //     var exception = e.ExceptionObject as Exception;
-            //     Debug.LogError($"Unhandled exception: {exception.ToString()}");
-            // };
+            AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
+            {
+                var exception = e.ExceptionObject as Exception;
+                Debug.LogError($"Unhandled exception: {exception.ToString()}");
+            };
             // Application.logMessageReceived += (condition, stackTrace, type) =>
             // {
             //     if (type == LogType.Exception)
@@ -216,10 +216,10 @@ namespace PBGame
             mapSelection.MapsetConfig.OnValueChanged += (config, prevConfig) =>
             {
                 // Observe offset changes in the mapset.
-                if(prevConfig != null)
+                if (prevConfig != null)
                     prevConfig.Offset.OnValueChanged -= OnMusicOffsetChange;
                 mapsetOffset = config;
-                if(mapsetOffset != null)
+                if (mapsetOffset != null)
                     mapsetOffset.Offset.BindAndTrigger(OnMusicOffsetChange);
             };
 
@@ -445,7 +445,10 @@ namespace PBGame
         /// <summary>
         /// Event called when the mapset/map's offset has been changed.
         /// </summary>
-        private void OnMusicOffsetChange(int offset, int prevOffset) => ApplyMusicOffset();
+        private void OnMusicOffsetChange(int offset, int prevOffset)
+        {
+            ApplyMusicOffset();
+        }
 
         /// <summary>
         /// Returns the total music offset applied.

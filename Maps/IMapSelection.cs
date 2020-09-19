@@ -1,4 +1,3 @@
-using System;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations.Maps;
 using PBFramework.Data.Bindables;
@@ -27,7 +26,6 @@ namespace PBGame.Maps
         /// Returns the config for the currently selected map.
         /// </summary>
         Bindable<MapConfig> MapConfig { get; }
-
 
 
         /// <summary>

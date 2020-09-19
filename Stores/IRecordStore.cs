@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Rulesets.Maps;
+using PBFramework.DB;
 using PBFramework.Stores;
 
 namespace PBGame.Stores
@@ -9,9 +10,9 @@ namespace PBGame.Stores
     public interface IRecordStore : IDatabaseBackedStore<Record> {
 
         /// <summary>
-        /// Returns all records for the specified map.
+        /// Returns the database result for the records of specified map.
         /// </summary>
-        IEnumerable<IRecord> GetRecords(IPlayableMap map);
+        IDatabaseResult<Record> GetRecords(IPlayableMap map);
 
         /// <summary>
         /// Saves the specified record to the store.
