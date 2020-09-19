@@ -17,6 +17,7 @@ Slowly making progress 🧩
 ## Versions
 ### 0.11.0 (WIP)
 #### New features
+- Added offset menu button in `PrepareScreen`.
 - Added version information in settings menu.
 - Navigate to prepare screen when the selected song list item has been selected again.
 #### Changes

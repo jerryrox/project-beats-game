@@ -19,6 +19,7 @@ namespace PBGame.UI.Components.Prepare.Details
 
         private MenuButton backButton;
         private MenuButton infoButton;
+        private MenuButton offsetButton;
         private MenuButton playButton;
 
         [ReceivesDependency]
@@ -34,7 +35,7 @@ namespace PBGame.UI.Components.Prepare.Details
             {
                 grid.Anchor = AnchorType.Fill;
                 grid.RawSize = Vector2.zero;
-                InvokeAfterTransformed(1, () => grid.CellSize = new Vector2(Width / 3f, 56f));
+                InvokeAfterTransformed(1, () => grid.CellSize = new Vector2(Width / grid.ChildCount, 56f));
 
                 backButton = grid.CreateChild<MenuButton>("back", 0);
                 {
@@ -50,7 +51,14 @@ namespace PBGame.UI.Components.Prepare.Details
 
                     infoButton.OnTriggered += Model.ToggleDetailedMode;
                 }
-                playButton = grid.CreateChild<MenuButton>("play", 2);
+                offsetButton = grid.CreateChild<MenuButton>("offset", 2);
+                {
+                    offsetButton.IconName = "icon-clock";
+                    offsetButton.LabelText = "Offset";
+
+                    offsetButton.OnTriggered += Model.ShowOffset;
+                }
+                playButton = grid.CreateChild<MenuButton>("play", 3);
                 {
                     playButton.IconName = "icon-play";
                     playButton.LabelText = "Play";

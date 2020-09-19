@@ -91,6 +91,11 @@ namespace PBGame.UI.Models
         public void ToggleDetailedMode() => SetDetailedMode(!isDetailedMode.Value);
 
         /// <summary>
+        /// Shows the offset overlay for current selection.
+        /// </summary>
+        public void ShowOffset() => OverlayNavigator.Show<OffsetsOverlay>();
+
+        /// <summary>
         /// Sets the detailed/brief display mode.
         /// </summary>
         public void SetDetailedMode(bool isDetailed) => isDetailedMode.Value = isDetailed;
