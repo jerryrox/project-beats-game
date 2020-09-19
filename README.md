@@ -15,7 +15,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.11.0 (WIP)
+### 0.11.0
 #### New features
 - Added offset menu button in `PrepareScreen`.
 - Added version information in settings menu.
