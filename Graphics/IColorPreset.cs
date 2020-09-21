@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Graphics;
@@ -36,5 +37,10 @@ namespace PBGame.Graphics
         /// Returns the color resembling the specified hit result type.
         /// </summary>
         ColorPalette GetHitResultColor(HitResultType type);
+
+        /// <summary>
+        /// Returns the color resembling the specified rank type.
+        /// </summary>
+        ColorPalette GetRankColor(RankType type);
     }
 }
