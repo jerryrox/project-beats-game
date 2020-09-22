@@ -32,6 +32,8 @@ namespace PBGame.Data.Records
 
         public string Username { get; set; }
 
+        public string AvatarUrl { get; set; }
+
         public RankType Rank { get; set; }
 
         public int Score { get; set; }
@@ -74,11 +76,13 @@ namespace PBGame.Data.Records
             {
                 UserId = Guid.Empty;
                 Username = "";
+                AvatarUrl = "";
             }
             else
             {
                 UserId = user.Id;
                 Username = user.Username;
+                AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
             }
 
             MapHash = map.Detail.Hash;
