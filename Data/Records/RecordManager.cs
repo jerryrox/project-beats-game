@@ -1,13 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Data.Users;
 using PBGame.Stores;
 using PBGame.Rulesets.Maps;
 using PBFramework.Threading;
-using PBFramework.Dependencies;
+using PBFramework.Debugging;
 
 namespace PBGame.Data.Records
 {
@@ -15,15 +14,10 @@ namespace PBGame.Data.Records
 
         private IRecordStore recordStore;
         // TODO: Replay store
-        private IDependencyContainer dependency;
 
 
-        public RecordManager(IDependencyContainer dependency)
+        public RecordManager()
         {
-            if(dependency == null) throw new ArgumentNullException(nameof(dependency));
-
-            this.dependency = dependency;
-
             recordStore = new RecordStore();
         }
 
@@ -44,9 +38,9 @@ namespace PBGame.Data.Records
             {
                 using (var records = recordStore.GetRecords(map))
                 {
-                    var injectedRecords = GetInjectedRecords(records).ToList();
-                    listener?.SetFinished(injectedRecords);
-                    return injectedRecords;
+                    var recordList = records.Cast<IRecord>().ToList();
+                    listener?.SetFinished(recordList);
+                    return recordList;
                 }
             });
         }
@@ -55,9 +49,17 @@ namespace PBGame.Data.Records
 
         public void SaveRecord(IRecord record)
         {
-            if(!(record is Record r))
+            if (!(record is Record r))
+            {
+                Logger.LogWarning($"The record trying to save is not a type of {nameof(Record)}!");
                 return;
+            }
             recordStore.SaveRecord(r);
+        }
+
+        public void DeleteRecords(IPlayableMap map)
+        {
+            recordStore.DeleteRecords(map);
         }
 
         // TODO: Implement when replay store is implemented.
@@ -83,18 +85,6 @@ namespace PBGame.Data.Records
                 }
             }
             return bestRecord;
-        }
-
-        /// <summary>
-        /// Injects dependencies to specified records and returns them.
-        /// </summary>
-        private IEnumerable<IRecord> GetInjectedRecords(IEnumerable<IRecord> records)
-        {
-            foreach (var r in records)
-            {
-                dependency.Inject(r);
-                yield return r;
-            }
         }
     }
 }

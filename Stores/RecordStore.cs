@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using PBGame.IO;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
@@ -24,6 +23,16 @@ namespace PBGame.Stores
         public void SaveRecord(Record record)
         {
             Database.Edit().Write(record).Commit();
+        }
+
+        public void DeleteRecords(IPlayableMap map)
+        {
+            using(var records = Database.Query()
+                .FilterMap(map)
+                .GetResult())
+            {
+                Database.Edit().RemoveRange(records).Commit();
+            }
         }
 
         public int GetPlayCount(IPlayableMap map, IUser user)
@@ -51,7 +60,7 @@ namespace PBGame.Stores
         public static IDatabaseQuery<Record> FilterMap(this IDatabaseQuery<Record> context, IPlayableMap map)
         {
             var mapHash = map.Detail.Hash;
-            var gameMode = map.PlayableMode.ToString();
+            var gameMode = ((int)map.PlayableMode).ToString();
             return context
                 .Where(d => d["MapHash"].ToString().Equals(mapHash, StringComparison.Ordinal))
                 .Where(d => d["GameMode"].ToString().Equals(gameMode, StringComparison.Ordinal));

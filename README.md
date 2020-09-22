@@ -15,7 +15,9 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### (WIP)
+### 0.11.1 (WIP)
+#### Fixes
+- Fixed internal logic error while saving play records.
 
 ### 0.11.0
 #### New features

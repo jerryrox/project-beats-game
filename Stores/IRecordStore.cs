@@ -20,6 +20,11 @@ namespace PBGame.Stores
         void SaveRecord(Record record);
 
         /// <summary>
+        /// Deletes all records of specified map.
+        /// </summary>
+        void DeleteRecords(IPlayableMap map);
+
+        /// <summary>
         /// Returns the number of records made for the specified map and the user.
         /// </summary>
         int GetPlayCount(IPlayableMap map, IUser user);

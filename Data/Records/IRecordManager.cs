@@ -29,6 +29,11 @@ namespace PBGame.Data.Records
         void SaveRecord(IRecord record);
 
         /// <summary>
+        /// Deletes all the records of specified map.
+        /// </summary>
+        void DeleteRecords(IPlayableMap map);
+
+        /// <summary>
         /// Returns whether there is a replay data for specified record.
         /// </summary>
         bool HasReplay(IRecord record);

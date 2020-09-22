@@ -56,7 +56,7 @@ namespace PBGame.Data.Records
         IReadOnlyList<JudgementRecord> Judgements { get; }
 
         /// <summary>
-        /// Returns the number of hiss recorded for each hit result types.
+        /// Returns the number of hits recorded for each hit result types.
         /// </summary>
         IReadOnlyDictionary<HitResultType, int> HitResultCounts { get; }
 
@@ -79,11 +79,6 @@ namespace PBGame.Data.Records
         /// Returns the date & time when this record was made.
         /// </summary>
         DateTime Date { get; }
-
-        /// <summary>
-        /// Returns whether this record has a replay.
-        /// </summary>
-        bool HasReplay { get; }
 
         /// <summary>
         /// Returns whether this record is a complete play.

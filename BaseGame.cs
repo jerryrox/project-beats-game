@@ -160,7 +160,7 @@ namespace PBGame
             Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));
 
             Dependencies.CacheAs<IUserManager>(userManager = new UserManager(Dependencies));
-            Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager(Dependencies));
+            Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager());
 
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));

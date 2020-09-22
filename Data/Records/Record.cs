@@ -56,14 +56,7 @@ namespace PBGame.Data.Records
         public DateTime Date { get; set; }
 
         [JsonIgnore]
-        public bool HasReplay => RecordManager == null ? false : RecordManager.HasReplay(this);
-
-        [JsonIgnore]
         public bool IsClear => Rank != RankType.F;
-
-        [JsonIgnore]
-        [ReceivesDependency]
-        private IRecordManager RecordManager { get; set; }
 
 
         public Record() { }
