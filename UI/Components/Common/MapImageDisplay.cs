@@ -10,7 +10,7 @@ using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-namespace PBGame.UI.Components
+namespace PBGame.UI.Components.Common
 {
     public class MapImageDisplay : UguiObject, IHasColor {
 
