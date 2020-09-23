@@ -14,10 +14,23 @@ namespace PBGame.Rulesets.Scoring
 	/// </summary>
 	public abstract class ScoreProcessor : IScoreProcessor {
 
-		public event Action OnLastJudgement;
+        private static Dictionary<RankType, float> RankAccuracies = new Dictionary<RankType, float>()
+        {
+            { RankType.F, 0f },
+            { RankType.D, 0f },
+            { RankType.C, 0.7f },
+            { RankType.B, 0.8f },
+            { RankType.A, 0.9f },
+            { RankType.S, 0.95f },
+            { RankType.SH, 0.95f },
+            { RankType.X, 1f },
+            { RankType.XH, 1f },
+        };
+
+        public event Action OnLastJudgement;
 
 		public event Action<JudgementResult> OnNewJudgement;
-
+        
 
 		/// <summary>
 		/// Table of counters for each hit result type.
@@ -93,16 +106,14 @@ namespace PBGame.Rulesets.Scoring
             Combo.OnNewValue += (combo) => HighestCombo.Value = Math.Max(combo, HighestCombo.Value);
             Accuracy.OnNewValue += (acc) => Ranking.Value = CalculateRank(acc);
 
-			resultCounts[HitResultType.Miss] = 0;
-			resultCounts[HitResultType.Bad] = 0;
-			resultCounts[HitResultType.Ok] = 0;
-			resultCounts[HitResultType.Good] = 0;
-			resultCounts[HitResultType.Great] = 0;
-			resultCounts[HitResultType.Perfect] = 0;
+            foreach (var type in (HitResultType[])Enum.GetValues(typeof(HitResultType)))
+                resultCounts[type] = 0;
 
             curRawScore = 0;
             maxRawScore = 0;
         }
+
+        public float GetRankAccuracy(RankType type) => RankAccuracies[type];
 
         public virtual void ApplyMap(IPlayableMap map)
         {
@@ -119,6 +130,21 @@ namespace PBGame.Rulesets.Scoring
             InvokeNewJudgement(result);
         }
 
+        public RankType CalculateRank(float acc)
+		{
+			if(acc == RankAccuracies[RankType.X])
+				return RankType.X; // TODO: XH if harder mods applied.
+			else if(acc > RankAccuracies[RankType.S])
+				return RankType.S; // TODO: SH if harder mods applied.
+			else if(acc > RankAccuracies[RankType.A])
+				return RankType.A;
+			else if(acc > RankAccuracies[RankType.B])
+				return RankType.B;
+			else if(acc > RankAccuracies[RankType.C])
+				return RankType.C;
+			return RankType.D;
+		}
+
         public virtual void Dispose()
         {
             resultCounts = null;
@@ -134,24 +160,6 @@ namespace PBGame.Rulesets.Scoring
         {
             return rawScore + (int)(rawScore * Math.Max(0, Combo.Value) * difficultyMultiplier * modMultiplier * 0.04f);
         }
-
-        /// <summary>
-        /// Calculate ranking type from current score progress.
-        /// </summary>
-        protected RankType CalculateRank(float acc)
-		{
-			if(acc == 1d)
-				return RankType.X;
-			else if(acc > 0.95)
-				return RankType.S;
-			else if(acc > 0.9)
-				return RankType.A;
-			else if(acc > 0.8)
-				return RankType.B;
-			else if(acc > 0.7)
-				return RankType.C;
-			return RankType.D;
-		}
 
 		/// <summary>
 		/// Applies state change to the score for specified result.

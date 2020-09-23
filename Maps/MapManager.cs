@@ -76,7 +76,7 @@ namespace PBGame.Maps
             {
                 IMapset mapset = store.Load(id);
 
-                UnityThread.DispatchUnattended(() =>
+                UnityThread.Dispatch(() =>
                 {
                     // If already loaded within all mapsets, replace it.
                     allMapsets.AddOrReplace(mapset);
