@@ -16,6 +16,9 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.11.1 (WIP)
+#### Changes
+- Moved ScoreProcessor creation from GameSession to ModeService.
+- Moved MapImageDisplay component to its proper namespace.
 #### Fixes
 - Fixed internal logic error while saving play records.
 

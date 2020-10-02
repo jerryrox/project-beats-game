@@ -42,5 +42,10 @@ namespace PBGame.Graphics
         /// Returns the color resembling the specified rank type.
         /// </summary>
         ColorPalette GetRankColor(RankType type);
+
+        /// <summary>
+        /// Returns the outline color for the specified rank type.
+        /// </summary>
+        Color GetRankOutlineColor(RankType type);
     }
 }

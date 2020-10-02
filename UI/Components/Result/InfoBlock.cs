@@ -63,7 +63,7 @@ namespace PBGame.UI.Components.Result
                 versionLabel.FontSize = 22;
                 versionLabel.Alignment = TextAnchor.LowerLeft;
             }
-            mapperLabel = CreateChild<Label>("version");
+            mapperLabel = CreateChild<Label>("mapper");
             {
                 mapperLabel.Anchor = AnchorType.BottomRight;
                 mapperLabel.Pivot = PivotType.BottomRight;
@@ -103,7 +103,7 @@ namespace PBGame.UI.Components.Result
             titleLabel.Text = map?.Metadata.GetTitle(preferUnicode);
             artistLabel.Text = map?.Metadata.GetArtist(preferUnicode);
             versionLabel.Text = map?.Detail.Version;
-            mapperLabel.Text = $"mapped by {map.Metadata.Creator}";
+            mapperLabel.Text = $"mapped by {map?.Metadata.Creator ?? ""}";
         }
 
         /// <summary>

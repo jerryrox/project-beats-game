@@ -45,6 +45,11 @@ namespace PBGame.UI.Models
         public IReadOnlyBindable<GameLoadState> LoadState => loadState;
 
         /// <summary>
+        /// Returns the current mode servicer instance.
+        /// </summary>
+        public IModeService ModeService => currentModeService;
+
+        /// <summary>
         /// Returns the game screen.
         /// </summary>
         private GameScreen Screen => ScreenNavigator.Get<GameScreen>();
