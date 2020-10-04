@@ -23,7 +23,6 @@ namespace PBGame.UI.Models
         /// </summary>
         public event Action OnLoginFailed;
 
-        private CacherAgent<string, Texture2D> profileImageAgent;
         private CacherAgent<string, Texture2D> coverImageAgent;
 
         private DropdownContext apiDropdownContext;
@@ -33,7 +32,6 @@ namespace PBGame.UI.Models
         private Bindable<IApiRequest> meRequest = new Bindable<IApiRequest>();
         private BindableBool isLoggingIn = new BindableBool(false);
         private Bindable<Texture2D> coverImage = new Bindable<Texture2D>();
-        private Bindable<Texture2D> profileImage = new Bindable<Texture2D>();
 
 
         /// <summary>
@@ -75,11 +73,6 @@ namespace PBGame.UI.Models
         /// Returns the cover image of the currently logged in user.
         /// </summary>
         public IReadOnlyBindable<Texture2D> CoverImage => coverImage;
-
-        /// <summary>
-        /// Returns the profile image of the currently logged in user.
-        /// </summary>
-        public IReadOnlyBindable<Texture2D> ProfileImage => profileImage;
 
         /// <summary>
         /// Returns the type of the currently selected provider.
@@ -130,9 +123,6 @@ namespace PBGame.UI.Models
 
             coverImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             coverImageAgent.OnFinished += OnCoverImageLoaded;
-
-            profileImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
-            profileImageAgent.OnFinished += OnProfileImageLoaded;
         }
 
         /// <summary>
@@ -243,7 +233,6 @@ namespace PBGame.UI.Models
             isLoggingIn.Value = false;
 
             DisposeCoverImage();
-            DisposeProfileImage();
         }
 
         /// <summary>
@@ -345,27 +334,6 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
-        /// Requests profile image for current user.
-        /// </summary>
-        private void RequestProfileImage()
-        {
-            DisposeProfileImage();
-
-            var user = CurrentUser.Value;
-            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
-                profileImageAgent.Request(user.OnlineUser.AvatarImage);
-        }
-
-        /// <summary>
-        /// Disposes current profile image request and the state.
-        /// </summary>
-        private void DisposeProfileImage()
-        {
-            profileImage.Value = null;
-            profileImageAgent.Remove();
-        }
-
-        /// <summary>
         /// Event called when the last login api setting has been changed.
         /// </summary>
         private void OnLastLoginApiChange(ApiProviderType type)
@@ -429,17 +397,11 @@ namespace PBGame.UI.Models
         private void OnUserChange(IUser user)
         {
             RequestCoverImage();
-            RequestProfileImage();
         }
 
         /// <summary>
         /// Event called when the user's cover image has been loaded.
         /// </summary>
         private void OnCoverImageLoaded(Texture2D image) => coverImage.Value = image;
-
-        /// <summary>
-        /// Event called when the user's profile image has been loaded.
-        /// </summary>
-        private void OnProfileImageLoaded(Texture2D image) => profileImage.Value = image;
     }
 }

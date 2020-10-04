@@ -1,17 +1,18 @@
 using PBGame.UI.Models;
+using PBGame.UI.Components.Common;
+using PBGame.Data.Users;
 using PBFramework.UI;
 using PBFramework.Graphics;
-using PBFramework.Graphics.Effects.Components;
 using PBFramework.Dependencies;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PBGame.UI.Components.ProfileMenu
 {
     public class ProfileImage : UguiObject {
 
         private ISprite glow;
-        private ISprite mask;
-        private ITexture image;
+        private AvatarDisplay avatarDisplay;
 
 
         [ReceivesDependency]
@@ -28,20 +29,12 @@ namespace PBGame.UI.Components.ProfileMenu
                 glow.SpriteName = "glow-circle-32";
                 glow.Color = new Color(0f, 0f, 0f, 0.5f);
             }
-            mask = CreateChild<UguiSprite>("mask", 1);
+            avatarDisplay = CreateChild<AvatarDisplay>("avatar", 1);
             {
-                mask.Anchor = AnchorType.Fill;
-                mask.RawSize = Vector2.zero;
-                mask.Color = new Color(0.125f, 0.125f, 0.125f);
-                mask.SpriteName = "circle-320";
-
-                mask.AddEffect(new MaskEffect());
-
-                image = mask.CreateChild<UguiTexture>("image", 2);
-                {
-                    image.Anchor = AnchorType.Fill;
-                    image.RawSize = Vector2.zero;
-                }
+                avatarDisplay.Anchor = AnchorType.Fill;
+                avatarDisplay.Offset = Offset.Zero;
+                avatarDisplay.MaskSprite = "circle-320";
+                avatarDisplay.ImageType = Image.Type.Simple;
             }
 
             OnEnableInited();
@@ -51,25 +44,21 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            Model.ProfileImage.BindAndTrigger(OnProfileImageChange);
+            Model.CurrentUser.BindAndTrigger(OnUserChange);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            Model.ProfileImage.OnNewValue -= OnProfileImageChange;
+            Model.CurrentUser.OnNewValue -= OnUserChange;
 
-            image.Active = false;
+            avatarDisplay.RemoveSource();
         }
 
         /// <summary>
-        /// Event called when the user's profile image is changed.
+        /// Event called when the user has changed.
         /// </summary>
-        private void OnProfileImageChange(Texture2D profileImage)
-        {
-            image.Texture = profileImage;
-            image.Active = profileImage != null;
-        }
+        private void OnUserChange(IUser user) => avatarDisplay.SetSource(user);
     }
 }

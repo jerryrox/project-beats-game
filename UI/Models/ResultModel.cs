@@ -20,12 +20,8 @@ namespace PBGame.UI.Models
 {
     public class ResultModel : BaseModel
     {
-
-        private CacherAgent<string, Texture2D> avatarAgent;
-
         private Bindable<IPlayableMap> map = new Bindable<IPlayableMap>();
         private Bindable<IRecord> record = new Bindable<IRecord>();
-        private Bindable<Texture2D> avatarImage = new Bindable<Texture2D>();
 
 
         /// <summary>
@@ -42,11 +38,6 @@ namespace PBGame.UI.Models
         /// Returns the current record instance being displayed for.
         /// </summary>
         public IReadOnlyBindable<IRecord> Record => record;
-
-        /// <summary>
-        /// Returns the avatar image currently loaded.
-        /// </summary>
-        public IReadOnlyBindable<Texture2D> AvatarImage => avatarImage;
 
         /// <summary>
         /// Returns whether unicode is preferred.
@@ -68,27 +59,16 @@ namespace PBGame.UI.Models
         private IGameConfiguration GameConfiguration { get; set; }
 
         [ReceivesDependency]
-        private IWebImageCacher WebImageCacher { get; set; }
-
-        [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
 
-        [InitWithDependency]
-        private void Init()
-        {
-            avatarAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
-            avatarAgent.OnFinished += OnAvatarLoaded;
-        }
-
         protected override void OnPostHide()
         {
             base.OnPostHide();
 
-            Debug.Log("onPostHide");
             SetMap(null);
             SetRecord(null);
         }
@@ -166,33 +146,6 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Sets the record to display.
         /// </summary>
-        private void SetRecord(IRecord record)
-        {
-            RemoveAvatar();
-
-            this.record.Value = record;
-
-            if (record != null)
-            {
-                avatarAgent.Request(record.AvatarUrl);
-            }
-        }
-
-        /// <summary>
-        /// Removes currently loaded avatar image and stops on-going request if applicable.
-        /// </summary>
-        private void RemoveAvatar()
-        {
-            avatarImage.Value = null;
-            avatarAgent.Remove();
-        }
-
-        /// <summary>
-        /// Event called when avatar agent has loaded the avatar image.
-        /// </summary>
-        private void OnAvatarLoaded(Texture2D image)
-        {
-            avatarImage.Value = image;
-        }
+        private void SetRecord(IRecord record) => this.record.Value = record;
     }
 }

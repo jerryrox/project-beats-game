@@ -14,11 +14,8 @@ namespace PBGame.UI.Models
 {
     public class MenuBarModel : BaseModel {
 
-        private CacherAgent<string, Texture2D> profileImageCacher;
-
         private Bindable<MenuType> focusedMenu = new Bindable<MenuType>(MenuType.None);
         private Bindable<INavigationView> currentOverlay = new Bindable<INavigationView>();
-        private Bindable<Texture2D> profileImage = new Bindable<Texture2D>();
         private BindableBool isMusicButtonActive = new BindableBool(false);
         private Bindable<Color> barColor = new Bindable<Color>();
 
@@ -32,11 +29,6 @@ namespace PBGame.UI.Models
         /// Returns the menu overlay currently displayed.
         /// </summary>
         public IReadOnlyBindable<INavigationView> CurrentOverlay => currentOverlay;
-
-        /// <summary>
-        /// Returns the profile image of the current online user.
-        /// </summary>
-        public IReadOnlyBindable<Texture2D> ProfileImage => profileImage;
 
         /// <summary>
         /// Returns whether the music button should be activated.
@@ -65,16 +57,6 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IApi Api { get; set; }
 
-        [ReceivesDependency]
-        private IWebImageCacher WebImageCacher { get; set; }
-
-
-        [InitWithDependency]
-        private void Init()
-        {
-            profileImageCacher = new CacherAgent<string, Texture2D>(WebImageCacher);
-            profileImageCacher.OnFinished += OnProfileImageLoaded;
-        }
 
         /// <summary>
         /// Sets the current menu type.
@@ -98,7 +80,6 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
-            CurrentUser.BindAndTrigger(OnUserChange);
             ScreenNavigator.CurrentScreen.BindAndTrigger(OnScreenChange);
 
             SetMenu(MenuType.None);
@@ -108,17 +89,9 @@ namespace PBGame.UI.Models
         {
             base.OnPreHide();
 
-            CurrentUser.OnNewValue -= OnUserChange;
             ScreenNavigator.CurrentScreen.OnNewValue -= OnScreenChange;
 
             HideMenu();
-        }
-
-        protected override void OnPostHide()
-        {
-            base.OnPostHide();
-
-            RemoveProfileImage();
         }
 
         /// <summary>
@@ -163,15 +136,6 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
-        /// Removes current profile image.
-        /// </summary>
-        private void RemoveProfileImage()
-        {
-            profileImage.Value = null;
-            profileImageCacher.Remove();
-        }
-
-        /// <summary>
         /// Returns the appropriate menu overlay for the specified type.
         /// </summary>
         private INavigationView GetMenuFor(MenuType type)
@@ -194,24 +158,6 @@ namespace PBGame.UI.Models
         {
             focusedMenu.Value = MenuType.None;
             ReleaseMenu();
-        }
-
-        /// <summary>
-        /// Event called when the web image cacher has returned a new proile image.
-        /// </summary>
-        private void OnProfileImageLoaded(Texture2D image)
-        {
-            profileImage.Value = image;
-        }
-
-        /// <summary>
-        /// Event called on user profile change.
-        /// </summary>
-        private void OnUserChange(IUser user)
-        {
-            RemoveProfileImage();
-            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
-                profileImageCacher.Request(user.OnlineUser.AvatarImage);
         }
 
         /// <summary>
