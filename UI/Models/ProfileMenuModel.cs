@@ -195,7 +195,7 @@ namespace PBGame.UI.Models
         public void VisitUserPage()
         {
             var user = CurrentUser.Value;
-            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.ProfilePage))
+            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.ProfilePage))
                 Application.OpenURL(user.OnlineUser.ProfilePage);
         }
 
@@ -331,7 +331,7 @@ namespace PBGame.UI.Models
             DisposeCoverImage();
 
             var user = CurrentUser.Value;
-            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.CoverImage))
+            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.CoverImage))
                 coverImageAgent.Request(user.OnlineUser.CoverImage);
         }
 
@@ -352,7 +352,7 @@ namespace PBGame.UI.Models
             DisposeProfileImage();
 
             var user = CurrentUser.Value;
-            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
+            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
                 profileImageAgent.Request(user.OnlineUser.AvatarImage);
         }
 

@@ -67,7 +67,7 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             var gameMode = Model.GameMode.Value;
             var user = Model.CurrentUser.Value;
-            if(user == null)
+            if(!user.IsOnlineUser)
                 return;
 
             var stats = user.GetStatistics(gameMode);

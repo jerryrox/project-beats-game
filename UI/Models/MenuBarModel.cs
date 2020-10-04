@@ -210,7 +210,7 @@ namespace PBGame.UI.Models
         private void OnUserChange(IUser user)
         {
             RemoveProfileImage();
-            if(user != null && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
+            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.AvatarImage))
                 profileImageCacher.Request(user.OnlineUser.AvatarImage);
         }
 

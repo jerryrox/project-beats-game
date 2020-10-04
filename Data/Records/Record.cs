@@ -68,22 +68,16 @@ namespace PBGame.Data.Records
         /// </summary>
         public Record(IPlayableMap map, IUser user, IScoreProcessor scoreProcessor, int playTime)
         {
-            if(map == null) throw new ArgumentNullException(nameof(map));
+            if(map == null)
+                throw new ArgumentNullException(nameof(map));
+            if(user == null)
+                throw new ArgumentNullException(nameof(user));
 
             InitializeAsNew();
 
-            if (user == null)
-            {
-                UserId = Guid.Empty;
-                Username = "";
-                AvatarUrl = "";
-            }
-            else
-            {
-                UserId = user.Id;
-                Username = user.Username;
-                AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
-            }
+            UserId = user.Id;
+            Username = user.Username;
+            AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
 
             MapHash = map.Detail.Hash;
             GameMode = map.PlayableMode;

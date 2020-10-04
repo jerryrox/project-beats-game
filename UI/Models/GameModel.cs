@@ -140,17 +140,7 @@ namespace PBGame.UI.Models
 
                     // Retrieve user and user stats.
                     var user = UserManager.CurrentUser.Value;
-                    if(user == null)
-                    {
-                        listener?.SetFinished();
-                        return;
-                    }
                     var userStats = user.GetStatistics(currentMap.PlayableMode);
-                    if (userStats == null)
-                    {
-                        listener?.SetFinished();
-                        return;
-                    }
 
                     // Record the play result to records database and user statistics.
                     Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
