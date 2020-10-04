@@ -19,18 +19,18 @@ namespace PBGame.Data.Users
         Task Reload(TaskListener listener = null);
 
         /// <summary>
+        /// Switches current user to offline user.
+        /// </summary>
+        IUser SetUserOffline();
+
+        /// <summary>
         /// Switches current user to the user of specified online user.
         /// </summary>
-        Task<IUser> SetUser(IOnlineUser onlineUser, TaskListener<IUser> listener = null);
+        IUser SetUser(IOnlineUser onlineUser);
 
         /// <summary>
         /// Saves the specified user to store.
         /// </summary>
         void SaveUser(IUser user);
-
-        /// <summary>
-        /// Removes current user.
-        /// </summary>
-        void RemoveUser();
     }
 }

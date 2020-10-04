@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Networking.API;
 using PBFramework.Data.Bindables;
@@ -12,8 +10,10 @@ namespace PBGame.Data.Users
 {
     public class UserManager : IUserManager {
 
+        private static User offlineUser = new User();
+
         private IUserStore userStore;
-        private Bindable<IUser> currentUser;
+        private Bindable<IUser> currentUser = new Bindable<IUser>(offlineUser);
         private IDependencyContainer dependencies;
 
 
@@ -27,7 +27,6 @@ namespace PBGame.Data.Users
             this.dependencies = dependencies;
 
             userStore = new UserStore();
-            currentUser = new Bindable<IUser>();
         }
 
         public Task Reload(TaskListener listener = null)
@@ -40,29 +39,26 @@ namespace PBGame.Data.Users
             });
         }
 
-        public Task<IUser> SetUser(IOnlineUser onlineUser, TaskListener<IUser> listener = null)
+        public IUser SetUserOffline()
         {
-            if(onlineUser == null)
-                throw new ArgumentNullException(nameof(onlineUser));
-            return Task.Run<IUser>(() =>
-            {
-                var user = userStore.LoadUser(onlineUser) as User;
+            return currentUser.Value = offlineUser;
+        }
 
-                UnityThread.DispatchUnattended(() =>
-                {
-                    dependencies.Inject(user);
-                    currentUser.Value = user;
+        public IUser SetUser(IOnlineUser onlineUser)
+        {
+            if (onlineUser == null || !onlineUser.IsOnline)
+                return SetUserOffline();
 
-                    listener?.SetFinished(user);
-                    return null;
-                });
-                return user;
-            });
+            var user = userStore.LoadUser(onlineUser) as User;
+            dependencies.Inject(user);
+            currentUser.Value = user;
+            return user;
         }
 
         public void SaveUser(IUser user)
         {
-            if(user == null) return;
+            if(user == null || !user.IsOnlineUser)
+                return;
             if (!(user is User u))
                 throw new ArgumentException($"user must be a type of {nameof(User)}");
 
