@@ -29,13 +29,22 @@ namespace PBGame.Data.Users
         public int Level { get; set; } = 1;
 
         [JsonIgnore]
-        public float ExpProgress => (float)CurExp / (float)MaxExp;
+        public float ExpProgress
+        {
+            get
+            {
+                float maxExp = MaxExp;
+                if(maxExp == 0f)
+                    return 0f;
+                return (float)CurExp / (float)MaxExp;
+            }
+        }
 
         [JsonIgnore]
         public long CurExp => TotalScore - GetRequiredScore(Level - 1);
 
         [JsonIgnore]
-        public long MaxExp => GetRequiredScore(Level);
+        public long MaxExp => GetRequiredScore(Level) - GetRequiredScore(Level - 1);
 
         public long TotalScore { get; set; }
 
