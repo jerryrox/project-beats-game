@@ -23,6 +23,7 @@ Slowly making progress 🧩
 #### Fixes
 - Fixed internal logic error while saving play records.
 - Fixed exp displaying wrongly.
+- Fixed best score evaluation being done using ALL records, not filtered by current user's id.
 
 ### 0.11.0
 #### New features
