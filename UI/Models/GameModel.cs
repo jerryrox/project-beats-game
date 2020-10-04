@@ -25,6 +25,7 @@ namespace PBGame.UI.Models
         private IPlayableMap currentMap;
         private IModeService currentModeService;
         private IGameSession currentSession;
+        private IRecord lastRecord;
 
         private Bindable<GameLoadState> loadState = new Bindable<GameLoadState>(GameLoadState.Idle);
 
@@ -115,8 +116,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Makes the user exit the game with a clear result.
         /// </summary>
-        // TODO: Navigate to ResultScreen.
-        public void ExitGameWithClear() => ExitTo<PrepareScreen>();
+        public void ExitGameWithClear() => ExitTo<ResultScreen>();
 
         /// <summary>
         /// Makes the user exit the game back to preparation screen.
@@ -144,6 +144,8 @@ namespace PBGame.UI.Models
 
                     // Record the play result to records database and user statistics.
                     Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
+                    lastRecord = newRecord;
+                    Debug.LogWarning("Last record set");
                     var records = await RecordManager.GetRecords(currentMap, listener?.CreateSubListener<List<IRecord>>());
 
                     // Save as cleared play.
@@ -187,6 +189,8 @@ namespace PBGame.UI.Models
 
             currentMap = null;
             currentModeService = null;
+            lastRecord = null;
+            Debug.Log("Disposing last record");
         }
 
         /// <summary>
@@ -195,9 +199,15 @@ namespace PBGame.UI.Models
         private void ExitTo<T>()
             where T : MonoBehaviour, INavigationView
         {
+            var record = lastRecord;
+            Debug.Log("Acquired last record cache");
             var screen = ScreenNavigator.Show<T>();
-            // TODO: If Result screen, pass the newRecord object to ResultScreen.
-            // if(screen is ResultScreen)
+            Debug.Log("Screen is result screen? " + (screen is ResultScreen));
+            if (screen is ResultScreen resultScreen)
+            {
+                Debug.Log("Setting record");
+                resultScreen.Model.Setup(currentMap, record);
+            }
         }
 
         /// <summary>

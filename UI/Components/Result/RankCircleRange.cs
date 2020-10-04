@@ -38,6 +38,7 @@ namespace PBGame.UI.Components.Result
                 sprite.Anchor = AnchorType.Fill;
                 sprite.Offset = new Offset(4f);
                 sprite.SpriteName = "circle-320";
+                sprite.ImageType = Image.Type.Filled;
                 sprite.SetRadial360Fill(Image.Origin360.Top);
                 sprite.Active = false;
             }
@@ -84,9 +85,10 @@ namespace PBGame.UI.Components.Result
         /// </summary>
         private void SetRangeSprite(UguiSprite sprite, Color color, float accFrom, float accTo)
         {
-            float offsetAngle = 2f;
+            float offsetAngle = 1f;
+            sprite.Active = true;
             sprite.Color = color;
-            sprite.RotationZ = accFrom * -360f + offsetAngle;
+            sprite.RotationZ = accFrom * -360f - offsetAngle;
             sprite.FillAmount = (accTo - accFrom) - (offsetAngle * 2f / 360f);
         }
 

@@ -55,6 +55,8 @@ namespace PBGame.UI.Components.Result
                 meterSprite.Anchor = AnchorType.Fill;
                 meterSprite.Offset = Offset.Zero;
                 meterSprite.SpriteName = "circle-320";
+                meterSprite.ImageType = Image.Type.Filled;
+                meterSprite.SetRadial360Fill(Image.Origin360.Top);
 
                 meterGradient = meterSprite.AddEffect(new GradientEffect());
                 meterGradient.Component.direction = UIGradient.Direction.Vertical;

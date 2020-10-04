@@ -21,18 +21,30 @@ namespace PBGame.UI.Components.Common
         private int curIndex = 0;
         private Color tintColor = Color.white;
 
+        private float alpha = 1f;
+
 
 
         public Color Color
         {
             get => tintColor;
-            set => SetTint(value);
+            set
+            {
+                SetTint(value);
+                Alpha = value.a;
+            }
         }
 
-        /// <summary>
-        /// Unsupported property.
-        /// </summary>
-        public float Alpha { get; set; }
+        public float Alpha
+        {
+            get => alpha;
+            set
+            {
+                if (!transitionAni.IsPlaying)
+                    textures[curIndex].Alpha = alpha;
+                alpha = value;
+            }
+        }
 
         /// <summary>
         /// Returns the texture displayer at current index.
@@ -50,6 +62,7 @@ namespace PBGame.UI.Components.Common
                 texture.Anchor = AnchorType.Fill;
                 texture.RawSize = Vector2.zero;
                 texture.Alpha = 0f;
+                texture.Active = false;
             }
 
             transitionAni = new Anime();
@@ -57,8 +70,8 @@ namespace PBGame.UI.Components.Common
             {
                 for (int i = 0; i < textures.Length; i++)
                 {
-                    var alpha = textures[i].Alpha;
-                    textures[i].Alpha = Easing.Linear(progress, alpha, i == curIndex ? 1 - alpha : -alpha, 0f);
+                    var a = textures[i].Alpha;
+                    textures[i].Alpha = Easing.Linear(progress, a, i == curIndex ? alpha - a : -a, 0f);
                 }
             })
                 .AddTime(0f, 0f)

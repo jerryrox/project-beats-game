@@ -112,7 +112,7 @@ namespace PBGame.UI.Components.Result
             scoreLabel.Text = (record?.Score ?? 0).ToString("N0");
             comboLabel.Text = $"x{(record?.MaxCombo ?? 0).ToString("N0")}";
             nameLabel.Text = record?.Username ?? "";
-            dateLabel.Text = record?.Date.ToString("YYYY/MM/DD HH:MM:SS") ?? "";
+            dateLabel.Text = record?.Date.ToString("yyyy-MM-dd HH:mm:ss") ?? "";
         }
 
         /// <summary>
