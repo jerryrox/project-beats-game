@@ -145,8 +145,7 @@ namespace PBGame.UI.Models
                     // Record the play result to records database and user statistics.
                     Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
                     lastRecord = newRecord;
-                    Debug.LogWarning("Last record set");
-                    var records = await RecordManager.GetRecords(currentMap, listener?.CreateSubListener<List<IRecord>>());
+                    var records = await RecordManager.GetRecords(currentMap, user, listener?.CreateSubListener<List<IRecord>>());
 
                     // Save as cleared play.
                     if (scoreProcessor.IsFinished)
@@ -190,7 +189,6 @@ namespace PBGame.UI.Models
             currentMap = null;
             currentModeService = null;
             lastRecord = null;
-            Debug.Log("Disposing last record");
         }
 
         /// <summary>
@@ -200,14 +198,9 @@ namespace PBGame.UI.Models
             where T : MonoBehaviour, INavigationView
         {
             var record = lastRecord;
-            Debug.Log("Acquired last record cache");
             var screen = ScreenNavigator.Show<T>();
-            Debug.Log("Screen is result screen? " + (screen is ResultScreen));
             if (screen is ResultScreen resultScreen)
-            {
-                Debug.Log("Setting record");
                 resultScreen.Model.Setup(currentMap, record);
-            }
         }
 
         /// <summary>

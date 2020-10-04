@@ -22,6 +22,7 @@ Slowly making progress 🧩
 - Changed the way offline user is handled by UserManager.
 #### Fixes
 - Fixed internal logic error while saving play records.
+- Fixed exp displaying wrongly.
 
 ### 0.11.0
 #### New features
