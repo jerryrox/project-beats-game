@@ -18,7 +18,7 @@ namespace PBGame.UI.Components.Result
 
         private Label scoreLabel;
         private Label comboLabel;
-        private UguiTexture profileTexture;
+        private AvatarDisplay avatarDisplay;
         private Label nameLabel;
         private Label dateLabel;
 
@@ -53,21 +53,12 @@ namespace PBGame.UI.Components.Result
                 comboLabel.Alignment = TextAnchor.MiddleRight;
                 comboLabel.FontSize = 28;
             }
-            var profileMask = CreateChild<UguiSprite>("profile-mask");
+            avatarDisplay = CreateChild<AvatarDisplay>("avatar");
             {
-                profileMask.Pivot = PivotType.Right;
-                profileMask.X = -200f;
-                profileMask.Size = new Vector2(64f, 64f);
-                profileMask.Color = Color.black;
-                profileMask.SpriteName = "circle-32";
-                profileMask.ImageType = Image.Type.Sliced;
-                profileMask.AddEffect(new MaskEffect());
-
-                profileTexture = profileMask.CreateChild<UguiTexture>("texture");
-                {
-                    profileTexture.Anchor = AnchorType.Fill;
-                    profileTexture.Offset = Offset.Zero;
-                }
+                avatarDisplay.Pivot = PivotType.Right;
+                avatarDisplay.X = -200f;
+                avatarDisplay.Size = new Vector2(64f, 64f);
+                avatarDisplay.Color = Color.black;
             }
             nameLabel = CreateChild<Label>("name");
             {
@@ -93,7 +84,6 @@ namespace PBGame.UI.Components.Result
             base.OnEnableInited();
 
             Model.Record.BindAndTrigger(OnRecordChanged);
-            Model.AvatarImage.BindAndTrigger(OnAvatarChanged);
         }
         
         protected override void OnDisable()
@@ -101,7 +91,8 @@ namespace PBGame.UI.Components.Result
             base.OnDisable();
 
             Model.Record.Unbind(OnRecordChanged);
-            Model.AvatarImage.Unbind(OnAvatarChanged);
+
+            avatarDisplay.RemoveSource();
         }
 
         /// <summary>
@@ -113,15 +104,8 @@ namespace PBGame.UI.Components.Result
             comboLabel.Text = $"x{(record?.MaxCombo ?? 0).ToString("N0")}";
             nameLabel.Text = record?.Username ?? "";
             dateLabel.Text = record?.Date.ToString("yyyy-MM-dd HH:mm:ss") ?? "";
-        }
 
-        /// <summary>
-        /// Event called on avatar image change.
-        /// </summary>
-        private void OnAvatarChanged(Texture2D image)
-        {
-            profileTexture.Texture = image;
-            profileTexture.Active = image != null;
+            avatarDisplay.SetSource(record?.AvatarUrl);
         }
     }
 }
