@@ -22,10 +22,12 @@ namespace PBGame.UI.Navigations.Screens
         {
             var blur = CreateChild<BlurDisplay>("blur");
             {
+                blur.Anchor = AnchorType.Fill;
                 blur.Offset = Offset.Zero;
 
                 var darken = blur.CreateChild<UguiSprite>("darken");
                 {
+                    darken.Anchor = AnchorType.Fill;
                     darken.Offset = Offset.Zero;
                     darken.Color = new Color(0f, 0f, 0f, 0.25f);
                 }

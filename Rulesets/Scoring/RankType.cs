@@ -23,9 +23,9 @@ namespace PBGame.Rulesets.Scoring
 		/// </summary>
         public static string ToDisplayedString(this RankType context)
         {
-            if (context == RankType.XH || context == RankType.SH)
+            if (context == RankType.XH || context == RankType.X)
                 return "SS";
-			if(context == RankType.X)
+			if(context == RankType.SH)
                 return "S";
             return context.ToString();
         }

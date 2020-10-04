@@ -88,6 +88,7 @@ namespace PBGame.UI.Models
         {
             base.OnPostHide();
 
+            Debug.Log("onPostHide");
             SetMap(null);
             SetRecord(null);
         }
@@ -149,7 +150,7 @@ namespace PBGame.UI.Models
             yield return RankType.C;
             yield return RankType.B;
             yield return RankType.A;
-            // TODO: SH if used harder mods.
+            // TODO: Change to SH if used harder mods.
             yield return RankType.S;
         }
 
