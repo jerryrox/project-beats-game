@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Rulesets;
 using PBGame.Networking.API;
@@ -16,14 +15,17 @@ namespace PBGame.Data.Users
         /// Table of statistic information for each game mode.
         /// </summary>
         [JsonProperty]
-        private Dictionary<GameModeType, UserStatistics> statistics { get; set; }
+        private Dictionary<GameModeType, UserStatistics> statistics { get; set; } = new Dictionary<GameModeType, UserStatistics>();
 
 
         [JsonIgnore]
         public IOnlineUser OnlineUser { get; set; }
 
         [Indexed]
-        public string OnlineId { get; set; }
+        public string OnlineId { get; set; } = "";
+
+        [JsonIgnore]
+        public bool IsOnlineUser => OnlineUser != null && OnlineUser.IsOnline;
 
         [JsonIgnore]
         public string Username => OnlineUser.Username;
@@ -49,7 +51,7 @@ namespace PBGame.Data.Users
         public User() {}
 
         /// <summary>
-        /// Constructor for a new user data.
+        /// Initializes a new User using the specified API online user.
         /// </summary>
         public User(IOnlineUser onlineUser)
         {
@@ -58,7 +60,6 @@ namespace PBGame.Data.Users
             OnlineUser = onlineUser;
             OnlineId = onlineUser.Id;
             JoinedDate = DateTime.Now;
-            statistics = new Dictionary<GameModeType, UserStatistics>();
         }
 
         [InitWithDependency]
