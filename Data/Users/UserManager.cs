@@ -10,29 +10,32 @@ namespace PBGame.Data.Users
 {
     public class UserManager : IUserManager {
 
-        private static User offlineUser = new User();
-
+        private User offlineUser;
         private IUserStore userStore;
-        private Bindable<IUser> currentUser = new Bindable<IUser>(offlineUser);
+        private Bindable<IUser> currentUser;
         private IDependencyContainer dependencies;
 
 
         public IReadOnlyBindable<IUser> CurrentUser => currentUser;
 
 
-        public UserManager(IDependencyContainer dependencies)
+        public UserManager(IApi api, IDependencyContainer dependencies)
         {
             if(dependencies == null) throw new ArgumentNullException(nameof(dependencies));
 
             this.dependencies = dependencies;
 
+            offlineUser = new User(api.OfflineUser);
+
             userStore = new UserStore();
+            currentUser = new Bindable<IUser>(offlineUser);
         }
 
         public Task Reload(TaskListener listener = null)
         {
             return Task.Run(() =>
             {
+                dependencies.Inject(offlineUser);
                 userStore.Reload();
 
                 listener?.SetFinished();

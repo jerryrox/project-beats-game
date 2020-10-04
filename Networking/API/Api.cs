@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Networking.API.Osu;
 using PBGame.Networking.API.Bloodcat;
@@ -19,8 +18,6 @@ namespace PBGame.Networking.API
 {
     public class Api : IApi {
 
-        private readonly static IOnlineUser OfflineUser = new OfflineUser();
-
         private IEnvConfiguration envConfig;
         private INotificationBox notificationBox;
 
@@ -29,6 +26,8 @@ namespace PBGame.Networking.API
         private Bindable<IOnlineUser> user = new Bindable<IOnlineUser>(new OfflineUser());
         private Bindable<Authentication> authentication = new Bindable<Authentication>();
 
+
+        public IOnlineUser OfflineUser { get; private set; } = new OfflineUser();
 
         public IReadOnlyBindable<IOnlineUser> User => user;
 
