@@ -147,7 +147,7 @@ namespace PBGame.UI.Components.Result
             rankGlowSprite.Tint = rankColor;
 
             rankLabel.Color = rankColor;
-            rankLabel.Text = rank.ToString();
+            rankLabel.Text = rank.ToDisplayedString();
             rankShadowEffect.Component.effectColor = rankOutlineColor;
 
             accuracyLabel.Text = accuracy.ToString("P2");
