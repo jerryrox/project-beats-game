@@ -119,7 +119,8 @@ namespace PBGame.UI.Models
         /// </summary>
         public void Retry()
         {
-            // TODO:
+            ScreenNavigator.Hide<ResultScreen>();
+            OverlayNavigator.Show<GameLoadOverlay>();
         }
 
         /// <summary>
