@@ -32,11 +32,11 @@ namespace PBGame.Data.Records
             });
         }
 
-        public Task<List<IRecord>> GetRecords(IPlayableMap map, TaskListener<List<IRecord>> listener = null)
+        public Task<List<IRecord>> GetRecords(IPlayableMap map, IUser user = null, TaskListener<List<IRecord>> listener = null)
         {
             return Task.Run(() =>
             {
-                using (var records = recordStore.GetRecords(map))
+                using (var records = recordStore.GetRecords(map, user))
                 {
                     var recordList = records.Cast<IRecord>().ToList();
                     listener?.SetFinished(recordList);

@@ -31,6 +31,11 @@ namespace PBGame.Data.Records
         string Username { get; }
 
         /// <summary>
+        /// Returns the url to the user's profile image.
+        /// </summary>
+        string AvatarUrl { get; }
+
+        /// <summary>
         /// Returns the rank achieved.
         /// </summary>
         RankType Rank { get; }

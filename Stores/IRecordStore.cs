@@ -10,9 +10,9 @@ namespace PBGame.Stores
     public interface IRecordStore : IDatabaseBackedStore<Record> {
 
         /// <summary>
-        /// Returns the database result for the records of specified map.
+        /// Returns the database result for the records of specified map and optionally, the user.
         /// </summary>
-        IDatabaseResult<Record> GetRecords(IPlayableMap map);
+        IDatabaseResult<Record> GetRecords(IPlayableMap map, IUser user = null);
 
         /// <summary>
         /// Saves the specified record to the store.

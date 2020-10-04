@@ -34,8 +34,8 @@ namespace PBGame.Graphics
         private Dictionary<RankType, ColorPalette> rankColors = new Dictionary<RankType, ColorPalette>()
         {
             { RankType.XH, new ColorPalette(HexColor.Create("CCD9E3")) },
-            { RankType.X, new ColorPalette(HexColor.Create("CCD9E3")) },
-            { RankType.SH, new ColorPalette(HexColor.Create("4EB1FF")) },
+            { RankType.SH, new ColorPalette(HexColor.Create("CCD9E3")) },
+            { RankType.X, new ColorPalette(HexColor.Create("4EB1FF")) },
             { RankType.S, new ColorPalette(HexColor.Create("4EB1FF")) },
             { RankType.A, new ColorPalette(HexColor.Create("00C300")) },
             { RankType.B, new ColorPalette(HexColor.Create("EAD500")) },
@@ -90,5 +90,7 @@ namespace PBGame.Graphics
             Logger.LogWarning($"ColorPreset.GetRankColor - Unknown type: {type}");
             return new ColorPalette(Color.white);
         }
+
+        public Color GetRankOutlineColor(RankType type) => GetRankColor(type).Darken(0.65f);
     }
 }

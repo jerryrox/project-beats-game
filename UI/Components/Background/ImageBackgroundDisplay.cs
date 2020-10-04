@@ -1,4 +1,5 @@
 using PBGame.UI.Models.Background;
+using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;

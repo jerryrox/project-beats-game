@@ -1,5 +1,5 @@
 using PBGame.UI.Models;
-using PBGame.UI.Components;
+using PBGame.UI.Components.Common;
 using PBGame.UI.Components.MusicMenu;
 using PBGame.Maps;
 using PBGame.Rulesets.Maps;

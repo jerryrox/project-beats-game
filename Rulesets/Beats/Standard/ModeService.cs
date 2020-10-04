@@ -1,5 +1,6 @@
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Beats.Standard.Maps;
+using PBGame.Rulesets.Beats.Standard.Scoring;
 using PBGame.Rulesets.Beats.Standard.Difficulty;
 using PBGame.Rulesets.Beats.Standard.Judgements;
 using PBFramework.Graphics;
@@ -21,6 +22,8 @@ namespace PBGame.Rulesets.Beats.Standard
         public override Rulesets.Maps.IMapProcessor CreateProcessor(IPlayableMap map) => new Standard.Maps.MapProcessor(map);
 
         public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map) => new DifficultyCalculator(map);
+
+        public override Rulesets.Scoring.IScoreProcessor CreateScoreProcessor() => new ScoreProcessor();
 
         public override Rulesets.Judgements.HitTiming CreateTiming() => new HitTiming();
 

@@ -15,9 +15,15 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.11.1 (WIP)
+### 0.12.0 (WIP)
+#### Changes
+- Moved ScoreProcessor creation from GameSession to ModeService.
+- Moved MapImageDisplay component to its proper namespace.
+- Changed the way offline user is handled by UserManager.
 #### Fixes
 - Fixed internal logic error while saving play records.
+- Fixed exp displaying wrongly.
+- Fixed best score evaluation being done using ALL records, not filtered by current user's id.
 
 ### 0.11.0
 #### New features

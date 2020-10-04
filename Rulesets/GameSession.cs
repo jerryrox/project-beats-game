@@ -139,7 +139,7 @@ namespace PBGame.Rulesets
         public void InvokeSoftInit()
         {
             // Initialize score processor
-            ScoreProcessor = CreateScoreProcessor();
+            ScoreProcessor = Model.ModeService.CreateScoreProcessor();
             ScoreProcessor.ApplyMap(CurrentMap);
             ScoreProcessor.OnLastJudgement += InvokeCompletion;
 
@@ -292,10 +292,5 @@ namespace PBGame.Rulesets
         /// Creates a new instance of the game gui under the specified container object.
         /// </summary>
         protected abstract GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies);
-
-        /// <summary>
-        /// Creates a new instance of the score processor.
-        /// </summary>
-        protected abstract IScoreProcessor CreateScoreProcessor();
     }
 }

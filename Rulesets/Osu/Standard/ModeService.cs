@@ -28,6 +28,9 @@ namespace PBGame.Rulesets.Osu.Standard
         public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map) => null;
 
         // TODO:
+        public override Rulesets.Scoring.IScoreProcessor CreateScoreProcessor() => null;
+
+        // TODO:
         public override Rulesets.Judgements.HitTiming CreateTiming() => null;
 
         // TODO:
