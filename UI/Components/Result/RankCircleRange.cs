@@ -37,7 +37,7 @@ namespace PBGame.UI.Components.Result
                 var sprite = rangeSprites[i] = CreateChild<UguiSprite>($"range{i}");
                 sprite.Anchor = AnchorType.Fill;
                 sprite.Offset = new Offset(4f);
-                sprite.SpriteName = "circle-320";
+                sprite.SpriteName = "outline-circle-296-4";
                 sprite.ImageType = Image.Type.Filled;
                 sprite.SetRadial360Fill(Image.Origin360.Top);
                 sprite.Active = false;
