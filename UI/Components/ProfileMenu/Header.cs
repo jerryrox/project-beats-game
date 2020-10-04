@@ -58,10 +58,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnUserChange(IUser user)
         {
-            if(user != null)
-                nickname.Text = user.Username;
-            else
-                nickname.Text = "";
+            nickname.Text = user.Username;
         }
     }
 }

@@ -10,6 +10,11 @@ namespace PBGame.Networking.API
     public interface IApi {
 
         /// <summary>
+        /// Returns the offline API user instance.
+        /// </summary>
+        IOnlineUser OfflineUser { get; }
+
+        /// <summary>
         /// Returns the current online user.
         /// </summary>
         IReadOnlyBindable<IOnlineUser> User { get; }

@@ -18,6 +18,11 @@ namespace PBGame.Data.Users
         string OnlineId { get; }
 
         /// <summary>
+        /// Returns whether this user is derived from API online user.
+        /// </summary>
+        bool IsOnlineUser { get; }
+
+        /// <summary>
         /// Returns the displayed name of the user.
         /// </summary>
         string Username { get; }

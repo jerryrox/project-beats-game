@@ -363,12 +363,7 @@ namespace PBGame
         {
             api.User.OnValueChanged += (user, oldUser) =>
             {
-                // If user turned online
-                if (user.IsOnline && user != oldUser)
-                    OnUserBecameOnline(user);
-                // If user turned offline
-                else if (!user.IsOnline && user != oldUser)
-                    OnUserBecameOffline(user);
+                OnApiUserChange(user);
             };
         }
 
@@ -427,19 +422,10 @@ namespace PBGame
         /// <summary>
         /// Event called when the user in API has become online.
         /// </summary>
-        private void OnUserBecameOnline(IOnlineUser user)
+        private void OnApiUserChange(IOnlineUser user)
         {
-            userManager.SetUser(user, null);
-        }
-
-        /// <summary>
-        /// Event called when the user in API has become offline.
-        /// </summary>
-        private void OnUserBecameOffline(IOnlineUser user)
-        {
-            if(userManager.CurrentUser.Value != null)
-                userManager.SaveUser(userManager.CurrentUser.Value);
-            userManager.RemoveUser();
+            userManager.SaveUser(userManager.CurrentUser.Value);
+            userManager.SetUser(user);
         }
 
         /// <summary>
