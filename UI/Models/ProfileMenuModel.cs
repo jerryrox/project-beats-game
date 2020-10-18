@@ -23,15 +23,12 @@ namespace PBGame.UI.Models
         /// </summary>
         public event Action OnLoginFailed;
 
-        private CacherAgent<string, Texture2D> coverImageAgent;
-
         private DropdownContext apiDropdownContext;
 
         private Bindable<IApiProvider> currentProvider = new Bindable<IApiProvider>(null);
         private Bindable<IApiRequest> authRequest = new Bindable<IApiRequest>();
         private Bindable<IApiRequest> meRequest = new Bindable<IApiRequest>();
         private BindableBool isLoggingIn = new BindableBool(false);
-        private Bindable<Texture2D> coverImage = new Bindable<Texture2D>();
 
 
         /// <summary>
@@ -68,11 +65,6 @@ namespace PBGame.UI.Models
         /// Returns whether the user is currently loggin in.
         /// </summary>
         public IReadOnlyBindable<bool> IsLoggingIn => isLoggingIn;
-
-        /// <summary>
-        /// Returns the cover image of the currently logged in user.
-        /// </summary>
-        public IReadOnlyBindable<Texture2D> CoverImage => coverImage;
 
         /// <summary>
         /// Returns the type of the currently selected provider.
@@ -120,9 +112,6 @@ namespace PBGame.UI.Models
         {
             apiDropdownContext = new DropdownContext();
             apiDropdownContext.ImportFromEnum<ApiProviderType>(CurProviderType.Value);
-
-            coverImageAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
-            coverImageAgent.OnFinished += OnCoverImageLoaded;
         }
 
         /// <summary>
@@ -310,27 +299,6 @@ namespace PBGame.UI.Models
             GameConfiguration.Username.Value = username;
             GameConfiguration.Password.Value = password;
             GameConfiguration.Save();
-        }
-
-        /// <summary>
-        /// Requests cover image for current user.
-        /// </summary>
-        private void RequestCoverImage()
-        {
-            DisposeCoverImage();
-
-            var user = CurrentUser.Value;
-            if(user.IsOnlineUser && !string.IsNullOrEmpty(user.OnlineUser.CoverImage))
-                coverImageAgent.Request(user.OnlineUser.CoverImage);
-        }
-
-        /// <summary>
-        /// Disposes current cover image request and the state.
-        /// </summary>
-        private void DisposeCoverImage()
-        {
-            coverImage.Value = null;
-            coverImageAgent.Remove();
         }
 
         /// <summary>
