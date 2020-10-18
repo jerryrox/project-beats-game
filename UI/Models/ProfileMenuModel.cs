@@ -198,8 +198,6 @@ namespace PBGame.UI.Models
             // Synchronize selection with the actual value in configuration.
             apiDropdownContext.SelectDataWithText(CurProviderType.Value.ToString());
             apiDropdownContext.OnSelection += OnApiDropdownSelection;
-
-            CurrentUser.BindAndTrigger(OnUserChange);
         }
 
         protected override void OnPreHide()
@@ -209,7 +207,6 @@ namespace PBGame.UI.Models
             CurProviderType.OnNewValue -= OnLastLoginApiChange;
             Auth.OnNewValue -= OnAuthenticationChange;
             apiDropdownContext.OnSelection -= OnApiDropdownSelection;
-            CurrentUser.OnNewValue -= OnUserChange;
 
             DisposeAuthRequest(false);
             DisposeMeRequest(false);
@@ -220,8 +217,6 @@ namespace PBGame.UI.Models
             base.OnPostHide();
 
             isLoggingIn.Value = false;
-
-            DisposeCoverImage();
         }
 
         /// <summary>
@@ -358,18 +353,5 @@ namespace PBGame.UI.Models
 
             DisposeMeRequest(true);
         }
-
-        /// <summary>
-        /// Event called when the current user has changed.
-        /// </summary>
-        private void OnUserChange(IUser user)
-        {
-            RequestCoverImage();
-        }
-
-        /// <summary>
-        /// Event called when the user's cover image has been loaded.
-        /// </summary>
-        private void OnCoverImageLoaded(Texture2D image) => coverImage.Value = image;
     }
 }
