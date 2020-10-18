@@ -1,4 +1,6 @@
 using PBGame.UI.Models;
+using PBGame.UI.Components.Common;
+using PBGame.Data.Users;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -9,7 +11,7 @@ namespace PBGame.UI.Components.ProfileMenu
 {
     public class CoverDisplay : UguiObject
     {
-        private ITexture image;
+        private WebTexture image;
 
 
         [ReceivesDependency]
@@ -28,7 +30,7 @@ namespace PBGame.UI.Components.ProfileMenu
                 bg.Offset = Offset.Zero;
                 bg.Color = ColorPreset.DarkBackground;
             }
-            image = CreateChild<UguiTexture>("image");
+            image = CreateChild<WebTexture>("image");
             {
                 image.Anchor = AnchorType.Fill;
                 image.Offset = Offset.Zero;
@@ -51,25 +53,25 @@ namespace PBGame.UI.Components.ProfileMenu
         {
             base.OnEnableInited();
 
-            Model.CoverImage.BindAndTrigger(OnCoverImageChange);
+            Model.CurrentUser.BindAndTrigger(OnUserChange);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             
-            Model.CoverImage.OnNewValue -= OnCoverImageChange;
+            Model.CurrentUser.Unbind(OnUserChange);
 
-            image.Active = false;
+            image.Unload();
         }
 
         /// <summary>
-        /// Event called when the cover image has changed.
+        /// Event called when the current user has changed.
         /// </summary>
-        private void OnCoverImageChange(Texture2D coverImage)
+        private void OnUserChange(IUser user)
         {
-            image.Texture = coverImage;
-            image.Active = coverImage != null;
+            if (user.IsOnlineUser)
+                image.Load(user.OnlineUser.CoverImage);
         }
     }
 }
