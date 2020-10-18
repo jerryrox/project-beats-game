@@ -131,7 +131,7 @@ namespace PBGame.UI.Components.Download.Result
         /// </summary>
         private void OnPreviewMapsetChange(OnlineMapset mapset)
         {
-            Toggle(Model.IsPreviewingMapset(mapset), true);
+            Toggle(Model.IsPreviewingMapset(this.mapset), true);
         }
     }
 }
