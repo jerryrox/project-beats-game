@@ -1,12 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
-using PBGame.Stores;
-using PBGame.Networking.API;
 using PBGame.Networking.Maps;
-using PBGame.Notifications;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -17,8 +11,8 @@ namespace PBGame.UI.Components.Download.Result
     public class ActionBar : UguiSprite
     {
         private IGrid grid;
-        private HoverableTrigger downloadButton;
-        private HoverableTrigger playButton;
+        private IconButton downloadButton;
+        private IconButton playButton;
 
         private OnlineMapset mapset;
 
@@ -37,21 +31,15 @@ namespace PBGame.UI.Components.Download.Result
                 grid.Anchor = AnchorType.Fill;
                 grid.Offset = Offset.Zero;
 
-                downloadButton = grid.CreateChild<HoverableTrigger>("download", 0);
+                downloadButton = grid.CreateChild<IconButton>("download", 0);
                 {
-                    downloadButton.CreateIconSprite(spriteName: "icon-download", size: 24f);
-                    downloadButton.UseDefaultHoverAni();
-
-                    downloadButton.IsClickToTrigger = true;
-
+                    downloadButton.IconName = "icon-download";
+                    
                     downloadButton.OnTriggered += () => Model.DownloadMapset(mapset);
                 }
-                playButton = grid.CreateChild<HoverableTrigger>("play", 1);
+                playButton = grid.CreateChild<IconButton>("play", 1);
                 {
-                    playButton.CreateIconSprite(spriteName: "icon-play", size: 24f);
-                    playButton.UseDefaultHoverAni();
-
-                    playButton.IsClickToTrigger = true;
+                    playButton.IconName = "icon-play";
 
                     playButton.OnTriggered += () => Model.SetPreview(mapset);
                 }
