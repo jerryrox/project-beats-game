@@ -45,6 +45,7 @@ namespace PBGame.UI.Components.Download.Result
                 loadDelay = null;
                 Load(mapset.CardImage);
             };
+            loadDelay.Start();
         }
 
         /// <summary>
