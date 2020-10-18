@@ -22,6 +22,7 @@ Slowly making progress 🧩
 - Moved ScoreProcessor creation from GameSession to ModeService.
 - Moved MapImageDisplay component to its proper namespace.
 - Changed the way offline user is handled by UserManager.
+- Changed the way some images are loaded.
 #### Fixes
 - Fixed internal logic error while saving play records.
 - Fixed exp displaying wrongly.
