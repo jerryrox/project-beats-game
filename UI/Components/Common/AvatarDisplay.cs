@@ -24,6 +24,11 @@ namespace PBGame.UI.Components.Common
             set => SpriteName = value;
         }
 
+        /// <summary>
+        /// Returns whether there is a valid texture assigned.
+        /// </summary>
+        public bool HasTexture => webTexture.Texture != null;
+
         public bool UseMask
         {
             get => mask.enabled;

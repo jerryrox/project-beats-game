@@ -5,10 +5,10 @@ using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Data.Records;
-using PBGame.Assets.Caching;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
+using PBGame.Rulesets.Judgements;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
@@ -22,6 +22,8 @@ namespace PBGame.UI.Models
     {
         private Bindable<IPlayableMap> map = new Bindable<IPlayableMap>();
         private Bindable<IRecord> record = new Bindable<IRecord>();
+
+        private HitTiming hitTiming;
 
 
         /// <summary>
@@ -65,9 +67,18 @@ namespace PBGame.UI.Models
         private IOverlayNavigator OverlayNavigator { get; set; }
 
 
+        protected override void OnPreShow()
+        {
+            base.OnPreShow();
+
+            map.BindAndTrigger(OnMapChange);
+        }
+
         protected override void OnPostHide()
         {
             base.OnPostHide();
+
+            map.Unbind(OnMapChange);
 
             SetMap(null);
             SetRecord(null);
@@ -136,6 +147,14 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Returns whether the specified hit result type is valid in current ruleset.
+        /// </summary>
+        public bool IsSupportedHitType(HitResultType type)
+        {
+            return hitTiming?.IsHitResultSupported(type) ?? false;
+        }
+
+        /// <summary>
         /// Sets the map to display.
         /// </summary>
         private void SetMap(IPlayableMap map)
@@ -147,5 +166,13 @@ namespace PBGame.UI.Models
         /// Sets the record to display.
         /// </summary>
         private void SetRecord(IRecord record) => this.record.Value = record;
+
+        /// <summary>
+        /// Event called on current map change.
+        /// </summary>
+        private void OnMapChange(IPlayableMap map)
+        {
+            hitTiming = map == null ? null : ModeService.CreateTiming();
+        }
     }
 }

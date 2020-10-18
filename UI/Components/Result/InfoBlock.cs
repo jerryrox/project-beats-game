@@ -58,18 +58,18 @@ namespace PBGame.UI.Components.Result
             {
                 versionLabel.Anchor = AnchorType.BottomLeft;
                 versionLabel.Pivot = PivotType.BottomLeft;
-                versionLabel.Position = new Vector3(16f, 16f);
+                versionLabel.Position = new Vector3(16f, 30f);
                 versionLabel.IsBold = true;
                 versionLabel.FontSize = 22;
                 versionLabel.Alignment = TextAnchor.LowerLeft;
             }
             mapperLabel = CreateChild<Label>("mapper");
             {
-                mapperLabel.Anchor = AnchorType.BottomRight;
-                mapperLabel.Pivot = PivotType.BottomRight;
-                mapperLabel.Position = new Vector3(-16f, 16f);
-                mapperLabel.FontSize = 22;
-                mapperLabel.Alignment = TextAnchor.LowerRight;
+                mapperLabel.Anchor = AnchorType.BottomLeft;
+                mapperLabel.Pivot = PivotType.BottomLeft;
+                mapperLabel.Position = new Vector3(16f, 8f);
+                mapperLabel.FontSize = 20;
+                mapperLabel.Alignment = TextAnchor.LowerLeft;
             }
 
             OnEnableInited();

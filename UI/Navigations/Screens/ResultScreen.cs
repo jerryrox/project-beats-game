@@ -40,6 +40,12 @@ namespace PBGame.UI.Navigations.Screens
                 bottomMenu.Y = 0f;
                 bottomMenu.Height = 72f;
             }
+            var judgementCounter = CreateChild<JudgementCounter>("judgement-counter", 5);
+            {
+                judgementCounter.Anchor = AnchorType.BottomRight;
+                judgementCounter.Pivot = PivotType.BottomRight;
+                judgementCounter.Position = new Vector3(0, 72f);
+            }
             var infoBlock = CreateChild<InfoBlock>("info-block", 2);
             {
                 infoBlock.Anchor = AnchorType.BottomStretch;
