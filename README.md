@@ -31,6 +31,7 @@ Slowly making progress 🧩
 - Fixed best score evaluation being done using ALL records, not filtered by current user's id.
 - Fixed preview bar showing even when previewing a different song.
 - Fixed dragger tick view being mispositioned on judgement.
+- Fixed inaccurate sample points for sliders.
 
 ### 0.11.0
 #### New features

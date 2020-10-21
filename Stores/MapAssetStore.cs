@@ -103,13 +103,15 @@ namespace PBGame.Stores
                             {
                                 File = file,
                                 LookupName = name
-                        };
+                            };
+                            break;
                         }
                     }
                 }
             };
 
             // Lookup all valid hit sounds from all hit objects.
+            int counter = 0;
             foreach (var hitObj in Map.HitObjects)
             {
                 var curve = hitObj as IHasCurve;
@@ -121,6 +123,8 @@ namespace PBGame.Stores
                 for (int i = 0; i < hitObj.NestedObjects.Count; i++)
                     addSounds(hitObj.NestedObjects[i].Samples);
                 addSounds(hitObj.Samples);
+
+                counter++;
             }
         }
 
