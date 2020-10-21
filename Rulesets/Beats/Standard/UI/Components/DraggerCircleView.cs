@@ -228,12 +228,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             RemoveDragger();
         }
 
-        protected override void EvalPassiveJudgement()
-        {
-            SetResult(HitResultType.Miss, judgeEndTime);
-        }
-
-        protected void Update()
+        public void UpdatePosition()
         {
             if(draggerView == null)
                 return;
@@ -246,6 +241,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             myPosition.x = dragger.GetPosition(progress).x;
             myPosition.y = draggerView.DistUnderHitPos;
             this.Position = myPosition;
+        }
+
+        protected override void EvalPassiveJudgement()
+        {
+            SetResult(HitResultType.Miss, judgeEndTime);
         }
     }
 }

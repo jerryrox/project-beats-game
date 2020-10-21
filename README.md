@@ -29,6 +29,8 @@ Slowly making progress 🧩
 - Fixed internal logic error while saving play records.
 - Fixed exp displaying wrongly.
 - Fixed best score evaluation being done using ALL records, not filtered by current user's id.
+- Fixed preview bar showing even when previewing a different song.
+- Fixed dragger tick view being mispositioned on judgement.
 
 ### 0.11.0
 #### New features
