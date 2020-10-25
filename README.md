@@ -19,6 +19,8 @@ Slowly making progress 🧩
 #### New features
 - Implemented AvatarDisplay component to simplify loading of avatar images.
 - Added judgemnt counter display for ResultScreen.
+#### Improvements
+- Sign-in process will continue even when login menu overlay has become hidden.
 #### Changes
 - Moved ScoreProcessor creation from GameSession to ModeService.
 - Moved MapImageDisplay component to its proper namespace.

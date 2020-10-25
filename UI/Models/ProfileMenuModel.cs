@@ -112,6 +112,9 @@ namespace PBGame.UI.Models
         {
             apiDropdownContext = new DropdownContext();
             apiDropdownContext.ImportFromEnum<ApiProviderType>(CurProviderType.Value);
+
+            CurProviderType.BindAndTrigger(OnLastLoginApiChange);
+            Auth.OnNewValue += OnAuthenticationChange;
         }
 
         /// <summary>
@@ -192,31 +195,18 @@ namespace PBGame.UI.Models
         {
             base.OnPreShow();
 
-            CurProviderType.BindAndTrigger(OnLastLoginApiChange);
-            Auth.OnNewValue += OnAuthenticationChange;
-
             // Synchronize selection with the actual value in configuration.
             apiDropdownContext.SelectDataWithText(CurProviderType.Value.ToString());
             apiDropdownContext.OnSelection += OnApiDropdownSelection;
+
+            CheckIsLoggingIn();
         }
 
         protected override void OnPreHide()
         {
             base.OnPreHide();
 
-            CurProviderType.OnNewValue -= OnLastLoginApiChange;
-            Auth.OnNewValue -= OnAuthenticationChange;
             apiDropdownContext.OnSelection -= OnApiDropdownSelection;
-
-            DisposeAuthRequest(false);
-            DisposeMeRequest(false);
-        }
-
-        protected override void OnPostHide()
-        {
-            base.OnPostHide();
-
-            isLoggingIn.Value = false;
         }
 
         /// <summary>
