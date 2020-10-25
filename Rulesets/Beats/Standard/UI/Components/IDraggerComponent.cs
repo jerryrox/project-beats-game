@@ -21,5 +21,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// Disassociates this object from parent dragger.
         /// </summary>
         void RemoveDragger();
+
+        /// <summary>
+        /// Updates the position of the dragger component.
+        /// </summary>
+        void UpdatePosition();
     }
 }

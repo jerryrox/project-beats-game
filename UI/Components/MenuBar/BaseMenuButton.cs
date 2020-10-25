@@ -29,7 +29,7 @@ namespace PBGame.UI.Components.MenuBar
         [InitWithDependency]
         private void Init()
         {
-            CreateIconSprite(spriteName: IconSpritename);
+            CreateIconSprite(spriteName: IconSpritename, size: 28);
 
             UseDefaultHoverAni();
             UseDefaultFocusAni();

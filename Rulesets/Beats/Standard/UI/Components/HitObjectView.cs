@@ -65,7 +65,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         }
 
         /// <summary>
-        /// Returns the desired position of the object upon judgement.
+        /// Returns the desired X position of the object upon judgement.
         /// </summary>
         protected virtual float GetPosOnJudgement() => BaseParentView == null ? X : BaseParentView.X + X;
     }

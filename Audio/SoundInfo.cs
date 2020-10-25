@@ -54,9 +54,9 @@ namespace PBGame.Audio
 						yield return string.Format("{0}/{1}-{2}{3}", Namespace, Sample, Sound, Variant);
 					yield return string.Format("{0}/{1}-{2}", Namespace, Sample, Sound);
 				}
-				if(!string.IsNullOrEmpty(Variant))
-					yield return string.Format("{0}-{1}{2}", Sample, Sound, Variant);
-				yield return string.Format("{0}-{1}", Sample, Sound);
+                if (!string.IsNullOrEmpty(Variant))
+                    yield return string.Format("{0}-{1}{2}", Sample, Sound, Variant);
+                yield return string.Format("{0}-{1}", Sample, Sound);
 			}
 		}
 

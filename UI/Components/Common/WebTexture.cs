@@ -20,18 +20,29 @@ namespace PBGame.UI.Components.Common
         private IAnime showAni;
 
 
+        /// <summary>
+        /// Whether the cacher agent unload should be done with delay.
+        /// </summary>
+        public bool IsDelayedUnload
+        {
+            get => cacherAgent.UseDelayedRemove;
+            set => cacherAgent.UseDelayedRemove = value;
+        }
+
         [ReceivesDependency]
-        private IWebImageCacher WebImageCacher { get; set; }
+        protected IWebImageCacher WebImageCacher { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
             cacherAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
+            cacherAgent.RemoveDelay = 2f;
             cacherAgent.OnFinished += OnImageLoaded;
             cacherAgent.OnProgress += OnLoadProgress;
 
             this.Alpha = 0f;
+            this.IsDelayedUnload = true;
 
             showAni = new Anime();
             showAni.AnimateFloat(a => this.Alpha = a)

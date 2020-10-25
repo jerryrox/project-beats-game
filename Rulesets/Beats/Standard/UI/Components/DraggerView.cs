@@ -85,6 +85,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                     tickView.SetDragger(this);
                     tickView.SetHitObject(tick);
                     AddNestedObject(tickView);
+
+                    tickViews.Add(tickView);
                 }
             }
         }
@@ -154,6 +156,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             if (hitObject.SamplePoint == null)
                 throw new Exception("There must be a valid sample point in order to process hit sounds!");
             return new PlayableHitsound(GameSession.MapAssetStore, hitObject.SamplePoint, hitObject.EndSamples, SoundPool);
+        }
+
+        protected void Update()
+        {
+            startCircle?.UpdatePosition();
+            for (int i = 0; i < tickViews.Count; i++)
+                tickViews[i].UpdatePosition();
         }
     }
 }
