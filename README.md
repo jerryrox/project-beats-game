@@ -32,7 +32,7 @@ Slowly making progress 🧩
 - Fixed preview bar showing even when previewing a different song.
 - Fixed dragger tick view being mispositioned on judgement.
 - Fixed inaccurate sample points for sliders.
-- Fixed issue where web textures do not delay cacher remove even when necessary.
+- Fixed issue where DownloadScreen's result cell does not load image immediately when there is already a cache.
 
 ### 0.11.0
 #### New features

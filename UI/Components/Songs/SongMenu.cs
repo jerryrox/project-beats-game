@@ -16,11 +16,11 @@ namespace PBGame.UI.Components.Songs
     public class SongMenu : UguiObject {
 
         private ISprite bgSprite;
-        private HoverableTrigger backButton;
-        private HoverableTrigger randomButton;
-        private HoverableTrigger prevButton;
-        private HoverableTrigger nextButton;
-        private HoverableTrigger playButton;
+        private IconButton backButton;
+        private IconButton randomButton;
+        private IconButton prevButton;
+        private IconButton nextButton;
+        private IconButton playButton;
         private PreviewBox previewBox;
 
         [ReceivesDependency]
@@ -36,68 +36,59 @@ namespace PBGame.UI.Components.Songs
                 bgSprite.RawSize = Vector2.zero;
                 bgSprite.Color = new Color(0f, 0f, 0f, 0.125f);
             }
-            backButton = CreateChild<HoverableTrigger>("back", 0);
+            backButton = CreateChild<IconButton>("back", 0);
             {
                 backButton.Anchor = AnchorType.LeftStretch;
                 backButton.Pivot = PivotType.Left;
                 backButton.Width = 100f;
                 backButton.X = 0f;
+                backButton.IconName = "icon-arrow-left";
                 
                 backButton.SetOffsetVertical(0f);
-                backButton.CreateIconSprite(spriteName: "icon-arrow-left");
-                backButton.UseDefaultHoverAni();
 
                 backButton.OnTriggered += Model.NavigateToHome;
             }
-            randomButton = CreateChild<HoverableTrigger>("random", 1);
+            randomButton = CreateChild<IconButton>("random", 1);
             {
                 randomButton.Anchor = AnchorType.LeftStretch;
                 randomButton.Pivot = PivotType.Left;
                 randomButton.X = 670f;
                 randomButton.Width = 80f;
                 randomButton.SetOffsetVertical(0f);
-
-                randomButton.CreateIconSprite(spriteName: "icon-random");
-                randomButton.UseDefaultHoverAni();
+                randomButton.IconName = "icon-random";
 
                 randomButton.OnTriggered += Model.SelectRandomMapset;
             }
-            prevButton = CreateChild<HoverableTrigger>("prev", 2);
+            prevButton = CreateChild<IconButton>("prev", 2);
             {
                 prevButton.Anchor = AnchorType.LeftStretch;
                 prevButton.Pivot = PivotType.Left;
                 prevButton.X = 750f;
                 prevButton.Width = 80f;
                 prevButton.SetOffsetVertical(0f);
-
-                prevButton.CreateIconSprite(spriteName: "icon-backward");
-                prevButton.UseDefaultHoverAni();
+                prevButton.IconName = "icon-backward";
 
                 prevButton.OnTriggered += Model.SelectPrevMapset;
             }
-            nextButton = CreateChild<HoverableTrigger>("next", 3);
+            nextButton = CreateChild<IconButton>("next", 3);
             {
                 nextButton.Anchor = AnchorType.LeftStretch;
                 nextButton.Pivot = PivotType.Left;
                 nextButton.X = 830f;
                 nextButton.Width = 80f;
                 nextButton.SetOffsetVertical(0f);
-
-                nextButton.CreateIconSprite(spriteName: "icon-forward");
-                nextButton.UseDefaultHoverAni();
+                nextButton.IconName = "icon-forward";
 
                 nextButton.OnTriggered += Model.SelectNextMapset;
             }
-            playButton = CreateChild<HoverableTrigger>("play", 4);
+            playButton = CreateChild<IconButton>("play", 4);
             {
                 playButton.Anchor = AnchorType.RightStretch;
                 playButton.Pivot = PivotType.Right;
                 playButton.X = 0f;
                 playButton.Width = 100f;
                 playButton.SetOffsetVertical(0f);
-
-                playButton.CreateIconSprite(spriteName: "icon-play");
-                playButton.UseDefaultHoverAni();
+                playButton.IconName = "icon-play";
 
                 playButton.OnTriggered += Model.NavigateToPrepare;
             }

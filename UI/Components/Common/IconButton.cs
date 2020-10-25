@@ -10,7 +10,7 @@ namespace PBGame.UI.Components.Common
         [InitWithDependency]
         private void Init()
         {
-            CreateIconSprite(spriteName: "null", size: 24);
+            CreateIconSprite(spriteName: "null", size: 28);
             UseDefaultHoverAni();
 
             IsClickToTrigger = true;
