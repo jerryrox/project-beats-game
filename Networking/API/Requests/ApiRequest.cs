@@ -1,6 +1,8 @@
 using System;
 using PBGame.Networking.API.Responses;
+using PBGame.Notifications;
 using PBFramework.Data.Bindables;
+using PBFramework.Threading;
 using PBFramework.Networking;
 using PBFramework.Networking.API;
 
@@ -9,6 +11,8 @@ namespace PBGame.Networking.API.Requests
     public abstract class ApiRequest<T> : IApiRequest<T>
         where T : IApiResponse
     {
+        public event Action OnDisposing;
+
         protected IApi api;
         protected IApiProvider provider;
 
@@ -37,7 +41,7 @@ namespace PBGame.Networking.API.Requests
             InnerRequest = CreateRequest();
         }
 
-        public void Request()
+        public void Request(TaskListener<IWebRequest> listener = null)
         {
             if (DidRequest)
                 throw new Exception("This request has already been made!");
@@ -49,13 +53,17 @@ namespace PBGame.Networking.API.Requests
             InnerRequest.OnFinished += OnHttpResponse;
 
             OnPreRequest();
-            InnerRequest.Request();
+            InnerRequest.Request(listener: listener);
         }
+
+        public virtual INotification CreateNotification() => null;
 
         public void Dispose()
         {
             if (InnerRequest != null)
             {
+                OnDisposing?.Invoke();
+
                 InnerRequest.OnFinished -= OnHttpResponse;
                 InnerRequest.Response?.Dispose();
                 InnerRequest = null;
