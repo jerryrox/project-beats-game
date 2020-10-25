@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.Common
         }
 
         [ReceivesDependency]
-        private IWebImageCacher WebImageCacher { get; set; }
+        protected IWebImageCacher WebImageCacher { get; set; }
 
 
         [InitWithDependency]
