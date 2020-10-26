@@ -1,28 +1,21 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBGame.Notifications;
 using PBFramework.UI;
 using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.CoffeeUI;
-using PBFramework.Allocation.Recyclers;
+using PBFramework.Graphics.Effects.Components;
 using PBFramework.Animations;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 using Coffee.UIExtensions;
 
-namespace PBGame.UI.Components.System
+namespace PBGame.UI.Components.Common
 {
-    public class MessageCell : HoverableTrigger, IRecyclable<MessageCell>, IHasAlpha {
-
-        /// <summary>
-        /// The duration of message before it automatically hides.
-        /// </summary>
-        private const float ShowDuration = 4f;
+    public class BaseNotificationCell : HoverableTrigger, IRecyclable, IHasAlpha {
 
         /// <summary>
         /// The X position from which the cell will slide in on show, or slide to on hide.
@@ -32,21 +25,21 @@ namespace PBGame.UI.Components.System
         /// <summary>
         /// Event called when this cell is hidden.
         /// </summary>
-        public event Action<MessageCell> OnHidden;
+        public event Action<BaseNotificationCell> OnHidden;
 
         private CanvasGroup canvasGroup;
 
+        private IGraphicObject container;
         private ISprite bgSprite;
+        private WebTexture coverTexture;
         private ISprite glowSprite;
         private ILabel label;
 
         private IAnime showAni;
+        private IAnime hideAni;
         private IAnime positionAni;
-        private float curDuration;
         private float targetY;
 
-
-        public IRecycler<MessageCell> Recycler { get; set; }
 
         public float Alpha
         {
@@ -65,43 +58,50 @@ namespace PBGame.UI.Components.System
         public float TargetY => targetY;
 
         /// <summary>
+        /// Returns the actual height of the cell.
+        /// </summary>
+        public virtual float CellHeight => this.Height;
+
+        /// <summary>
         /// Returns whether the show/hide animations are playing.
         /// </summary>
-        private bool IsAnimating => showAni.IsPlaying || triggerAni.IsPlaying;
+        protected bool IsAnimating => showAni.IsPlaying || hideAni.IsPlaying;
 
         [ReceivesDependency]
-        private IColorPreset ColorPreset { get; set; }
+        protected IColorPreset ColorPreset { get; set; }
 
 
         [InitWithDependency]
         private void Init()
         {
-            OnTriggered += () =>
-            {
-                Hide();
-            };
-
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
 
-            bgSprite = CreateChild<UguiSprite>("bg", 0);
+            container = CreateChild("container");
             {
-                bgSprite.Anchor = AnchorType.Fill;
-                bgSprite.Offset = new Offset(8f);
-                bgSprite.SpriteName = "circle-16";
-                bgSprite.ImageType = Image.Type.Sliced;
+                container.Anchor = AnchorType.Fill;
+                container.Offset = new Offset(8f);
 
-                var gradient = bgSprite.AddEffect(new GradientEffect()).Component;
-                gradient.direction = UIGradient.Direction.Horizontal;
-                gradient.color2 = new Color(0.75f, 0.75f, 0.75f);
+                bgSprite = container.CreateChild<UguiSprite>("bg");
+                {
+                    bgSprite.Anchor = AnchorType.Fill;
+                    bgSprite.Offset = Offset.Zero;
+                    bgSprite.SpriteName = "circle-16";
+                    bgSprite.ImageType = Image.Type.Sliced;
 
-                glowSprite = bgSprite.CreateChild<UguiSprite>("glow", 0);
+                    bgSprite.AddEffect(new MaskEffect());
+
+                    var gradient = bgSprite.AddEffect(new GradientEffect()).Component;
+                    gradient.direction = UIGradient.Direction.Horizontal;
+                    gradient.color2 = new Color(0.75f, 0.75f, 0.75f);
+                }
+                glowSprite = bgSprite.CreateChild<UguiSprite>("glow");
                 {
                     glowSprite.Anchor = AnchorType.Fill;
                     glowSprite.Offset = new Offset(-13.5f);
                     glowSprite.SpriteName = "glow-circle-16-x2";
                     glowSprite.ImageType = Image.Type.Sliced;
                 }
-                label = bgSprite.CreateChild<Label>("label", 1);
+                label = bgSprite.CreateChild<Label>("label");
                 {
                     label.Anchor = AnchorType.TopStretch;
                     label.Pivot = PivotType.Top;
@@ -123,16 +123,16 @@ namespace PBGame.UI.Components.System
                 .AddTime(0.25f, 0.75f)
                 .Build();
 
-            triggerAni = new Anime();
-            triggerAni.AnimateFloat(x => this.X = x)
+            hideAni = new Anime();
+            hideAni.AnimateFloat(x => this.X = x)
                 .AddTime(0f, 0f, EaseType.QuadEaseOut)
                 .AddTime(0.25f, SlideInPos)
                 .Build();
-            triggerAni.AnimateFloat(a => this.Alpha = a)
+            hideAni.AnimateFloat(a => this.Alpha = a)
                 .AddTime(0f, () => this.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
-            triggerAni.AddEvent(triggerAni.Duration, () => OnHidden?.Invoke(this));
+            hideAni.AddEvent(hideAni.Duration, () => OnHidden?.Invoke(this));
 
             hoverInAni = new Anime();
             hoverInAni.AnimateFloat(a => this.Alpha = a)
@@ -154,11 +154,11 @@ namespace PBGame.UI.Components.System
         }
 
         /// <summary>
-        /// Initializes the cell to display specified data.
+        /// Shows this cell with the specified notification.
         /// </summary>
-        public void Show(INotification notification)
+        public virtual void Show(INotification notification)
         {
-            if(!Active || IsAnimating)
+            if (!Active || IsAnimating)
                 return;
 
             this.Notification = notification;
@@ -169,12 +169,10 @@ namespace PBGame.UI.Components.System
 
             label.Text = notification.Message;
             label.Height = label.PreferredHeight;
-            this.Height = label.Height + (-label.Y * 2f) + bgSprite.Offset.Vertical;
+            this.Height = label.Height + (-label.Y * 2f) + container.Offset.Vertical;
 
-            triggerAni.Stop();
+            hideAni.Stop();
             showAni.PlayFromStart();
-
-            curDuration = ShowDuration;
         }
 
         /// <summary>
@@ -186,7 +184,7 @@ namespace PBGame.UI.Components.System
                 return;
 
             showAni.Stop();
-            triggerAni.PlayFromStart();
+            hideAni.PlayFromStart();
         }
 
         /// <summary>
@@ -194,7 +192,7 @@ namespace PBGame.UI.Components.System
         /// </summary>
         public void PositionTo(float y, bool animate)
         {
-            if(!Active || triggerAni.IsPlaying)
+            if(!Active || hideAni.IsPlaying)
                 return;
 
             targetY = y;
@@ -204,25 +202,26 @@ namespace PBGame.UI.Components.System
                 this.Y = y;
         }
 
-        public void OnRecycleNew()
+        public virtual void OnRecycleNew()
         {
             Active = true;
             Alpha = 0f;
             X = SlideInPos;
         }
 
-        public void OnRecycleDestroy()
+        public virtual void OnRecycleDestroy()
         {
             Active = false;
             Notification = null;
             showAni.Stop();
+            hideAni.Stop();
             positionAni.Stop();
         }
 
         /// <summary>
         /// Returns the color palette matching the specified type.
         /// </summary>
-        private ColorPalette GetColor(NotificationType type)
+        protected ColorPalette GetColor(NotificationType type)
         {
             switch (type)
             {
@@ -233,22 +232,6 @@ namespace PBGame.UI.Components.System
             }
             Debug.LogWarning($"MessageCell.GetColor - Unknown notification type: " + type);
             return ColorPreset.Passive;
-        }
-
-        protected override void Update()
-        {
-            if(IsAnimating)
-                return;
-
-            base.Update();
-
-            // Handle auto hiding after certain time.
-            if (curDuration > 0f)
-            {
-                curDuration -= Time.deltaTime;
-                if (curDuration <= 0f)
-                    Hide();
-            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// </summary>
         private const float DisplayerPadding = 12f;
 
-        private MessageDisplayer messageDisplayer;
+        private NotificationDisplayer messageDisplayer;
         private FpsDisplayer fpsDisplayer;
 
         private IAnime menubarShowAni;
@@ -34,7 +34,7 @@ namespace PBGame.UI.Navigations.Overlays
                 fpsDisplayer.Position = new Vector3(-DisplayerPadding, DisplayerPadding);
                 fpsDisplayer.Size = new Vector2(170f, 30f);
             }
-            messageDisplayer = CreateChild<MessageDisplayer>("message-displayer", 1);
+            messageDisplayer = CreateChild<NotificationDisplayer>("message-displayer", 1);
             {
                 messageDisplayer.Anchor = AnchorType.TopRight;
                 messageDisplayer.Pivot = PivotType.Right;

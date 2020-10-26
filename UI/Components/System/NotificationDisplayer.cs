@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.System
 {
-    public class MessageDisplayer : UguiObject, IDisplayer {
+    public class NotificationDisplayer : UguiObject, IDisplayer {
 
-        private ManagedRecycler<MessageCell> cellRecycler;
+        private ManagedRecycler<NotificationCell> cellRecycler;
 
         private CanvasGroup canvasGroup;
 
@@ -25,7 +25,7 @@ namespace PBGame.UI.Components.System
         [InitWithDependency]
         private void Init()
         {
-            cellRecycler = new ManagedRecycler<MessageCell>(CreateCell);
+            cellRecycler = new ManagedRecycler<NotificationCell>(CreateCell);
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
 
             showAni = new Anime();
@@ -110,16 +110,16 @@ namespace PBGame.UI.Components.System
         /// <summary>
         /// Creates a new message cell.
         /// </summary>
-        private MessageCell CreateCell()
+        private NotificationCell CreateCell()
         {
-            var cell = CreateChild<MessageCell>("cell", ChildCount);
+            var cell = CreateChild<NotificationCell>("cell", ChildCount);
             cell.Anchor = AnchorType.Top;
             cell.Pivot = PivotType.Top;
             cell.Width = this.Width;
             cell.OnHidden += (c) => {
                 // Remove from notifications automatically if hidden.
-                Model.RemoveNotification(c.Notification);
-                cellRecycler.Return(c);
+                Model.RemoveNotification(cell.Notification);
+                cellRecycler.Return(cell);
                 AdjustCellPos();
             };
             return cell;
