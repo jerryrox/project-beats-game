@@ -5,17 +5,20 @@ using PBFramework.Threading;
 
 namespace PBGame.Notifications
 {
-    public class NotificationBox : INotificationBox {
+    public class NotificationBox : INotificationBox
+    {
 
-        public event Action<Notification> OnNewNotification;
+        public event Action<INotification> OnNewNotification;
 
-        public event Action<Notification> OnRemoveNotification;
+        public event Action<INotification> OnRemoveNotification;
 
-        private List<Notification> notifications = new List<Notification>();
+        private List<INotification> notifications = new List<INotification>();
 
 
         public void Add(Notification notification)
         {
+            PostProcessNotification(notification);
+
             UnityThread.DispatchUnattended(() =>
             {
                 if (notification.Scope != NotificationScope.Temporary)
@@ -25,7 +28,7 @@ namespace PBGame.Notifications
             });
         }
 
-        public void Remove(Notification notification)
+        public void Remove(INotification notification)
         {
             UnityThread.DispatchUnattended(() =>
             {
@@ -37,7 +40,7 @@ namespace PBGame.Notifications
 
         public void RemoveById(string id, bool multiple)
         {
-            if(string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
                 return;
 
             UnityThread.DispatchUnattended(() =>
@@ -55,6 +58,14 @@ namespace PBGame.Notifications
                 }
                 return null;
             });
+        }
+
+        /// <summary>
+        /// Performs any additional processing of notification data.
+        /// </summary>
+        private void PostProcessNotification(Notification notification)
+        {
+            // TODO:
         }
     }
 }

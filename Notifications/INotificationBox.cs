@@ -10,12 +10,12 @@ namespace PBGame.Notifications
         /// <summary>
         /// Event called on new notification.
         /// </summary>
-        event Action<Notification> OnNewNotification;
+        event Action<INotification> OnNewNotification;
 
         /// <summary>
         /// Event called on notification removal.
         /// </summary>
-        event Action<Notification> OnRemoveNotification;
+        event Action<INotification> OnRemoveNotification;
 
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace PBGame.Notifications
         /// <summary>
         /// Removes the specified notification from the list.
         /// </summary>
-        void Remove(Notification notification);
+        void Remove(INotification notification);
 
         /// <summary>
         /// Removes the notification of specified id.

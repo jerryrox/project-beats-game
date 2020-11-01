@@ -53,7 +53,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Displays the specified notification.
         /// </summary>
-        public void DisplayNotification(Notification notification)
+        public void DisplayNotification(INotification notification)
         {
             // Display a new cell for this notification
             var cell = cellRecycler.GetNext();
@@ -106,7 +106,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Event called on new notification.
         /// </summary>
-        private void OnNotification(Notification notification)
+        private void OnNotification(INotification notification)
         {
             DisplayNotification(notification);
         }
