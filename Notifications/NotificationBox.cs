@@ -6,12 +6,14 @@ namespace PBGame.Notifications
 {
     public class NotificationBox : INotificationBox
     {
-
         public event Action<INotification> OnNewNotification;
 
         public event Action<INotification> OnRemoveNotification;
 
         private List<INotification> notifications = new List<INotification>();
+
+
+        public IReadOnlyList<INotification> Notifications => notifications.AsReadOnly();
 
 
         public void Add(Notification notification)

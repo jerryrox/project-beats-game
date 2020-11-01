@@ -80,7 +80,12 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Returns whether the show/hide animations are playing.
         /// </summary>
-        protected bool IsAnimating => showAni.IsPlaying || hideAni.IsPlaying;
+        private bool IsAnimating => showAni.IsPlaying || hideAni.IsPlaying;
+
+        /// <summary>
+        /// Returns whether auto hiding should be handled.
+        /// </summary>
+        private bool ShouldAutoHide => CurScope == NotificationScope.Temporary || Notification?.Scope == NotificationScope.Temporary;
 
         [ReceivesDependency]
         protected IColorPreset ColorPreset { get; set; }
@@ -178,7 +183,7 @@ namespace PBGame.UI.Components.Common
             if (!Active || IsAnimating)
                 return;
 
-            curHideDelay = scope == NotificationScope.Temporary ? AutoHideDelay : float.PositiveInfinity;
+            curHideDelay = ShouldAutoHide ? AutoHideDelay : float.PositiveInfinity;
 
             this.Notification = notification;
 
@@ -204,6 +209,10 @@ namespace PBGame.UI.Components.Common
 
             showAni.Stop();
             hideAni.PlayFromStart();
+
+            // If the current displayal scope is Stored, revoke the task.
+            if (CurScope == NotificationScope.Stored)
+                Notification?.Task?.RevokeTask(true);
         }
 
         /// <summary>
@@ -280,9 +289,13 @@ namespace PBGame.UI.Components.Common
                 Hide();
             else
             {
-                // TODO:
-                // If no actions, dismiss.
                 // If has actions, display context menu.
+                if (Notification.HasActions())
+                {
+                    // TODO:
+                }
+                else
+                    Hide();
             }
         }
     }

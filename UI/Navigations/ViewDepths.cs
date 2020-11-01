@@ -34,6 +34,7 @@ namespace PBGame.UI.Navigations
         public const int ProfileMenuOverlay = 102;
         public const int MusicMenuOverlay = 103;
         public const int SettingsMenuOverlay = 104;
+        public const int NotificationMenuOverlay = 105;
 
         public const int OffsetOverlay = 110;
 

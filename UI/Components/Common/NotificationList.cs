@@ -25,6 +25,21 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         public NotificationScope Scope { get; set; }
 
+        /// <summary>
+        /// Returns the desired height which accommodates all notification cells in the list.
+        /// </summary>
+        public float DesiredHeight
+        {
+            get
+            {
+                var cells = cellRecycler.ActiveObjects;
+                if(cells.Count == 0)
+                    return 0f;
+                var lastCell = cells[cells.Count - 1];
+                return Math.Abs(lastCell.Y) + lastCell.Height;
+            }
+        }
+
 
         [InitWithDependency]
         private void Init()
@@ -49,6 +64,15 @@ namespace PBGame.UI.Components.Common
             var cell = cellRecycler.GetNext();
             cell.Show(notification, Scope);
             cell.PositionTo(GetNextCellPos(), false);
+        }
+
+        /// <summary>
+        /// Hides the notification cell matching the specified data.
+        /// </summary>
+        public void HideNotification(INotification notification)
+        {
+            var cell = cellRecycler.ActiveObjects.Find((c) => c.Notification == notification);
+            cell.Hide();
         }
 
         /// <summary>

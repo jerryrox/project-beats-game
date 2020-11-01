@@ -22,6 +22,12 @@ namespace PBGame.UI.Navigations.Overlays
         protected IAnime hoverAni;
         protected IAnime outAni;
 
+
+        /// <summary>
+        /// Returns whether glow sprite will be used in the menu display.
+        /// </summary>
+        public virtual bool UseGlow => false;
+
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
@@ -59,28 +65,34 @@ namespace PBGame.UI.Navigations.Overlays
                         outAni?.PlayFromStart();
                     };
 
-                    glowSprite = container.CreateChild<UguiSprite>("glow", -1);
+                    if (UseGlow)
                     {
-                        glowSprite.Anchor = AnchorType.Fill;
-                        glowSprite.Offset = new Offset(-15f);
-                        glowSprite.SpriteName = "square-32-glow";
-                        glowSprite.ImageType = Image.Type.Sliced;
-                        glowSprite.Color = Color.black;
+                        glowSprite = container.CreateChild<UguiSprite>("glow", -1);
+                        {
+                            glowSprite.Anchor = AnchorType.Fill;
+                            glowSprite.Offset = new Offset(-15f);
+                            glowSprite.SpriteName = "square-32-glow";
+                            glowSprite.ImageType = Image.Type.Sliced;
+                            glowSprite.Color = Color.black;
+                        }
                     }
                 }
             }
 
-            hoverAni = new Anime();
-            hoverAni.AnimateColor(color => glowSprite.Color = color)
-                .AddTime(0f, () => glowSprite.Color)
-                .AddTime(0.25f, Color.gray)
-                .Build();
+            if (UseGlow)
+            {
+                hoverAni = new Anime();
+                hoverAni.AnimateColor(color => glowSprite.Color = color)
+                    .AddTime(0f, () => glowSprite.Color)
+                    .AddTime(0.25f, Color.gray)
+                    .Build();
 
-            outAni = new Anime();
-            outAni.AnimateColor(color => glowSprite.Color = color)
-                .AddTime(0f, () => glowSprite.Color)
-                .AddTime(0.25f, Color.black)
-                .Build();
+                outAni = new Anime();
+                outAni.AnimateColor(color => glowSprite.Color = color)
+                    .AddTime(0f, () => glowSprite.Color)
+                    .AddTime(0.25f, Color.black)
+                    .Build();
+            }
         }
 
         protected override IAnime CreateShowAnime(IDependencyContainer dependencies)
