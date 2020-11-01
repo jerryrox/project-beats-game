@@ -19,7 +19,6 @@ namespace PBGame.UI.Components.Common
         private CanvasGroup canvasGroup;
 
 
-        // TODO: Assign this when creating this list.
         /// <summary>
         /// The displayal scope of the notifications.
         /// </summary>
@@ -108,7 +107,7 @@ namespace PBGame.UI.Components.Common
             cell.Anchor = AnchorType.Top;
             cell.Pivot = PivotType.Top;
             cell.Width = this.Width;
-            cell.OnHidden += (c) => {
+            cell.OnDismiss += (c) => {
                 // Remove from notifications automatically if hidden.
                 OnDismiss?.Invoke(cell.Notification);
                 cellRecycler.Return(cell);

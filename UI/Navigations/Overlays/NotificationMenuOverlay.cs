@@ -42,6 +42,7 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     notificationList.Anchor = AnchorType.Fill;
                     notificationList.Offset = Offset.Zero;
+                    notificationList.Scope = NotificationScope.Stored;
 
                     notificationList.OnDismiss += OnDismissed;
                 }

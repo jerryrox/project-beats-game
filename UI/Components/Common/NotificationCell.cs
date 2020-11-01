@@ -17,7 +17,6 @@ namespace PBGame.UI.Components.Common
 {
     public class NotificationCell : HoverableTrigger, IRecyclable<NotificationCell>, IHasAlpha
     {
-
         /// <summary>
         /// The X position from which the cell will slide in on show, or slide to on hide.
         /// </summary>
@@ -31,7 +30,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Event called when this cell is hidden.
         /// </summary>
-        public event Action<NotificationCell> OnHidden;
+        public event Action<NotificationCell> OnDismiss;
 
         private CanvasGroup canvasGroup;
 
@@ -154,7 +153,7 @@ namespace PBGame.UI.Components.Common
                 .AddTime(0f, () => this.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
-            hideAni.AddEvent(hideAni.Duration, () => OnHidden?.Invoke(this));
+            hideAni.AddEvent(hideAni.Duration, () => OnDismiss?.Invoke(this));
 
             hoverInAni = new Anime();
             hoverInAni.AnimateFloat(a => this.Alpha = a)
@@ -183,6 +182,7 @@ namespace PBGame.UI.Components.Common
             if (!Active || IsAnimating)
                 return;
 
+            CurScope = scope;
             curHideDelay = ShouldAutoHide ? AutoHideDelay : float.PositiveInfinity;
 
             this.Notification = notification;
