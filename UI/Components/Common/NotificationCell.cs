@@ -43,6 +43,7 @@ namespace PBGame.UI.Components.Common
         private ISprite glowSprite;
         private ILabel label;
         private ISprite actionSprite;
+        private IProgressBar taskProgressBar;
 
         private IAnime showAni;
         private IAnime hideAni;
@@ -150,6 +151,18 @@ namespace PBGame.UI.Components.Common
                     actionSprite.Size = new Vector2(24f, 24f);
                     actionSprite.SpriteName = "icon-actions";
                 }
+                taskProgressBar = bgSprite.CreateChild<UguiProgressBar>("progress");
+                {
+                    taskProgressBar.Anchor = AnchorType.BottomStretch;
+                    taskProgressBar.Pivot = PivotType.Bottom;
+                    taskProgressBar.Y = 0f;
+                    taskProgressBar.SetOffsetHorizontal(0f);
+                    taskProgressBar.Height = 4;
+
+                    taskProgressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
+                    taskProgressBar.Foreground.Color = ColorPreset.PrimaryFocus;
+                    taskProgressBar.Foreground.SetOffsetTop(1f);
+                }
             }
 
             showAni = new Anime();
@@ -204,6 +217,9 @@ namespace PBGame.UI.Components.Common
             curHideDelay = ShouldAutoHide ? AutoHideDelay : float.PositiveInfinity;
 
             this.Notification = notification;
+
+            // Display progress bar if there is an associated task.
+            BindListener();
 
             // Display action sprites if there are any actions associated.
             actionSprite.Active = notification.HasActions();
@@ -264,6 +280,8 @@ namespace PBGame.UI.Components.Common
 
         public virtual void OnRecycleDestroy()
         {
+            UnbindListener();
+
             Active = false;
             Notification = null;
             showAni.Stop();
@@ -284,6 +302,33 @@ namespace PBGame.UI.Components.Common
                 if (curHideDelay <= 0f)
                     Hide();
             }
+        }
+
+        /// <summary>
+        /// Binds listener events to cell UI.
+        /// </summary>
+        private void BindListener()
+        {
+            var listener = Notification?.Listener;
+            if (listener == null)
+            {
+                taskProgressBar.Active = false;
+                return;
+            }
+
+            taskProgressBar.Active = true;
+            taskProgressBar.Value = listener.Progress;
+            listener.OnProgress += OnListenerProgress;
+        }
+
+        /// <summary>
+        /// Unbinds listener events from cell UI.
+        /// </summary>
+        private void UnbindListener()
+        {
+            var listener = Notification?.Listener;
+            if (listener != null)
+                listener.OnProgress -= OnListenerProgress;
         }
 
         /// <summary>
@@ -339,6 +384,14 @@ namespace PBGame.UI.Components.Common
                 else
                     Hide();
             }
+        }
+
+        /// <summary>
+        /// Event called when the task listener reports a new progress.
+        /// </summary>
+        private void OnListenerProgress(float progress)
+        {
+            taskProgressBar.Value = progress;
         }
     }
 }

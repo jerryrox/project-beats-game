@@ -42,6 +42,11 @@ namespace PBGame.Notifications
         /// Returns the background task associated to this notification.
         /// </summary>
         ITask Task { get; }
+
+        /// <summary>
+        /// Progress reporter instance for displaying progresses.
+        /// </summary>
+        TaskListener Listener { get; }
     }
 
     public static class INotificationExtension

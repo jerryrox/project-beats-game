@@ -160,6 +160,7 @@ namespace PBGame.Networking.API
             request.OnDisposing += () => notificationBox.Remove(notification);
 
             notification.Task = request.InnerRequest;
+            notification.Listener = listener;
             notificationBox.Add(notification);
         }
     }

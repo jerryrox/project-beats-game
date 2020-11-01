@@ -19,5 +19,7 @@ namespace PBGame.Notifications
         public NotificationType Type { get; set; } = NotificationType.Passive;
 
         public ITask Task { get; set; }
+
+        public TaskListener Listener { get; set; }
     }
 }
