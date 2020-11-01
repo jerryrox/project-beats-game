@@ -24,7 +24,7 @@ namespace PBGame.Maps
 
         private string lastSearch = "";
 
-        private INotificationBox notificationBox;
+        private NotificationBox notificationBox;
 
 
         public IMapsetList AllMapsets => allMapsets;
@@ -34,7 +34,7 @@ namespace PBGame.Maps
         public string LastSearch => lastSearch;
 
 
-        public MapManager(IMapsetStore store, INotificationBox notificationBox)
+        public MapManager(IMapsetStore store, NotificationBox notificationBox)
         {
             if(store == null) throw new ArgumentNullException(nameof(store));
 

@@ -3,41 +3,46 @@ using PBFramework.Threading;
 
 namespace PBGame.Notifications
 {
-    public class Notification : INotification {
+    public class Notification {
 
-        private List<NotificationAction> actions;
-
-
+        /// <summary>
+        /// An optional field for identifying notifications.
+        /// </summary>
         public string Id { get; set; }
 
+        /// <summary>
+        /// Message to be displayed on the notification.
+        /// </summary>
         public string Message { get; set; }
 
+        /// <summary>
+        /// Background image displayed on the notification.
+        /// </summary>
         public string CoverImage { get; set; }
 
+        /// <summary>
+        /// Displayal scope of the notification.
+        /// </summary>
         public NotificationScope Scope { get; set; } = NotificationScope.Stored;
 
-        public NotificationAction DefaultAction { get; set; }
+        /// <summary>
+        /// List of actions associated with the notification.
+        /// </summary>
+        public List<NotificationAction> Actions { get; set; }
 
-        public bool HasActions => actions != null && actions.Count > 0;
+        /// <summary>
+        /// Returns whether there is at least one action on this notification.
+        /// </summary>
+        public bool HasActions => Actions != null && Actions.Count > 0;
 
+        /// <summary>
+        /// Type of notification.
+        /// </summary>
         public NotificationType Type { get; set; } = NotificationType.Passive;
 
-        public TaskListener Listener { get; set; }
-
-
-        public void AddAction(NotificationAction action)
-        {
-            if(actions == null)
-                actions = new List<NotificationAction>();
-            actions.Add(action);
-        }
-
-        public IEnumerable<NotificationAction> GetActions()
-        {
-            if(actions == null)
-                yield break;
-            foreach(var action in actions)
-                yield return action;
-        }
+        /// <summary>
+        /// A background task associated to this notification.
+        /// </summary>
+        public ITask Task { get; set; }
     }
 }

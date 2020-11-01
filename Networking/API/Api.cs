@@ -20,7 +20,7 @@ namespace PBGame.Networking.API
     public class Api : IApi {
 
         private IEnvConfiguration envConfig;
-        private INotificationBox notificationBox;
+        private NotificationBox notificationBox;
 
         private Dictionary<ApiProviderType, IApiProvider> providers;
 
@@ -39,7 +39,7 @@ namespace PBGame.Networking.API
         public IApiProvider AuthenticatedProvider => IsLoggedIn ? GetProvider(authentication.Value.ProviderType) : null;
 
 
-        public Api(IEnvConfiguration envConfig, INotificationBox notificationBox, DeepLinker deepLinker)
+        public Api(IEnvConfiguration envConfig, NotificationBox notificationBox, DeepLinker deepLinker)
         {
             if (envConfig == null)
                 throw new ArgumentNullException(nameof(envConfig));
@@ -159,7 +159,7 @@ namespace PBGame.Networking.API
 
             request.OnDisposing += () => notificationBox.Remove(notification);
 
-            notification.Listener = listener;
+            notification.Task = request.InnerRequest;
             notificationBox.Add(notification);
         }
     }

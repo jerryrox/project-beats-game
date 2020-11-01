@@ -20,7 +20,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called on new notification from the notification box.
         /// </summary>
-        public event Action<INotification> OnNewNotification;
+        public event Action<Notification> OnNewNotification;
 
         private BindableBool isMenuBarActive = new BindableBool();
         private BindableBool isGameScreen = new BindableBool();
@@ -61,13 +61,13 @@ namespace PBGame.UI.Models
         private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
-        private INotificationBox NotificationBox { get; set; }
+        private NotificationBox NotificationBox { get; set; }
 
 
         /// <summary>
         /// Removes the specified notification from the notification box.
         /// </summary>
-        public void RemoveNotification(INotification notification)
+        public void RemoveNotification(Notification notification)
         {
             if(notification.Scope == NotificationScope.Temporary)
                 NotificationBox.Remove(notification);
@@ -129,7 +129,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called when a new notification arrives.
         /// </summary>
-        private void OnNotification(INotification notification)
+        private void OnNotification(Notification notification)
         {
             OnNewNotification?.Invoke(notification);
         }

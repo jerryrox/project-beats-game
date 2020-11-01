@@ -7,14 +7,14 @@ namespace PBGame.Notifications
 {
     public class NotificationBox : INotificationBox {
 
-        public event Action<INotification> OnNewNotification;
+        public event Action<Notification> OnNewNotification;
 
-        public event Action<INotification> OnRemoveNotification;
+        public event Action<Notification> OnRemoveNotification;
 
-        private List<INotification> notifications = new List<INotification>();
+        private List<Notification> notifications = new List<Notification>();
 
 
-        public void Add(INotification notification)
+        public void Add(Notification notification)
         {
             UnityThread.DispatchUnattended(() =>
             {
@@ -25,7 +25,7 @@ namespace PBGame.Notifications
             });
         }
 
-        public void Remove(INotification notification)
+        public void Remove(Notification notification)
         {
             UnityThread.DispatchUnattended(() =>
             {

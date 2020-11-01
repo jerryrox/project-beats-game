@@ -40,7 +40,7 @@ namespace PBGame.Networking.API.Requests
         /// <summary>
         /// Creates a new notification that represents this request.
         /// </summary>
-        INotification CreateNotification();
+        Notification CreateNotification();
     }
 
     public interface IApiRequest<T> : IApiRequest

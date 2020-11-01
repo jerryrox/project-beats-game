@@ -65,7 +65,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// The notification info bound to this cell.
         /// </summary>
-        public INotification Notification { get; private set; }
+        public Notification Notification { get; private set; }
 
         /// <summary>
         /// Returns the desired Y position of the cell.
@@ -173,7 +173,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Shows this cell with the specified notification.
         /// </summary>
-        public virtual void Show(INotification notification, NotificationScope scope)
+        public virtual void Show(Notification notification, NotificationScope scope)
         {
             if (!Active || IsAnimating)
                 return;
