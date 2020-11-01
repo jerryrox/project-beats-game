@@ -20,7 +20,7 @@ namespace PBGame.Networking.API
     public class Api : IApi {
 
         private IEnvConfiguration envConfig;
-        private NotificationBox notificationBox;
+        private INotificationBox notificationBox;
 
         private Dictionary<ApiProviderType, IApiProvider> providers;
 

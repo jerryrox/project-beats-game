@@ -24,7 +24,7 @@ namespace PBGame.Maps
 
         private string lastSearch = "";
 
-        private NotificationBox notificationBox;
+        private INotificationBox notificationBox;
 
 
         public IMapsetList AllMapsets => allMapsets;

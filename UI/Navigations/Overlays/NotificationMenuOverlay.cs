@@ -68,7 +68,10 @@ namespace PBGame.UI.Navigations.Overlays
 
         protected void Update()
         {
-            scrollView.Container.Height = notificationList.DesiredHeight;
+            if (scrollView != null)
+            {
+                scrollView.Container.Height = notificationList.DesiredHeight;
+            }
         }
 
         /// <summary>

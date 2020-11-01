@@ -56,7 +56,7 @@ namespace PBGame.UI.Models
         private GameScreen Screen => ScreenNavigator.Get<GameScreen>();
 
         [ReceivesDependency]
-        private NotificationBox NotificationBox { get; set; }
+        private INotificationBox NotificationBox { get; set; }
 
         [ReceivesDependency]
         private IScreenNavigator ScreenNavigator { get; set; }

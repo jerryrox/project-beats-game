@@ -61,7 +61,7 @@ namespace PBGame.UI.Models
         private IScreenNavigator ScreenNavigator { get; set; }
 
         [ReceivesDependency]
-        private NotificationBox NotificationBox { get; set; }
+        private INotificationBox NotificationBox { get; set; }
 
 
         /// <summary>

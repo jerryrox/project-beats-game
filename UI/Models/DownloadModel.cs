@@ -79,7 +79,7 @@ namespace PBGame.UI.Models
         private IApi Api { get; set; }
 
         [ReceivesDependency]
-        private NotificationBox NotificationBox { get; set; }
+        private INotificationBox NotificationBox { get; set; }
 
         [ReceivesDependency]
         private IDownloadStore DownloadStore { get; set; }
