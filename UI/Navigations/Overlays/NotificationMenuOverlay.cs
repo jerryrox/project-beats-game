@@ -42,6 +42,8 @@ namespace PBGame.UI.Navigations.Overlays
                 {
                     notificationList.Anchor = AnchorType.Fill;
                     notificationList.Offset = Offset.Zero;
+
+                    notificationList.OnDismiss += OnDismissed;
                 }
             }
 
@@ -81,6 +83,14 @@ namespace PBGame.UI.Navigations.Overlays
         {
             foreach (var notification in model.Notifications)
                 notificationList.DisplayNotification(notification);
+        }
+
+        /// <summary>
+        /// Event called when the specified notification was dismissed from the list.
+        /// </summary>
+        private void OnDismissed(INotification notification)
+        {
+            Model.RemoveNotification(notification);
         }
 
         /// <summary>

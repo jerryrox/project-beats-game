@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.System
 {
-    public class NotificationDisplayer : UguiObject, IDisplayer {
+    public class NotificationDisplayer : UguiObject, IDisplayer
+    {
 
         private NotificationList notificationList;
         private CanvasGroup canvasGroup;
@@ -31,6 +32,8 @@ namespace PBGame.UI.Components.System
                 notificationList.Offset = Offset.Zero;
 
                 notificationList.Scope = NotificationScope.Temporary;
+
+                // notificationList.OnDismiss += 
             }
 
             showAni = new Anime();
@@ -55,7 +58,7 @@ namespace PBGame.UI.Components.System
             showAni.Stop();
             hideAni.Stop();
 
-            if(enable)
+            if (enable)
                 showAni.PlayFromStart();
             else
                 hideAni.PlayFromStart();
@@ -67,7 +70,7 @@ namespace PBGame.UI.Components.System
 
             Model.OnNewNotification += OnNotification;
         }
-        
+
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -81,6 +84,14 @@ namespace PBGame.UI.Components.System
         private void OnNotification(INotification notification)
         {
             notificationList.DisplayNotification(notification);
+        }
+
+        /// <summary>
+        /// Event called when a notification has been dismissed from the list.
+        /// </summary>
+        private void OnDismissed(INotification notification)
+        {
+            Model.RemoveNotification(notification);
         }
     }
 }

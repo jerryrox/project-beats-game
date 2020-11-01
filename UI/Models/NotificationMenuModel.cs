@@ -32,6 +32,14 @@ namespace PBGame.UI.Models
         {
         }
 
+        /// <summary>
+        /// Removes the specified notification from the box.
+        /// </summary>
+        public void RemoveNotification(INotification notification)
+        {
+            NotificationBox.Remove(notification);
+        }
+
         protected override void OnPreShow()
         {
             base.OnPreShow();
