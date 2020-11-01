@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using PBGame.UI.Components.Common.Dropdown;
 using PBGame.Graphics;
 using PBGame.Notifications;
 using PBFramework.UI;
@@ -39,11 +42,14 @@ namespace PBGame.UI.Components.Common
         private WebTexture coverTexture;
         private ISprite glowSprite;
         private ILabel label;
+        private ISprite actionSprite;
 
         private IAnime showAni;
         private IAnime hideAni;
         private IAnime positionAni;
         private float targetY;
+
+        private DropdownContext dropdownContext;
 
         private float curHideDelay;
 
@@ -87,8 +93,11 @@ namespace PBGame.UI.Components.Common
         private bool ShouldAutoHide => CurScope == NotificationScope.Temporary || Notification?.Scope == NotificationScope.Temporary;
 
         [ReceivesDependency]
-        protected IColorPreset ColorPreset { get; set; }
+        private IColorPreset ColorPreset { get; set; }
 
+        [ReceivesDependency]
+        private IDropdownProvider DropdownProvider { get; set; }
+        
 
         [InitWithDependency]
         private void Init()
@@ -96,6 +105,8 @@ namespace PBGame.UI.Components.Common
             OnTriggered += OnCellTrigger;
 
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
+            dropdownContext = new DropdownContext();
+            dropdownContext.OnSelection += OnDropdownSelection;
 
             container = CreateChild("container");
             {
@@ -131,6 +142,13 @@ namespace PBGame.UI.Components.Common
                     label.Alignment = TextAnchor.MiddleCenter;
                     label.SetOffsetHorizontal(12f);
                     label.WrapText = true;
+                }
+                actionSprite = bgSprite.CreateChild<UguiSprite>("actions");
+                {
+                    actionSprite.Anchor = AnchorType.Right;
+                    actionSprite.X = -8;
+                    actionSprite.Size = new Vector2(24f, 24f);
+                    actionSprite.SpriteName = "icon-actions";
                 }
             }
 
@@ -187,10 +205,15 @@ namespace PBGame.UI.Components.Common
 
             this.Notification = notification;
 
+            // Display action sprites if there are any actions associated.
+            actionSprite.Active = notification.HasActions();
+
+            // Set color theme of cell.
             var palette = GetColor(notification.Type);
             bgSprite.Color = palette.Weaken(0.3f);
             glowSprite.Color = palette.Base;
 
+            // Adjust height based on label height.
             label.Text = notification.Message;
             label.Height = label.PreferredHeight;
             this.Height = label.Height + (-label.Y * 2f) + container.Offset.Vertical;
@@ -209,6 +232,8 @@ namespace PBGame.UI.Components.Common
 
             showAni.Stop();
             hideAni.PlayFromStart();
+
+            dropdownContext.Datas.Clear();
 
             // If the current displayal scope is Stored, revoke the task.
             if (CurScope == NotificationScope.Stored)
@@ -278,6 +303,20 @@ namespace PBGame.UI.Components.Common
         }
 
         /// <summary>
+        /// Event called on selection of a dropdown menu item.
+        /// </summary>
+        private void OnDropdownSelection(DropdownData data)
+        {
+            var action = data.ExtraData as NotificationAction;
+            if(action == null)
+                return;
+
+            action.Action?.Invoke();
+            if(action.ShouldDismiss)
+                Hide();
+        }
+
+        /// <summary>
         /// Event called on notification cell button trigger.
         /// </summary>
         private void OnCellTrigger()
@@ -292,7 +331,10 @@ namespace PBGame.UI.Components.Common
                 // If has actions, display context menu.
                 if (Notification.HasActions())
                 {
-                    // TODO:
+                    dropdownContext.Datas.Clear();
+                    dropdownContext.Datas.AddRange(Notification.Actions.Select((a) => new DropdownData(a.Name, a)));
+
+                    DropdownProvider.OpenAt(dropdownContext, GetPositionAtCorner(PivotType.Center, Space.World));
                 }
                 else
                     Hide();
