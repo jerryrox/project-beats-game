@@ -18,6 +18,8 @@ Slowly making progress 🧩
 ### 0.12.0 (WIP)
 #### New features
 - Implemented AvatarDisplay component to simplify loading of avatar images.
+- Implemented NotificationMenuOverlay.
+- Reworked on notification displayal. (Added support for task cancellation, progress check, action handling, cover image).
 - Added judgemnt counter display for ResultScreen.
 #### Improvements
 - Sign-in process will continue even when login menu overlay has become hidden.

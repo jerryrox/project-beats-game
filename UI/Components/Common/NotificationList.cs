@@ -1,75 +1,57 @@
-using PBGame.UI.Models;
+using System;
 using PBGame.Notifications;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
-using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-namespace PBGame.UI.Components.System
+namespace PBGame.UI.Components.Common
 {
-    public class MessageDisplayer : UguiObject, IDisplayer {
+    public class NotificationList : UguiObject {
 
-        private ManagedRecycler<MessageCell> cellRecycler;
+        /// <summary>
+        /// Event called on dismissing the passed notification.
+        /// </summary>
+        public event Action<INotification> OnDismiss;
+
+        private ManagedRecycler<NotificationCell> cellRecycler;
 
         private CanvasGroup canvasGroup;
 
-        private IAnime showAni;
-        private IAnime hideAni;
 
+        /// <summary>
+        /// The displayal scope of the notifications.
+        /// </summary>
+        public NotificationScope Scope { get; set; }
 
-        [ReceivesDependency]
-        private SystemModel Model { get; set; }
+        /// <summary>
+        /// Returns the desired height which accommodates all notification cells in the list.
+        /// </summary>
+        public float DesiredHeight
+        {
+            get
+            {
+                var cells = cellRecycler.ActiveObjects;
+                if(cells.Count == 0)
+                    return 0f;
+                var lastCell = cells[cells.Count - 1];
+                return Math.Abs(lastCell.Y) + lastCell.Height;
+            }
+        }
 
 
         [InitWithDependency]
         private void Init()
         {
-            cellRecycler = new ManagedRecycler<MessageCell>(CreateCell);
+            cellRecycler = new ManagedRecycler<NotificationCell>(CreateCell);
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
-
-            showAni = new Anime();
-            showAni.AddEvent(0f, () => Active = true);
-            showAni.AnimateFloat(a => canvasGroup.alpha = a)
-                .AddTime(0f, () => canvasGroup.alpha)
-                .AddTime(0.25f, 1f)
-                .Build();
-
-            hideAni = new Anime();
-            hideAni.AnimateFloat(a => canvasGroup.alpha = a)
-                .AddTime(0f, () => canvasGroup.alpha)
-                .AddTime(0.25f, 1f)
-                .Build();
-            hideAni.AddEvent(hideAni.Duration, () => Active = false);
-
-            OnEnableInited();
-        }
-
-        protected override void OnEnableInited()
-        {
-            base.OnEnableInited();
-
-            Model.OnNewNotification += OnNotification;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            Model.OnNewNotification -= OnNotification;
-
             cellRecycler.ReturnAll();
-        }
-
-        public void ToggleDisplay(bool enable)
-        {
-            showAni.Stop();
-            hideAni.Stop();
-
-            if(enable)
-                showAni.PlayFromStart();
-            else
-                hideAni.PlayFromStart();
         }
 
         /// <summary>
@@ -79,8 +61,17 @@ namespace PBGame.UI.Components.System
         {
             // Display a new cell for this notification
             var cell = cellRecycler.GetNext();
-            cell.Show(notification);
+            cell.Show(notification, Scope);
             cell.PositionTo(GetNextCellPos(), false);
+        }
+
+        /// <summary>
+        /// Hides the notification cell matching the specified data.
+        /// </summary>
+        public void HideNotification(INotification notification)
+        {
+            var cell = cellRecycler.ActiveObjects.Find((c) => c.Notification == notification);
+            cell.Hide();
         }
 
         /// <summary>
@@ -110,27 +101,19 @@ namespace PBGame.UI.Components.System
         /// <summary>
         /// Creates a new message cell.
         /// </summary>
-        private MessageCell CreateCell()
+        private NotificationCell CreateCell()
         {
-            var cell = CreateChild<MessageCell>("cell", ChildCount);
+            var cell = CreateChild<NotificationCell>("cell", ChildCount);
             cell.Anchor = AnchorType.Top;
             cell.Pivot = PivotType.Top;
             cell.Width = this.Width;
-            cell.OnHidden += (c) => {
+            cell.OnDismiss += (c) => {
                 // Remove from notifications automatically if hidden.
-                Model.RemoveNotification(c.Notification);
-                cellRecycler.Return(c);
+                OnDismiss?.Invoke(cell.Notification);
+                cellRecycler.Return(cell);
                 AdjustCellPos();
             };
             return cell;
-        }
-
-        /// <summary>
-        /// Event called on new notification.
-        /// </summary>
-        private void OnNotification(INotification notification)
-        {
-            DisplayNotification(notification);
         }
     }
 }

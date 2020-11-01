@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Networking.API.Responses;
 using PBGame.Networking.Maps;
@@ -23,7 +24,7 @@ namespace PBGame.Networking.API.Requests
         {
         }
 
-        public override INotification CreateNotification()
+        public override Notification CreateNotification()
         {
             Notification notification = new Notification()
             {
@@ -32,12 +33,16 @@ namespace PBGame.Networking.API.Requests
                 Message = $"Downloading {Mapset.Artist} - {Mapset.Title} ({Mapset.Creator})",
                 Scope = NotificationScope.Stored,
                 Type = NotificationType.Passive,
+                Actions = new List<NotificationAction>()
+                {
+                    new NotificationAction()
+                    {
+                        Name = "Stop download",
+                        Action = Dispose,
+                        ShouldDismiss = true,
+                    }
+                },
             };
-            notification.AddAction(new NotificationAction()
-            {
-                Name = "Cancel",
-                Action = Dispose,
-            });
             return notification;
         }
 

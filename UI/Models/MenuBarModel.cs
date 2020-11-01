@@ -143,7 +143,7 @@ namespace PBGame.UI.Models
             switch (type)
             {
                 case MenuType.Music: return OverlayNavigator.Show<MusicMenuOverlay>();
-                case MenuType.Notification: return null;//OverlayNavigator.Show<NotificationMenuOverlay>();
+                case MenuType.Notification: return OverlayNavigator.Show<NotificationMenuOverlay>();
                 case MenuType.Profile: return OverlayNavigator.Show<ProfileMenuOverlay>();
                 case MenuType.Quick: return OverlayNavigator.Show<QuickMenuOverlay>();
                 case MenuType.Settings: return OverlayNavigator.Show<SettingsMenuOverlay>();

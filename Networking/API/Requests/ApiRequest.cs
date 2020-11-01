@@ -56,7 +56,7 @@ namespace PBGame.Networking.API.Requests
             InnerRequest.Request(listener: listener);
         }
 
-        public virtual INotification CreateNotification() => null;
+        public virtual Notification CreateNotification() => null;
 
         public void Dispose()
         {
