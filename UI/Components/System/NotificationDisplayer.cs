@@ -1,3 +1,4 @@
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Notifications;
 using PBFramework.Graphics;
@@ -14,6 +15,9 @@ namespace PBGame.UI.Components.System
 
         private IAnime showAni;
         private IAnime hideAni;
+
+        [ReceivesDependency]
+        private SystemModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -42,6 +46,8 @@ namespace PBGame.UI.Components.System
                 .AddTime(0.25f, 1f)
                 .Build();
             hideAni.AddEvent(hideAni.Duration, () => Active = false);
+
+            OnEnableInited();
         }
 
         public void ToggleDisplay(bool enable)
@@ -53,6 +59,28 @@ namespace PBGame.UI.Components.System
                 showAni.PlayFromStart();
             else
                 hideAni.PlayFromStart();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            Model.OnNewNotification += OnNotification;
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.OnNewNotification -= OnNotification;
+        }
+
+        /// <summary>
+        /// Event called when a new notification is received.
+        /// </summary>
+        private void OnNotification(INotification notification)
+        {
+            notificationList.DisplayNotification(notification);
         }
     }
 }

@@ -1,14 +1,18 @@
-using PBGame.UI.Models;
+using System;
 using PBGame.Notifications;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
-using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.UI.Components.Common
 {
     public class NotificationList : UguiObject {
+
+        /// <summary>
+        /// Event called on dismissing the passed notification.
+        /// </summary>
+        public event Action<INotification> OnDismiss;
 
         private ManagedRecycler<NotificationCell> cellRecycler;
 
@@ -21,31 +25,17 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         public NotificationScope Scope { get; set; }
 
-        [ReceivesDependency]
-        private SystemModel Model { get; set; }
-
 
         [InitWithDependency]
         private void Init()
         {
             cellRecycler = new ManagedRecycler<NotificationCell>(CreateCell);
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
-
-            OnEnableInited();
-        }
-
-        protected override void OnEnableInited()
-        {
-            base.OnEnableInited();
-
-            Model.OnNewNotification += OnNotification;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-
-            Model.OnNewNotification -= OnNotification;
 
             cellRecycler.ReturnAll();
         }
@@ -96,19 +86,11 @@ namespace PBGame.UI.Components.Common
             cell.Width = this.Width;
             cell.OnHidden += (c) => {
                 // Remove from notifications automatically if hidden.
-                Model.RemoveNotification(cell.Notification);
+                OnDismiss?.Invoke(cell.Notification);
                 cellRecycler.Return(cell);
                 AdjustCellPos();
             };
             return cell;
-        }
-
-        /// <summary>
-        /// Event called on new notification.
-        /// </summary>
-        private void OnNotification(INotification notification)
-        {
-            DisplayNotification(notification);
         }
     }
 }

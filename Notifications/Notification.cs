@@ -14,7 +14,7 @@ namespace PBGame.Notifications
         public NotificationScope Scope { get; set; } = NotificationScope.Stored;
 
         public List<NotificationAction> Actions { get; set; }
-        IReadOnlyList<NotificationAction> INotification.Actions => Actions.AsReadOnly();
+        IReadOnlyList<NotificationAction> INotification.Actions => Actions?.AsReadOnly();
 
         public NotificationType Type { get; set; } = NotificationType.Passive;
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBFramework.Threading;
 
@@ -65,7 +64,11 @@ namespace PBGame.Notifications
         /// </summary>
         private void PostProcessNotification(Notification notification)
         {
-            // TODO:
+            // Force-set notification scope to true under certain conditions.
+            if (notification.Task != null || notification.HasActions())
+            {
+                notification.Scope = NotificationScope.Stored;
+            }
         }
     }
 }
