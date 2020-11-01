@@ -15,7 +15,8 @@ using Coffee.UIExtensions;
 
 namespace PBGame.UI.Components.Common
 {
-    public class BaseNotificationCell : HoverableTrigger, IRecyclable, IHasAlpha {
+    public class NotificationCell : HoverableTrigger, IRecyclable<NotificationCell>, IHasAlpha
+    {
 
         /// <summary>
         /// The X position from which the cell will slide in on show, or slide to on hide.
@@ -23,9 +24,14 @@ namespace PBGame.UI.Components.Common
         private const float SlideInPos = 200f;
 
         /// <summary>
+        /// The duration of message before it automatically hides.
+        /// </summary>
+        private const float AutoHideDelay = 4f;
+
+        /// <summary>
         /// Event called when this cell is hidden.
         /// </summary>
-        public event Action<BaseNotificationCell> OnHidden;
+        public event Action<NotificationCell> OnHidden;
 
         private CanvasGroup canvasGroup;
 
@@ -40,12 +46,21 @@ namespace PBGame.UI.Components.Common
         private IAnime positionAni;
         private float targetY;
 
+        private float curHideDelay;
+
 
         public float Alpha
         {
             get => canvasGroup.alpha;
             set => canvasGroup.alpha = value;
         }
+
+        public IRecycler<NotificationCell> Recycler { get; set; }
+
+        /// <summary>
+        /// Current displayal scope of the notification.
+        /// </summary>
+        public NotificationScope CurScope { get; private set; }
 
         /// <summary>
         /// The notification info bound to this cell.
@@ -74,6 +89,8 @@ namespace PBGame.UI.Components.Common
         [InitWithDependency]
         private void Init()
         {
+            OnTriggered += OnCellTrigger;
+
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
 
             container = CreateChild("container");
@@ -156,10 +173,12 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Shows this cell with the specified notification.
         /// </summary>
-        public virtual void Show(INotification notification)
+        public virtual void Show(INotification notification, NotificationScope scope)
         {
             if (!Active || IsAnimating)
                 return;
+
+            curHideDelay = scope == NotificationScope.Temporary ? AutoHideDelay : float.PositiveInfinity;
 
             this.Notification = notification;
 
@@ -192,11 +211,11 @@ namespace PBGame.UI.Components.Common
         /// </summary>
         public void PositionTo(float y, bool animate)
         {
-            if(!Active || hideAni.IsPlaying)
+            if (!Active || hideAni.IsPlaying)
                 return;
 
             targetY = y;
-            if(animate)
+            if (animate)
                 positionAni.PlayFromStart();
             else
                 this.Y = y;
@@ -218,10 +237,25 @@ namespace PBGame.UI.Components.Common
             positionAni.Stop();
         }
 
+        protected override void Update()
+        {
+            if(IsAnimating)
+                return;
+
+            base.Update();
+
+            if (curHideDelay > 0f)
+            {
+                curHideDelay -= Time.deltaTime;
+                if (curHideDelay <= 0f)
+                    Hide();
+            }
+        }
+
         /// <summary>
         /// Returns the color palette matching the specified type.
         /// </summary>
-        protected ColorPalette GetColor(NotificationType type)
+        private ColorPalette GetColor(NotificationType type)
         {
             switch (type)
             {
@@ -232,6 +266,24 @@ namespace PBGame.UI.Components.Common
             }
             Debug.LogWarning($"MessageCell.GetColor - Unknown notification type: " + type);
             return ColorPreset.Passive;
+        }
+
+        /// <summary>
+        /// Event called on notification cell button trigger.
+        /// </summary>
+        private void OnCellTrigger()
+        {
+            if(Notification == null)
+                return;
+
+            if (CurScope == NotificationScope.Temporary)
+                Hide();
+            else
+            {
+                // TODO:
+                // If no actions, dismiss.
+                // If has actions, display context menu.
+            }
         }
     }
 }
