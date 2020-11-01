@@ -26,7 +26,7 @@ namespace PBGame.UI.Navigations.Overlays
         /// <summary>
         /// Returns whether glow sprite will be used in the menu display.
         /// </summary>
-        public virtual bool UseGlow => false;
+        public virtual bool UseGlow => true;
 
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }

@@ -33,7 +33,7 @@ namespace PBGame.UI.Components.System
 
                 notificationList.Scope = NotificationScope.Temporary;
 
-                // notificationList.OnDismiss += 
+                notificationList.OnDismiss += OnDismissed;
             }
 
             showAni = new Anime();
