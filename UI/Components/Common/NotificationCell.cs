@@ -126,42 +126,48 @@ namespace PBGame.UI.Components.Common
                     var gradient = bgSprite.AddEffect(new GradientEffect()).Component;
                     gradient.direction = UIGradient.Direction.Horizontal;
                     gradient.color2 = new Color(0.75f, 0.75f, 0.75f);
-                }
-                glowSprite = bgSprite.CreateChild<UguiSprite>("glow");
-                {
-                    glowSprite.Anchor = AnchorType.Fill;
-                    glowSprite.Offset = new Offset(-13.5f);
-                    glowSprite.SpriteName = "glow-circle-16-x2";
-                    glowSprite.ImageType = Image.Type.Sliced;
-                }
-                label = bgSprite.CreateChild<Label>("label");
-                {
-                    label.Anchor = AnchorType.TopStretch;
-                    label.Pivot = PivotType.Top;
-                    label.Y = -12f;
-                    label.FontSize = 16;
-                    label.Alignment = TextAnchor.MiddleCenter;
-                    label.SetOffsetHorizontal(12f);
-                    label.WrapText = true;
-                }
-                actionSprite = bgSprite.CreateChild<UguiSprite>("actions");
-                {
-                    actionSprite.Anchor = AnchorType.Right;
-                    actionSprite.X = -8;
-                    actionSprite.Size = new Vector2(24f, 24f);
-                    actionSprite.SpriteName = "icon-actions";
-                }
-                taskProgressBar = bgSprite.CreateChild<UguiProgressBar>("progress");
-                {
-                    taskProgressBar.Anchor = AnchorType.BottomStretch;
-                    taskProgressBar.Pivot = PivotType.Bottom;
-                    taskProgressBar.Y = 0f;
-                    taskProgressBar.SetOffsetHorizontal(0f);
-                    taskProgressBar.Height = 4;
 
-                    taskProgressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
-                    taskProgressBar.Foreground.Color = ColorPreset.PrimaryFocus;
-                    taskProgressBar.Foreground.SetOffsetTop(1f);
+                    coverTexture = bgSprite.CreateChild<WebTexture>("cover");
+                    {
+                        coverTexture.Anchor = AnchorType.Fill;
+                        coverTexture.Offset = Offset.Zero;
+                    }
+                    glowSprite = bgSprite.CreateChild<UguiSprite>("glow");
+                    {
+                        glowSprite.Anchor = AnchorType.Fill;
+                        glowSprite.Offset = new Offset(-13.5f);
+                        glowSprite.SpriteName = "glow-circle-16-x2";
+                        glowSprite.ImageType = Image.Type.Sliced;
+                    }
+                    label = bgSprite.CreateChild<Label>("label");
+                    {
+                        label.Anchor = AnchorType.TopStretch;
+                        label.Pivot = PivotType.Top;
+                        label.Y = -12f;
+                        label.FontSize = 16;
+                        label.Alignment = TextAnchor.MiddleCenter;
+                        label.SetOffsetHorizontal(12f);
+                        label.WrapText = true;
+                    }
+                    actionSprite = bgSprite.CreateChild<UguiSprite>("actions");
+                    {
+                        actionSprite.Anchor = AnchorType.Right;
+                        actionSprite.X = -8;
+                        actionSprite.Size = new Vector2(24f, 24f);
+                        actionSprite.SpriteName = "icon-actions";
+                    }
+                    taskProgressBar = bgSprite.CreateChild<UguiProgressBar>("progress");
+                    {
+                        taskProgressBar.Anchor = AnchorType.BottomStretch;
+                        taskProgressBar.Pivot = PivotType.Bottom;
+                        taskProgressBar.Y = 0f;
+                        taskProgressBar.SetOffsetHorizontal(0f);
+                        taskProgressBar.Height = 4;
+
+                        taskProgressBar.Background.Color = new Color(0f, 0f, 0f, 0.5f);
+                        taskProgressBar.Foreground.Color = ColorPreset.PrimaryFocus;
+                        taskProgressBar.Foreground.SetOffsetTop(1f);
+                    }
                 }
             }
 
@@ -208,7 +214,7 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Shows this cell with the specified notification.
         /// </summary>
-        public virtual void Show(INotification notification, NotificationScope scope)
+        public void Show(INotification notification, NotificationScope scope)
         {
             if (!Active || IsAnimating)
                 return;
@@ -220,6 +226,9 @@ namespace PBGame.UI.Components.Common
 
             // Display progress bar if there is an associated task.
             BindListener();
+
+            // Load cover image.
+            coverTexture.Load(notification.CoverImage);
 
             // Display action sprites if there are any actions associated.
             actionSprite.Active = notification.HasActions();
@@ -281,6 +290,7 @@ namespace PBGame.UI.Components.Common
         public virtual void OnRecycleDestroy()
         {
             UnbindListener();
+            coverTexture.Unload();
 
             Active = false;
             Notification = null;
