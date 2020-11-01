@@ -11,7 +11,7 @@ namespace PBGame.Notifications
 
         public string CoverImage { get; set; }
 
-        public NotificationScope Scope { get; set; } = NotificationScope.Stored;
+        public NotificationScope Scope { get; set; } = NotificationScope.Temporary;
 
         public List<NotificationAction> Actions { get; set; }
         IReadOnlyList<NotificationAction> INotification.Actions => Actions?.AsReadOnly();
