@@ -321,7 +321,6 @@ namespace PBGame
             // Handle mapset import
             downloadStore.MapStorage.OnAdded += (path) =>
             {
-                Debug.Log("ProjectBeatsGame.HookDownloadStore - Downloaded at path: " + path);
                 mapManager.Import(downloadStore.MapStorage.GetFile(path));
 
                 notificationBox.Add(new Notification()

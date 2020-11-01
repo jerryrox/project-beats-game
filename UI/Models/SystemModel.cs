@@ -24,6 +24,7 @@ namespace PBGame.UI.Models
 
         private BindableBool isMenuBarActive = new BindableBool();
         private BindableBool isGameScreen = new BindableBool();
+        private BindableBool isNotificationOverlayActive = new BindableBool();
 
 
         /// <summary>
@@ -50,6 +51,11 @@ namespace PBGame.UI.Models
         /// Returns whether the game screen is currently active.
         /// </summary>
         public IReadOnlyBindable<bool> IsGameScreen => isGameScreen;
+
+        /// <summary>
+        /// Returns whether the notification menu overlay is currently active.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsNotificationOverlayActive => isNotificationOverlayActive;
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
@@ -107,6 +113,8 @@ namespace PBGame.UI.Models
         {
             if(view is MenuBarOverlay)
                 isMenuBarActive.Value = true;
+            if(view is NotificationMenuOverlay)
+                isNotificationOverlayActive.Value = true;
         }
 
         /// <summary>
@@ -116,6 +124,8 @@ namespace PBGame.UI.Models
         {
             if(view is MenuBarOverlay)
                 isMenuBarActive.Value = false;
+            if(view is NotificationMenuOverlay)
+                isNotificationOverlayActive.Value = false;
         }
 
         /// <summary>

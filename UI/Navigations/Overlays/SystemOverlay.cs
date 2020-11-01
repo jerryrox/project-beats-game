@@ -63,6 +63,8 @@ namespace PBGame.UI.Navigations.Overlays
 
             model.IsFpsEnabled.BindAndTrigger(OnShowFpsChange);
             model.IsMenuBarActive.BindAndTrigger(OnMenuBarActivate);
+            model.IsNotificationOverlayActive.BindAndTrigger(OnNotificationOverlayActivate);
+
             model.IsMessageEnabled.OnNewValue += OnDisplayMessagesChange;
             model.IsMessageEnabledGame.OnNewValue += OnDisplayMessagesGameChange;
             model.IsGameScreen.OnNewValue += OnGameScreen;
@@ -72,11 +74,13 @@ namespace PBGame.UI.Navigations.Overlays
         {
             base.OnDisable();
 
-            model.IsFpsEnabled.OnNewValue -= OnShowFpsChange;
-            model.IsMenuBarActive.OnNewValue -= OnMenuBarActivate;
-            model.IsMessageEnabled.OnNewValue -= OnDisplayMessagesChange;
-            model.IsMessageEnabledGame.OnNewValue -= OnDisplayMessagesGameChange;
-            model.IsGameScreen.OnNewValue -= OnGameScreen;
+            model.IsFpsEnabled.Unbind(OnShowFpsChange);
+            model.IsMenuBarActive.Unbind(OnMenuBarActivate);
+            model.IsNotificationOverlayActive.Unbind(OnNotificationOverlayActivate);
+
+            model.IsMessageEnabled.Unbind(OnDisplayMessagesChange);
+            model.IsMessageEnabledGame.Unbind(OnDisplayMessagesGameChange);
+            model.IsGameScreen.Unbind(OnGameScreen);
         }
 
         /// <summary>
@@ -110,7 +114,10 @@ namespace PBGame.UI.Navigations.Overlays
                 }
             }
 
-            messageDisplayer.ToggleDisplay(isMessageEnbled);
+            // Message displayer should be inactive when there is a notification menu overlay in view.
+            bool isNotifOverlayEnabled = model.IsNotificationOverlayActive.Value;
+            
+            messageDisplayer.ToggleDisplay(isMessageEnbled && !isNotifOverlayEnabled);
         }
 
         /// <summary>
@@ -135,6 +142,14 @@ namespace PBGame.UI.Navigations.Overlays
         {
             ToggleMessageDisplayer();
             AdjustForMenubar(isActive);
+        }
+
+        /// <summary>
+        /// Event called on notification menu overlay active state change.
+        /// </summary>
+        private void OnNotificationOverlayActivate(bool isActive)
+        {
+            ToggleMessageDisplayer();
         }
 
         /// <summary>

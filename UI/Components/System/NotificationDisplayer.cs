@@ -54,6 +54,10 @@ namespace PBGame.UI.Components.System
 
         public void ToggleDisplay(bool enable)
         {
+            if((enable && showAni.IsPlaying) ||
+                (!enable && hideAni.IsPlaying))
+                return;
+
             showAni.Stop();
             hideAni.Stop();
 
