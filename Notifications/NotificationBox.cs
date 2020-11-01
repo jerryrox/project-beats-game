@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBFramework.Threading;
 
 namespace PBGame.Notifications
 {
-    public class NotificationBox : INotificationBox {
-
+    public class NotificationBox : INotificationBox
+    {
         public event Action<INotification> OnNewNotification;
 
         public event Action<INotification> OnRemoveNotification;
@@ -14,8 +13,13 @@ namespace PBGame.Notifications
         private List<INotification> notifications = new List<INotification>();
 
 
-        public void Add(INotification notification)
+        public IReadOnlyList<INotification> Notifications => notifications.AsReadOnly();
+
+
+        public void Add(Notification notification)
         {
+            PostProcessNotification(notification);
+
             UnityThread.DispatchUnattended(() =>
             {
                 if (notification.Scope != NotificationScope.Temporary)
@@ -37,7 +41,7 @@ namespace PBGame.Notifications
 
         public void RemoveById(string id, bool multiple)
         {
-            if(string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
                 return;
 
             UnityThread.DispatchUnattended(() =>
@@ -55,6 +59,18 @@ namespace PBGame.Notifications
                 }
                 return null;
             });
+        }
+
+        /// <summary>
+        /// Performs any additional processing of notification data.
+        /// </summary>
+        private void PostProcessNotification(Notification notification)
+        {
+            // Force-set notification scope to true under certain conditions.
+            if (notification.Task != null || notification.HasActions())
+            {
+                notification.Scope = NotificationScope.Stored;
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using PBGame.Networking.API.Responses;
 using PBGame.Notifications;
 using PBGame.Configurations;
 using PBFramework.Data.Bindables;
+using PBFramework.Threading;
 using PBFramework.Networking;
 using PBFramework.Networking.Linking;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace PBGame.Networking.API
         public IApiProvider AuthenticatedProvider => IsLoggedIn ? GetProvider(authentication.Value.ProviderType) : null;
 
 
-        public Api(IEnvConfiguration envConfig, INotificationBox notificationBox, DeepLinker deepLinker)
+        public Api(IEnvConfiguration envConfig, NotificationBox notificationBox, DeepLinker deepLinker)
         {
             if (envConfig == null)
                 throw new ArgumentNullException(nameof(envConfig));
@@ -80,8 +81,10 @@ namespace PBGame.Networking.API
             if (authentication.Value != null)
                 request.InnerRequest.SetHeader("Authorization", $"Bearer {authentication.Value.AccessToken}");
 
-            // TODO: Display request as notification.
-            request.Request();
+            var listener = new TaskListener<IWebRequest>();
+
+            ShowNotification(request, listener);
+            request.Request(listener);
         }
 
         public void HandleResponse(IApiResponse response)
@@ -143,6 +146,22 @@ namespace PBGame.Networking.API
                     Logger.LogError($"Failed to parse deeplink response: {response}\n{e.ToString()}");
                 }
             }
+        }
+
+        /// <summary>
+        /// Shows a notification for the specified api request.
+        /// </summary>
+        private void ShowNotification(IApiRequest request, TaskListener<IWebRequest> listener)
+        {
+            var notification = request.CreateNotification();
+            if(notification == null)
+                return;
+
+            request.OnDisposing += () => notificationBox.Remove(notification);
+
+            notification.Task = request.InnerRequest;
+            notification.Listener = listener;
+            notificationBox.Add(notification);
         }
     }
 }

@@ -188,23 +188,10 @@ namespace PBGame.UI.Models
             // Setup request.
             var request = provider.MapsetDownload();
             request.DownloadStore = DownloadStore;
-            request.MapsetId = mapset.Id.ToString();
-
-            // Show a notification.
-            NotificationBox.Add(new Notification()
-            {
-                Type = NotificationType.Passive,
-                Message = $"Download started for {mapset.Artist} - {mapset.Title}.",
-                Scope = NotificationScope.Temporary,
-            });
+            request.Mapset = mapset;
 
             // Start request
             Api.Request(request);
-            // TODO: Remove when notification overlay is implemented.
-            request.InnerRequest.OnProgress += (progress) =>
-            {
-                Debug.Log("Download progress: " + progress);
-            };
         }
 
         /// <summary>
