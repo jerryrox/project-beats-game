@@ -1,10 +1,9 @@
-using System.Linq;
 using PBGame.Graphics;
 using PBGame.UI.Components.Prepare.Details;
 using PBGame.UI.Components.Prepare.Details.Meta;
+using PBGame.UI.Components.Prepare.Details.Actions;
 using PBGame.UI.Components.Prepare.Details.Ranking;
 using PBFramework.UI;
-using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 
@@ -18,6 +17,7 @@ namespace PBGame.UI.Components.Prepare
         private IScrollView contentScroll;
         private MetaContainer metaContainer;
         private RankingContainer rankingContainer;
+        private ActionsContainer actionsContainer;
 
 
         /// <summary>
@@ -58,26 +58,33 @@ namespace PBGame.UI.Components.Prepare
             contentScroll = CreateChild<UguiScrollView>("content", 2);
             {
                 contentScroll.Anchor = AnchorType.Fill;
-                contentScroll.RawWidth = -128f;
-                contentScroll.SetOffsetVertical(128f, 0f);
+                contentScroll.Offset = new Offset(0f, 128f, 0f, 0f);
 
                 contentScroll.Background.Alpha = 0f;
 
-                metaContainer = contentScroll.Container.CreateChild<MetaContainer>("meta", 0);
+                metaContainer = contentScroll.Container.CreateChild<MetaContainer>("meta");
                 {
                     metaContainer.Anchor = AnchorType.TopStretch;
                     metaContainer.Pivot = PivotType.Top;
-                    metaContainer.RawWidth = 0f;
                     metaContainer.Y = -32f;
                     metaContainer.Height = 360f;
+                    metaContainer.SetOffsetHorizontal(64f);
                 }
-                rankingContainer = contentScroll.Container.CreateChild<RankingContainer>("ranking", 1);
+                rankingContainer = contentScroll.Container.CreateChild<RankingContainer>("ranking");
                 {
                     rankingContainer.Anchor = AnchorType.TopStretch;
                     rankingContainer.Pivot = PivotType.Top;
-                    rankingContainer.RawWidth = 0f;
                     rankingContainer.Y = -424f;
                     rankingContainer.Height = 360f;
+                    rankingContainer.SetOffsetHorizontal(64f);
+                }
+                actionsContainer = contentScroll.Container.CreateChild<ActionsContainer>("actions");
+                {
+                    actionsContainer.Anchor = AnchorType.TopStretch;
+                    actionsContainer.Pivot = PivotType.Top;
+                    actionsContainer.Y = -816f;
+                    actionsContainer.Height = 48f;
+                    actionsContainer.SetOffsetHorizontal(64f);
                 }
 
                 // Calculate height of the scrollview content.

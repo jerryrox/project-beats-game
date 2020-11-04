@@ -13,6 +13,16 @@ namespace PBGame.Maps
         /// </summary>
         event Action<IMapset> OnImportMapset;
 
+        /// <summary>
+        /// Event called when a map has been deleted.
+        /// </summary>
+        event Action<IOriginalMap> OnDeleteMap;
+
+        /// <summary>
+        /// Event called when a mapset has been deleted.
+        /// </summary>
+        event Action<IMapset> OnDeleteMapset;
+
 
         /// <summary>
         /// Returns the list of all maps loaded into memory.
