@@ -101,13 +101,19 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Shows the map actions dialog overlay.
         /// </summary>
-        public void ShowMapActions()
+        public void ShowMapActions(IOriginalMap map)
         {
+            if (map == null)
+            {
+                Debug.LogWarning("Attempted to show map actions for a null map.");
+                return;
+            }
+
             var dialogModel = OverlayNavigator.Show<DialogOverlay>().Model;
-            dialogModel.SetMessage("Select an action for the current map.");
+            dialogModel.SetMessage($"Select an action for the version ({map.Detail.Version})");
             dialogModel.AddOption(new DialogOption()
             {
-                Callback = OnMapActionDelete,
+                Callback = () => OnMapActionDelete(map),
                 Label = "Delete",
                 Color = ColorPreset.Warning
             });
@@ -307,9 +313,9 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Event called on selecting delete in map actions dialog.
         /// </summary>
-        private void OnMapActionDelete()
+        private void OnMapActionDelete(IOriginalMap map)
         {
-            MapManager.DeleteMap(MapSelection.Map.Value.OriginalMap);
+            MapManager.DeleteMap(map);
         }
     }
 }

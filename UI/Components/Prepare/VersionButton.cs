@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBGame.Maps;
 using PBGame.Rulesets;
@@ -52,6 +53,9 @@ namespace PBGame.UI.Components.Prepare
         private bool ShouldBeFocused => !isInteractible || myMap == MapSelection.Map.Value;
 
         [ReceivesDependency]
+        private PrepareModel Model { get; set; }
+
+        [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
         [ReceivesDependency]
@@ -64,10 +68,16 @@ namespace PBGame.UI.Components.Prepare
         [InitWithDependency]
         private void Init()
         {
+            IsClickToTrigger = true;
+
             OnTriggered += () =>
             {
                 if (myMap != null)
                     MapSelection.SelectMap(myMap);
+            };
+            OnHold += () =>
+            {
+                Model.ShowMapActions(myMap.OriginalMap);
             };
 
             canvasGroup = gameObject.AddComponent<CanvasGroup>();

@@ -30,7 +30,7 @@ namespace PBGame.UI.Components.Prepare.Details.Actions
                 actionButton.Tint = colorPreset.Passive;
                 actionButton.LabelText = "Map Actions";
 
-                actionButton.OnTriggered += () => Model.ShowMapActions();
+                actionButton.OnTriggered += () => Model.ShowMapActions(Model.SelectedMap.Value?.OriginalMap);
             }
         }
     }
