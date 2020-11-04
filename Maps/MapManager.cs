@@ -17,6 +17,10 @@ namespace PBGame.Maps
 
         public event Action<IMapset> OnImportMapset;
 
+        public event Action<IOriginalMap> OnDeleteMap;
+
+        public event Action<IMapset> OnDeleteMapset;
+
         private IMapsetStore store;
         private IMapsetList allMapsets = new MapsetList(false);
         private IMapsetList displayedMapsets = new MapsetList(true);
@@ -34,12 +38,13 @@ namespace PBGame.Maps
         public string LastSearch => lastSearch;
 
 
-        public MapManager(IMapsetStore store, NotificationBox notificationBox)
+        public MapManager(IMapsetStore store, NotificationBox notificationBox, IMapSelection selection)
         {
             if(store == null) throw new ArgumentNullException(nameof(store));
 
             this.store = store;
             this.notificationBox = notificationBox;
+            this.selection = selection;
         }
 
         public Task Reload(TaskListener listener = null)
@@ -160,8 +165,11 @@ namespace PBGame.Maps
 
         public void DeleteMap(IOriginalMap map)
         {
-            if(map == null)
-                throw new ArgumentNullException(nameof(map));
+            if (map == null)
+            {
+                UnityEngine.Debug.LogWarning("Attmpted to delete a null map.");
+                return;
+            }
 
             var mapset = map.Detail.Mapset;
             if (mapset == null)
@@ -180,11 +188,14 @@ namespace PBGame.Maps
                 selection.SelectMap(mapset.GetMapBefore(selectedOriginal));
 
             store.DeleteMap(map);
+            mapset.Maps.Remove(map);
+            OnDeleteMap?.Invoke(map);
         }
 
         public void DeleteMapset(IMapset mapset)
         {
             // TODO:
+            OnDeleteMapset?.Invoke(mapset);
         }
 
         public IMapset GetRandom()

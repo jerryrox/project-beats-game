@@ -66,7 +66,7 @@ namespace PBGame.Rulesets.Maps
             if(index < 0 || index > Maps.Count)
                 throw new Exception("The specified map is not part of this mapset.");
 
-            return Maps[Mathf.Clamp(index - 1, 0, Maps.Count)];
+            return Maps[Mathf.Clamp(index == 0 ? 1 : index - 1, 0, Maps.Count)];
         }
 
         public IEnumerable GetHashParams()

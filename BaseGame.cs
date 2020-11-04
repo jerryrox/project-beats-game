@@ -149,7 +149,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration, mapsetConfiguration, mapConfiguration));
-            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
+            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox, mapSelection));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome()
             {
                 AudioController = musicController
