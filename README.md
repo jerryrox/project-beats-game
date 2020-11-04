@@ -19,6 +19,9 @@ Slowly making progress 🧩
 #### New features
 - Implemented AvatarDisplay component to simplify loading of avatar images.
 - Implemented NotificationMenuOverlay.
+- Implemented map actions dialog.
+- Implemented map deletion.
+- Implemented mapset deletion.
 - Reworked on notification displayal. (Added support for task cancellation, progress check, action handling, cover image).
 - Added judgemnt counter display for ResultScreen.
 #### Improvements
@@ -37,6 +40,7 @@ Slowly making progress 🧩
 - Fixed dragger tick view being mispositioned on judgement.
 - Fixed inaccurate sample points for sliders.
 - Fixed issue where DownloadScreen's result cell does not load image immediately when there is already a cache.
+- Fixed prepare screen's details scrollview not having full width.
 
 ### 0.11.0
 #### New features

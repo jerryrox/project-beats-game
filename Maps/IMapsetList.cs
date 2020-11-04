@@ -48,6 +48,11 @@ namespace PBGame.Maps
         void AddOrReplace(IMapset mapset);
 
         /// <summary>
+        /// Removes the specified mapset from the list.
+        /// </summary>
+        void Remove(IMapset mapset);
+
+        /// <summary>
         /// Clears the mapsets list.
         /// </summary>
         void Clear();

@@ -19,5 +19,10 @@ namespace PBGame.Stores
         /// Loads the mapset of specified id.
         /// </summary>
         Mapset Load(Guid id);
+
+        /// <summary>
+        /// Deletes the specified map in this mapset.
+        /// </summary>
+        void DeleteMap(IOriginalMap map);
     }
 }

@@ -79,6 +79,12 @@ namespace PBGame.Maps
             Add(mapset);
         }
 
+        public void Remove(IMapset mapset)
+        {
+            mapsets.Remove(mapset);
+            InvokeChange();
+        }
+
         public void Clear()
         {
             mapsets.Clear();

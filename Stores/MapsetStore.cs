@@ -87,6 +87,15 @@ namespace PBGame.Stores
             return mapset;
         }
 
+        public void DeleteMap(IOriginalMap map)
+        {
+            var file = map.Detail.MapFile;
+            if (!file.Exists)
+                throw new Exception($"Attempted to delete map that does not exist: {map.Metadata.Artist} - {map.Metadata.Title}");
+            file.Delete();
+            file.Refresh();
+        }
+
         protected override IDatabase<Mapset> CreateDatabase() => new Database<Mapset>(GameDirectory.Maps.GetSubdirectory("data"));
 
         protected override IDirectoryStorage CreateStorage() => new DirectoryStorage(GameDirectory.Maps.GetSubdirectory("files"));

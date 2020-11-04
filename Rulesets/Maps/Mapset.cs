@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using PBFramework.DB;
 using PBFramework.DB.Entities;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace PBGame.Rulesets.Maps
 {
-    public class Mapset : DatabaseEntity, IMapset {
+    public class Mapset : DatabaseEntity, IMapset
+    {
 
         private int? mapsetId;
 
@@ -44,17 +46,27 @@ namespace PBGame.Rulesets.Maps
 
         public void SortMapsByMode(GameModeType gameMode)
         {
-            Maps.Sort((x, y) => {
-				var diffX = x.GetPlayable(gameMode).Difficulty;
-				var diffY = y.GetPlayable(gameMode).Difficulty;
-				var scaleX = diffX.Scale;
-				var scaleY = diffY.Scale;
-				if(diffX.GameMode != gameMode)
-					scaleX += ((int)diffX.GameMode + 1) * 1000;
-				if(diffY.GameMode != gameMode)
-					scaleY += ((int)diffY.GameMode + 1) * 1000;
-				return scaleX.CompareTo(scaleY);
+            Maps.Sort((x, y) =>
+            {
+                var diffX = x.GetPlayable(gameMode).Difficulty;
+                var diffY = y.GetPlayable(gameMode).Difficulty;
+                var scaleX = diffX.Scale;
+                var scaleY = diffY.Scale;
+                if (diffX.GameMode != gameMode)
+                    scaleX += ((int)diffX.GameMode + 1) * 1000;
+                if (diffY.GameMode != gameMode)
+                    scaleY += ((int)diffY.GameMode + 1) * 1000;
+                return scaleX.CompareTo(scaleY);
             });
+        }
+
+        public IOriginalMap GetMapBefore(IOriginalMap map)
+        {
+            var index = Maps.IndexOf(map);
+            if(index < 0 || index > Maps.Count)
+                throw new Exception("The specified map is not part of this mapset.");
+
+            return Maps[Mathf.Clamp(index == 0 ? 1 : index - 1, 0, Maps.Count)];
         }
 
         public IEnumerable GetHashParams()
