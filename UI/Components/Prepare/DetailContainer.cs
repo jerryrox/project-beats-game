@@ -58,8 +58,7 @@ namespace PBGame.UI.Components.Prepare
             contentScroll = CreateChild<UguiScrollView>("content", 2);
             {
                 contentScroll.Anchor = AnchorType.Fill;
-                contentScroll.RawWidth = -128f;
-                contentScroll.SetOffsetVertical(128f, 0f);
+                contentScroll.Offset = new Offset(0f, 128f, 0f, 0f);
 
                 contentScroll.Background.Alpha = 0f;
 
@@ -69,7 +68,7 @@ namespace PBGame.UI.Components.Prepare
                     metaContainer.Pivot = PivotType.Top;
                     metaContainer.Y = -32f;
                     metaContainer.Height = 360f;
-                    metaContainer.SetOffsetHorizontal(0f);
+                    metaContainer.SetOffsetHorizontal(64f);
                 }
                 rankingContainer = contentScroll.Container.CreateChild<RankingContainer>("ranking");
                 {
@@ -77,7 +76,7 @@ namespace PBGame.UI.Components.Prepare
                     rankingContainer.Pivot = PivotType.Top;
                     rankingContainer.Y = -424f;
                     rankingContainer.Height = 360f;
-                    rankingContainer.SetOffsetHorizontal(0f);
+                    rankingContainer.SetOffsetHorizontal(64f);
                 }
                 actionsContainer = contentScroll.Container.CreateChild<ActionsContainer>("actions");
                 {
@@ -85,7 +84,7 @@ namespace PBGame.UI.Components.Prepare
                     actionsContainer.Pivot = PivotType.Top;
                     actionsContainer.Y = -816f;
                     actionsContainer.Height = 48f;
-                    actionsContainer.SetOffsetHorizontal(0f);
+                    actionsContainer.SetOffsetHorizontal(64f);
                 }
 
                 // Calculate height of the scrollview content.
