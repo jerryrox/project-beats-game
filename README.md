@@ -21,6 +21,7 @@ Slowly making progress 🧩
 - Implemented NotificationMenuOverlay.
 - Implemented map actions dialog.
 - Implemented map deletion.
+- Implemented mapset deletion.
 - Reworked on notification displayal. (Added support for task cancellation, progress check, action handling, cover image).
 - Added judgemnt counter display for ResultScreen.
 #### Improvements
