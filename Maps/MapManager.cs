@@ -194,7 +194,34 @@ namespace PBGame.Maps
 
         public void DeleteMapset(IMapset mapset)
         {
-            // TODO:
+            if (mapset == null)
+            {
+                UnityEngine.Debug.LogWarning("Attempted to delete a null mapset.");
+                return;
+            }
+
+            // If this mapset is currently selected, make it select the previous mapset.
+            var selectedMapset = selection.Mapset.Value;
+            if (selectedMapset == mapset)
+            {
+                // If there is only one mapset left in all mapsets, just remove selection.
+                if(allMapsets.Count <= 1)
+                    selection.SelectMapset(null);
+                else
+                {
+                    // Determine which mapset list to choose the previous map from.
+                    var mapsetsList = (
+                        (displayedMapsets.Contains(mapset) && displayedMapsets.Count == 1) || displayedMapsets.Count == 0 ?
+                        allMapsets :
+                        displayedMapsets
+                    );
+                    selection.SelectMapset(mapsetsList.GetPrevious(mapset));
+                }
+            }
+
+            store.Delete(mapset as Mapset);
+            allMapsets.Remove(mapset);
+            displayedMapsets.Remove(mapset);
             OnDeleteMapset?.Invoke(mapset);
         }
 
@@ -203,5 +230,7 @@ namespace PBGame.Maps
             if(displayedMapsets.Count == 0) return null;
             return displayedMapsets[Random.Range(0, displayedMapsets.Count)];
         }
+
+
     }
 }

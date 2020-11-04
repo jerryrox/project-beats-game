@@ -20,6 +20,7 @@ Slowly making progress 🧩
 - Implemented AvatarDisplay component to simplify loading of avatar images.
 - Implemented NotificationMenuOverlay.
 - Implemented map actions dialog.
+- Implemented map deletion.
 - Reworked on notification displayal. (Added support for task cancellation, progress check, action handling, cover image).
 - Added judgemnt counter display for ResultScreen.
 #### Improvements

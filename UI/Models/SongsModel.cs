@@ -245,9 +245,17 @@ namespace PBGame.UI.Models
             switch (action)
             {
                 case SongDeleteAction:
-                    // TODO: Come back when mapset deletion is implemented.
-                    Debug.LogWarning("Delete mapset: " + mapsetForDropdown.Metadata.Title);
+                    bool preferUnicode = PreferUnicode.Value;
+                    string artist = mapsetForDropdown.Metadata.GetArtist(preferUnicode);
+                    string title = mapsetForDropdown.Metadata.GetTitle(preferUnicode);
+                    // Confirm with the user first.
+                    var dialogModel = OverlayNavigator.Show<DialogOverlay>().Model;
+                    dialogModel.SetMessage($"Are you sure you want to delete this mapset?\n{artist} - {title}");
+                    dialogModel.AddConfirmCancel(
+                        onConfirm: () => MapManager.DeleteMapset(mapsetForDropdown)
+                    );
                     break;
+
                 case SongOffsetAction:
                     // If not the selected mapset, make it selected.
                     if(mapsetForDropdown != MapSelection.Mapset.Value)
