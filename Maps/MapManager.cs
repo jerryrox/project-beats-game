@@ -160,7 +160,26 @@ namespace PBGame.Maps
 
         public void DeleteMap(IOriginalMap map)
         {
-            // TODO:
+            if(map == null)
+                throw new ArgumentNullException(nameof(map));
+
+            var mapset = map.Detail.Mapset;
+            if (mapset == null)
+                throw new Exception($"Could not retrieve the mapset of specified map: {map.Metadata.Artist} - {map.Metadata.Title}");
+
+            // Delete the mapset itself if there is only one map.
+            if (mapset.Maps.Count == 1)
+            {
+                DeleteMapset(mapset);
+                return;
+            }
+
+            // If this map is currently selected, make it select the previous map.
+            var selectedOriginal = selection.Map.Value?.OriginalMap;
+            if (selectedOriginal == map)
+                selection.SelectMap(mapset.GetMapBefore(selectedOriginal));
+
+            store.DeleteMap(map);
         }
 
         public void DeleteMapset(IMapset mapset)

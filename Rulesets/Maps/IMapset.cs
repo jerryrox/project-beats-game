@@ -40,5 +40,10 @@ namespace PBGame.Rulesets.Maps
         /// If the given mode cannot be evaluated for, it will be pushed to the back.
         /// </summary>
         void SortMapsByMode(GameModeType gameMode);
+
+        /// <summary>
+        /// Returns the map before the specified map, in the current ordering of the Maps list.
+        /// </summary>
+        IOriginalMap GetMapBefore(IOriginalMap map);
     }
 }
