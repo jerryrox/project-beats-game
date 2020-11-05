@@ -202,7 +202,7 @@ namespace PBGame.IO.Decoding.Osu
 
 				if(result == null)
 				{
-					Logger.LogError("HitObjectParser.Parse - Unknown hit object for line: " + text);
+					Logger.Log("HitObjectParser.Parse - Unknown hit object for line: " + text);
 					return null;
 				}
 

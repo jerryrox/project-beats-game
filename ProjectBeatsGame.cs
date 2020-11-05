@@ -48,6 +48,7 @@ namespace PBGame
 
             // Hook events
             HookEngine();
+            HookLogger();
             HookMusicController();
             HookScreenNavigator();
             HookOverlayNavigator();
@@ -107,6 +108,31 @@ namespace PBGame
                 {
                     Logger.LogError($"Unhandled exception: {condition}\n{stackTrace}");
                 }
+            };
+        }
+
+        /// <summary>
+        /// Triggers actions on certain Logger events.
+        /// </summary>
+        private void HookLogger()
+        {
+            Logger.OnWarning += (message) =>
+            {
+                notificationBox.Add(new Notification()
+                {
+                    Message = message.ToString(),
+                    Scope = NotificationScope.Temporary,
+                    Type = NotificationType.Warning,
+                });
+            };
+            Logger.OnError += (message) =>
+            {
+                notificationBox.Add(new Notification()
+                {
+                    Message = message.ToString(),
+                    Scope = NotificationScope.Stored,
+                    Type = NotificationType.Negative,
+                });
             };
         }
 
