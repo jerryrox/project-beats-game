@@ -11,6 +11,8 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Components.Download.Result
 {
     public class MapMetaTag : BaseMetaTag, IRecyclable<MapMetaTag> {
@@ -47,7 +49,7 @@ namespace PBGame.UI.Components.Download.Result
             var service = ModeManager.GetService(gameMode);
             if (service == null)
             {
-                Debug.LogWarning($"MapMetaTag.SetMapset - Unsupported gameMode: {gameMode}");
+                Logger.Log($"Encountered an unsupported gameMode: {gameMode}");
                 return;
             }
 

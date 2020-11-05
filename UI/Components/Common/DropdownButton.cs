@@ -9,6 +9,8 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Components.Common
 {
     public class DropdownButton : HoverableTrigger, IHasLabel {
@@ -108,7 +110,7 @@ namespace PBGame.UI.Components.Common
             // If empty context, return.
             if (Context == null)
             {
-                Debug.LogWarning("DropdownButton.OpenMenu - Context is empty!");
+                Logger.LogWarning("Dropdown context is empty.");
                 return;
             }
 

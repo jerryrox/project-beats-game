@@ -12,6 +12,8 @@ using PBGame.Notifications;
 using PBFramework.Data;
 using UnityEngine;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame
 {
     public class ProjectBeatsGame : BaseGame
@@ -97,15 +99,15 @@ namespace PBGame
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
             {
                 var exception = e.ExceptionObject as Exception;
-                Debug.LogError($"Unhandled exception: {exception.ToString()}");
+                Logger.LogError($"Unhandled exception: {exception.ToString()}");
             };
-            // Application.logMessageReceived += (condition, stackTrace, type) =>
-            // {
-            //     if (type == LogType.Exception)
-            //     {
-            //         Debug.LogError($"Unhandled exception at: {stackTrace}");
-            //     }
-            // };
+            Application.logMessageReceived += (condition, stackTrace, type) =>
+            {
+                if (type == LogType.Exception)
+                {
+                    Logger.LogError($"Unhandled exception: {condition}\n{stackTrace}");
+                }
+            };
         }
 
         /// <summary>

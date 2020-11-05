@@ -16,6 +16,8 @@ using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Models
 {
     public class PrepareModel : BaseModel {
@@ -105,7 +107,7 @@ namespace PBGame.UI.Models
         {
             if (map == null)
             {
-                Debug.LogWarning("Attempted to show map actions for a null map.");
+                Logger.LogWarning("Attempted to show map actions for a null map.");
                 return;
             }
 
