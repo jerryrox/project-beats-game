@@ -53,7 +53,7 @@ namespace PBGame.Rulesets.UI.Components
             buttonTrigger = CreateChild<BasicTrigger>("trigger");
             {
                 buttonTrigger.Anchor = AnchorType.CenterStretch;
-                buttonTrigger.Width = 12f;
+                buttonTrigger.Width = 24f;
                 buttonTrigger.SetOffsetVertical(0f);
 
                 buttonTrigger.OnPointerDown += () => isTriggered.Value = true;
