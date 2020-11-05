@@ -59,7 +59,8 @@ namespace PBGame.Rulesets.UI
                 escapeDisplay.Anchor = AnchorType.TopStretch;
                 escapeDisplay.Pivot = PivotType.Top;
                 escapeDisplay.Height = 64;
-                escapeDisplay.SetOffsetHorizontal(0f);
+                escapeDisplay.Y = -8f;
+                escapeDisplay.SetOffsetHorizontal(8f);
             }
         }
 

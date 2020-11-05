@@ -5,6 +5,7 @@ using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Data.Bindables;
+using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -14,8 +15,8 @@ namespace PBGame.Rulesets.UI.Components
 {
     public class EscapeDisplay : UguiObject {
 
-        private BindableBool isLeftEscapePressed = new BindableBool(false);
-        private BindableBool isRightEscapePressed = new BindableBool(false);
+        private EscapeButton leftButton;
+        private EscapeButton rightButton;
 
 
         [ReceivesDependency]
@@ -25,60 +26,36 @@ namespace PBGame.Rulesets.UI.Components
         [InitWithDependency]
         private void Init()
         {
-            var leftTrigger = CreateChild<BasicTrigger>("left");
+            leftButton = CreateChild<EscapeButton>("left");
             {
-                leftTrigger.Anchor = AnchorType.LeftStretch;
-                leftTrigger.Pivot = PivotType.Left;
-                leftTrigger.X = 0f;
-                leftTrigger.Width = 8f;
-                leftTrigger.SetOffsetVertical(0f);
-                
-                leftTrigger.OnPointerDown += OnLeftTriggerDown;
-                leftTrigger.OnPointerUp += OnLeftTriggerUp;
+                leftButton.Anchor = AnchorType.LeftStretch;
+                leftButton.SetSide(PivotType.Left);
+                leftButton.SetOffsetVertical(0f);
             }
-            var rightTrigger = CreateChild<BasicTrigger>("right");
+            rightButton = CreateChild<EscapeButton>("right");
             {
-                rightTrigger.Anchor = AnchorType.RightStretch;
-                rightTrigger.Pivot = PivotType.Right;
-                rightTrigger.X = 0f;
-                rightTrigger.Width = 8f;
-                rightTrigger.SetOffsetVertical(0f);
-
-                rightTrigger.OnPointerDown += OnRightTriggerDown;
-                rightTrigger.OnPointerUp += OnRightTriggerUp;
+                rightButton.Anchor = AnchorType.RightStretch;
+                rightButton.SetSide(PivotType.Right);
+                rightButton.SetOffsetVertical(0f);
             }
 
             OnEnableInited();
-        }
-
-        /// <summary>
-        /// Manually triggers escape gesture.
-        /// </summary>
-        public void TriggerEscape()
-        {
-            isLeftEscapePressed.Value = false;
-            isRightEscapePressed.Value = false;
-
-            Model.CurrentSession?.InvokePause();
         }
 
         protected override void OnEnableInited()
         {
             base.OnEnableInited();
 
-            isLeftEscapePressed.Value = false;
-            isRightEscapePressed.Value = false;
-
-            isLeftEscapePressed.Bind(TryTriggerEscape);
-            isRightEscapePressed.Bind(TryTriggerEscape);
+            leftButton.IsTriggered.Bind(TryTriggerEscape);
+            rightButton.IsTriggered.Bind(TryTriggerEscape);
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            isLeftEscapePressed.Unbind(TryTriggerEscape);
-            isRightEscapePressed.Unbind(TryTriggerEscape);
+            leftButton?.IsTriggered.Unbind(TryTriggerEscape);
+            rightButton?.IsTriggered.Unbind(TryTriggerEscape);
         }
 
         /// <summary>
@@ -86,29 +63,8 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         private void TryTriggerEscape(bool _)
         {
-            Debug.LogWarning($"Left: {isLeftEscapePressed.Value}, right: {isRightEscapePressed.Value}");
-            if(isLeftEscapePressed.Value && isRightEscapePressed.Value)
-                TriggerEscape();
+            if(leftButton.IsTriggered.Value && rightButton.IsTriggered.Value)
+                Model.CurrentSession?.InvokePause();
         }
-
-        /// <summary>
-        /// Event called on left escape trigger down.
-        /// </summary>
-        private void OnLeftTriggerDown() => isLeftEscapePressed.Value = true;
-
-        /// <summary>
-        /// Event called on left escape trigger up.
-        /// </summary>
-        private void OnLeftTriggerUp() => isLeftEscapePressed.Value = false;
-
-        /// <summary>
-        /// Event called on right escape trigger down.
-        /// </summary>
-        private void OnRightTriggerDown() => isRightEscapePressed.Value = true;
-
-        /// <summary>
-        /// Event called on right escape trigger up.
-        /// </summary>
-        private void OnRightTriggerUp() => isRightEscapePressed.Value = false;
     }
 }
