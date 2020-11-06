@@ -23,6 +23,7 @@ Slowly making progress 🧩
 - Implemented map deletion.
 - Implemented mapset deletion.
 - Implemented proper escape buttons during in-game.
+- Implemented on displaying log message through notifications.
 - Reworked on notification displayal. (Added support for task cancellation, progress check, action handling, cover image).
 - Added judgemnt counter display for ResultScreen.
 #### Improvements
