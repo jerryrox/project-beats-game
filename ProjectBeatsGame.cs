@@ -94,8 +94,6 @@ namespace PBGame
         /// </summary>
         private void HookEngine()
         {
-            // TODO: These don't really help at early development yet. Come back when game is ready for play.
-
             // Start listening to any exceptions that occurs during game.
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
             {
@@ -121,7 +119,7 @@ namespace PBGame
                 notificationBox.Add(new Notification()
                 {
                     Message = message.ToString(),
-                    Scope = NotificationScope.Temporary,
+                    Scope = NotificationScope.Stored,
                     Type = NotificationType.Warning,
                 });
             };
