@@ -16,6 +16,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Coffee.UIExtensions;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Components.Common
 {
     public class NotificationCell : HoverableTrigger, IRecyclable<NotificationCell>, IHasAlpha
@@ -353,7 +355,7 @@ namespace PBGame.UI.Components.Common
                 case NotificationType.Negative: return ColorPreset.Negative;
                 case NotificationType.Warning: return ColorPreset.Warning;
             }
-            Debug.LogWarning($"MessageCell.GetColor - Unknown notification type: " + type);
+            Logger.LogWarning($"Unknown notification type: {type}");
             return ColorPreset.Passive;
         }
 

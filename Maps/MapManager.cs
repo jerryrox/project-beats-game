@@ -10,6 +10,7 @@ using PBGame.Notifications;
 using PBFramework.Threading;
 
 using Random = UnityEngine.Random;
+using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.Maps
 {
@@ -142,12 +143,7 @@ namespace PBGame.Maps
                 }
                 catch (Exception e)
                 {
-                    UnityEngine.Debug.LogError(e);
-                    notificationBox?.Add(new Notification()
-                    {
-                        Message = $"Error while importing mapset: ({e.Message})\n{e.StackTrace}",
-                        Type = NotificationType.Negative
-                    });
+                    Logger.LogError($"Error while importing mapset: {e.Message}\n{e.StackTrace}");
                     listener?.SetFinished();
                     return null;
                 }
@@ -167,7 +163,7 @@ namespace PBGame.Maps
         {
             if (map == null)
             {
-                UnityEngine.Debug.LogWarning("Attmpted to delete a null map.");
+                Logger.LogWarning("Attempted to delete a null map.");
                 return;
             }
 
@@ -196,7 +192,7 @@ namespace PBGame.Maps
         {
             if (mapset == null)
             {
-                UnityEngine.Debug.LogWarning("Attempted to delete a null mapset.");
+                Logger.LogWarning("Attempted to delete a null mapset.");
                 return;
             }
 

@@ -15,6 +15,8 @@ using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Models
 {
     public class GameModel : BaseModel
@@ -164,7 +166,7 @@ namespace PBGame.UI.Models
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e);
+                    Logger.LogError($"Error while recording score: {e.Message}\n{e.StackTrace}");
                     listener?.SetFinished();
                 }
             });

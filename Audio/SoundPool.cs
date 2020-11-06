@@ -47,10 +47,8 @@ namespace PBGame.Audio
 
         public IEnumerable<IEffectController> Play(IEnumerable<IEffectAudio> effects, float volumeScale = 1f)
         {
-            UnityEngine.Debug.Log("Playing audio effects");
             foreach (var audio in effects)
             {
-                UnityEngine.Debug.Log("A: " + volumeScale);
                 var controller = NextController(false);
                 controller.MountAudio(audio);
                 controller.Play();

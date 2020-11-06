@@ -7,6 +7,8 @@ using PBGame.Audio;
 using PBFramework.Utils;
 using UnityEngine;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.IO.Decoding.Osu
 {
 	/// <summary>
@@ -200,7 +202,7 @@ namespace PBGame.IO.Decoding.Osu
 
 				if(result == null)
 				{
-//					Debug.LogError("HitObjectParser.Parse - Unknown hit object for line: " + text);
+					Logger.Log("HitObjectParser.Parse - Unknown hit object for line: " + text);
 					return null;
 				}
 
@@ -212,11 +214,7 @@ namespace PBGame.IO.Decoding.Osu
 			}
 			catch(Exception e)
 			{
-				Debug.LogErrorFormat(
-					"HitObjectParser.Parse - Failed to parse line: {0}, Error: {1}",
-					text,
-					e.Message
-				);
+				Logger.LogError($"HitObjectParser.Parse - Failed to parse line: {text}, Error: {e.Message}");
 			}
 			return null;
 		}
