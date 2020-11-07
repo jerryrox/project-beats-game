@@ -3,57 +3,60 @@ using PBFramework.Threading;
 
 namespace PBGame.Notifications
 {
-    public interface INotification {
-
+    /// <summary>
+    /// A read-only interface of Notification data.
+    /// </summary>
+    public interface INotification
+    {
         /// <summary>
-        /// An optional identifier provided by the emitter.
+        /// Returns an optional field for identifying notifications.
         /// </summary>
-        string Id { get; set; }
+        string Id { get; }
 
         /// <summary>
-        /// The message to be displayed on the notification.
+        /// Returns the message to be displayed on the notification.
         /// </summary>
-        string Message { get; set; }
+        string Message { get; }
 
         /// <summary>
-        /// A link to the image covered on the background of the notification.
+        /// Returns the background image displayed on the notification.
         /// </summary>
-        string CoverImage { get; set; }
+        string CoverImage { get; }
 
         /// <summary>
-        /// Type of notification displaying scope.
+        /// Returns the displayal scope of the notification.
         /// </summary>
         NotificationScope Scope { get; set; }
 
         /// <summary>
-        /// The default action to perform on pressing the notification.
+        /// Returns the list of actions associated with the notification.
         /// </summary>
-        NotificationAction DefaultAction { get; set; }
+        IReadOnlyList<NotificationAction> Actions { get; }
 
         /// <summary>
-        /// Returns whether the notification contains optional actions.
+        /// Returns the type of notification.
         /// </summary>
-        bool HasActions { get; }
+        NotificationType Type { get; }
 
         /// <summary>
-        /// Type of notification message.
+        /// Returns the background task associated to this notification.
         /// </summary>
-        NotificationType Type { get; set; }
+        ITask Task { get; }
 
         /// <summary>
-        /// Listener instance that listens to the completion of a task.
+        /// Progress reporter instance for displaying progresses.
         /// </summary>
-        TaskListener Listener { get; set; }
+        TaskListener Listener { get; }
+    }
 
-
+    public static class INotificationExtension
+    {
         /// <summary>
-        /// Adds an optional action that can be performed from the notification.
+        /// Returns whether the notification has any associated actions.
         /// </summary>
-        void AddAction(NotificationAction action);
-
-        /// <summary>
-        /// Returns all optional actions added to the notification.
-        /// </summary>
-        IEnumerable<NotificationAction> GetActions();
+        public static bool HasActions(this INotification context)
+        {
+            return context.Actions != null && context.Actions.Count > 0;
+        }
     }
 }

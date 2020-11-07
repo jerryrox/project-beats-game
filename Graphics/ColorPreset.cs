@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Utils;
@@ -28,6 +29,18 @@ namespace PBGame.Graphics
             { HitResultType.Ok, new ColorPalette(HexColor.Create("8BB972")) },
             { HitResultType.Bad, new ColorPalette(HexColor.Create("FFB972")) },
             { HitResultType.Miss, new ColorPalette(HexColor.Create("FF271D")) },
+        };
+
+        private Dictionary<RankType, ColorPalette> rankColors = new Dictionary<RankType, ColorPalette>()
+        {
+            { RankType.XH, new ColorPalette(HexColor.Create("CCD9E3")) },
+            { RankType.SH, new ColorPalette(HexColor.Create("CCD9E3")) },
+            { RankType.X, new ColorPalette(HexColor.Create("4EB1FF")) },
+            { RankType.S, new ColorPalette(HexColor.Create("4EB1FF")) },
+            { RankType.A, new ColorPalette(HexColor.Create("00C300")) },
+            { RankType.B, new ColorPalette(HexColor.Create("EAD500")) },
+            { RankType.C, new ColorPalette(HexColor.Create("FF8400")) },
+            { RankType.D, new ColorPalette(HexColor.Create("D20000")) },
         };
 
         public List<Color> DefaultComboColors { get; private set; } = new List<Color>()
@@ -69,5 +82,15 @@ namespace PBGame.Graphics
             Logger.LogWarning($"ColorPreset.GetHitResultColor - Unknown type: {type}");
             return new ColorPalette(Color.white);
         }
+
+        public ColorPalette GetRankColor(RankType type)
+        {
+            if(rankColors.TryGetValue(type, out ColorPalette value))
+                return value;
+            Logger.LogWarning($"ColorPreset.GetRankColor - Unknown type: {type}");
+            return new ColorPalette(Color.white);
+        }
+
+        public Color GetRankOutlineColor(RankType type) => GetRankColor(type).Darken(0.65f);
     }
 }

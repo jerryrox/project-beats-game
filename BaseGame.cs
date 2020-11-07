@@ -149,7 +149,7 @@ namespace PBGame
 
             Dependencies.CacheAs<IMapsetStore>(mapsetStore = new MapsetStore(modeManager));
             Dependencies.CacheAs<IMapSelection>(mapSelection = new MapSelection(musicCacher, backgroundCacher, gameConfiguration, mapsetConfiguration, mapConfiguration));
-            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox));
+            Dependencies.CacheAs<IMapManager>(mapManager = new MapManager(mapsetStore, notificationBox, mapSelection));
             Dependencies.CacheAs<IMetronome>(metronome = new Metronome()
             {
                 AudioController = musicController
@@ -159,8 +159,8 @@ namespace PBGame
             Dependencies.CacheAs<IDownloadStore>(downloadStore = new DownloadStore());
             Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));
 
-            Dependencies.CacheAs<IUserManager>(userManager = new UserManager(Dependencies));
-            Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager(Dependencies));
+            Dependencies.CacheAs<IUserManager>(userManager = new UserManager(api, Dependencies));
+            Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager());
 
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));

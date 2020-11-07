@@ -5,7 +5,7 @@ Implementation of Project: Beats game
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.0.4) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.2.0) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
@@ -15,6 +15,36 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.12.0
+#### New features
+- Implemented AvatarDisplay component to simplify loading of avatar images.
+- Implemented NotificationMenuOverlay.
+- Implemented map actions dialog.
+- Implemented map deletion.
+- Implemented mapset deletion.
+- Implemented proper escape buttons during in-game.
+- Implemented on displaying log message through notifications.
+- Implemented scroll-to-top button in DownloadScreen.
+- Reworked on notification displayal. (Added support for task cancellation, progress check, action handling, cover image).
+- Added judgemnt counter display for ResultScreen.
+#### Improvements
+- Sign-in process will continue even when login menu overlay has become hidden.
+#### Changes
+- Moved ScoreProcessor creation from GameSession to ModeService.
+- Moved MapImageDisplay component to its proper namespace.
+- Changed the way offline user is handled by UserManager.
+- Changed the way some images are loaded.
+- Changed some HoverableTriggers to IconButton.
+#### Fixes
+- Fixed internal logic error while saving play records.
+- Fixed exp displaying wrongly.
+- Fixed best score evaluation being done using ALL records, not filtered by current user's id.
+- Fixed preview bar showing even when previewing a different song.
+- Fixed dragger tick view being mispositioned on judgement.
+- Fixed inaccurate sample points for sliders.
+- Fixed issue where DownloadScreen's result cell does not load image immediately when there is already a cache.
+- Fixed prepare screen's details scrollview not having full width.
+
 ### 0.11.0
 #### New features
 - Added offset menu button in `PrepareScreen`.

@@ -32,6 +32,8 @@ namespace PBGame.Data.Records
 
         public string Username { get; set; }
 
+        public string AvatarUrl { get; set; }
+
         public RankType Rank { get; set; }
 
         public int Score { get; set; }
@@ -56,14 +58,7 @@ namespace PBGame.Data.Records
         public DateTime Date { get; set; }
 
         [JsonIgnore]
-        public bool HasReplay => RecordManager == null ? false : RecordManager.HasReplay(this);
-
-        [JsonIgnore]
         public bool IsClear => Rank != RankType.F;
-
-        [JsonIgnore]
-        [ReceivesDependency]
-        private IRecordManager RecordManager { get; set; }
 
 
         public Record() { }
@@ -73,20 +68,16 @@ namespace PBGame.Data.Records
         /// </summary>
         public Record(IPlayableMap map, IUser user, IScoreProcessor scoreProcessor, int playTime)
         {
-            if(map == null) throw new ArgumentNullException(nameof(map));
+            if(map == null)
+                throw new ArgumentNullException(nameof(map));
+            if(user == null)
+                throw new ArgumentNullException(nameof(user));
 
             InitializeAsNew();
 
-            if (user == null)
-            {
-                UserId = Guid.Empty;
-                Username = "";
-            }
-            else
-            {
-                UserId = user.Id;
-                Username = user.Username;
-            }
+            UserId = user.Id;
+            Username = user.Username;
+            AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
 
             MapHash = map.Detail.Hash;
             GameMode = map.PlayableMode;

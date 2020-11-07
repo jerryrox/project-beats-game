@@ -18,5 +18,10 @@ namespace PBGame.Notifications
         /// The displayed name of the action.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Whether this action should dismiss the notification.
+        /// </summary>
+        public bool ShouldDismiss { get; set; } = false;
     }
 }

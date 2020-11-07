@@ -15,6 +15,8 @@ using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame.UI.Models
 {
     public class GameModel : BaseModel
@@ -25,6 +27,7 @@ namespace PBGame.UI.Models
         private IPlayableMap currentMap;
         private IModeService currentModeService;
         private IGameSession currentSession;
+        private IRecord lastRecord;
 
         private Bindable<GameLoadState> loadState = new Bindable<GameLoadState>(GameLoadState.Idle);
 
@@ -43,6 +46,11 @@ namespace PBGame.UI.Models
         /// Returns the current game loading state.
         /// </summary>
         public IReadOnlyBindable<GameLoadState> LoadState => loadState;
+
+        /// <summary>
+        /// Returns the current mode servicer instance.
+        /// </summary>
+        public IModeService ModeService => currentModeService;
 
         /// <summary>
         /// Returns the game screen.
@@ -110,8 +118,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Makes the user exit the game with a clear result.
         /// </summary>
-        // TODO: Navigate to ResultScreen.
-        public void ExitGameWithClear() => ExitTo<PrepareScreen>();
+        public void ExitGameWithClear() => ExitTo<ResultScreen>();
 
         /// <summary>
         /// Makes the user exit the game back to preparation screen.
@@ -135,21 +142,12 @@ namespace PBGame.UI.Models
 
                     // Retrieve user and user stats.
                     var user = UserManager.CurrentUser.Value;
-                    if(user == null)
-                    {
-                        listener?.SetFinished();
-                        return;
-                    }
                     var userStats = user.GetStatistics(currentMap.PlayableMode);
-                    if (userStats == null)
-                    {
-                        listener?.SetFinished();
-                        return;
-                    }
 
                     // Record the play result to records database and user statistics.
                     Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
-                    var records = await RecordManager.GetRecords(currentMap, listener?.CreateSubListener<List<IRecord>>());
+                    lastRecord = newRecord;
+                    var records = await RecordManager.GetRecords(currentMap, user, listener?.CreateSubListener<List<IRecord>>());
 
                     // Save as cleared play.
                     if (scoreProcessor.IsFinished)
@@ -168,7 +166,7 @@ namespace PBGame.UI.Models
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e);
+                    Logger.LogError($"Error while recording score: {e.Message}\n{e.StackTrace}");
                     listener?.SetFinished();
                 }
             });
@@ -192,6 +190,7 @@ namespace PBGame.UI.Models
 
             currentMap = null;
             currentModeService = null;
+            lastRecord = null;
         }
 
         /// <summary>
@@ -200,9 +199,10 @@ namespace PBGame.UI.Models
         private void ExitTo<T>()
             where T : MonoBehaviour, INavigationView
         {
+            var record = lastRecord;
             var screen = ScreenNavigator.Show<T>();
-            // TODO: If Result screen, pass the newRecord object to ResultScreen.
-            // if(screen is ResultScreen)
+            if (screen is ResultScreen resultScreen)
+                resultScreen.Model.Setup(currentMap, record);
         }
 
         /// <summary>

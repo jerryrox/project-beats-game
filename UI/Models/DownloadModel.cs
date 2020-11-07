@@ -29,11 +29,20 @@ namespace PBGame.UI.Models
         /// </summary>
         public event Action<List<OnlineMapset>, bool> OnMapsetListChange;
 
+        /// <summary>
+        /// Event called when the search list should be scrolled to top.
+        /// </summary>
+        public event Action OnScrollTopRequest;
+
         private CacherAgent<string, IMusicAudio> musicAgent;
 
         private Bindable<MapsetsRequest> mapsetsRequest = new Bindable<MapsetsRequest>();
         private Bindable<List<OnlineMapset>> mapsetList = new Bindable<List<OnlineMapset>>(new List<OnlineMapset>());
         private Bindable<OnlineMapset> previewingMapset = new Bindable<OnlineMapset>();
+        private BindableBool isScrolledDown = new BindableBool(false)
+        {
+            TriggerWhenDifferent = true,
+        };
 
 
         /// <summary>
@@ -50,6 +59,11 @@ namespace PBGame.UI.Models
         /// Returns the mapset currently playing the preview audio.
         /// </summary>
         public IReadOnlyBindable<OnlineMapset> PreviewingMapset => previewingMapset;
+
+        /// <summary>
+        /// Returns whether the songs list is currently scrolled down.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsScrolledDown => isScrolledDown;
 
         /// <summary>
         /// Returns whether there is an on-going mapset request.
@@ -93,37 +107,6 @@ namespace PBGame.UI.Models
             musicAgent.OnFinished += OnMusicAudioLoaded;
 
             ResetOptions();
-        }
-
-        protected override void OnPreShow()
-        {
-            base.OnPreShow();
-
-            MusicController.Stop();
-            MusicController.MountAudio(null);
-            MusicController.OnEnd += OnMusicEnd;
-
-            RequestMapsets();
-        }
-
-        protected override void OnPreHide()
-        {
-            base.OnPreHide();
-
-            MusicController.OnEnd -= OnMusicEnd;
-
-            ResetOptions();
-            ResetPreviewingMapset();
-            StopMapsetRequest();
-        }
-
-        protected override void OnPostHide()
-        {
-            base.OnPostHide();
-
-            // Revert music back to selected map's music.
-            MusicController.MountAudio(MapSelection.Music.Value);
-            MusicController.Play();
         }
 
         /// <summary>
@@ -188,23 +171,10 @@ namespace PBGame.UI.Models
             // Setup request.
             var request = provider.MapsetDownload();
             request.DownloadStore = DownloadStore;
-            request.MapsetId = mapset.Id.ToString();
-
-            // Show a notification.
-            NotificationBox.Add(new Notification()
-            {
-                Type = NotificationType.Passive,
-                Message = $"Download started for {mapset.Artist} - {mapset.Title}.",
-                Scope = NotificationScope.Temporary,
-            });
+            request.Mapset = mapset;
 
             // Start request
             Api.Request(request);
-            // TODO: Remove when notification overlay is implemented.
-            request.InnerRequest.OnProgress += (progress) =>
-            {
-                Debug.Log("Download progress: " + progress);
-            };
         }
 
         /// <summary>
@@ -231,6 +201,53 @@ namespace PBGame.UI.Models
         public string GetProviderIcon(ApiProviderType type)
         {
             return Api.GetProvider(type).IconName;
+        }
+
+        /// <summary>
+        /// Sets whether the songs list is currently scrolled down.
+        /// </summary>
+        public void SetScrolledDown(bool isScrolledDown)
+        {
+            this.isScrolledDown.Value = isScrolledDown;
+        }
+
+        /// <summary>
+        /// Requests for search list top scroll.
+        /// </summary>
+        public void RequestScrollTop()
+        {
+            OnScrollTopRequest?.Invoke();
+        }
+
+        protected override void OnPreShow()
+        {
+            base.OnPreShow();
+
+            MusicController.Stop();
+            MusicController.MountAudio(null);
+            MusicController.OnEnd += OnMusicEnd;
+
+            RequestMapsets();
+        }
+
+        protected override void OnPreHide()
+        {
+            base.OnPreHide();
+
+            MusicController.OnEnd -= OnMusicEnd;
+
+            ResetOptions();
+            ResetPreviewingMapset();
+            StopMapsetRequest();
+        }
+
+        protected override void OnPostHide()
+        {
+            base.OnPostHide();
+
+            // Revert music back to selected map's music.
+            MusicController.MountAudio(MapSelection.Music.Value);
+            MusicController.Play();
         }
 
         /// <summary>

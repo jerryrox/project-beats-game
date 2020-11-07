@@ -121,6 +121,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             RemoveDragger();
         }
 
+        public void UpdatePosition()
+        {
+            this.Y = Mathf.Max(draggerView.StartCircle.Position.y, this.Y);
+        }
+
         protected override void EvalPassiveJudgement()
         {
             if (draggerView != null && draggerView.StartCircle != null)
@@ -136,11 +141,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 SetResult(HitResultType.Miss, 0f);
                 Active = false;
             }
-        }
-
-        protected void Update()
-        {
-            this.Y = Mathf.Max(draggerView.StartCircle.Position.y, this.Y);
         }
 
         /// <summary>

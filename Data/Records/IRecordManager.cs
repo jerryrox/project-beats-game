@@ -15,8 +15,9 @@ namespace PBGame.Data.Records
 
         /// <summary>
         /// Returns all records for the specified map.
+        /// Specify a non-null user to retrieve results of that user only.
         /// </summary>
-        Task<List<IRecord>> GetRecords(IPlayableMap map, TaskListener<List<IRecord>> listener = null);
+        Task<List<IRecord>> GetRecords(IPlayableMap map, IUser user = null, TaskListener<List<IRecord>> listener = null);
 
         /// <summary>
         /// Returns the number of records for the specified map and user.
@@ -27,6 +28,11 @@ namespace PBGame.Data.Records
         /// Saves the specified record to the database.
         /// </summary>
         void SaveRecord(IRecord record);
+
+        /// <summary>
+        /// Deletes all the records of specified map.
+        /// </summary>
+        void DeleteRecords(IPlayableMap map);
 
         /// <summary>
         /// Returns whether there is a replay data for specified record.

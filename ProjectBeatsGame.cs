@@ -12,6 +12,8 @@ using PBGame.Notifications;
 using PBFramework.Data;
 using UnityEngine;
 
+using Logger = PBFramework.Debugging.Logger;
+
 namespace PBGame
 {
     public class ProjectBeatsGame : BaseGame
@@ -46,6 +48,7 @@ namespace PBGame
 
             // Hook events
             HookEngine();
+            HookLogger();
             HookMusicController();
             HookScreenNavigator();
             HookOverlayNavigator();
@@ -91,21 +94,44 @@ namespace PBGame
         /// </summary>
         private void HookEngine()
         {
-            // TODO: These don't really help at early development yet. Come back when game is ready for play.
-
             // Start listening to any exceptions that occurs during game.
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
             {
                 var exception = e.ExceptionObject as Exception;
-                Debug.LogError($"Unhandled exception: {exception.ToString()}");
+                Logger.LogError($"Unhandled exception: {exception.ToString()}");
             };
-            // Application.logMessageReceived += (condition, stackTrace, type) =>
-            // {
-            //     if (type == LogType.Exception)
-            //     {
-            //         Debug.LogError($"Unhandled exception at: {stackTrace}");
-            //     }
-            // };
+            Application.logMessageReceived += (condition, stackTrace, type) =>
+            {
+                if (type == LogType.Exception)
+                {
+                    Logger.LogError($"Unhandled exception: {condition}\n{stackTrace}");
+                }
+            };
+        }
+
+        /// <summary>
+        /// Triggers actions on certain Logger events.
+        /// </summary>
+        private void HookLogger()
+        {
+            Logger.OnWarning += (message) =>
+            {
+                notificationBox.Add(new Notification()
+                {
+                    Message = message.ToString(),
+                    Scope = NotificationScope.Stored,
+                    Type = NotificationType.Warning,
+                });
+            };
+            Logger.OnError += (message) =>
+            {
+                notificationBox.Add(new Notification()
+                {
+                    Message = message.ToString(),
+                    Scope = NotificationScope.Stored,
+                    Type = NotificationType.Negative,
+                });
+            };
         }
 
         /// <summary>
@@ -321,7 +347,6 @@ namespace PBGame
             // Handle mapset import
             downloadStore.MapStorage.OnAdded += (path) =>
             {
-                Debug.Log("ProjectBeatsGame.HookDownloadStore - Downloaded at path: " + path);
                 mapManager.Import(downloadStore.MapStorage.GetFile(path));
 
                 notificationBox.Add(new Notification()
@@ -363,12 +388,7 @@ namespace PBGame
         {
             api.User.OnValueChanged += (user, oldUser) =>
             {
-                // If user turned online
-                if (user.IsOnline && user != oldUser)
-                    OnUserBecameOnline(user);
-                // If user turned offline
-                else if (!user.IsOnline && user != oldUser)
-                    OnUserBecameOffline(user);
+                OnApiUserChange(user);
             };
         }
 
@@ -427,19 +447,10 @@ namespace PBGame
         /// <summary>
         /// Event called when the user in API has become online.
         /// </summary>
-        private void OnUserBecameOnline(IOnlineUser user)
+        private void OnApiUserChange(IOnlineUser user)
         {
-            userManager.SetUser(user, null);
-        }
-
-        /// <summary>
-        /// Event called when the user in API has become offline.
-        /// </summary>
-        private void OnUserBecameOffline(IOnlineUser user)
-        {
-            if(userManager.CurrentUser.Value != null)
-                userManager.SaveUser(userManager.CurrentUser.Value);
-            userManager.RemoveUser();
+            userManager.SaveUser(userManager.CurrentUser.Value);
+            userManager.SetUser(user);
         }
 
         /// <summary>

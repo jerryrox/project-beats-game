@@ -10,12 +10,17 @@ using PBGame.Notifications;
 using PBFramework.Threading;
 
 using Random = UnityEngine.Random;
+using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.Maps
 {
     public class MapManager : IMapManager {
 
         public event Action<IMapset> OnImportMapset;
+
+        public event Action<IOriginalMap> OnDeleteMap;
+
+        public event Action<IMapset> OnDeleteMapset;
 
         private IMapsetStore store;
         private IMapsetList allMapsets = new MapsetList(false);
@@ -34,12 +39,13 @@ namespace PBGame.Maps
         public string LastSearch => lastSearch;
 
 
-        public MapManager(IMapsetStore store, INotificationBox notificationBox)
+        public MapManager(IMapsetStore store, NotificationBox notificationBox, IMapSelection selection)
         {
             if(store == null) throw new ArgumentNullException(nameof(store));
 
             this.store = store;
             this.notificationBox = notificationBox;
+            this.selection = selection;
         }
 
         public Task Reload(TaskListener listener = null)
@@ -76,7 +82,7 @@ namespace PBGame.Maps
             {
                 IMapset mapset = store.Load(id);
 
-                UnityThread.DispatchUnattended(() =>
+                UnityThread.Dispatch(() =>
                 {
                     // If already loaded within all mapsets, replace it.
                     allMapsets.AddOrReplace(mapset);
@@ -137,12 +143,7 @@ namespace PBGame.Maps
                 }
                 catch (Exception e)
                 {
-                    UnityEngine.Debug.LogError(e);
-                    notificationBox?.Add(new Notification()
-                    {
-                        Message = $"Error while importing mapset: ({e.Message})\n{e.StackTrace}",
-                        Type = NotificationType.Negative
-                    });
+                    Logger.LogError($"Error while importing mapset: {e.Message}\n{e.StackTrace}");
                     listener?.SetFinished();
                     return null;
                 }
@@ -160,12 +161,64 @@ namespace PBGame.Maps
 
         public void DeleteMap(IOriginalMap map)
         {
-            // TODO:
+            if (map == null)
+            {
+                Logger.LogWarning("Attempted to delete a null map.");
+                return;
+            }
+
+            var mapset = map.Detail.Mapset;
+            if (mapset == null)
+                throw new Exception($"Could not retrieve the mapset of specified map: {map.Metadata.Artist} - {map.Metadata.Title}");
+
+            // Delete the mapset itself if there is only one map.
+            if (mapset.Maps.Count == 1)
+            {
+                DeleteMapset(mapset);
+                return;
+            }
+
+            // If this map is currently selected, make it select the previous map.
+            var selectedOriginal = selection.Map.Value?.OriginalMap;
+            if (selectedOriginal == map)
+                selection.SelectMap(mapset.GetMapBefore(selectedOriginal));
+
+            store.DeleteMap(map);
+            mapset.Maps.Remove(map);
+            OnDeleteMap?.Invoke(map);
         }
 
         public void DeleteMapset(IMapset mapset)
         {
-            // TODO:
+            if (mapset == null)
+            {
+                Logger.LogWarning("Attempted to delete a null mapset.");
+                return;
+            }
+
+            // If this mapset is currently selected, make it select the previous mapset.
+            var selectedMapset = selection.Mapset.Value;
+            if (selectedMapset == mapset)
+            {
+                // If there is only one mapset left in all mapsets, just remove selection.
+                if(allMapsets.Count <= 1)
+                    selection.SelectMapset(null);
+                else
+                {
+                    // Determine which mapset list to choose the previous map from.
+                    var mapsetsList = (
+                        (displayedMapsets.Contains(mapset) && displayedMapsets.Count == 1) || displayedMapsets.Count == 0 ?
+                        allMapsets :
+                        displayedMapsets
+                    );
+                    selection.SelectMapset(mapsetsList.GetPrevious(mapset));
+                }
+            }
+
+            store.Delete(mapset as Mapset);
+            allMapsets.Remove(mapset);
+            displayedMapsets.Remove(mapset);
+            OnDeleteMapset?.Invoke(mapset);
         }
 
         public IMapset GetRandom()
@@ -173,5 +226,7 @@ namespace PBGame.Maps
             if(displayedMapsets.Count == 0) return null;
             return displayedMapsets[Random.Range(0, displayedMapsets.Count)];
         }
+
+
     }
 }

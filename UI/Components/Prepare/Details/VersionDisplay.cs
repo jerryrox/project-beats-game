@@ -10,8 +10,8 @@ namespace PBGame.UI.Components.Prepare.Details
 {
     public class VersionDisplay : UguiSprite {
 
-        private HoverableTrigger backButton;
-        private HoverableTrigger nextButton;
+        private IconButton backButton;
+        private IconButton nextButton;
         private VersionButton versionIcon;
         private ILabel nameLabel;
         private ILabel scaleLabel;
@@ -26,30 +26,26 @@ namespace PBGame.UI.Components.Prepare.Details
         {
             Alpha = 0.125f;
 
-            backButton = CreateChild<HoverableTrigger>("back", 0);
+            backButton = CreateChild<IconButton>("back", 0);
             {
                 backButton.Anchor = AnchorType.LeftStretch;
                 backButton.Pivot = PivotType.Left;
                 backButton.RawHeight = 0f;
                 backButton.Width = 80f;
                 backButton.X = 0f;
-
-                backButton.CreateIconSprite(spriteName: "icon-left");
-                backButton.UseDefaultHoverAni();
-
+                backButton.IconName = "icon-left";
+                
                 backButton.OnTriggered += Model.SelectPrevMap;
             }
-            nextButton = CreateChild<HoverableTrigger>("next", 1);
+            nextButton = CreateChild<IconButton>("next", 1);
             {
                 nextButton.Anchor = AnchorType.RightStretch;
                 nextButton.Pivot = PivotType.Right;
                 nextButton.RawHeight = 0f;
                 nextButton.Width = 80f;
                 nextButton.X = 0f;
+                nextButton.IconName = "icon-right";
                 
-                nextButton.CreateIconSprite(spriteName: "icon-right");
-                nextButton.UseDefaultHoverAni();
-
                 nextButton.OnTriggered += Model.SelectNextMap;
             }
             versionIcon = CreateChild<VersionButton>("version", 2);

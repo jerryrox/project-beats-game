@@ -71,9 +71,7 @@ namespace PBGame.Rulesets.Objects
 
 			// Determine which sample point this object belongs to.
 			IHasEndTime endTimeObject = this as IHasEndTime;
-			SamplePoint = controlPoints.SamplePointAt(
-				(endTimeObject != null ? endTimeObject.EndTime : StartTime) + ControlPointOffset
-			);
+			SamplePoint = controlPoints.SamplePointAt(StartTime + ControlPointOffset);
 
 			// Create nested objects if necessary
 			NestedObjects.Clear();

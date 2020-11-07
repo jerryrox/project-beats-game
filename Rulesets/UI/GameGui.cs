@@ -1,4 +1,5 @@
 using System;
+using PBGame.Rulesets.UI.Components;
 using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -52,6 +53,14 @@ namespace PBGame.Rulesets.UI
                     onHideAction?.Invoke();
                     onHideAction = null;
                 });
+            }
+            var escapeDisplay = CreateChild<EscapeDisplay>("escaper", 10000);
+            {
+                escapeDisplay.Anchor = AnchorType.TopStretch;
+                escapeDisplay.Pivot = PivotType.Top;
+                escapeDisplay.Height = 64;
+                escapeDisplay.Y = -8f;
+                escapeDisplay.SetOffsetHorizontal(8f);
             }
         }
 

@@ -77,6 +77,11 @@ namespace PBGame.Rulesets.Scoring
 
 
         /// <summary>
+        /// Returns the minimum accuracy required to achieve the specified rank.
+        /// </summary>
+        float GetRankAccuracy(RankType type);
+
+        /// <summary>
         /// Apply any changes to the score processing from specified map.
         /// </summary>
         void ApplyMap(IPlayableMap map);
@@ -85,5 +90,10 @@ namespace PBGame.Rulesets.Scoring
         /// Processes the specified judgement for scoring.
         /// </summary>
         void ProcessJudgement(JudgementResult result);
+
+        /// <summary>
+        /// Returns the rank type for the specified accuracy.
+        /// </summary>
+        RankType CalculateRank(float acc);
     }
 }

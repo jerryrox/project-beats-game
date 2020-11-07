@@ -25,6 +25,8 @@ namespace PBGame.UI.Navigations
         public const int SongsScreen = 10;
         public const int PrepareScreen = 11;
 
+        public const int ResultScreen = 20;
+
         public const int GameLoadOverlay = 50;
 
         public const int MenuBarOverlay = 100;
@@ -32,6 +34,7 @@ namespace PBGame.UI.Navigations
         public const int ProfileMenuOverlay = 102;
         public const int MusicMenuOverlay = 103;
         public const int SettingsMenuOverlay = 104;
+        public const int NotificationMenuOverlay = 105;
 
         public const int OffsetOverlay = 110;
 

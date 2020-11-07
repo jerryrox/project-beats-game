@@ -1,4 +1,5 @@
 using PBGame.Rulesets.Maps;
+using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Graphics;
@@ -46,6 +47,11 @@ namespace PBGame.Rulesets
         /// Creates a new map difficulty calculator instance for this game mode.
         /// </summary>
         IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map);
+
+        /// <summary>
+        /// Creates a new score processor for this mode.
+        /// </summary>
+        IScoreProcessor CreateScoreProcessor();
 
         /// <summary>
         /// Creates a new hit object timing information of this game mode.

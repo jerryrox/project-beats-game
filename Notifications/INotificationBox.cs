@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace PBGame.Notifications
 {
@@ -17,11 +18,16 @@ namespace PBGame.Notifications
         /// </summary>
         event Action<INotification> OnRemoveNotification;
 
+        /// <summary>
+        /// Returns the list of notifications currently stored in the box.
+        /// </summary>
+        IReadOnlyList<INotification> Notifications { get; }
+
 
         /// <summary>
         /// Adds a notification as a quick message 
         /// </summary>
-        void Add(INotification notification);
+        void Add(Notification notification);
 
         /// <summary>
         /// Removes the specified notification from the list.

@@ -108,7 +108,7 @@ namespace PBGame.UI.Components.ProfileMenu
 
             Model.CurrentUser.OnNewValue += OnUserChange;
 
-            SwitchView(Model.CurrentUser.Value != null, false);
+            SwitchView(Model.CurrentUser.Value.IsOnlineUser, false);
         }
         
         protected override void OnDisable()
@@ -168,7 +168,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnUserChange(IUser user)
         {
-            SwitchView(user != null);
+            SwitchView(user.IsOnlineUser);
         }
 
         /// <summary>

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PBGame.UI.Models.Dialog;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Data.Rankings;
 using PBGame.Maps;
+using PBGame.Graphics;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
@@ -13,6 +15,8 @@ using PBFramework.Data.Bindables;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
+
+using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.UI.Models
 {
@@ -84,11 +88,43 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IModeManager ModeManager { get; set; }
 
+        [ReceivesDependency]
+        private IColorPreset ColorPreset { get; set; }
+
+        [ReceivesDependency]
+        private IMapManager MapManager { get; set; }
+
 
         /// <summary>
         /// Toggles between detailed/brief information display mode.
         /// </summary>
         public void ToggleDetailedMode() => SetDetailedMode(!isDetailedMode.Value);
+
+        /// <summary>
+        /// Shows the map actions dialog overlay.
+        /// </summary>
+        public void ShowMapActions(IOriginalMap map)
+        {
+            if (map == null)
+            {
+                Logger.LogWarning("Attempted to show map actions for a null map.");
+                return;
+            }
+
+            var dialogModel = OverlayNavigator.Show<DialogOverlay>().Model;
+            dialogModel.SetMessage($"Select an action for the version ({map.Detail.Version})");
+            dialogModel.AddOption(new DialogOption()
+            {
+                Callback = () => OnMapActionDelete(map),
+                Label = "Delete",
+                Color = ColorPreset.Warning
+            });
+            dialogModel.AddOption(new DialogOption()
+            {
+                Label = "Cancel",
+                Color = ColorPreset.Negative
+            });
+        }
 
         /// <summary>
         /// Shows the offset overlay for current selection.
@@ -173,6 +209,8 @@ namespace PBGame.UI.Models
             GameMode.OnNewValue += OnGameModeChange;
             RankDisplay.OnNewValue += OnRankDisplayChange;
 
+            MapManager.OnDeleteMap += OnDeleteMap;
+
             SetDetailedMode(false);
             SetMapList();
             RequestMapsetDescription();
@@ -187,6 +225,8 @@ namespace PBGame.UI.Models
             SelectedMap.OnNewValue -= OnMapChange;
             GameMode.OnNewValue -= OnGameModeChange;
             RankDisplay.OnNewValue -= OnRankDisplayChange;
+
+            MapManager.OnDeleteMap -= OnDeleteMap;
 
             mapsetDescription.Value = "";
             // TODO: Stop mapset description api request
@@ -257,6 +297,27 @@ namespace PBGame.UI.Models
         private void OnRankDisplayChange(RankDisplayType type)
         {
             RequestRankings();
+        }
+
+        /// <summary>
+        /// Event called on map deletion from map manager.
+        /// </summary>
+        private void OnDeleteMap(IOriginalMap map)
+        {
+            var mapset = SelectedMapset.Value;
+            if(mapset == null)
+                return;
+
+            // Trigger change on the maps list.
+            MapList.Trigger();
+        }
+
+        /// <summary>
+        /// Event called on selecting delete in map actions dialog.
+        /// </summary>
+        private void OnMapActionDelete(IOriginalMap map)
+        {
+            MapManager.DeleteMap(map);
         }
     }
 }

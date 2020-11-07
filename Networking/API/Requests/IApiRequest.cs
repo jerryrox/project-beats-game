@@ -1,12 +1,21 @@
 using System;
 using PBGame.Networking.API.Responses;
+using PBGame.Notifications;
 using PBFramework.Data.Bindables;
+using PBFramework.Threading;
+using PBFramework.Networking;
 using PBFramework.Networking.API;
 
 namespace PBGame.Networking.API.Requests
 {
     public interface IApiRequest : IDisposable
     {
+        /// <summary>
+        /// Event called before the request is disposed.
+        /// </summary>
+        event Action OnDisposing;
+
+
         /// <summary>
         /// Returns whether this request has already been made.
         /// </summary>
@@ -26,7 +35,12 @@ namespace PBGame.Networking.API.Requests
         /// <summary>
         /// Starts requesting the PB Api server for a response.
         /// </summary>
-        void Request();
+        void Request(TaskListener<IWebRequest> listener = null);
+
+        /// <summary>
+        /// Creates a new notification that represents this request.
+        /// </summary>
+        Notification CreateNotification();
     }
 
     public interface IApiRequest<T> : IApiRequest

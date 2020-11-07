@@ -89,7 +89,7 @@ namespace PBGame.UI.Components.ProfileMenu
         /// </summary>
         private void OnUserChange(IUser user)
         {
-            if(user != null && user.OnlineUser.Provider != null)
+            if(user.IsOnlineUser)
                 accountLabel.Text = $"Logged in using {user.OnlineUser.Provider.Name}";
             else
                 accountLabel.Text = $"You are currently offline.";

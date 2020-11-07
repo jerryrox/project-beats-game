@@ -32,7 +32,7 @@ namespace PBGame.Rulesets.Maps
 				var samplePoint = hitObj.SamplePoint;
 				if(samplePoint != null)
 				{
-					if(hitObj.Samples != null)
+                    if(hitObj.Samples != null)
 					{
 						for(int i=0; i<hitObj.Samples.Count; i++)
 							samplePoint.ApplySample(hitObj.Samples[i]);

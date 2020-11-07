@@ -1,6 +1,7 @@
+using PBGame.Rulesets.Maps;
+using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Difficulty;
 using PBGame.Rulesets.Judgements;
-using PBGame.Rulesets.Maps;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 
@@ -34,7 +35,9 @@ namespace PBGame.Rulesets
 
 		public abstract IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map);
 
-		public abstract HitTiming CreateTiming();
+        public abstract IScoreProcessor CreateScoreProcessor();
+
+        public abstract HitTiming CreateTiming();
 
 		public IGameSession GetSession(IGraphicObject container, IDependencyContainer dependency)
 		{

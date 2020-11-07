@@ -1,4 +1,5 @@
 using PBGame.UI.Models.MenuBar;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Users;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -10,8 +11,7 @@ namespace PBGame.UI.Components.MenuBar
     public class ProfileMenuButton : BaseMenuButton {
 
         private ISprite background;
-        private ISprite imageBackground;
-        private ITexture imageTexture;
+        private AvatarDisplay avatarDisplay;
         private ILabel nicknameLabel;
         private ILabel levelLabel;
 
@@ -32,21 +32,14 @@ namespace PBGame.UI.Components.MenuBar
                 background.RawSize = Vector2.zero;
                 background.Color = new Color(0f, 0f, 0f, 0.125f);
             }
-            imageBackground = CreateChild<UguiSprite>("image-bg", 5);
+            avatarDisplay = CreateChild<AvatarDisplay>("avatar", 5);
             {
-                imageBackground.Anchor = AnchorType.Left;
-                imageBackground.Pivot = PivotType.Left;
-                imageBackground.X = 8f;
-                imageBackground.Size = new Vector2(48f, 48f);
-                imageBackground.Color = new Color(0f, 0f, 0f, 0.125f);
-
-                imageTexture = imageBackground.CreateChild<UguiTexture>("image", 5);
-                {
-                    imageTexture.Anchor = AnchorType.Fill;
-                    imageTexture.RawSize = Vector2.zero;
-                    imageTexture.Position = Vector2.zero;
-                    imageTexture.Active = false;
-                }
+                avatarDisplay.Anchor = AnchorType.Left;
+                avatarDisplay.Pivot = PivotType.Left;
+                avatarDisplay.X = 8f;
+                avatarDisplay.Size = new Vector2(48f, 48f);
+                avatarDisplay.Color = new Color(0f, 0f, 0f, 0.125f);
+                avatarDisplay.MaskSprite = null;
             }
             nicknameLabel = CreateChild<Label>("nickname", 6);
             {
@@ -75,7 +68,6 @@ namespace PBGame.UI.Components.MenuBar
         {
             base.OnEnableInited();
 
-            Model.ProfileImage.OnNewValue += OnProfileImageLoaded;
             Model.CurrentUser.BindAndTrigger(OnUserChange);
         }
 
@@ -84,15 +76,8 @@ namespace PBGame.UI.Components.MenuBar
             base.OnDisable();
 
             Model.CurrentUser.OnNewValue -= OnUserChange;
-        }
-
-        /// <summary>
-        /// Sets the profile image to the specified texture.
-        /// </summary>
-        private void SetProfileImage(Texture2D texture)
-        {
-            imageTexture.Active = texture != null;
-            imageTexture.Texture = texture;
+            
+            avatarDisplay.RemoveSource();
         }
 
         /// <summary>
@@ -100,16 +85,9 @@ namespace PBGame.UI.Components.MenuBar
         /// </summary>
         private void SetUserProfile(IUser user)
         {
-            if(user != null)
-                nicknameLabel.Text = user.Username;
-            else
-                nicknameLabel.Text = "offline user";
+            nicknameLabel.Text = user.Username;
+            avatarDisplay.SetSource(user);
         }
-
-        /// <summary>
-        /// Event called from cacher agent when the avatar has been loaded.
-        /// </summary>
-        private void OnProfileImageLoaded(Texture2D texture) => SetProfileImage(texture);
 
         /// <summary>
         /// Event called when the online user has changed.
