@@ -15,7 +15,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.12.0 (WIP)
+### 0.12.0
 #### New features
 - Implemented AvatarDisplay component to simplify loading of avatar images.
 - Implemented NotificationMenuOverlay.
