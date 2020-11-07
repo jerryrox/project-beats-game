@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PBGame.UI.Components.Common;
+using PBGame.UI.Models;
 using PBGame.UI.Components.Download.Search;
-using PBFramework.UI;
+using PBFramework.Utils;
 using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Download
 {
@@ -22,11 +18,15 @@ namespace PBGame.UI.Components.Download
         private BannerContainer bannerContainer;
         private SearchBarContainer searchBarContainer;
         private ShadowButton shadowButton;
+        private ScrollTopButton scrollTopButton;
 
         private bool isFolded = true;
 
         private IAnime foldAni;
         private IAnime unfoldAni;
+
+        private IAnime scrollButtonShowAni;
+        private IAnime scrollButtonHideAni;
 
 
         /// <summary>
@@ -38,6 +38,9 @@ namespace PBGame.UI.Components.Download
         /// Returns the height of the search menu on unfolded state.
         /// </summary>
         public float UnfoldedHeight => 360f;
+
+        [ReceivesDependency]
+        private DownloadModel Model { get; set; }
 
 
         [InitWithDependency]
@@ -85,10 +88,19 @@ namespace PBGame.UI.Components.Download
 
                 shadowButton.OnTriggered += OnShadowButton;
             }
+            scrollTopButton = CreateChild<ScrollTopButton>("scroll-button", 2);
+            {
+                scrollTopButton.Anchor = AnchorType.Bottom;
+                scrollTopButton.Y = -28f;
+                scrollTopButton.Size = new Vector2(120f, 24f);
+                scrollTopButton.Active = false;
+
+                scrollTopButton.OnTriggered += OnScrollTopButton;
+            }
 
             foldAni = new Anime();
             foldAni.AddEvent(0f, () => bannerContainer.IsInteractible = false);
-            foldAni.AnimateFloat(h => 
+            foldAni.AnimateFloat(h =>
             {
                 container.Height = h;
                 shadowButton.SetOffsetTop(h);
@@ -119,6 +131,28 @@ namespace PBGame.UI.Components.Download
                 .AddTime(0.25f, 0.5f)
                 .Build();
             unfoldAni.AddEvent(unfoldAni.Duration, () => bannerContainer.IsInteractible = true);
+
+            scrollButtonShowAni = new Anime();
+            scrollButtonShowAni.AddEvent(0f, () => scrollTopButton.Active = true);
+            scrollButtonShowAni.AnimateFloat((i) =>
+            {
+                scrollTopButton.Alpha = Easing.Linear(i, 0f, 1f, 0f);
+                scrollTopButton.Y = Easing.Linear(i, 0f, 28f, 0f);
+            }).AddTime(0f, 0f, EaseType.BackEaseOut)
+                .AddTime(0.25f, 1f)
+                .Build();
+
+            scrollButtonHideAni = new Anime();
+            scrollButtonHideAni.AnimateFloat((i) =>
+            {
+                scrollTopButton.Alpha = Easing.Linear(i, 1f, -1f, 0f);
+                scrollTopButton.Y = Easing.Linear(i, 28f, -28f, 0f);
+            }).AddTime(0f, 0f, EaseType.SineEaseOut)
+                .AddTime(0.25f, 1f)
+                .Build();
+            scrollButtonHideAni.AddEvent(scrollButtonHideAni.Duration, () => scrollTopButton.Active = false);
+
+            OnEnableInited();
         }
 
         /// <summary>
@@ -140,6 +174,20 @@ namespace PBGame.UI.Components.Download
                 unfoldAni.PlayFromStart();
         }
 
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            Model.IsScrolledDown.BindAndTrigger(OnScrolledDown);
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.IsScrolledDown.Unbind(OnScrolledDown);
+        }
+
         /// <summary>
         /// Event called on triggering advanced button.
         /// </summary>
@@ -149,5 +197,21 @@ namespace PBGame.UI.Components.Download
         /// Event called on triggering shadow button.
         /// </summary>
         private void OnShadowButton() => SetFold(true);
+
+        /// <summary>
+        /// Event called on songs list scrolled down.
+        /// </summary>
+        private void OnScrolledDown(bool isScrolledDown)
+        {
+            scrollButtonShowAni.Stop();
+            scrollButtonHideAni.Stop();
+
+            if (isScrolledDown)
+                scrollButtonShowAni.PlayFromStart();
+            else
+                scrollButtonHideAni.PlayFromStart();
+        }
+
+        private void OnScrollTopButton() => Model.RequestScrollTop();
     }
 }

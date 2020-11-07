@@ -20,6 +20,11 @@ namespace PBGame.UI.Components.Download
         /// </summary>
         private const float NextPageReqThreshold = 150f;
 
+        /// <summary>
+        /// Amount of additional position Y required from initial container position to make scroll top button show.
+        /// </summary>
+        private const float ScrollTopThreshold = 50;
+
         private BasicScrollbar scrollbar;
 
         private bool requestedNextPage;
@@ -65,6 +70,8 @@ namespace PBGame.UI.Components.Download
 
             Model.OnMapsetListChange += OnResultChange;
             OnResultChange(Model.MapsetList.Value, false);
+
+            Model.OnScrollTopRequest += OnScrollTopRequest;
         }
 
         protected override void OnDisable()
@@ -72,6 +79,7 @@ namespace PBGame.UI.Components.Download
             base.OnDisable();
 
             Model.OnMapsetListChange -= OnResultChange;
+            Model.OnScrollTopRequest -= OnScrollTopRequest;
         }
 
         protected override void Update()
@@ -80,8 +88,13 @@ namespace PBGame.UI.Components.Download
             if (!ShouldUpdate || Model.MapsetList.Value.Count == 0 || requestedNextPage)
                 return;
 
+            float containerPos = container.Position.y;
+
+            Model.SetScrolledDown(containerPos > ContainerStartPos.y + ScrollTopThreshold);
+            Debug.LogWarning($"ContainerPos: {containerPos}, startPos: {ContainerStartPos.y}");
+
             var triggerPos = ContainerEndPos.y - NextPageReqThreshold;
-            if (container.Position.y >= triggerPos)
+            if (containerPos >= triggerPos)
             {
                 requestedNextPage = true;
                 Model.RequestMapsets();
@@ -133,6 +146,14 @@ namespace PBGame.UI.Components.Download
                 pos += lastDelta.Value;
                 container.Position = pos;
             }
+        }
+
+        /// <summary>
+        /// Event called on requesting scroll to top.
+        /// </summary>
+        private void OnScrollTopRequest()
+        {
+            ScrollTo(ContainerStartPos);
         }
     }
 }
