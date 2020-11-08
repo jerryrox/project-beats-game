@@ -1,4 +1,6 @@
 using PBGame.Rulesets.UI.Components;
+using PBGame.Rulesets.Inputs;
+using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
@@ -49,6 +51,24 @@ namespace PBGame.Rulesets.UI.HUD
         }
 
         /// <summary>
+        /// Shows the primary effect for specified cursor.
+        /// </summary>
+        public void ShowPrimary(ICursor cursor, IInputResultReporter resultReporter)
+        {
+            var effect = primaryRecycler.GetNext();
+            effect.Show(cursor, resultReporter);
+        }
+
+        /// <summary>
+        /// Shows the secondary effect for specified cursor.
+        /// </summary>
+        public void ShowSecondary(ICursor cursor, IInputResultReporter resultReporter)
+        {
+            var effect = secondaryRecycler.GetNext();
+            effect.Show(cursor, resultReporter);
+        }
+
+        /// <summary>
         /// Immediately returns all effects to recyclers.
         /// </summary>
         private void DestroyAllEffects()
@@ -63,7 +83,9 @@ namespace PBGame.Rulesets.UI.HUD
         /// </summary>
         private PrimaryTouchEffects CreatePrimaryEffect()
         {
-            return primaryContainer.CreateChild<PrimaryTouchEffects>();
+            var effect = primaryContainer.CreateChild<PrimaryTouchEffects>();
+            effect.PulseRecycler = pulseRecycler;
+            return effect;
         }
 
         /// <summary>
@@ -71,7 +93,9 @@ namespace PBGame.Rulesets.UI.HUD
         /// </summary>
         private SecondaryTouchEffects CreateSecondaryEffect()
         {
-            return secondaryContainer.CreateChild<SecondaryTouchEffects>();
+            var effect = secondaryContainer.CreateChild<SecondaryTouchEffects>();
+            effect.PulseRecycler = pulseRecycler;
+            return effect;
         }
 
         /// <summary>

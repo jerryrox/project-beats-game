@@ -122,7 +122,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public IEnumerable<JudgementResult> JudgePassive(float curTime, HitObjectView view)
         {
-            return view.JudgePassive(curTime);
+            return view.JudgePassive(curTime).Select((r) =>
+            {
+                hitBarCursor?.ReportNewResult(r);
+                return r;
+            });
         }
 
         int IComparable<IInputReceiver>.CompareTo(IInputReceiver other) => other.InputLayer.CompareTo(InputLayer);

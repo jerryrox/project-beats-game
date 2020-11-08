@@ -37,7 +37,8 @@ namespace PBGame.Rulesets.UI.Components
             this.resultReporter = resultReporter;
 
             // Set initial position.
-            myTransform.position = cursor.RawPosition;
+            Position = cursor.Position;
+            Debug.LogWarning(Position);
 
             // Listen to input release state.
             cursor.State.Bind(OnCursorStateChange);
@@ -64,7 +65,7 @@ namespace PBGame.Rulesets.UI.Components
                 resultReporter.OnResult -= OnInputResult;
             resultReporter = null;
 
-            showAni?.Stop();
+            showAni?.Pause();
             hideAni?.PlayFromStart();
         }
 
@@ -76,8 +77,8 @@ namespace PBGame.Rulesets.UI.Components
         void IRecyclable.OnRecycleDestroy()
         {
             Active = false;
-            showAni?.Stop();
-            hideAni?.Stop();
+            showAni?.Pause();
+            hideAni?.Pause();
         }
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace PBGame.Rulesets.UI.Components
             if(cursor == null)
                 return;
 
-            myTransform.position = cursor.RawPosition;
+            Position = cursor.Position;
         }
     }
 }
