@@ -12,7 +12,6 @@ namespace PBGame.Rulesets.UI.Components
 {
     public abstract class TouchEffect : UguiObject, IRecyclable
     {
-
         protected ICursor cursor;
         protected IInputResultReporter resultReporter;
 
@@ -95,9 +94,13 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         protected virtual void OnInputResult(JudgementResult result)
         {
+            HitResultType type = result.HitResult;
+            if(type == HitResultType.Miss)
+                return;
+
             // Show a pulse effect at the current position.
             var effect = PulseRecycler.GetNext();
-            effect.Show(myTransform.position, ColorPreset.GetHitResultColor(result.HitResult));
+            effect.Show(myTransform.position, ColorPreset.GetHitResultColor(type));
         }
 
         protected void Update()

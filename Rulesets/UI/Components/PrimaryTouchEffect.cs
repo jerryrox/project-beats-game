@@ -19,7 +19,7 @@ namespace PBGame.Rulesets.UI.Components
         private IAnime repeatAni;
 
 
-        IRecycler<PrimaryTouchEffects> IRecyclable<PrimaryTouchEffects>.Recycler { get; set; }
+        public IRecycler<PrimaryTouchEffects> Recycler { get; set; }
 
         [ReceivesDependency]
         private IColorPreset ColorPreset { get; set; }
@@ -62,8 +62,10 @@ namespace PBGame.Rulesets.UI.Components
                 .AddTime(0f, new Vector2(160f, 160f), EaseType.CubicEaseOut)
                 .AddTime(0.15f, new Vector2(100f, 100f))
                 .Build();
+            showAni.AddEvent(showAni.Duration, () => repeatAni.PlayFromStart());
 
             hideAni = new Anime();
+            hideAni.AddEvent(0f, () => repeatAni.Pause());
             hideAni.AnimateFloat((alpha) => glowSprite.Alpha = alpha)
                 .AddTime(0f, () => glowSprite.Alpha)
                 .AddTime(0.25f, 0f)
@@ -72,8 +74,12 @@ namespace PBGame.Rulesets.UI.Components
                 .AddTime(0f, () => fillSprite.Alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
+            hideAni.AddEvent(hideAni.Duration, () => Recycler.Return(this));
 
-            repeatAni = new Anime();
+            repeatAni = new Anime()
+            {
+                WrapMode = WrapModeType.Loop,
+            };
             repeatAni.AnimateFloat((alpha) => fillSprite.Alpha = alpha)
                 .AddTime(0f, 0.25f, EaseType.QuadEaseOut)
                 .AddTime(0.4f, 0.75f, EaseType.QuadEaseIn)

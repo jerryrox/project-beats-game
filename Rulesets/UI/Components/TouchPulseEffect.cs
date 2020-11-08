@@ -20,7 +20,7 @@ namespace PBGame.Rulesets.UI.Components
         private IAnime anime;
 
 
-        IRecycler<TouchPulseEffect> IRecyclable<TouchPulseEffect>.Recycler { get; set; }
+        public IRecycler<TouchPulseEffect> Recycler { get; set; }
 
 
         [InitWithDependency]
@@ -39,6 +39,7 @@ namespace PBGame.Rulesets.UI.Components
                 .AddTime(0f, new Vector2(PulseStartSize, PulseStartSize), EaseType.CubicEaseOut)
                 .AddTime(0.25f, new Vector2(PulseFullSize, PulseFullSize))
                 .Build();
+            anime.AddEvent(anime.Duration, () => Recycler.Return(this));
         }
 
         /// <summary>
