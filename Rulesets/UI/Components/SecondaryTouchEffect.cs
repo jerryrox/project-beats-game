@@ -13,6 +13,10 @@ namespace PBGame.Rulesets.UI.Components
 {
     public class SecondaryTouchEffects : TouchEffect, IRecyclable<SecondaryTouchEffects> {
 
+        private const float GlowSizeOffset = 28f;
+        private const float BaseSize = 150;
+        private const float ShowShrinkSize = 80;
+
         private ISprite glowSprite;
         private ISprite fillSprite;
 
@@ -30,7 +34,7 @@ namespace PBGame.Rulesets.UI.Components
         {
             glowSprite = CreateChild<UguiSprite>("glow");
             {
-                glowSprite.Size = new Vector2(108f, 108f);
+                glowSprite.Size = new Vector2(BaseSize + GlowSizeOffset, BaseSize + GlowSizeOffset);
                 glowSprite.SpriteName = "glow-square-32";
                 glowSprite.ImageType = Image.Type.Sliced;
                 glowSprite.Color = ColorPreset.SecondaryFocus;
@@ -59,8 +63,8 @@ namespace PBGame.Rulesets.UI.Components
                 .AddTime(0.15f, 0.25f)
                 .Build();
             showAni.AnimateVector2((size) => fillSprite.Size = size)
-                .AddTime(0f, new Vector2(140f, 140f), EaseType.CubicEaseOut)
-                .AddTime(0.15f, new Vector2(80f, 80f))
+                .AddTime(0f, new Vector2(BaseSize + ShowShrinkSize, BaseSize + ShowShrinkSize), EaseType.CubicEaseOut)
+                .AddTime(0.15f, new Vector2(BaseSize, BaseSize))
                 .Build();
             showAni.AddEvent(showAni.Duration, () => repeatAni.PlayFromStart());
 
