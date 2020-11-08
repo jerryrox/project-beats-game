@@ -113,7 +113,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                             TriggerCursorPress(cursor, pos);
                         // If not hit on hit bar, this is treated as a key stoke.
                         else
-                            TriggerKeyPress(cursor);
+                            TriggerKeyPress(cursor, cursor);
                     }
                 }
             }
@@ -147,10 +147,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Triggers a new key stroke press event for specified input.
         /// </summary>
-        private void TriggerKeyPress(IInput input)
+        private void TriggerKeyPress(IInput input, ICursor cursor = null)
         {
             var beatsKey = keyRecycler.GetNext();
             beatsKey.Input = input;
+            beatsKey.SetInputAsCursor(cursor);
             OnKeyPress?.Invoke(beatsKey);
         }
 
