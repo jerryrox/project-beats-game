@@ -27,6 +27,11 @@ namespace PBGame.Rulesets.UI
         public HealthDisplay HealthDisplay { get; protected set; }
 
         /// <summary>
+        /// Returns the effects displayer object.
+        /// </summary>
+        public TouchEffectDisplay TouchEffectDisplay { get; protected set; }
+
+        /// <summary>
         /// Returns the skip displayer object.
         /// </summary>
         public SkipDisplay SkipDisplay { get; protected set; }
@@ -35,7 +40,7 @@ namespace PBGame.Rulesets.UI
         [InitWithDependency]
         private void Init()
         {
-            SkipDisplay = CreateChild<SkipDisplay>("skip", 4);
+            SkipDisplay = CreateChild<SkipDisplay>("skip", 100);
             {
                 SkipDisplay.Anchor = AnchorType.BottomStretch;
                 SkipDisplay.Pivot = PivotType.Bottom;

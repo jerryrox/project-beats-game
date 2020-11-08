@@ -90,6 +90,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     indicator.SetOffsetVertical(-8f);
                 }
             }
+            TouchEffectDisplay = CreateChild<TouchEffectDisplay>("touch-effect", 4);
+            {
+                TouchEffectDisplay.Anchor = AnchorType.Fill;
+                TouchEffectDisplay.Offset = Offset.Zero;
+            }
         }
     }
 }
