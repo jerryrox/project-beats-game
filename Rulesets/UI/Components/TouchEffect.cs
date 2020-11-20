@@ -38,7 +38,6 @@ namespace PBGame.Rulesets.UI.Components
 
             // Set initial position.
             Position = cursor.Position;
-            Debug.LogWarning(Position);
 
             // Listen to input release state.
             cursor.State.Bind(OnCursorStateChange);

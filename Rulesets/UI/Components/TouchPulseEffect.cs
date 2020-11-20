@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using PBFramework.UI;
 using PBFramework.Utils;
 using PBFramework.Graphics;
+using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Animations;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
@@ -14,8 +15,8 @@ namespace PBGame.Rulesets.UI.Components
 {
     public class TouchPulseEffect : UguiSprite, IRecyclable<TouchPulseEffect> {
 
-        private const float PulseStartSize = 60f;
-        private const float PulseFullSize = 180f;
+        private const float PulseStartSize = 140f;
+        private const float PulseFullSize = 280f;
 
         private IAnime anime;
 
@@ -28,6 +29,9 @@ namespace PBGame.Rulesets.UI.Components
         {
             SpriteName = "glow-in-square-32";
             ImageType = Image.Type.Sliced;
+            RotationZ = 45f;
+
+            AddEffect(new AdditiveShaderEffect());
 
             anime = new Anime();
             anime.AnimateFloat((alpha) => this.Alpha = alpha)

@@ -8,7 +8,7 @@ using PBFramework.Allocation.Recyclers;
 namespace PBGame.Rulesets.Beats.Standard.Inputs
 {
     public class BeatsCursor : BaseBeatsInput<ICursor>, IRecyclable<BeatsCursor>,
-        IInputResultReporter 
+        IInputResultReporter
     {
         public event Action<JudgementResult> OnResult;
 

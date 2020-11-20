@@ -156,6 +156,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             var beatsKey = keyRecycler.GetNext();
             beatsKey.Input = input;
             beatsKey.SetInputAsCursor(cursor);
+            // Associate the key with the hit cursor.
+            if(hitBarCursor.IsActive)
+                beatsKey.SetHitCursor(hitBarCursor);
+
             OnKeyPress?.Invoke(beatsKey);
         }
 

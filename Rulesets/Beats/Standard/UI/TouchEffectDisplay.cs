@@ -58,7 +58,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// </summary>
         private void OnCursorPress(BeatsCursor cursor)
         {
-            ShowPrimary(cursor.Input, null);
+            ShowPrimary(cursor.Input, cursor);
         }
 
         /// <summary>

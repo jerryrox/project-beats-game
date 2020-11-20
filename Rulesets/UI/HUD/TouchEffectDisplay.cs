@@ -40,14 +40,14 @@ namespace PBGame.Rulesets.UI.HUD
                 DestroyAllEffects();
             };
 
+            pulseRecycler = new ManagedRecycler<TouchPulseEffect>(CreatePulseEffect);
+            pulseRecycler.Precook(5);
+
             primaryRecycler = new ManagedRecycler<PrimaryTouchEffects>(CreatePrimaryEffect);
             primaryRecycler.Precook(4);
 
             secondaryRecycler = new ManagedRecycler<SecondaryTouchEffects>(CreateSecondaryEffect);
             secondaryRecycler.Precook(20);
-
-            pulseRecycler = new ManagedRecycler<TouchPulseEffect>(CreatePulseEffect);
-            pulseRecycler.Precook(5);
         }
 
         /// <summary>
