@@ -16,7 +16,7 @@ namespace PBGame.Rulesets.UI.Components
     public class TouchPulseEffect : UguiSprite, IRecyclable<TouchPulseEffect> {
 
         private const float PulseStartSize = 140f;
-        private const float PulseFullSize = 280f;
+        private const float PulseFullSize = 320f;
 
         private IAnime anime;
 

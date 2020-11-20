@@ -68,7 +68,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         {
             var cursor = key.GetInputAsCursor();
             if(cursor != null)
-                ShowSecondary(cursor, null);
+                ShowSecondary(cursor, key);
         }
     }
 }
