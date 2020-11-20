@@ -36,7 +36,7 @@ namespace PBGame.Rulesets.UI.Components
             anime = new Anime();
             anime.AnimateFloat((alpha) => this.Alpha = alpha)
                 .AddTime(0f, 0f, EaseType.QuadEaseOut)
-                .AddTime(0.15f, 1f, EaseType.QuadEaseIn)
+                .AddTime(0.1f, 1f, EaseType.QuadEaseIn)
                 .AddTime(0.25f, 0f)
                 .Build();
             anime.AnimateVector2((size) => this.Size = size)
