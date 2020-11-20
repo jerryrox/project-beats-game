@@ -71,7 +71,7 @@ namespace PBGame.UI.Navigations.Overlays
                         {
                             glowSprite.Anchor = AnchorType.Fill;
                             glowSprite.Offset = new Offset(-15f);
-                            glowSprite.SpriteName = "square-32-glow";
+                            glowSprite.SpriteName = "glow-square-32";
                             glowSprite.ImageType = Image.Type.Sliced;
                             glowSprite.Color = Color.black;
                         }

@@ -113,7 +113,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                             TriggerCursorPress(cursor, pos);
                         // If not hit on hit bar, this is treated as a key stoke.
                         else
-                            TriggerKeyPress(cursor);
+                            TriggerKeyPress(cursor, cursor);
                     }
                 }
             }
@@ -122,7 +122,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public IEnumerable<JudgementResult> JudgePassive(float curTime, HitObjectView view)
         {
-            return view.JudgePassive(curTime);
+            return view.JudgePassive(curTime).Select((r) =>
+            {
+                hitBarCursor?.ReportNewResult(r);
+                return r;
+            });
         }
 
         int IComparable<IInputReceiver>.CompareTo(IInputReceiver other) => other.InputLayer.CompareTo(InputLayer);
@@ -147,10 +151,15 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Triggers a new key stroke press event for specified input.
         /// </summary>
-        private void TriggerKeyPress(IInput input)
+        private void TriggerKeyPress(IInput input, ICursor cursor = null)
         {
             var beatsKey = keyRecycler.GetNext();
             beatsKey.Input = input;
+            beatsKey.SetInputAsCursor(cursor);
+            // Associate the key with the hit cursor.
+            if(hitBarCursor.IsActive)
+                beatsKey.SetHitCursor(hitBarCursor);
+
             OnKeyPress?.Invoke(beatsKey);
         }
 

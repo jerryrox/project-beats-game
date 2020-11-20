@@ -1,12 +1,10 @@
 using PBGame.Graphics;
 using PBGame.Rulesets.UI.HUD;
 using PBGame.Rulesets.Beats.Standard.Maps;
-using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
@@ -89,6 +87,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     indicator.Width = 2f;
                     indicator.SetOffsetVertical(-8f);
                 }
+            }
+            TouchEffectDisplay = CreateChild<TouchEffectDisplay>("touch-effect", 4);
+            {
+                TouchEffectDisplay.Anchor = AnchorType.Fill;
+                TouchEffectDisplay.Offset = Offset.Zero;
             }
         }
     }

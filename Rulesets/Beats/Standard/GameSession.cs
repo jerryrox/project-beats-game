@@ -21,17 +21,7 @@ namespace PBGame.Rulesets.Beats.Standard
         {
             base.OnHardInit += () =>
             {
-                // TODO: Determine whether it's a player-controlled session.
-                var playArea = Dependencies.Get<PlayAreaContainer>();
-                var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
-
-                // Initialize inputter
-                var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
-                Dependencies.Inject(localPlayerInputter);
-                gameInputter = localPlayerInputter;
-
-                // Pass inputter to hit object holder
-                hitObjectHolder.SetInputter(gameInputter);
+                InitInputter();
             };
             base.OnHardDispose += () =>
             {
@@ -42,6 +32,26 @@ namespace PBGame.Rulesets.Beats.Standard
         protected override Rulesets.UI.GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies)
         {
             return container.CreateChild<GameGui>("beats-standard-gui", dependencies: dependencies);
+        }
+
+        /// <summary>
+        /// Initializes inputter for gameplay.
+        /// </summary>
+        private void InitInputter()
+        {
+            // TODO: Determine whether it's a player-controlled session.
+            var playArea = Dependencies.Get<PlayAreaContainer>();
+            var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
+            var touchEffectDisplay = Dependencies.Get<TouchEffectDisplay>();
+
+            // Initialize inputter
+            var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
+            Dependencies.Inject(localPlayerInputter);
+            gameInputter = localPlayerInputter;
+
+            // Pass inputter to dependencies.
+            hitObjectHolder.SetInputter(gameInputter);
+            touchEffectDisplay.SetInputter(gameInputter);
         }
     }
 }
