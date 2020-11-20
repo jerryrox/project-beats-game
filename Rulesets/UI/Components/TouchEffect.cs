@@ -6,7 +6,6 @@ using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.Rulesets.UI.Components
 {
@@ -57,12 +56,7 @@ namespace PBGame.Rulesets.UI.Components
             if (cursor == null)
                 return;
 
-            cursor.State.Unbind(OnCursorStateChange);
-            cursor = null;
-
-            if (resultReporter != null)
-                resultReporter.OnResult -= OnInputResult;
-            resultReporter = null;
+            UnbindCursor();
 
             showAni?.Pause();
             hideAni?.PlayFromStart();
@@ -76,6 +70,7 @@ namespace PBGame.Rulesets.UI.Components
         void IRecyclable.OnRecycleDestroy()
         {
             Active = false;
+            UnbindCursor();
             showAni?.Pause();
             hideAni?.Pause();
         }
@@ -109,6 +104,20 @@ namespace PBGame.Rulesets.UI.Components
                 return;
 
             Position = cursor.Position;
+        }
+
+        /// <summary>
+        /// Unbinds cursor and result reporter events and removes references to them.
+        /// </summary>
+        private void UnbindCursor()
+        {
+            if(cursor != null)
+                cursor.State.Unbind(OnCursorStateChange);
+            cursor = null;
+
+            if (resultReporter != null)
+                resultReporter.OnResult -= OnInputResult;
+            resultReporter = null;
         }
     }
 }
