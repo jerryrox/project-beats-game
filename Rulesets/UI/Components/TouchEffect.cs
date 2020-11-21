@@ -32,18 +32,11 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public void Show(ICursor cursor, IInputResultReporter resultReporter)
         {
-            this.cursor = cursor;
-            this.resultReporter = resultReporter;
+            UnbindCursor();
+            BindCursor(cursor, resultReporter);
 
             // Set initial position.
             Position = cursor.Position;
-
-            // Listen to input release state.
-            cursor.State.Bind(OnCursorStateChange);
-
-            // Listen to new judgement results from this input.
-            if (resultReporter != null)
-                resultReporter.OnResult += OnInputResult;
 
             showAni?.PlayFromStart();
         }
@@ -104,6 +97,19 @@ namespace PBGame.Rulesets.UI.Components
                 return;
 
             Position = cursor.Position;
+        }
+
+        /// <summary>
+        /// Binds cursor and result reporter events and stores their reference.
+        /// </summary>
+        private void BindCursor(ICursor cursor, IInputResultReporter resultReporter)
+        {
+            this.cursor = cursor;
+            cursor.State.Bind(OnCursorStateChange);
+
+            this.resultReporter = resultReporter;
+            if (resultReporter != null)
+                resultReporter.OnResult += OnInputResult;
         }
 
         /// <summary>
