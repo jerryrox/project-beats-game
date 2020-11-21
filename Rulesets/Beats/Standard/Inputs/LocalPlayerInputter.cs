@@ -66,9 +66,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             GameSession.OnSoftDispose += OnSoftDispose;
             GameSession.OnHardDispose += OnHardDispose;
 
-            OnKeyPress += JudgeKeyPress;
-            OnKeyRelease += JudgeKeyRelease;
-
             pointerEvent = new PointerEventData(Root3D.EventSystem);
         }
 
@@ -120,13 +117,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             return true;
         }
 
-        public IEnumerable<JudgementResult> JudgePassive(float curTime, HitObjectView view)
+        public void JudgePassive(float curTime, HitObjectView view)
         {
-            return view.JudgePassive(curTime).Select((r) =>
-            {
-                hitBarCursor?.ReportNewResult(r);
-                return r;
-            });
+            foreach(var judgement in view.JudgePassive(curTime))
+                AddJudgement(judgement);
         }
 
         int IComparable<IInputReceiver>.CompareTo(IInputReceiver other) => other.InputLayer.CompareTo(InputLayer);
@@ -161,6 +155,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 beatsKey.SetHitCursor(hitBarCursor);
 
             OnKeyPress?.Invoke(beatsKey);
+            JudgeKeyPress(beatsKey);
         }
 
         /// <summary>
@@ -247,7 +242,12 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private void AddJudgement(JudgementResult result)
         {
             if (result != null)
+            {
+                if(hitBarCursor.IsActive)
+                    hitBarCursor.ReportNewResult(result);
+
                 GameSession?.ScoreProcessor.ProcessJudgement(result);
+            }
         }
 
         /// <summary>
@@ -265,6 +265,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private void OnKeyStateRelease(BeatsKey key)
         {
             OnKeyRelease?.Invoke(key);
+            JudgeKeyRelease(key);
+            
             keyRecycler.Return(key);
         }
 
