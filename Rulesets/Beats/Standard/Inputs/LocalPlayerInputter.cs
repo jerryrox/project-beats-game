@@ -212,6 +212,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void JudgeKeyPress(BeatsKey key)
         {
+            // Return if no cursor is active.
+            if(!hitBarCursor.IsActive)
+                return;
+
             // Find the first hit object where the cursor is within the X range.
             foreach (var objView in hitObjectHolder.GetActiveObjects())
             {
