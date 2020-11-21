@@ -6,7 +6,6 @@ using PBFramework.Graphics;
 using PBFramework.Animations;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 namespace PBGame.Rulesets.UI.Components
 {
@@ -33,18 +32,11 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public void Show(ICursor cursor, IInputResultReporter resultReporter)
         {
-            this.cursor = cursor;
-            this.resultReporter = resultReporter;
+            UnbindCursor();
+            BindCursor(cursor, resultReporter);
 
             // Set initial position.
             Position = cursor.Position;
-
-            // Listen to input release state.
-            cursor.State.Bind(OnCursorStateChange);
-
-            // Listen to new judgement results from this input.
-            if (resultReporter != null)
-                resultReporter.OnResult += OnInputResult;
 
             showAni?.PlayFromStart();
         }
@@ -54,18 +46,13 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public void Hide()
         {
-            if (cursor == null)
-                return;
+            UnbindCursor();
 
-            cursor.State.Unbind(OnCursorStateChange);
-            cursor = null;
-
-            if (resultReporter != null)
-                resultReporter.OnResult -= OnInputResult;
-            resultReporter = null;
-
-            showAni?.Pause();
-            hideAni?.PlayFromStart();
+            if (Active)
+            {
+                showAni?.Pause();
+                hideAni?.PlayFromStart();
+            }
         }
 
         void IRecyclable.OnRecycleNew()
@@ -76,6 +63,7 @@ namespace PBGame.Rulesets.UI.Components
         void IRecyclable.OnRecycleDestroy()
         {
             Active = false;
+            UnbindCursor();
             showAni?.Pause();
             hideAni?.Pause();
         }
@@ -109,6 +97,33 @@ namespace PBGame.Rulesets.UI.Components
                 return;
 
             Position = cursor.Position;
+        }
+
+        /// <summary>
+        /// Binds cursor and result reporter events and stores their reference.
+        /// </summary>
+        private void BindCursor(ICursor cursor, IInputResultReporter resultReporter)
+        {
+            this.cursor = cursor;
+            cursor.State.Bind(OnCursorStateChange);
+
+            this.resultReporter = resultReporter;
+            if (resultReporter != null)
+                resultReporter.OnResult += OnInputResult;
+        }
+
+        /// <summary>
+        /// Unbinds cursor and result reporter events and removes references to them.
+        /// </summary>
+        private void UnbindCursor()
+        {
+            if(cursor != null)
+                cursor.State.Unbind(OnCursorStateChange);
+            cursor = null;
+
+            if (resultReporter != null)
+                resultReporter.OnResult -= OnInputResult;
+            resultReporter = null;
         }
     }
 }
