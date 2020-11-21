@@ -53,13 +53,13 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         public void Hide()
         {
-            if (cursor == null)
-                return;
-
             UnbindCursor();
 
-            showAni?.Pause();
-            hideAni?.PlayFromStart();
+            if (Active)
+            {
+                showAni?.Pause();
+                hideAni?.PlayFromStart();
+            }
         }
 
         void IRecyclable.OnRecycleNew()
