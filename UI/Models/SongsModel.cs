@@ -257,11 +257,8 @@ namespace PBGame.UI.Models
                     break;
 
                 case SongOffsetAction:
-                    // If not the selected mapset, make it selected.
-                    if(mapsetForDropdown != MapSelection.Mapset.Value)
-                        MapSelection.SelectMapset(mapsetForDropdown);
-                    // Now show the offsets overlay.
-                    OverlayNavigator.Show<OffsetsOverlay>();
+                    var offsetsModel = OverlayNavigator.Show<OffsetsOverlay>().Model;
+                    offsetsModel.SetMap(mapsetForDropdown);
                     break;
             }
         }

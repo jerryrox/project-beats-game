@@ -68,6 +68,15 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Sets the map to modify the offset for.
+        /// </summary>
+        public void SetMap(IMapset mapset, IPlayableMap map = null)
+        {
+            // Simply select the map and let the bindables retrieve the map/mapset configurations.
+            MapSelection.SelectMapset(mapset, map);
+        }
+
+        /// <summary>
         /// Sets the metronome beat frequency.
         /// </summary>
         public void SetFrequency(BeatFrequency frequency)
