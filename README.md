@@ -18,6 +18,8 @@ Slowly making progress 🧩
 ### 0.12.1
 #### New features
 - Implemented touch pulse effects.
+#### Changes
+- Made the selection of map for offset tweaking done through OffsetsModel, not indirectly via MapSelection.
 #### Fixes
 - (Beats Standard) Fixed issue where touching anywhere on the screen would occasionally register as a valid hit on objects.
 
