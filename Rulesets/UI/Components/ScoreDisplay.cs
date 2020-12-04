@@ -4,12 +4,12 @@ using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-namespace PBGame.Rulesets.UI.HUD
+namespace PBGame.Rulesets.UI.Components
 {
-    public class AccuracyDisplay : UguiObject
+    public class ScoreDisplay : UguiObject
     {
         /// <summary>
-        /// The label displaying the accuracy.
+        /// The label displaying the score.
         /// </summary>
         public ILabel Label { get; private set; }
 
@@ -19,11 +19,11 @@ namespace PBGame.Rulesets.UI.HUD
         {
             gameSession.OnSoftInit += () =>
             {
-                gameSession.ScoreProcessor.Accuracy.BindAndTrigger(OnAccuracyChange);
+                gameSession.ScoreProcessor.Score.BindAndTrigger(OnScoreChange);
             };
             gameSession.OnSoftDispose += () =>
             {
-                Label.Text = "0%";
+                Label.Text = "0";
             };
 
             this.Size = Vector2.zero;
@@ -35,11 +35,11 @@ namespace PBGame.Rulesets.UI.HUD
         }
 
         /// <summary>
-        /// Event called when the accuracy changes.
+        /// Event called when the score changes.
         /// </summary>
-        private void OnAccuracyChange(float acc, float prevAcc)
+        private void OnScoreChange(int score, int prevScore)
         {
-            Label.Text = acc.ToString("P2");
+            Label.Text = score.ToString("N0");
         }
     }
 }

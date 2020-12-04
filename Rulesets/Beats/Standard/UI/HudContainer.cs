@@ -1,5 +1,5 @@
 using PBGame.Graphics;
-using PBGame.Rulesets.UI.HUD;
+using PBGame.Rulesets.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Maps;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Shaders;

@@ -1,16 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets.Beats.Standard.Inputs;
-using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
-    public class TouchEffectDisplay : Rulesets.UI.HUD.TouchEffectDisplay {
+    public class TouchEffectDisplay : Rulesets.UI.Components.TouchEffectDisplay {
 
         private IGameInputter gameInputter;
 
