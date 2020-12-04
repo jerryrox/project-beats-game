@@ -19,10 +19,11 @@ Slowly making progress 🧩
 #### New features
 - Implemented touch pulse effects.
 #### Changes
-- Made the selection of map for offset tweaking done through OffsetsModel, not indirectly via MapSelection.
+- Made pause indicator container be disabled on hiding end animation.
+- Made the selection of map for offset tweaking done through `OffsetsModel`, not indirectly via `MapSelection`.
+- (Beats Standard) Removed old touch effect on `HitBarDisplay`.
 #### Fixes
-- Fixed issue where WebTexture component's alpha could not be customized.
-- (Beats Standard) Removed old touch effect on HitBarDisplay.
+- Fixed issue where `WebTexture` component's alpha could not be customized.
 - (Beats Standard) Fixed issue where touching anywhere on the screen would occasionally register as a valid hit on objects.
 
 ### 0.12.0
