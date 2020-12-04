@@ -21,6 +21,7 @@ Slowly making progress 🧩
 #### Changes
 - Made the selection of map for offset tweaking done through OffsetsModel, not indirectly via MapSelection.
 #### Fixes
+- Fixed issue where WebTexture component's alpha could not be customized.
 - (Beats Standard) Fixed issue where touching anywhere on the screen would occasionally register as a valid hit on objects.
 
 ### 0.12.0
