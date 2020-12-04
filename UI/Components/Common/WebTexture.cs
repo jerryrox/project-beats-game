@@ -1,19 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Assets.Caching;
 using PBFramework.UI;
-using PBFramework.Assets.Caching;
-using PBFramework.Graphics;
 using PBFramework.Allocation.Caching;
 using PBFramework.Animations;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Common
 {
     public class WebTexture : UguiTexture {
+
+        private CanvasGroup canvasGroup;
 
         private CacherAgent<string, Texture2D> cacherAgent;
 
@@ -36,17 +32,19 @@ namespace PBGame.UI.Components.Common
         [InitWithDependency]
         private void Init()
         {
+            canvasGroup = myObject.AddComponent<CanvasGroup>();
+
             cacherAgent = new CacherAgent<string, Texture2D>(WebImageCacher);
             cacherAgent.RemoveDelay = 2f;
             cacherAgent.OnFinished += OnImageLoaded;
             cacherAgent.OnProgress += OnLoadProgress;
 
-            this.Alpha = 0f;
+            canvasGroup.alpha = 0f;
             this.IsDelayedUnload = true;
 
             showAni = new Anime();
-            showAni.AnimateFloat(a => this.Alpha = a)
-                .AddTime(0f, () => this.Alpha)
+            showAni.AnimateFloat(a => canvasGroup.alpha = a)
+                .AddTime(0f, () => canvasGroup.alpha)
                 .AddTime(0.25f, 1f)
                 .Build();
         }
@@ -85,7 +83,7 @@ namespace PBGame.UI.Components.Common
         protected virtual void OnUnload()
         {
             this.Texture = null;
-            this.Alpha = 0f;
+            canvasGroup.alpha = 0f;
             showAni.Stop();
         }
 
