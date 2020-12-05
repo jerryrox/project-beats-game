@@ -6,7 +6,7 @@ using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-namespace PBGame.Rulesets.UI.HUD
+namespace PBGame.Rulesets.UI.Components
 {
     public class TouchEffectDisplay : UguiObject
     {

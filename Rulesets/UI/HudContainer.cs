@@ -1,4 +1,4 @@
-using PBGame.Rulesets.UI.HUD;
+using PBGame.Rulesets.UI.Components;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 

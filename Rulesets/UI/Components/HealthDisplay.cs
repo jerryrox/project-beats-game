@@ -4,7 +4,7 @@ using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 
-namespace PBGame.Rulesets.UI.HUD
+namespace PBGame.Rulesets.UI.Components
 {
     public class HealthDisplay : UguiObject {
 
