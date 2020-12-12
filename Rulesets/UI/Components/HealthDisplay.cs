@@ -2,7 +2,9 @@ using PBGame.Rulesets.Scoring;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Graphics;
+using PBFramework.Animations;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.Rulesets.UI.Components
 {
@@ -10,6 +12,10 @@ namespace PBGame.Rulesets.UI.Components
 
         private bool isFailing;
         private IScoreProcessor scoreProcessor;
+
+        private IAnime changeAni;
+
+        private float curHealth;
 
 
         /// <summary>
@@ -48,6 +54,12 @@ namespace PBGame.Rulesets.UI.Components
             {
                 Indicator.Color = ColorPreset.PrimaryFocus.Base;
             }
+
+            changeAni = new Anime();
+            changeAni.AnimateFloat((float progress) => ProgressBar.Value = progress)
+                .AddTime(0f, () => ProgressBar.Value)
+                .AddTime(0.2f, () => curHealth)
+                .Build();
         }
 
         /// <summary>
@@ -67,7 +79,10 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         private void OnHealthChange(float health, float prevHealth)
         {
-            ProgressBar.Value = health;
+            // Animate health change
+            curHealth = health;
+            changeAni.PlayFromStart();
+
             SetFailing(scoreProcessor.IsFailed);
         }
     }
