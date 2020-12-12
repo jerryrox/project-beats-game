@@ -19,6 +19,8 @@ Slowly making progress 🧩
 #### New features
 - Implemented touch pulse effects.
 - (Beats Standard) Implemented combo displayer on the lane sprite.
+#### Improvements
+- Implemented recyclers on dialog option buttons.
 #### Changes
 - Made pause indicator container be disabled on hiding end animation.
 - Made the selection of map for offset tweaking done through `OffsetsModel`, not indirectly via `MapSelection`.
