@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using PBGame.Data.Rankings;
+using PBGame.Graphics;
 using PBGame.Rulesets;
+using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -14,7 +16,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
         private ILabel rank;
         private IGraphicObject scoreHolder;
-        private ISprite rankIcon;
+        private ILabel rankIcon;
         private ILabel score;
         private ILabel accuracy;
         private ILabel username;
@@ -38,6 +40,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         [ReceivesDependency]
         private IModeManager ModeManager { get; set; }
 
+        [ReceivesDependency]
+        private IColorPreset ColorPreset { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -54,12 +59,15 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
                 scoreHolder.Pivot = PivotType.Left;
                 scoreHolder.SetOffsetVertical(0f);
 
-                rankIcon = scoreHolder.CreateChild<UguiSprite>("icon", 0);
+                rankIcon = scoreHolder.CreateChild<Label>("icon", 0);
                 {
                     rankIcon.Anchor = AnchorType.LeftStretch;
                     rankIcon.Pivot = PivotType.Left;
                     rankIcon.X = 0;
-                    rankIcon.Scale = new Vector3(0.3f, 0.3f, 1f);
+                    rankIcon.Width = 32f;
+                    rankIcon.FontSize = 34;
+                    rankIcon.IsBold = true;
+                    rankIcon.SetOffsetVertical(0f);
                 }
                 score = scoreHolder.CreateChild<Label>("score", 1);
                 {
@@ -130,7 +138,8 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             var record = info.Record;
 
             rank.Text = $"#{info.Rank}";
-            rankIcon.SpriteName = $"ranking-{record.Rank}-small";
+            rankIcon.Text = record.Rank.ToDisplayedString();
+            rankIcon.Color = ColorPreset.GetRankColor(record.Rank);
             score.Text = record.Score.ToString("N0");
             accuracy.Text = record.Accuracy.ToString("P2");
             username.Text = record.Username;
