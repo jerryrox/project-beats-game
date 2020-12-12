@@ -38,6 +38,8 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
                 column.Pivot = PivotType.Top;
                 column.Height = 36f;
                 column.Y = -52f;
+                
+                column.SetOffsetHorizontal(0f);
             }
             rankingList = CreateChild<RankingList>("list", 2);
             {
