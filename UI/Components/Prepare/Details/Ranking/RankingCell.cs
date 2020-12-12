@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Data.Rankings;
 using PBGame.Rulesets;
-using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
 using PBFramework.Graphics;
@@ -52,17 +50,21 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
             scoreHolder = CreateChild<UguiObject>("score-holder", 1);
             {
+                scoreHolder.Anchor = AnchorType.CenterStretch;
                 scoreHolder.Pivot = PivotType.Left;
+                scoreHolder.SetOffsetVertical(0f);
 
                 rankIcon = scoreHolder.CreateChild<UguiSprite>("icon", 0);
                 {
+                    rankIcon.Anchor = AnchorType.LeftStretch;
                     rankIcon.Pivot = PivotType.Left;
+                    rankIcon.X = 0;
                     rankIcon.Scale = new Vector3(0.3f, 0.3f, 1f);
                 }
                 score = scoreHolder.CreateChild<Label>("score", 1);
                 {
                     SetupLabelStyle(score);
-                    score.X = 30f;
+                    score.X = -5f;
                 }
             }
             accuracy = CreateChild<Label>("acc", 2);
@@ -79,9 +81,12 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             }
             judgementGrid = CreateChild<UguiGrid>("judgements", 5);
             {
+                judgementGrid.Anchor = AnchorType.CenterStretch;
                 judgementGrid.Pivot = PivotType.Right;
-                judgementGrid.Width = 1000f;
+                judgementGrid.Width = 1000;
+                judgementGrid.Alignment = TextAnchor.UpperRight;
                 judgementGrid.CellSize = new Vector2(70f, 36f);
+                judgementGrid.Offset = new Offset(26f, 0f, 126f, 0f);
 
                 foreach (var rank in (HitResultType[])Enum.GetValues(typeof(HitResultType)))
                 {
@@ -120,7 +125,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// <summary>
         /// Sets ranking information to display.
         /// </summary>
-        public void SetRank(IRankInfo info)
+        public void SetRank(RankInfo info)
         {
             var record = info.Record;
 
@@ -130,10 +135,15 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             accuracy.Text = record.Accuracy.ToString("P2");
             username.Text = record.Username;
             maxCombo.Text = record.MaxCombo.ToString("N0");
+
+            foreach (var label in judgementLabels)
+                label.Text = "0";
             foreach (var resultPair in record.HitResultCounts)
             {
-                judgementLabels[(int)resultPair.Key].Text = resultPair.Value.ToString("N0");
+                var label = judgementLabels[(int)resultPair.Key];
+                label.Text = resultPair.Value.ToString("N0");
             }
+
             // TODO: Come back when mods are implemented.
             // mods.Text = "";
         }
@@ -143,9 +153,12 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// </summary>
         private void SetupLabelStyle(ILabel label)
         {
+            label.Anchor = AnchorType.CenterStretch;
             label.Pivot = PivotType.Left;
             label.FontSize = 17;
             label.Alignment = TextAnchor.MiddleLeft;
+
+            label.SetOffsetVertical(0f);
         }
     }
 }

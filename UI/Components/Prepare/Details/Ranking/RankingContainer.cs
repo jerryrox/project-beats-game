@@ -43,6 +43,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
             {
                 rankingList.Anchor = AnchorType.Fill;
                 rankingList.Offset = new Offset(0f, 88f, 0f, 0f);
+                rankingList.Column = column;
             }
 
             OnEnableInited();
@@ -67,7 +68,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// <summary>
         /// Starts reloading ranking info cells from appropriate sources.
         /// </summary>
-        private void OnRankListChange(List<IRankInfo> rankings)
+        private void OnRankListChange(List<RankInfo> rankings)
         {
             rankingList.Clear();
             rankingList.Setup(rankings);
