@@ -2,16 +2,23 @@ using PBGame.Data.Records;
 
 namespace PBGame.Data.Rankings
 {
-    public interface IRankInfo {
+    public class RankInfo {
 
         /// <summary>
         /// The rank number within a ranking set.
         /// </summary>
-        int Rank { get; set; }
+        public int Rank { get; private set; }
 
         /// <summary>
         /// Record holding the rank details.
         /// </summary>
-        IRecord Record { get; set; }
+        public IRecord Record { get; private set; }
+
+
+        public RankInfo(int rank, IRecord record)
+        {
+            Rank = rank;
+            Record = record;
+        }
     }
 }

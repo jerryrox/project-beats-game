@@ -15,8 +15,9 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.12.1
+### 0.13.0
 #### New features
+- Implemented local rankings.
 - Implemented touch pulse effects.
 - Implemented garbage collection and Resource unloading tasks for game loading process.
 - (Beats Standard) Implemented combo displayer on the lane sprite.

@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models.Dialog;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Data.Records;
 using PBGame.Data.Rankings;
 using PBGame.Maps;
 using PBGame.Graphics;
@@ -12,7 +14,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
-using PBFramework.Graphics;
+using PBFramework.Threading;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -22,10 +24,12 @@ namespace PBGame.UI.Models
 {
     public class PrepareModel : BaseModel {
 
+        private TaskListener<List<IRecord>> recordsListener;
+
         private BindableBool isDetailedMode = new BindableBool(false);
         private Bindable<List<IOriginalMap>> mapList = new Bindable<List<IOriginalMap>>();
         private Bindable<string> mapsetDescription = new Bindable<string>("");
-        private Bindable<List<IRankInfo>> rankList = new Bindable<List<IRankInfo>>(new List<IRankInfo>());
+        private Bindable<List<RankInfo>> rankList = new Bindable<List<RankInfo>>(new List<RankInfo>());
 
 
         /// <summary>
@@ -66,7 +70,7 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Returns the list of ranks loaded.
         /// </summary>
-        public IReadOnlyBindable<List<IRankInfo>> RankList => rankList;
+        public IReadOnlyBindable<List<RankInfo>> RankList => rankList;
 
         /// <summary>
         /// Returns the description of the mapset.
@@ -93,6 +97,9 @@ namespace PBGame.UI.Models
 
         [ReceivesDependency]
         private IMapManager MapManager { get; set; }
+
+        [ReceivesDependency]
+        private IRecordManager RecordManager { get; set; }
 
 
         /// <summary>
@@ -229,8 +236,10 @@ namespace PBGame.UI.Models
             MapManager.OnDeleteMap -= OnDeleteMap;
 
             mapsetDescription.Value = "";
+
             // TODO: Stop mapset description api request
-            // TODO: Stop rankings request
+
+            StopRecordRetrieval();
         }
 
         /// <summary>
@@ -261,8 +270,49 @@ namespace PBGame.UI.Models
         /// </summary>
         private void RequestRankings()
         {
-            rankList.Value = new List<IRankInfo>();
-            // TODO:
+            var curMap = SelectedMap.Value;
+            if (curMap == null)
+            {
+                rankList.Value = new List<RankInfo>();
+                return;
+            }
+
+            SetupRecordListener();
+
+            var displayType = RankDisplay.Value;
+            if (displayType == RankDisplayType.Local)
+            {
+                RecordManager.GetRecords(curMap, listener: recordsListener);
+            }
+            else
+            {
+                rankList.Value = new List<RankInfo>();
+                // TODO:
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new records list listener.
+        /// </summary>
+        private TaskListener<List<IRecord>> SetupRecordListener()
+        {
+            StopRecordRetrieval();
+
+            var listener = recordsListener = new TaskListener<List<IRecord>>();
+            listener.OnFinished += OnRecordsRetrieved;
+            return listener;
+        }
+
+        /// <summary>
+        /// Stops listening to record retrieval task's completion.
+        /// </summary>
+        private void StopRecordRetrieval()
+        {
+            if (recordsListener != null)
+            {
+                recordsListener.OnFinished -= OnRecordsRetrieved;
+                recordsListener = null;
+            }
         }
 
         /// <summary>
@@ -318,6 +368,17 @@ namespace PBGame.UI.Models
         private void OnMapActionDelete(IOriginalMap map)
         {
             MapManager.DeleteMap(map);
+        }
+
+        /// <summary>
+        /// Event called when the records list have been retrieved.
+        /// </summary>
+        private void OnRecordsRetrieved(List<IRecord> records)
+        {
+            records.Sort((x, y) => y.Score.CompareTo(x.Score));
+
+            int rank = 1;
+            rankList.Value = records.Select((r) => new RankInfo(rank++, r)).ToList();
         }
     }
 }
