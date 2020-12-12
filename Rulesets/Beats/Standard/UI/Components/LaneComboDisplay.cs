@@ -70,13 +70,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 .Build();
             comboAni.AnimateColor((color) => persistComboLabel.Color = color)
                 .AddTime(0f, () => persistComboLabel.Color)
-                .AddTime(0.05f, MaxPersistColor, EaseType.QuadEaseIn)
-                .AddTime(0.25f, MinPersistColor)
+                .AddTime(0.04f, MaxPersistColor, EaseType.QuadEaseIn)
+                .AddTime(0.2f, MinPersistColor)
                 .Build();
             comboAni.AnimateVector3((scale) => persistComboLabel.Scale = scale)
                 .AddTime(0f, Vector3.one, EaseType.QuadEaseOut)
-                .AddTime(0.125f, MaxPersistScale, EaseType.QuadEaseIn)
-                .AddTime(0.25f, Vector3.one)
+                .AddTime(0.1f, MaxPersistScale, EaseType.QuadEaseIn)
+                .AddTime(0.2f, Vector3.one)
                 .Build();
 
             hideAni = new Anime();
