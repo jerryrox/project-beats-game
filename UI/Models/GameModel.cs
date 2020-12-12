@@ -95,6 +95,8 @@ namespace PBGame.UI.Models
             currentModeService = modeService;
 
             InitSession();
+            CleanUpResources();
+            
             InitLoader();
         }
 
@@ -206,6 +208,14 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Queues a new game loader which handles Unity Resource collection.
+        /// </summary>
+        private void CleanUpResources()
+        {
+            AddAsLoader(new AsyncOperationTask(() => Resources.UnloadUnusedAssets()));
+        }
+
+        /// <summary>
         /// Initializes a new game session and starts loading the game.
         /// </summary>
         private void InitSession()
@@ -240,6 +250,8 @@ namespace PBGame.UI.Models
             gameLoader = new MultiTask(gameLoaders);
             gameLoader.OnFinished += () =>
             {
+                GC.Collect();
+
                 loadState.Value = GameLoadState.Success;
             };
             gameLoader.StartTask();

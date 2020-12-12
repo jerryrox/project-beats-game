@@ -5,7 +5,7 @@ Implementation of Project: Beats game
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.2.0) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.2.1) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
@@ -18,6 +18,7 @@ Slowly making progress 🧩
 ### 0.12.1
 #### New features
 - Implemented touch pulse effects.
+- Implemented garbage collection and Resource unloading tasks for game loading process.
 - (Beats Standard) Implemented combo displayer on the lane sprite.
 #### Improvements
 - Added visual improvements on the health bar.
