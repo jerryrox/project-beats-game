@@ -79,6 +79,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     {
                         fg.Offset = new Offset(0f, 0f, 0f, 12f);
                     }
+                    var thumb = progressBar.Thumb;
+                    {
+                        thumb.Parent.Offset = new Offset(0f, -6f, 0f, 6f);
+                    }
                 }
                 var indicator = HealthDisplay.Indicator;
                 {
