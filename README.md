@@ -20,6 +20,7 @@ Slowly making progress 🧩
 - Implemented touch pulse effects.
 - (Beats Standard) Implemented combo displayer on the lane sprite.
 #### Improvements
+- Added visual improvements on the health bar.
 - Implemented recyclers on dialog option buttons.
 #### Changes
 - Made pause indicator container be disabled on hiding end animation.
