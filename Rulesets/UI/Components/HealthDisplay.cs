@@ -67,13 +67,13 @@ namespace PBGame.Rulesets.UI.Components
                 thumbSprite.Active = true;
                 thumbSprite.SpriteName = "glow-128";
                 thumbSprite.Color = ColorPreset.PrimaryFocus.Alpha(0f);
-                thumbSprite.Size = new Vector2(12f, 56f);
+                thumbSprite.Size = new Vector2(36f, 88f);
 
                 pinEffectSprite = thumbSprite.CreateChild<UguiSprite>("effect");
                 {
                     pinEffectSprite.Color = ColorPreset.PrimaryFocus.Alpha(0f);
                     pinEffectSprite.SpriteName = "glow-128";
-                    pinEffectSprite.Size = new Vector2(48f, 224f);
+                    pinEffectSprite.Size = thumbSprite.Size * 6.5f;
 
                     pinEffectSprite.AddEffect(new AdditiveShaderEffect());
                 }
