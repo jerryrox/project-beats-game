@@ -27,6 +27,7 @@ Slowly making progress 🧩
 #### Changes
 - Made pause indicator container be disabled on hiding end animation.
 - Made the selection of map for offset tweaking done through `OffsetsModel`, not indirectly via `MapSelection`.
+- Removed `RecordManager` and made use of `RecordStore` instead.
 - (Beats Standard) Removed old touch effect on `HitBarDisplay`.
 #### Fixes
 - Fixed issue where `WebTexture` component's alpha could not be customized.
