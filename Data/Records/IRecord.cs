@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;
-using PBFramework.DB.Entities;
 
 namespace PBGame.Data.Records
 {
     // TODO: Store mods used.
-    public interface IRecord : IDatabaseEntity {
-
+    public interface IRecord
+    {
         /// <summary>
         /// Returns the ID of the user who made this record.
         /// </summary>
