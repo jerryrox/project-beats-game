@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models.Dialog;
 using PBGame.UI.Navigations.Screens;
@@ -16,7 +14,6 @@ using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Threading;
 using PBFramework.Dependencies;
-using UnityEngine;
 
 using Logger = PBFramework.Debugging.Logger;
 
@@ -26,11 +23,17 @@ namespace PBGame.UI.Models
 
         private TaskListener<List<IRecord>> recordsListener;
 
+        private BindableBool isRetrievingRecords = new BindableBool(false);
         private BindableBool isDetailedMode = new BindableBool(false);
         private Bindable<List<IOriginalMap>> mapList = new Bindable<List<IOriginalMap>>();
         private Bindable<string> mapsetDescription = new Bindable<string>("");
         private Bindable<List<RankInfo>> rankList = new Bindable<List<RankInfo>>(new List<RankInfo>());
 
+
+        /// <summary>
+        /// Returns whether the records are currently being retrieved.
+        /// </summary>
+        public IReadOnlyBindable<bool> IsRetrievingRecords => isRetrievingRecords;
 
         /// <summary>
         /// Returns whether the map information should be displayed as detailed mode.
@@ -298,6 +301,8 @@ namespace PBGame.UI.Models
         {
             StopRecordRetrieval();
 
+            isRetrievingRecords.Value = true;
+
             var listener = recordsListener = new TaskListener<List<IRecord>>();
             listener.OnFinished += OnRecordsRetrieved;
             return listener;
@@ -312,6 +317,8 @@ namespace PBGame.UI.Models
             {
                 recordsListener.OnFinished -= OnRecordsRetrieved;
                 recordsListener = null;
+
+                isRetrievingRecords.Value = false;
             }
         }
 
@@ -375,6 +382,8 @@ namespace PBGame.UI.Models
         /// </summary>
         private void OnRecordsRetrieved(List<IRecord> records)
         {
+            StopRecordRetrieval();
+            
             records.Sort((x, y) => y.Score.CompareTo(x.Score));
 
             int rank = 1;

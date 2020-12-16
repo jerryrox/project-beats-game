@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using PBGame.Data.Rankings;
 using PBFramework.UI;
+using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingList : UguiListView, IListView {
+    public class RankingList : UguiListView, IListView, IHasAlpha {
 
         /// <summary>
         /// The component which defines the column layout of the list.
