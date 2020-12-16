@@ -1,48 +1,84 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
 using PBGame.Rulesets.Maps;
 using PBFramework.DB;
 using PBFramework.Stores;
+using PBFramework.Threading;
 
 namespace PBGame.Stores
 {
     public class RecordStore : DatabaseBackedStore<Record>, IRecordStore {
 
 
-        public IDatabaseResult<Record> GetRecords(IPlayableMap map, IUser user)
+        public Task Reload(TaskListener listener = null)
         {
-            var query = Database.Query().FilterMap(map);
-            if(user != null)
-                query = query.FilterUser(user);
-            return query.Preload().GetResult();
+            return Task.Run(() =>
+            {
+                base.Reload();
+                listener?.SetFinished();
+            });
         }
 
-        public void SaveRecord(Record record)
+        public Task<List<IRecord>> GetTopRecords(IPlayableMap map, int? limit = null, TaskListener<List<IRecord>> listener = null)
         {
-            Database.Edit().Write(record).Commit();
+            return Task.Run(() =>
+            {
+                using (var query = Database.Query())
+                {
+                    ApplyFilterMap(query, map);
+
+                    List<IRecord> records = query.GetResult().Cast<IRecord>().ToList();
+                    records.SortByTop();
+                    return records;
+                }
+            });
+        }
+
+        public Task<List<IRecord>> GetTopRecords(IPlayableMap map, IUser user, int? limit = null, TaskListener<List<IRecord>> listener = null)
+        {
+            return Task.Run(() =>
+            {
+                using (var query = Database.Query())
+                {
+                    ApplyFilterMap(query, map);
+                    ApplyFilterUser(query, user);
+
+                    List<IRecord> records = query.GetResult().Cast<IRecord>().ToList();
+                    records.SortByTop();
+                    return records;
+                }
+            });
+        }
+
+        public int GetRecordCount(IPlayableMap map, IUser user)
+        {
+            using (var results = Database.Query())
+            {
+                ApplyFilterMap(results, map);
+                ApplyFilterUser(results, user);
+                return results.GetResult().Count;
+            }
+        }
+
+        public void SaveRecord(IRecord record)
+        {
+            if(!(record is Record rec))
+                throw new ArgumentException($"The specified record interface is not a type of {nameof(Record)}.");
+
+            Database.Edit().Write(rec).Commit();
         }
 
         public void DeleteRecords(IPlayableMap map)
         {
-            using(var records = Database.Query()
-                .FilterMap(map)
-                .GetResult())
+            using(var records = Database.Query())
             {
-                Database.Edit().RemoveRange(records).Commit();
-            }
-        }
-
-        public int GetPlayCount(IPlayableMap map, IUser user)
-        {
-            using (var results = Database.Query()
-                .FilterMap(map)
-                .FilterUser(user)
-                .GetResult())
-            {
-                return results.Count;
+                ApplyFilterMap(records, map);
+                Database.Edit().RemoveRange(records.GetResult()).Commit();
             }
         }
 
@@ -50,30 +86,25 @@ namespace PBGame.Stores
         {
             return new Database<Record>(GameDirectory.Records);
         }
-    }
 
-    public static class RecordStoreExtension
-    {
         /// <summary>
-        /// Selects records for the specified map.
+        /// Applies DB query selection of records for the specified map.
         /// </summary>
-        public static IDatabaseQuery<Record> FilterMap(this IDatabaseQuery<Record> context, IPlayableMap map)
+        private void ApplyFilterMap(IDatabaseQuery<Record> query, IPlayableMap map)
         {
             var mapHash = map.Detail.Hash;
             var gameMode = ((int)map.PlayableMode).ToString();
-            return context
-                .Where(d => d["MapHash"].ToString().Equals(mapHash, StringComparison.Ordinal))
+            query.Where(d => d["MapHash"].ToString().Equals(mapHash, StringComparison.Ordinal))
                 .Where(d => d["GameMode"].ToString().Equals(gameMode, StringComparison.Ordinal));
         }
 
         /// <summary>
-        /// Selects records for the specified user.
+        /// Applies DB query selection of records for the specified user.
         /// </summary>
-        public static IDatabaseQuery<Record> FilterUser(this IDatabaseQuery<Record> context, IUser user)
+        private void ApplyFilterUser(IDatabaseQuery<Record> query, IUser user)
         {
             var userId = user.Id.ToString();
-            return context
-                .Where(d => d["UserId"].ToString().Equals(userId, StringComparison.Ordinal));
+            query.Where(d => d["UserId"].ToString().Equals(userId, StringComparison.Ordinal));
         }
     }
 }
