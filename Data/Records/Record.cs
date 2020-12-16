@@ -7,7 +7,6 @@ using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;
 using PBFramework.DB.Entities;
-using PBFramework.Dependencies;
 using Newtonsoft.Json;
 
 namespace PBGame.Data.Records

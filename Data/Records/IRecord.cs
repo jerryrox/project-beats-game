@@ -95,4 +95,31 @@ namespace PBGame.Data.Records
         /// </summary>
         int GetHitCount(HitResultType result);
     }
+
+    public static class IRecordListExtension
+    {
+        /// <summary>
+        /// The comparison function which sorts the records from highest to lowest.
+        /// </summary>
+        public static readonly Comparison<IRecord> TopRecordComparer = (x, y) =>
+        {
+            int comparison = y.Score.CompareTo(x.Score);
+            if (comparison == 0)
+            {
+                comparison = y.Accuracy.CompareTo(x.Accuracy);
+                if(comparison == 0)
+                    comparison = x.Date.CompareTo(y.Date);
+            }
+            return comparison;
+        };
+
+
+        /// <summary>
+        /// Sorts the records list by top performance.
+        /// </summary>
+        public static void SortByTop(this List<IRecord> context)
+        {
+            context.Sort(TopRecordComparer);
+        }
+    }
 }
