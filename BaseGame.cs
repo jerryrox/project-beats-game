@@ -74,7 +74,7 @@ namespace PBGame
         protected Api api;
 
         protected IUserManager userManager;
-        protected IRecordManager recordManager;
+        protected IRecordStore recordStore;
 
         protected IRootMain rootMain;
         protected IRoot3D root3D;
@@ -166,7 +166,7 @@ namespace PBGame
             Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));
 
             Dependencies.CacheAs<IUserManager>(userManager = new UserManager(api, Dependencies));
-            Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager());
+            Dependencies.CacheAs<IRecordStore>(recordStore = new RecordStore());
 
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));

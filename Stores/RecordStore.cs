@@ -34,6 +34,9 @@ namespace PBGame.Stores
 
                     List<IRecord> records = query.GetResult().Cast<IRecord>().ToList();
                     records.SortByTop();
+                    ApplyLimit(records, limit);
+
+                    listener?.SetFinished(records);
                     return records;
                 }
             });
@@ -50,6 +53,9 @@ namespace PBGame.Stores
 
                     List<IRecord> records = query.GetResult().Cast<IRecord>().ToList();
                     records.SortByTop();
+                    ApplyLimit(records, limit);
+
+                    listener?.SetFinished(records);
                     return records;
                 }
             });
@@ -105,6 +111,16 @@ namespace PBGame.Stores
         {
             var userId = user.Id.ToString();
             query.Where(d => d["UserId"].ToString().Equals(userId, StringComparison.Ordinal));
+        }
+
+        /// <summary>
+        /// Applies record list count limit.
+        /// </summary>
+        private void ApplyLimit(List<IRecord> records, int? limit)
+        {
+            if(limit == null || limit.Value <= 0 || limit.Value >= records.Count)
+                return;
+            records.RemoveRange(limit.Value, records.Count - limit.Value);
         }
     }
 }
