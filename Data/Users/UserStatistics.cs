@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PBGame.Data.Records;
+using PBGame.Stores;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
@@ -70,7 +71,7 @@ namespace PBGame.Data.Users
 
         [JsonIgnore]
         [ReceivesDependency]
-        private IRecordManager RecordManager { get; set; }
+        private IRecordStore RecordStore { get; set; }
 
 
 
@@ -85,8 +86,8 @@ namespace PBGame.Data.Users
 
         public int GetPlayCount(IPlayableMap map)
         {
-            if(RecordManager != null && User != null)
-                return RecordManager.GetPlayCount(map, User);
+            if(RecordStore != null && User != null)
+                return RecordStore.GetRecordCount(map, User);
             return 0;
         }
 

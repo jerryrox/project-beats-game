@@ -6,6 +6,7 @@ using PBGame.UI.Navigations.Overlays;
 using PBGame.Data.Records;
 using PBGame.Data.Rankings;
 using PBGame.Maps;
+using PBGame.Stores;
 using PBGame.Graphics;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
@@ -102,7 +103,7 @@ namespace PBGame.UI.Models
         private IMapManager MapManager { get; set; }
 
         [ReceivesDependency]
-        private IRecordManager RecordManager { get; set; }
+        private IRecordStore RecordStore { get; set; }
 
 
         /// <summary>
@@ -285,7 +286,7 @@ namespace PBGame.UI.Models
             var displayType = RankDisplay.Value;
             if (displayType == RankDisplayType.Local)
             {
-                RecordManager.GetRecords(curMap, listener: recordsListener);
+                RecordStore.GetTopRecords(curMap, limit: 30, listener: recordsListener);
             }
             else
             {

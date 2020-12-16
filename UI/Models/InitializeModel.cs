@@ -66,7 +66,7 @@ namespace PBGame.UI.Models
         private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
-        private IRecordManager RecordManager { get; set; }
+        private IRecordStore RecordStore { get; set; }
 
         [ReceivesDependency]
         private IDownloadStore DownloadStore { get; set; }
@@ -152,7 +152,7 @@ namespace PBGame.UI.Models
             TaskListener listener = new TaskListener();
             listener.OnProgress += SetProgress;
             listener.OnFinished += FinalizeLoad;
-            RecordManager.Reload(listener);
+            RecordStore.Reload(listener);
         }
 
         /// <summary>
