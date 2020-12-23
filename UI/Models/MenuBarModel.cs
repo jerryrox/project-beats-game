@@ -2,11 +2,11 @@ using PBGame.UI.Models.MenuBar;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Data.Users;
-using PBGame.Assets.Caching;
+using PBGame.Rulesets;
 using PBGame.Networking.API;
+using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
-using PBFramework.Allocation.Caching;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -45,6 +45,17 @@ namespace PBGame.UI.Models
         /// </summary>
         public IReadOnlyBindable<IUser> CurrentUser => UserManager.CurrentUser;
 
+        /// <summary>
+        /// Returns the current game mode.
+        /// </summary>
+        public IReadOnlyBindable<GameModeType> GameMode => GameConfiguration.RulesetMode;
+
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
+
+        [ReceivesDependency]
+        private IModeManager ModeManager { get; set; }
+
         [ReceivesDependency]
         private IOverlayNavigator OverlayNavigator { get; set; }
 
@@ -74,6 +85,14 @@ namespace PBGame.UI.Models
                 focusedMenu.Value = type;
                 ShowMenu(type);
             }
+        }
+
+        /// <summary>
+        /// Returns the mode service instance for the current game mode.
+        /// </summary>
+        public IModeService GetModeService()
+        {
+            return ModeManager.GetService(GameMode.Value);
         }
 
         protected override void OnPreShow()
@@ -145,6 +164,7 @@ namespace PBGame.UI.Models
                 case MenuType.Music: return OverlayNavigator.Show<MusicMenuOverlay>();
                 case MenuType.Notification: return OverlayNavigator.Show<NotificationMenuOverlay>();
                 case MenuType.Profile: return OverlayNavigator.Show<ProfileMenuOverlay>();
+                case MenuType.Mode: return OverlayNavigator.Show<ModeMenuOverlay>();
                 case MenuType.Quick: return OverlayNavigator.Show<QuickMenuOverlay>();
                 case MenuType.Settings: return OverlayNavigator.Show<SettingsMenuOverlay>();
             }
