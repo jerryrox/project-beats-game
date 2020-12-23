@@ -20,6 +20,7 @@ Slowly making progress 🧩
 - Implemented local rankings.
 - Implemented touch pulse effects.
 - Implemented game mode selection menu.
+- Implemented support for selecting game modes even when they are unplayable.
 - Implemented garbage collection and Resource unloading tasks for game loading process.
 - (Beats Standard) Implemented combo displayer on the lane sprite.
 #### Improvements
