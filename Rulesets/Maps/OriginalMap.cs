@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using PBGame.Rulesets.Maps.Timing;
@@ -72,7 +73,7 @@ namespace PBGame.Rulesets.Maps
             if (this.playableMaps.TryGetValue(Detail.GameMode, out map))
                 return map;
             // Else, just return the first playable map.
-            return this.playableMaps.Count > 0 ? this.playableMaps[0] : null;
+            return this.playableMaps.Count > 0 ? this.playableMaps.FirstOrDefault().Value : null;
         }
 
         /// <summary>
