@@ -38,6 +38,7 @@ namespace PBGame.UI.Navigations.Overlays
             {
                 background.Anchor = AnchorType.Fill;
                 background.Offset = Offset.Zero;
+                background.Color = new Color(0f, 0f, 0f, 0.75f);
 
                 var grid = background.CreateChild<UguiGrid>("grid");
                 {

@@ -10,6 +10,8 @@ namespace PBGame.UI.Components.ModeMenu
 {
     public class ModeMenuCell : FocusableTrigger
     {
+        private readonly static Color InactiveContentColor = new Color(1f, 1f, 1f, 0.75f);
+
         private Label label;
 
 
@@ -34,12 +36,14 @@ namespace PBGame.UI.Components.ModeMenu
                 label.Offset = new Offset(56f, 0f, 16f, 0f);
                 label.FontSize = 18;
                 label.Alignment = TextAnchor.MiddleLeft;
+                label.Color = InactiveContentColor;
             }
-            CreateIconSprite(size: 28, alpha: 0.75f);
+            CreateIconSprite(size: 28);
             {
                 iconSprite.Anchor = AnchorType.Left;
                 iconSprite.Pivot = PivotType.Left;
                 iconSprite.Position = new Vector3(16f, 0f);
+                iconSprite.Color = InactiveContentColor;
             }
 
             focusSprite.Tint = ColorPreset.PrimaryFocus;
@@ -54,7 +58,7 @@ namespace PBGame.UI.Components.ModeMenu
 
             unfocusAni.AnimateColor((color) => iconSprite.Color = label.Color = color)
                 .AddTime(0f, () => iconSprite.Color)
-                .AddTime(unfocusAni.Duration, new Color(1f, 1f, 1f, 0.75f))
+                .AddTime(unfocusAni.Duration, InactiveContentColor)
                 .Build();
 
             OnEnableInited();
@@ -65,8 +69,20 @@ namespace PBGame.UI.Components.ModeMenu
         /// </summary>
         public void SetModeService(IModeService modeService)
         {
+            this.ModeService = modeService;
+
             label.Text = modeService.Name;
             IconName = modeService.GetIconName(32);
+
+            RefreshFocus();
+        }
+
+        /// <summary>
+        /// Re-evaluates the cell's focused state.
+        /// </summary>
+        public void RefreshFocus()
+        {
+            IsFocused = Model.GameMode.Value == ModeService?.GameMode;
         }
 
         protected override void OnEnableInited()
@@ -88,7 +104,7 @@ namespace PBGame.UI.Components.ModeMenu
         /// </summary>
         private void OnGameModeChanged(GameModeType type)
         {
-            IsFocused = type == ModeService?.GameMode;
+            RefreshFocus();
         }
     }
 }
