@@ -12,8 +12,6 @@ namespace PBGame.UI.Components.Common
         {
             CreateIconSprite(spriteName: "null", size: 28);
             UseDefaultHoverAni();
-
-            IsClickToTrigger = true;
         }
     }
 }

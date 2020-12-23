@@ -68,8 +68,6 @@ namespace PBGame.UI.Components.Prepare
         [InitWithDependency]
         private void Init()
         {
-            IsClickToTrigger = true;
-
             OnTriggered += () =>
             {
                 if (myMap != null)

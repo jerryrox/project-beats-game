@@ -35,8 +35,6 @@ namespace PBGame.UI.Components.Download.Search
         [InitWithDependency]
         private void Init()
         {
-            IsClickToTrigger = true;
-
             canvasGroup = RawObject.AddComponent<CanvasGroup>();
 
             glowSprite = CreateChild<UguiSprite>("glow", 0);

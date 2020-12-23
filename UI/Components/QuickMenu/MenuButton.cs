@@ -23,7 +23,6 @@ namespace PBGame.UI.Components.QuickMenu
         [InitWithDependency]
         private void Init()
         {
-            IsClickToTrigger = true;
             OnTriggered += () =>
             {
                 if(!IsFocused)
