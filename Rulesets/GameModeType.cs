@@ -8,9 +8,9 @@ namespace PBGame.Rulesets
     public enum GameModeType {
     
         OsuStandard = GameProviderType.Osu,
-        // OsuTaiko = 1,
-        // OsuCatch = 2,
-        // OsuMania = 3,
+        OsuTaiko = GameProviderType.Osu + 1,
+        OsuCatch = GameProviderType.Osu + 2,
+        OsuMania = GameProviderType.Osu + 3,
 
         BeatsStandard = GameProviderType.Beats,
     }

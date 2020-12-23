@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Collections.Generic;
-using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets
 {
@@ -11,10 +10,12 @@ namespace PBGame.Rulesets
 
         public ModeManager()
         {
-            // TODO: Register more game mode services
             services = new Dictionary<GameModeType, IModeService>()
             {
                 { GameModeType.OsuStandard, new Osu.Standard.ModeService() },
+                { GameModeType.OsuTaiko, new Osu.Taiko.ModeService() },
+                { GameModeType.OsuCatch, new Osu.Catch.ModeService() },
+                { GameModeType.OsuMania, new Osu.Mania.ModeService() },
                 { GameModeType.BeatsStandard, new Beats.Standard.ModeService() },
             };
         }

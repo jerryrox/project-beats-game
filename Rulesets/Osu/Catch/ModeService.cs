@@ -1,19 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 
-namespace PBGame.Rulesets.Osu.Standard
+namespace PBGame.Rulesets.Osu.Catch
 {
     public class ModeService : Rulesets.ModeService {
 
-        public override string Name => "Osu Standard";
+        public override string Name => "Osu Catch";
 
-        public override string BaseIconName => "icon-mode-osu";
+        public override string BaseIconName => "icon-mode-catch";
 
-        public override GameModeType GameMode => GameModeType.OsuStandard;
+        public override GameModeType GameMode => GameModeType.OsuCatch;
 
         // TODO:
         public override bool IsPlayable => false;
@@ -22,7 +19,8 @@ namespace PBGame.Rulesets.Osu.Standard
         // TODO:
         public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => null;
 
-        public override Rulesets.Maps.IMapProcessor CreateProcessor(IPlayableMap map) => new Standard.Maps.MapProcessor(map);
+        // TODO:
+        public override Rulesets.Maps.IMapProcessor CreateProcessor(IPlayableMap map) => null;
 
         // TODO:
         public override Rulesets.Difficulty.IDifficultyCalculator CreateDifficultyCalculator(IPlayableMap map) => null;
