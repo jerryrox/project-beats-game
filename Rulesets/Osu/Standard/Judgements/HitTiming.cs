@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Judgements;
 
-namespace PBGame.Rulesets.Beats.Standard.Judgements
+namespace PBGame.Rulesets.Osu.Standard.Judgements
 {
 	/// <summary>
-	/// Provides timing values for Beats Standard hit objects.
+	/// Provides timing values for Osu Standard hit objects.
 	/// </summary>
 	public class HitTiming : Rulesets.Judgements.HitTiming {
 
