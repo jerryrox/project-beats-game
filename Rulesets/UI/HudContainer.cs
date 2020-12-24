@@ -27,6 +27,11 @@ namespace PBGame.Rulesets.UI
         public HealthDisplay HealthDisplay { get; protected set; }
 
         /// <summary>
+        /// Returns the damaged effect displayer object.
+        /// </summary>
+        public DamagedDisplay DamagedDisplay { get; protected set; }
+
+        /// <summary>
         /// Returns the effects displayer object.
         /// </summary>
         public TouchEffectDisplay TouchEffectDisplay { get; protected set; }

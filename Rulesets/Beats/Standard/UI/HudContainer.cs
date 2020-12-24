@@ -98,6 +98,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 laneComboDisplay.Position = new Vector3(0f, -150f);
                 laneComboDisplay.RotationX = 25f;
             }
+            DamagedDisplay = CreateChild<DamagedDisplay>("damaged-display");
+            {
+                DamagedDisplay.Anchor = AnchorType.Fill;
+                DamagedDisplay.Offset = Offset.Zero;
+            }
             TouchEffectDisplay = CreateChild<TouchEffectDisplay>("touch-effect");
             {
                 TouchEffectDisplay.Anchor = AnchorType.Fill;
