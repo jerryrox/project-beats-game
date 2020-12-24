@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;
-using PBFramework.DB.Entities;
 
 namespace PBGame.Data.Records
 {
     // TODO: Store mods used.
-    public interface IRecord : IDatabaseEntity {
-
+    public interface IRecord
+    {
         /// <summary>
         /// Returns the ID of the user who made this record.
         /// </summary>
@@ -95,5 +94,32 @@ namespace PBGame.Data.Records
         /// Returns the number of hits made for specified hit result.
         /// </summary>
         int GetHitCount(HitResultType result);
+    }
+
+    public static class IRecordListExtension
+    {
+        /// <summary>
+        /// The comparison function which sorts the records from highest to lowest.
+        /// </summary>
+        public static readonly Comparison<IRecord> TopRecordComparer = (x, y) =>
+        {
+            int comparison = y.Score.CompareTo(x.Score);
+            if (comparison == 0)
+            {
+                comparison = y.Accuracy.CompareTo(x.Accuracy);
+                if(comparison == 0)
+                    comparison = x.Date.CompareTo(y.Date);
+            }
+            return comparison;
+        };
+
+
+        /// <summary>
+        /// Sorts the records list by top performance.
+        /// </summary>
+        public static void SortByTop(this List<IRecord> context)
+        {
+            context.Sort(TopRecordComparer);
+        }
     }
 }

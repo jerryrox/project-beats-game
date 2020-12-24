@@ -17,6 +17,7 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
 
         private ILabel label;
         private IGrid grid;
+        private MetaDifficultyBlock bpmInfo;
         private MetaDifficultyInfo difficultyInfo;
         private List<MetaDifficultyScale> scales = new List<MetaDifficultyScale>();
         private MetaDifficultyScale difficultyScale;
@@ -51,6 +52,10 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
                 grid.Axis = GridLayoutGroup.Axis.Vertical;
                 grid.CellSize = new Vector2(236f, 36f);
 
+                bpmInfo = grid.CreateChild<MetaDifficultyBlock>("bpm", -1);
+                {
+                    bpmInfo.Tint = ColorPreset.SecondaryFocus;
+                }
                 difficultyInfo = grid.CreateChild<MetaDifficultyInfo>("diff", 0);
                 difficultyScale = grid.CreateChild<MetaDifficultyScale>("scale", 100);
                 {
@@ -80,19 +85,22 @@ namespace PBGame.UI.Components.Prepare.Details.Meta
         /// </summary>
         private void SetupDifficulty(IPlayableMap map, DifficultyInfo difficulty)
         {
-            var detail = map.Detail.Difficulty;
+            var mapDifficulty = map.Detail.Difficulty;
 
             switch (map.PlayableMode)
             {
                 // TODO: Handle other modes that should display different label values.
                 
                 default:
-                    GetCell().Setup("AR", detail.ApproachRate, 10f);
-                    GetCell().Setup("CS", detail.CircleSize, 10f);
-                    GetCell().Setup("HP", detail.HpDrainRate, 10f);
-                    GetCell().Setup("OD", detail.OverallDifficulty, 10f);
+                    GetCell().Setup("AR", mapDifficulty.ApproachRate, 10f);
+                    GetCell().Setup("CS", mapDifficulty.CircleSize, 10f);
+                    GetCell().Setup("HP", mapDifficulty.HpDrainRate, 10f);
+                    GetCell().Setup("OD", mapDifficulty.OverallDifficulty, 10f);
                     break;
             }
+
+            // Display BPM value
+            bpmInfo.Setup("BPM", map.ControlPoints.CommonBpm.ToString("N0"));
 
             // Display overall scale
             difficultyScale.Setup("Diff. scale", difficulty.Scale, 10f);

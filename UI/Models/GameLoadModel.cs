@@ -101,7 +101,8 @@ namespace PBGame.UI.Models
 
             isShowAniEnded = false;
 
-            var modeServicer = ModeManager.GetService(GameConfiguration.RulesetMode.Value);
+            var selectedMap = SelectedMap.Value;
+            var modeServicer = ModeManager.GetService(selectedMap.PlayableMode);
             var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
             loadingState.BindTo(GameModel.LoadState);
 

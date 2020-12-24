@@ -31,7 +31,7 @@ namespace PBGame.UI.Components.Common
             set => iconSprite.Alpha = value;
         }
 
-        public bool Rotate { get; set; }
+        public bool Rotate { get; set; } = true;
 
 
         [InitWithDependency]

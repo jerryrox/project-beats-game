@@ -6,7 +6,7 @@ using PBGame.Rulesets.Judgements;
 namespace PBGame.Rulesets.Beats.Standard.Judgements
 {
 	/// <summary>
-	/// Provides timing values for Beats hit objects.
+	/// Provides timing values for Beats Standard hit objects.
 	/// </summary>
 	public class HitTiming : Rulesets.Judgements.HitTiming {
 

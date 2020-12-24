@@ -74,8 +74,6 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
-            IsClickToTrigger = true;
-
             OnTriggered += () =>
             {
                 if (Active && Mapset != null)

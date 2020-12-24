@@ -1,12 +1,9 @@
-using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.UI.Models;
 using PBGame.UI.Models.Dialog;
-using PBGame.UI.Components.Common;
 using PBFramework.UI;
 using PBFramework.Graphics;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -15,7 +12,7 @@ namespace PBGame.UI.Components.Dialog
     public class SelectionHolder : UguiObject {
 
         private ISprite bgSprite;
-        private List<DialogButton> buttons = new List<DialogButton>();
+        private ManagedRecycler<SelectionButton> buttonRecycler;
 
 
         [ReceivesDependency]
@@ -25,6 +22,8 @@ namespace PBGame.UI.Components.Dialog
         [InitWithDependency]
         private void Init()
         {
+            buttonRecycler = new ManagedRecycler<SelectionButton>(CreateButton);
+
             Height = 0f;
 
             bgSprite = CreateChild<UguiSprite>("bg", -1);
@@ -52,6 +51,19 @@ namespace PBGame.UI.Components.Dialog
         }
 
         /// <summary>
+        /// Creates a new dialog option selection button.
+        /// </summary>
+        private SelectionButton CreateButton()
+        {
+            var button = CreateChild<SelectionButton>("button");
+            {
+                button.Anchor = AnchorType.Top;
+                button.Pivot = PivotType.Top;
+            }
+            return button;
+        }
+
+        /// <summary>
         /// Builds dialog items using the specified list of options.
         /// </summary>
         private void BuildItems(List<DialogOption> options)
@@ -62,18 +74,9 @@ namespace PBGame.UI.Components.Dialog
             float height = 0f;
             foreach (var option in options)
             {
-                DialogButton button = CreateChild<DialogButton>("selection", buttons.Count);
-                {
-                    button.Anchor = AnchorType.Top;
-                    button.Pivot = PivotType.Top;
-                    button.Y = height == 0f ? 0f : -height - 2f;
-                    
-                    button.LabelText = option.Label;
-                    button.Tint = option.Color;
-
-                    button.OnTriggered += () => Model.SelectOption(option);
-                }
-                buttons.Add(button);
+                var button = buttonRecycler.GetNext();
+                button.Y = height == 0f ? 0f : -height - 2f;
+                button.SetOption(option);
 
                 height += button.Height + (height == 0f ? 0f : 2f);
             }
@@ -85,8 +88,7 @@ namespace PBGame.UI.Components.Dialog
         /// </summary>
         private void RemoveAll()
         {
-            buttons.ForEach(b => b.Destroy());
-            buttons.Clear();
+            buttonRecycler.ReturnAll();
             Height = 0f;
         }
 

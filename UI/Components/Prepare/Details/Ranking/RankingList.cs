@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Data.Rankings;
 using PBFramework.UI;
@@ -10,9 +8,14 @@ using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingList : UguiListView, IListView {
+    public class RankingList : UguiListView, IListView, IHasAlpha {
 
-        private List<IRankInfo> ranks = new List<IRankInfo>();
+        /// <summary>
+        /// The component which defines the column layout of the list.
+        /// </summary>
+        public RankingColumn Column { get; set; }
+
+        private List<RankInfo> ranks = new List<RankInfo>();
 
 
         [InitWithDependency]
@@ -29,7 +32,7 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// <summary>
         /// Displays the specified list of rank information.
         /// </summary>
-        public void Setup(IEnumerable<IRankInfo> ranks)
+        public void Setup(IEnumerable<RankInfo> ranks)
         {
             foreach(var rank in ranks)
                 this.ranks.Add(rank);
@@ -51,6 +54,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         {
             int index = transform.childCount;
             var cell = container.CreateChild<RankingCell>($"cell{index}", index);
+            {
+                cell.Size = CellSize;
+            }
             return cell;
         }
 
@@ -62,6 +68,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
 
             cell.IsEvenCell = item.ItemIndex % 2 == 1;
             cell.SetRank(ranks[item.ItemIndex]);
+
+            if(Column != null)
+                cell.AdjustToColumn(Column);
         }
     }
 }

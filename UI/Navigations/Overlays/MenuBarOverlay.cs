@@ -13,6 +13,7 @@ namespace PBGame.UI.Navigations.Overlays
         private BackgroundSprite backgroundSprite;
         private ComboMenuButton comboMenuButton;
         private ProfileMenuButton profileButton;
+        private ModeMenuButton modeButton;
         private MusicButton musicButton;
         private SettingsMenuButton settingsMenuButton;
         private NotificationMenuButton notificationMenuButton;
@@ -44,7 +45,8 @@ namespace PBGame.UI.Navigations.Overlays
                     backgroundSprite.RawSize = Vector2.zero;
                     backgroundSprite.SetOffsetVertical(0f);
                 }
-                comboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu", 1);
+
+                comboMenuButton = container.CreateChild<ComboMenuButton>("combo-menu");
                 {
                     comboMenuButton.Anchor = AnchorType.LeftStretch;
                     comboMenuButton.Pivot = PivotType.Left;
@@ -52,37 +54,46 @@ namespace PBGame.UI.Navigations.Overlays
                     comboMenuButton.X = 0f;
                     comboMenuButton.Width = 80f;
                 }
-                profileButton = container.CreateChild<ProfileMenuButton>("profile-menu", 2);
+                profileButton = container.CreateChild<ProfileMenuButton>("profile-menu");
                 {
                     profileButton.Anchor = AnchorType.LeftStretch;
                     profileButton.Pivot = PivotType.Left;
                     profileButton.SetOffsetVertical(0f);
-                    profileButton.X = 80f;
+                    profileButton.X = comboMenuButton.Width;
                     profileButton.Width = 220f;
                 }
-                musicButton = container.CreateChild<MusicButton>("music", 3);
+                modeButton = container.CreateChild<ModeMenuButton>("mode-menu");
                 {
-                    musicButton.Anchor = AnchorType.RightStretch;
-                    musicButton.Pivot = PivotType.Right;
-                    musicButton.SetOffsetVertical(0f);
-                    musicButton.X = -160f;
-                    musicButton.Width = 80f;
+                    modeButton.Anchor = AnchorType.LeftStretch;
+                    modeButton.Pivot = PivotType.Left;
+                    modeButton.SetOffsetVertical(0f);
+                    modeButton.X = profileButton.X + profileButton.Width;
+                    modeButton.Width = 80f;
                 }
-                settingsMenuButton = container.CreateChild<SettingsMenuButton>("settings-menu", 4);
-                {
-                    settingsMenuButton.Anchor = AnchorType.RightStretch;
-                    settingsMenuButton.Pivot = PivotType.Right;
-                    settingsMenuButton.SetOffsetVertical(0f);
-                    settingsMenuButton.X = -80f;
-                    settingsMenuButton.Width = 80f;
-                }
-                notificationMenuButton = container.CreateChild<NotificationMenuButton>("notification-menu", 5);
+                
+                notificationMenuButton = container.CreateChild<NotificationMenuButton>("notification-menu");
                 {
                     notificationMenuButton.Anchor = AnchorType.RightStretch;
                     notificationMenuButton.Pivot = PivotType.Right;
                     notificationMenuButton.SetOffsetVertical(0f);
                     notificationMenuButton.X = 0f;
                     notificationMenuButton.Width = 80f;
+                }
+                settingsMenuButton = container.CreateChild<SettingsMenuButton>("settings-menu");
+                {
+                    settingsMenuButton.Anchor = AnchorType.RightStretch;
+                    settingsMenuButton.Pivot = PivotType.Right;
+                    settingsMenuButton.SetOffsetVertical(0f);
+                    settingsMenuButton.X = -notificationMenuButton.Width;
+                    settingsMenuButton.Width = 80f;
+                }
+                musicButton = container.CreateChild<MusicButton>("music-menu");
+                {
+                    musicButton.Anchor = AnchorType.RightStretch;
+                    musicButton.Pivot = PivotType.Right;
+                    musicButton.SetOffsetVertical(0f);
+                    musicButton.X = settingsMenuButton.X - settingsMenuButton.Width;
+                    musicButton.Width = 80f;
                 }
             }
 

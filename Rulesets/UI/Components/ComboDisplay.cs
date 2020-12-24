@@ -4,12 +4,12 @@ using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-namespace PBGame.Rulesets.UI.HUD
+namespace PBGame.Rulesets.UI.Components
 {
-    public class ScoreDisplay : UguiObject
+    public class ComboDisplay : UguiObject
     {
         /// <summary>
-        /// The label displaying the score.
+        /// The label displaying the combo.
         /// </summary>
         public ILabel Label { get; private set; }
 
@@ -19,7 +19,7 @@ namespace PBGame.Rulesets.UI.HUD
         {
             gameSession.OnSoftInit += () =>
             {
-                gameSession.ScoreProcessor.Score.BindAndTrigger(OnScoreChange);
+                gameSession.ScoreProcessor.Combo.BindAndTrigger(OnComboChange);
             };
             gameSession.OnSoftDispose += () =>
             {
@@ -35,11 +35,11 @@ namespace PBGame.Rulesets.UI.HUD
         }
 
         /// <summary>
-        /// Event called when the score changes.
+        /// Event called when the combo changes.
         /// </summary>
-        private void OnScoreChange(int score, int prevScore)
+        private void OnComboChange(int combo, int prevCombo)
         {
-            Label.Text = score.ToString("N0");
+            Label.Text = $"x{combo.ToString("N0")}";
         }
     }
 }

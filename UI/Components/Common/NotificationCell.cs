@@ -133,6 +133,7 @@ namespace PBGame.UI.Components.Common
                     {
                         coverTexture.Anchor = AnchorType.Fill;
                         coverTexture.Offset = Offset.Zero;
+                        coverTexture.Alpha = 0.25f;
                     }
                     glowSprite = bgSprite.CreateChild<UguiSprite>("glow");
                     {

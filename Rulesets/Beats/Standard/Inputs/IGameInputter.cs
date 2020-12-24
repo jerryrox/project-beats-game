@@ -44,6 +44,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Handles passive judgements for the specified object.
         /// </summary>
-        IEnumerable<JudgementResult> JudgePassive(float curTime, HitObjectView view);
+        void JudgePassive(float curTime, HitObjectView view);
     }
 }

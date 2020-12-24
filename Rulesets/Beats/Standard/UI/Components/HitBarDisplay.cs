@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets.Beats.Standard.Inputs;
-using PBGame.Rulesets.Judgements;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Animations;
@@ -17,7 +13,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         private IGraphicObject effectHolder;
         private ISprite hitBarSprite;
-        private ISprite followSprite;
 
         private IAnime holdAni;
         private IAnime releaseAni;
@@ -49,24 +44,10 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 hitBarSprite.ImageType = Image.Type.Sliced;
                 hitBarSprite.Alpha = 0.5f;
             }
-            followSprite = CreateChild<UguiSprite>("follow", 2);
-            {
-                followSprite.SpriteName = "glow-128";
-                followSprite.Size = new Vector2(500f, 500f);
-                followSprite.Alpha = 0f;
-            }
 
             holdAni = new Anime();
             holdAni.AnimateFloat(a => hitBarSprite.Alpha = a)
                 .AddTime(0f, () => hitBarSprite.Alpha)
-                .AddTime(0.1f, 1f)
-                .Build();
-            holdAni.AnimateVector3(s => followSprite.Scale = s)
-                .AddTime(0f, () => followSprite.Scale)
-                .AddTime(0.1f, Vector3.one)
-                .Build();
-            holdAni.AnimateFloat(a => followSprite.Alpha = a)
-                .AddTime(0f, () => followSprite.Alpha)
                 .AddTime(0.1f, 1f)
                 .Build();
 
@@ -74,14 +55,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             releaseAni.AnimateFloat(a => hitBarSprite.Alpha = a)
                 .AddTime(0f, () => hitBarSprite.Alpha)
                 .AddTime(0.1f, 0.5f)
-                .Build();
-            releaseAni.AnimateVector3(s => followSprite.Scale = s)
-                .AddTime(0f, () => followSprite.Scale)
-                .AddTime(0.1f, new Vector3(2f, 2f, 1f))
-                .Build();
-            releaseAni.AnimateFloat(a => followSprite.Alpha = a)
-                .AddTime(0f, () => followSprite.Alpha)
-                .AddTime(0.1f, 0f)
                 .Build();
         }
 
@@ -135,16 +108,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             var effect = effectRecycler.GetNext();
             effect.X = x;
             effect.ShowEffect(hitObjectView);
-        }
-
-        protected void Update()
-        {
-            if(cursor == null)
-                return;
-            if(!cursor.IsOnHitBar.Value)
-                return;
-
-            followSprite.X = cursor.HitBarPos;
         }
 
         /// <summary>

@@ -47,7 +47,6 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
                 dropdown.Y = 8f;
                 dropdown.Height = 30f;
                 dropdown.Context = dropdownContext;
-                dropdown.IsClickToTrigger = true;
             }
         }
 

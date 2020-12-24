@@ -83,8 +83,9 @@ namespace PBGame.UI.Components.Common
         /// <summary>
         /// Whether the button fires "click" event on pointer click.
         /// If false, it is triggered on pointer down.
+        /// Default: true
         /// </summary>
-        public bool IsClickToTrigger { get; set; } = false;
+        public bool IsClickToTrigger { get; set; } = true;
 
         /// <summary>
         /// Returns the name of the sound to be played on pointer enter.

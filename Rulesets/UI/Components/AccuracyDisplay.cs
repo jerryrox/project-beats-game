@@ -4,12 +4,12 @@ using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
 
-namespace PBGame.Rulesets.UI.HUD
+namespace PBGame.Rulesets.UI.Components
 {
-    public class ComboDisplay : UguiObject
+    public class AccuracyDisplay : UguiObject
     {
         /// <summary>
-        /// The label displaying the combo.
+        /// The label displaying the accuracy.
         /// </summary>
         public ILabel Label { get; private set; }
 
@@ -19,11 +19,11 @@ namespace PBGame.Rulesets.UI.HUD
         {
             gameSession.OnSoftInit += () =>
             {
-                gameSession.ScoreProcessor.Combo.BindAndTrigger(OnComboChange);
+                gameSession.ScoreProcessor.Accuracy.BindAndTrigger(OnAccuracyChange);
             };
             gameSession.OnSoftDispose += () =>
             {
-                Label.Text = "0";
+                Label.Text = "0%";
             };
 
             this.Size = Vector2.zero;
@@ -35,11 +35,11 @@ namespace PBGame.Rulesets.UI.HUD
         }
 
         /// <summary>
-        /// Event called when the combo changes.
+        /// Event called when the accuracy changes.
         /// </summary>
-        private void OnComboChange(int combo, int prevCombo)
+        private void OnAccuracyChange(float acc, float prevAcc)
         {
-            Label.Text = $"x{combo.ToString("N0")}";
+            Label.Text = acc.ToString("P2");
         }
     }
 }

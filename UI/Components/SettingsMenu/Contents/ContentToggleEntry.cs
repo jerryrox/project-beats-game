@@ -25,7 +25,6 @@ namespace PBGame.UI.Components.SettingsMenu.Contents
             {
                 toggle.Anchor = AnchorType.Fill;
                 toggle.Offset = new Offset(8f);
-                toggle.IsClickToTrigger = true;
 
                 toggle.OnFocused += (isFocused) =>
                 {

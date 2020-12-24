@@ -30,8 +30,7 @@ namespace PBGame.Rulesets.Osu.Standard
         // TODO:
         public override Rulesets.Scoring.IScoreProcessor CreateScoreProcessor() => null;
 
-        // TODO:
-        public override Rulesets.Judgements.HitTiming CreateTiming() => null;
+        public override Rulesets.Judgements.HitTiming CreateTiming() => new Judgements.HitTiming();
 
         // TODO:
         protected override IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency)

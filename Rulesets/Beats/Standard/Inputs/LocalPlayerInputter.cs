@@ -66,9 +66,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             GameSession.OnSoftDispose += OnSoftDispose;
             GameSession.OnHardDispose += OnHardDispose;
 
-            OnKeyPress += JudgeKeyPress;
-            OnKeyRelease += JudgeKeyRelease;
-
             pointerEvent = new PointerEventData(Root3D.EventSystem);
         }
 
@@ -113,16 +110,17 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                             TriggerCursorPress(cursor, pos);
                         // If not hit on hit bar, this is treated as a key stoke.
                         else
-                            TriggerKeyPress(cursor);
+                            TriggerKeyPress(cursor, cursor);
                     }
                 }
             }
             return true;
         }
 
-        public IEnumerable<JudgementResult> JudgePassive(float curTime, HitObjectView view)
+        public void JudgePassive(float curTime, HitObjectView view)
         {
-            return view.JudgePassive(curTime);
+            foreach(var judgement in view.JudgePassive(curTime))
+                AddJudgement(judgement);
         }
 
         int IComparable<IInputReceiver>.CompareTo(IInputReceiver other) => other.InputLayer.CompareTo(InputLayer);
@@ -147,11 +145,17 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Triggers a new key stroke press event for specified input.
         /// </summary>
-        private void TriggerKeyPress(IInput input)
+        private void TriggerKeyPress(IInput input, ICursor cursor = null)
         {
             var beatsKey = keyRecycler.GetNext();
             beatsKey.Input = input;
+            beatsKey.SetInputAsCursor(cursor);
+            // Associate the key with the hit cursor.
+            if(hitBarCursor.IsActive)
+                beatsKey.SetHitCursor(hitBarCursor);
+
             OnKeyPress?.Invoke(beatsKey);
+            JudgeKeyPress(beatsKey);
         }
 
         /// <summary>
@@ -203,6 +207,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void JudgeKeyPress(BeatsKey key)
         {
+            // Return if no cursor is active.
+            if(!hitBarCursor.IsActive)
+                return;
+
             // Find the first hit object where the cursor is within the X range.
             foreach (var objView in hitObjectHolder.GetActiveObjects())
             {
@@ -234,7 +242,12 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private void AddJudgement(JudgementResult result)
         {
             if (result != null)
+            {
+                if(hitBarCursor.IsActive)
+                    hitBarCursor.ReportNewResult(result);
+
                 GameSession?.ScoreProcessor.ProcessJudgement(result);
+            }
         }
 
         /// <summary>
@@ -252,6 +265,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private void OnKeyStateRelease(BeatsKey key)
         {
             OnKeyRelease?.Invoke(key);
+            JudgeKeyRelease(key);
+            
             keyRecycler.Return(key);
         }
 

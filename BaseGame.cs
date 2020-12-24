@@ -74,7 +74,7 @@ namespace PBGame
         protected Api api;
 
         protected IUserManager userManager;
-        protected IRecordManager recordManager;
+        protected IRecordStore recordStore;
 
         protected IRootMain rootMain;
         protected IRoot3D root3D;
@@ -98,7 +98,13 @@ namespace PBGame
         {
             InitializeModules();
 
-            PostInitialize();
+            var timer = new SynchronizedTimer()
+            {
+                Limit = 0.01f,
+                WaitFrameOnStart = true,
+            };
+            timer.OnFinished += PostInitialize;
+            timer.Start();
         }
 
         public virtual void GracefulQuit()
@@ -160,7 +166,7 @@ namespace PBGame
             Dependencies.CacheAs<IApi>(api = new Api(envConfiguration, notificationBox, deepLinker));
 
             Dependencies.CacheAs<IUserManager>(userManager = new UserManager(api, Dependencies));
-            Dependencies.CacheAs<IRecordManager>(recordManager = new RecordManager());
+            Dependencies.CacheAs<IRecordStore>(recordStore = new RecordStore());
 
             Dependencies.CacheAs<IRootMain>(rootMain = RootMain.Create(Dependencies));
             Dependencies.CacheAs<IRoot3D>(root3D = Root3D.Create(Dependencies));
@@ -169,8 +175,6 @@ namespace PBGame
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
             Dependencies.CacheAs<IDropdownProvider>(dropdownProvider = new DropdownProvider(rootMain));
-
-            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
         }
 
         protected virtual void OnApplicationPause(bool paused) => OnAppPause?.Invoke(paused);
@@ -182,6 +186,8 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
+
             // Some default system settings.
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = 60;

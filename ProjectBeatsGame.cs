@@ -332,10 +332,16 @@ namespace PBGame
                 ApplyScreenResolution();
             };
 
-            // Offset settings
+            // Offset events
             gameConfiguration.GlobalOffset.OnNewValue += (offset) =>
             {
                 musicController.Clock.Offset = offset;
+            };
+
+            // Game mode events
+            gameConfiguration.RulesetMode.OnNewValue += (mode) =>
+            {
+                NotifyUnplayableMode();
             };
         }
 
@@ -442,6 +448,27 @@ namespace PBGame
         private void ApplyMusicVolume(float scale = 1f)
         {
             musicController.SetVolume(gameConfiguration.MasterVolume.Value * gameConfiguration.MusicVolume.Value * scale);
+        }
+
+        /// <summary>
+        /// Shows a notification to the user if the current game mode is unplayable yet.
+        /// </summary>
+        private void NotifyUnplayableMode()
+        {
+            var gameMode = gameConfiguration.RulesetMode.Value;
+            var modeService = modeManager.GetService(gameMode);
+            if (modeService != null)
+            {
+                if (!modeService.IsPlayable)
+                {
+                    notificationBox.Add(new Notification()
+                    {
+                        Message = $"The selected game mode ({modeService.Name}) is not playable yet. Any maps selected will be playable by its original, or the first available mode.",
+                        Scope = NotificationScope.Temporary,
+                        Type = NotificationType.Warning,
+                    });
+                }
+            }
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ using PBGame.UI.Models.Game;
 using PBGame.UI.Navigations.Screens;
 using PBGame.Data.Users;
 using PBGame.Data.Records;
+using PBGame.Stores;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
@@ -67,7 +68,7 @@ namespace PBGame.UI.Models
         private IUserManager UserManager { get; set; }
 
         [ReceivesDependency]
-        private IRecordManager RecordManager { get; set; }
+        private IRecordStore RecordStore { get; set; }
 
 
         /// <summary>
@@ -95,6 +96,8 @@ namespace PBGame.UI.Models
             currentModeService = modeService;
 
             InitSession();
+            CleanUpResources();
+            
             InitLoader();
         }
 
@@ -147,14 +150,15 @@ namespace PBGame.UI.Models
                     // Record the play result to records database and user statistics.
                     Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
                     lastRecord = newRecord;
-                    var records = await RecordManager.GetRecords(currentMap, user, listener?.CreateSubListener<List<IRecord>>());
+                    // Retrieve old records for the map and user.
+                    var records = await RecordStore.GetTopRecords(currentMap, user, limit: null, listener: listener?.CreateSubListener<List<IRecord>>());
 
                     // Save as cleared play.
                     if (scoreProcessor.IsFinished)
                     {
-                        RecordManager.SaveRecord(newRecord);
+                        RecordStore.SaveRecord(newRecord);
 
-                        var bestRecord = RecordManager.GetBestRecord(records);
+                        var bestRecord = records == null || records.Count == 0 ? null : records[0];
                         userStats.RecordPlay(newRecord, bestRecord);
                     }
                     // Save as failed play.
@@ -206,6 +210,14 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Queues a new game loader which handles Unity Resource collection.
+        /// </summary>
+        private void CleanUpResources()
+        {
+            AddAsLoader(new AsyncOperationTask(() => Resources.UnloadUnusedAssets()));
+        }
+
+        /// <summary>
         /// Initializes a new game session and starts loading the game.
         /// </summary>
         private void InitSession()
@@ -240,6 +252,8 @@ namespace PBGame.UI.Models
             gameLoader = new MultiTask(gameLoaders);
             gameLoader.OnFinished += () =>
             {
+                GC.Collect();
+
                 loadState.Value = GameLoadState.Success;
             };
             gameLoader.StartTask();

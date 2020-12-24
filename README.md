@@ -5,7 +5,7 @@ Implementation of Project: Beats game
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.2.0) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.2.1) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
@@ -15,6 +15,31 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.13.0
+#### New features
+- Implemented local rankings.
+- Implemented damaged effect.
+- Implemented touch pulse effects.
+- Implemented game mode selection menu.
+- Implemented BPM info display on `PrepareScreen`.
+- Implemented support for selecting game modes even when they are unplayable.
+- Implemented garbage collection and Resource unloading tasks for game loading process.
+- (Beats Standard) Implemented combo displayer on the lane sprite.
+#### Improvements
+- Added visual improvements on the health bar.
+- Implemented recyclers on dialog option buttons.
+#### Changes
+- Made pause indicator container be disabled on hiding end animation.
+- Made the selection of map for offset tweaking done through `OffsetsModel`, not indirectly via `MapSelection`.
+- Removed `RecordManager` and made use of `RecordStore` instead.
+- The default value for `IsClickToTrigger` on `BasicTrigger` has been changed to `true`.
+- (Beats Standard) Removed old touch effect on `HitBarDisplay`.
+#### Fixes
+- Fixed layout issue in `PrepareScreen` where the detail panel does not fully hide the inner content when in brief mode.
+- Fixed issue where `WebTexture` component's alpha could not be customized.
+- Fixed bug where `CommonBpm` was returned as its `BeatLength` value, not the actual BPM.
+- (Beats Standard) Fixed issue where touching anywhere on the screen would occasionally register as a valid hit on objects.
+
 ### 0.12.0
 #### New features
 - Implemented AvatarDisplay component to simplify loading of avatar images.

@@ -107,8 +107,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 var view = hitObjectViews[i];
 
                 // Process any passive judgements to be made.
-                foreach(var judgement in gameInputter.JudgePassive(curTime, view))
-                    AddJudgement(judgement);
+                gameInputter.JudgePassive(curTime, view);
 
                 if (view.IsFullyJudged)
                 {
@@ -139,14 +138,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                     view.Y = Mathf.LerpUnclamped(PlayArea.FallStartPos, PlayArea.HitPosition, approachProgress);
                 }
             }
-        }
-
-        /// <summary>
-        /// Adds the specified judgement info to score processor.
-        /// </summary>
-        private void AddJudgement(JudgementResult result)
-        {
-            GameSession?.ScoreProcessor.ProcessJudgement(result);
         }
 
         /// <summary>

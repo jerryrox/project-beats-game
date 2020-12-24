@@ -8,6 +8,7 @@ namespace PBGame.UI.Models.MenuBar
         None = 0,
         Quick,
         Profile,
+        Mode,
         Music,
         Settings,
         Notification

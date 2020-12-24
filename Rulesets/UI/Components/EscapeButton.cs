@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Components.Common;
 using PBGame.Graphics;
 using PBFramework.UI;
 using PBFramework.Data.Bindables;
 using PBFramework.Utils;
-using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.CoffeeUI;
 using PBFramework.Animations;
@@ -105,9 +101,12 @@ namespace PBGame.Rulesets.UI.Components
                     iconSprite.SpriteName = "icon-pause";
                     iconSprite.Color = ColorPreset.PrimaryFocus;
                 }
+
+                indicatorContainer.Active = false;
             }
 
             showAni = new Anime();
+            showAni.AddEvent(0f, () => indicatorContainer.Active = true);
             showAni.AnimateFloat((width) => indicatorContainer.Width = width)
                 .AddTime(0f, 0, EaseType.BackEaseOut)
                 .AddTime(0.25f, 196f)
@@ -126,6 +125,7 @@ namespace PBGame.Rulesets.UI.Components
                 .AddTime(0f, () => indicatorCanvas.alpha)
                 .AddTime(0.25f, 0f)
                 .Build();
+            hideAni.AddEvent(hideAni.Duration, () => indicatorContainer.Active = false);
         }
 
         /// <summary>

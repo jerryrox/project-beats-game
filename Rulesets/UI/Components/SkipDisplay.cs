@@ -13,7 +13,7 @@ using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PBGame.Rulesets.UI.HUD
+namespace PBGame.Rulesets.UI.Components
 {
     public class SkipDisplay : UguiSprite, IHasAlpha {
 
