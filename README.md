@@ -34,6 +34,7 @@ Slowly making progress 🧩
 - The default value for `IsClickToTrigger` on `BasicTrigger` has been changed to `true`.
 - (Beats Standard) Removed old touch effect on `HitBarDisplay`.
 #### Fixes
+- Fixed layout issue in `PrepareScreen` where the detail panel does not fully hide the inner content when in brief mode.
 - Fixed issue where `WebTexture` component's alpha could not be customized.
 - (Beats Standard) Fixed issue where touching anywhere on the screen would occasionally register as a valid hit on objects.
 
