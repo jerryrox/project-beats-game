@@ -18,6 +18,7 @@ Slowly making progress 🧩
 ### 0.13.0 (WIP)
 #### New features
 - Implemented local rankings.
+- Implemented damaged effect.
 - Implemented touch pulse effects.
 - Implemented game mode selection menu.
 - Implemented support for selecting game modes even when they are unplayable.
