@@ -15,7 +15,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.13.0 (WIP)
+### 0.13.0
 #### New features
 - Implemented local rankings.
 - Implemented damaged effect.
