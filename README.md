@@ -21,6 +21,7 @@ Slowly making progress 🧩
 - Implemented damaged effect.
 - Implemented touch pulse effects.
 - Implemented game mode selection menu.
+- Implemented BPM info display on `PrepareScreen`.
 - Implemented support for selecting game modes even when they are unplayable.
 - Implemented garbage collection and Resource unloading tasks for game loading process.
 - (Beats Standard) Implemented combo displayer on the lane sprite.
@@ -36,6 +37,7 @@ Slowly making progress 🧩
 #### Fixes
 - Fixed layout issue in `PrepareScreen` where the detail panel does not fully hide the inner content when in brief mode.
 - Fixed issue where `WebTexture` component's alpha could not be customized.
+- Fixed bug where `CommonBpm` was returned as its `BeatLength` value, not the actual BPM.
 - (Beats Standard) Fixed issue where touching anywhere on the screen would occasionally register as a valid hit on objects.
 
 ### 0.12.0

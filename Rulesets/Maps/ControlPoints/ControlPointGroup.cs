@@ -17,7 +17,7 @@ namespace PBGame.Rulesets.Maps.ControlPoints
         /// <summary>
         /// Returns the highest bpm from all timing points.
         /// </summary>
-        public double MaxBpm
+        public float MaxBpm
 		{
 			get => 60000 / (TimingPoints.OrderBy((point) => point.BeatLength).FirstOrDefault() ?? new TimingControlPoint()).BeatLength;
 		}
@@ -25,7 +25,7 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 		/// <summary>
 		/// Returns the lowest bpm from all timing points.
 		/// </summary>
-		public double MinBpm
+		public float MinBpm
 		{
 			get => 60000 / (TimingPoints.OrderByDescending((point) => point.BeatLength).FirstOrDefault() ?? new TimingControlPoint()).BeatLength;
 		}
@@ -33,13 +33,13 @@ namespace PBGame.Rulesets.Maps.ControlPoints
 		/// <summary>
 		/// Returns the most common bpm from all timing points.
 		/// </summary>
-		public double CommonBpm
+		public float CommonBpm
 		{
 			get
 			{
-				var commonGroup = TimingPoints.GroupBy(point => point.BeatLength).OrderByDescending(g => g.Count()).FirstOrDefault();
+                var commonGroup = TimingPoints.GroupBy(point => point.BeatLength).OrderByDescending(g => g.Count()).FirstOrDefault();
 				if(commonGroup != null)
-					return (commonGroup.FirstOrDefault() ?? new TimingControlPoint()).BeatLength;
+					return 60000 / (commonGroup.FirstOrDefault() ?? new TimingControlPoint()).BeatLength;
 				return 60000 / new TimingControlPoint().BeatLength;
 			}
 		}
