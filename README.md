@@ -15,7 +15,9 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### ??? (WIP)
+### 0.13.1 (WIP)
+#### Fixes
+- Fixed button sound not playing on escape button trigger.
 
 ### 0.13.0
 #### New features
