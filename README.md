@@ -16,6 +16,8 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.13.1 (WIP)
+#### New features
+- Implemented displayal of map count for their playable mode on `SongListItem`.
 #### Fixes
 - Fixed button sound not playing on escape button trigger.
 
