@@ -435,6 +435,8 @@ namespace PBGame
             Screen.SetResolution((int)newResolution.x, (int)newResolution.y, FullScreenMode.ExclusiveFullScreen, framerate);
 
             Application.targetFrameRate = framerate;
+
+            inputManager.SetResolution(newResolution);
         }
 
         /// <summary>
