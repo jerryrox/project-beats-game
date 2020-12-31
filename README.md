@@ -18,6 +18,8 @@ Slowly making progress 🧩
 ### 0.14.0 (WIP)
 #### New features
 - Implemented displayal of map count for their playable mode on `SongListItem`.
+#### Changes
+- Make the mobile platform use the acceleration supported by `Cursor` input.
 #### Fixes
 - Fixed button sound not playing on escape button trigger.
 

@@ -196,7 +196,8 @@ namespace PBGame
             envConfiguration.Load("Configurations/Env");
 
             // Apply accelerator to input manager
-            inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());
+            // inputManager.Accelerator = (Application.isMobilePlatform ? (IAccelerator)new DeviceAccelerator() : (IAccelerator)new CursorAccelerator());
+            inputManager.Accelerator = new CursorAccelerator();
 
             // Register decoders.
             Decoders.AddDecoder<OriginalMap>(
