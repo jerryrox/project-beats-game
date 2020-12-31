@@ -15,7 +15,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.13.1 (WIP)
+### 0.14.0 (WIP)
 #### New features
 - Implemented displayal of map count for their playable mode on `SongListItem`.
 #### Fixes
