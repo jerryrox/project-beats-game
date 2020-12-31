@@ -1,6 +1,4 @@
-using PBGame.Networking.Maps;
-
-namespace PBGame.UI.Components.Download.Result
+namespace PBGame.UI.Components.Common.MetaTags
 {
     public class RankMetaTag : BaseMetaTag {
 

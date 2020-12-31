@@ -6,6 +6,7 @@ using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Assets.Caching;
+using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Configurations;
 using PBFramework.UI;
@@ -64,6 +65,11 @@ namespace PBGame.UI.Models
         /// Returns the currently selected mapset.
         /// </summary>
         public IReadOnlyBindable<IMapset> SelectedMapset => MapSelection.Mapset;
+
+        /// <summary>
+        /// Returns the currently selected game mode.
+        /// </summary>
+        public IReadOnlyBindable<GameModeType> GameMode => GameConfiguration.RulesetMode;
 
         /// <summary>
         /// Returns the last search term used for filtering.
