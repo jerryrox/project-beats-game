@@ -7,7 +7,6 @@ using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
-using PBGame.Rulesets.Judgements;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
@@ -128,6 +127,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                         if (approachProgress >= 0f)
                         {
                             view.Active = true;
+                            view.Id = i;
                             hitObjectViews.AdvanceHighIndex(true);
                         }
                         // If not, all other objects wouldn't be shown since the objects are sorted by start time.
