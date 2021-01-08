@@ -24,6 +24,7 @@ Slowly making progress 🧩
 - Added support for iOS File Sharing in case download becomes unusable in the future.
 #### Changes
 - Make the mobile platform use the acceleration supported by `Cursor` input.
+- Removed judgement detail data from record files.
 #### Fixes
 - Fixed button sound not playing on escape button trigger.
 

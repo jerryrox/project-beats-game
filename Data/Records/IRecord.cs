@@ -55,11 +55,6 @@ namespace PBGame.Data.Records
         float Accuracy { get; }
 
         /// <summary>
-        /// List of judgements made.
-        /// </summary>
-        IReadOnlyList<JudgementRecord> Judgements { get; }
-
-        /// <summary>
         /// Returns the number of hits recorded for each hit result types.
         /// </summary>
         IReadOnlyDictionary<HitResultType, int> HitResultCounts { get; }

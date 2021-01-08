@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using PBGame.Data.Users;
 using PBGame.Rulesets;
@@ -12,9 +11,6 @@ using Newtonsoft.Json;
 namespace PBGame.Data.Records
 {
     public class Record : DatabaseEntity, IRecord {
-
-        [JsonProperty]
-        private List<JudgementRecord> judgements;
 
         [JsonProperty]
         private Dictionary<HitResultType, int> hitResultCounts;
@@ -42,13 +38,9 @@ namespace PBGame.Data.Records
         public float Accuracy { get; set; }
 
         [JsonIgnore]
-        public IReadOnlyList<JudgementRecord> Judgements => judgements.AsReadOnly();
-
-        [JsonIgnore]
         public IReadOnlyDictionary<HitResultType, int> HitResultCounts => hitResultCounts;
 
-        [JsonIgnore]
-        public int HitCount => judgements.Where(j => j.IsHit).Count();
+        public int HitCount { get; set; }
 
         public int Time { get; set; }
 
@@ -74,6 +66,8 @@ namespace PBGame.Data.Records
 
             InitializeAsNew();
 
+            UnityEngine.Debug.LogWarning("Created new record with id: " + Id.ToString());
+
             UserId = user.Id;
             Username = user.Username;
             AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
@@ -92,33 +86,28 @@ namespace PBGame.Data.Records
 
         public int GetHitCount(HitResultType result)
         {
-            return Judgements.Where(j => j.Result == result).Count();
+            if (HitResultCounts.TryGetValue(result, out int count))
+                return count;
+            return 0;
         }
 
         /// <summary>
-        /// Records the specified list of judgements.
+        /// Extracts certain data from the list of judgements.
         /// </summary>
         private void ExtractJudgements(List<JudgementResult> judgements)
         {
-            this.judgements = new List<JudgementRecord>(judgements.Count);
-            this.hitResultCounts = new Dictionary<HitResultType, int>();
+            hitResultCounts = new Dictionary<HitResultType, int>();
 
             if (judgements != null)
             {
+                HitCount = judgements.Count;
+
                 foreach (var j in judgements)
                 {
-                    this.judgements.Add(new JudgementRecord()
-                    {
-                        Combo = j.ComboAtJudgement,
-                        HitOffset = j.HitOffset,
-                        IsHit = j.IsHit,
-                        Result = j.HitResult
-                    });
-
-                    if(this.hitResultCounts.ContainsKey(j.HitResult))
-                        this.hitResultCounts[j.HitResult]++;
+                    if(hitResultCounts.ContainsKey(j.HitResult))
+                        hitResultCounts[j.HitResult]++;
                     else
-                        this.hitResultCounts[j.HitResult] = 1;
+                        hitResultCounts[j.HitResult] = 1;
 
                     AverageOffset += (float)j.HitOffset;
                 }
