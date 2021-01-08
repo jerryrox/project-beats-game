@@ -11,6 +11,9 @@ Slowly making progress 🧩
 ### Extra
 - project-beats-api (Only if using Network feature. Tested on 0.6.0) (https://github.com/jerryrox/project-beats-api)
 
+## Script Execution Order set up
+- `PBFramework.Inputs.InputManager` should be assigned before `Default Time`.
+
 ## Development progress
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
@@ -18,6 +21,7 @@ Slowly making progress 🧩
 ### 0.14.0 (WIP)
 #### New features
 - Implemented displayal of map count for their playable mode on `SongListItem`.
+- Added support for iOS File Sharing in case download becomes unusable in the future.
 #### Changes
 - Make the mobile platform use the acceleration supported by `Cursor` input.
 #### Fixes
