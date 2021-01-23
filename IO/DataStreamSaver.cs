@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace PBGame.IO
 {
@@ -12,20 +10,20 @@ namespace PBGame.IO
     public class DataStreamSaver<T>
         where T : IStreamableData
     {
-        private int index;
         private int poolSize;
         private int saveInterval;
         private T[] pool;
 
         private StreamWriter writer;
         private Thread streamingThread;
+        private bool isStarted = false;
+        private int dataCount = 0;
 
         private object locker = new object();
 
         public DataStreamSaver(int poolSize, int saveInterval = 60)
         {
             this.poolSize = poolSize;
-            this.index = 0;
             this.saveInterval = saveInterval;
             this.pool = new T[poolSize];
         }
@@ -33,19 +31,22 @@ namespace PBGame.IO
         /// <summary>
         /// Starts the streaming process for the specified target.
         /// </summary>
-        public void StartStream(Stream stream)
+        public void StartStream(StreamWriter writer)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (!stream.CanWrite)
+            if (writer == null)
+                throw new ArgumentNullException(nameof(writer));
+            if (writer.BaseStream == null)
+                throw new Exception("The base stream of specifier writer is null.");
+            if (!writer.BaseStream.CanWrite)
                 throw new Exception("The specified stream cannot be written to.");
             if (this.writer != null)
-                throw new Exception("There is already a stream initialized to the saver.");
+                throw new Exception("There is already a writer initialized to the saver.");
 
-            this.writer = new StreamWriter(stream);
+            this.writer = writer;
+            isStarted = true;
 
             streamingThread = new Thread(HandleStreaming);
-            streamingThread.Start();
+            streamingThread.Start(writer);
         }
 
         /// <summary>
@@ -54,9 +55,11 @@ namespace PBGame.IO
         public void StopStream()
         {
             writer = null;
-            streamingThread.Join();
-
-            index = 0;
+            isStarted = false;
+            if (streamingThread != null)
+                streamingThread.Join();
+            streamingThread = null;
+            dataCount = 0;
         }
 
         /// <summary>
@@ -69,38 +72,40 @@ namespace PBGame.IO
 
             lock (locker)
             {
-                index = index >= poolSize - 1 ? 0 : index + 1;
-                pool[index] = data;
+                pool[dataCount % poolSize] = data;
+                dataCount++;
             }
         }
 
         /// <summary>
         /// Handles the actual saving of the incoming data.
         /// </summary>
-        private void HandleStreaming()
+        private void HandleStreaming(object writer)
         {
-            var myStream = writer;
-            int curIndex = 0;
-            while (writer != null)
+            var myStream = writer as StreamWriter;
+            int curCount = 0;
+
+            Action seekAndWrite = () =>
             {
-                int targetIndex = 0;
+                int targetCount = 0;
                 lock (locker)
                 {
-                    targetIndex = index;
+                    targetCount = dataCount;
                 }
                 while (true)
                 {
-                    if (curIndex == targetIndex + 1)
+                    if (curCount == targetCount)
                         break;
 
-                    var item = pool[curIndex];
+                    var item = pool[curCount % poolSize];
                     myStream.Write(item.ToStreamData());
-
-                    curIndex++;
-                    if (curIndex >= poolSize)
-                        curIndex = 0;
+                    curCount++;
                 }
-
+            };
+            
+            while (isStarted)
+            {
+                seekAndWrite();
                 // Wait a delay until there is potentially enough data.
                 try
                 {
@@ -108,8 +113,8 @@ namespace PBGame.IO
                 }
                 catch {}
             }
+            seekAndWrite();
             myStream.Flush();
-            myStream.Close();
         }
     }
 }
