@@ -21,6 +21,19 @@ namespace PBGame.IO
 
         private object locker = new object();
 
+
+        /// <summary>
+        /// Returns the raw value array.
+        /// This shouldn't be modified unless you know what you're doing.
+        /// </summary>
+        public T[] RawBuffer => pool;
+
+        /// <summary>
+        /// Returns the next index of the internal buffer where the next data will be set to.
+        /// </summary>
+        public int NextPushIndex => dataCount % poolSize;
+
+
         public DataStreamSaver(int poolSize, int saveInterval = 60)
         {
             this.poolSize = poolSize;

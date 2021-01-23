@@ -14,7 +14,6 @@ namespace PBGame.Stores
 {
     public class RecordStore : DatabaseBackedStore<Record>, IRecordStore {
 
-
         public Task Reload(TaskListener listener = null)
         {
             return Task.Run(() =>
