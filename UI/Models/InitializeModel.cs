@@ -71,6 +71,9 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IDownloadStore DownloadStore { get; set; }
 
+        [ReceivesDependency]
+        private ITemporaryStore TemporaryStore { get; set; }
+
 
         /// <summary>
         /// Starts the game loading process.
@@ -162,6 +165,8 @@ namespace PBGame.UI.Models
         {
             UnityThread.DispatchUnattended(() =>
             {
+                TemporaryStore.Clear();
+
                 isComplete.Value = true;
                 return null;
             });
