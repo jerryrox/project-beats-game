@@ -65,7 +65,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public string ToStreamData()
         {
-            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}";
+            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}\n";
         }
 
         void IInput.Release() {}

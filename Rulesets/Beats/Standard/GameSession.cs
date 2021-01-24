@@ -39,11 +39,11 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         private void InitInputter()
         {
-            // TODO: Determine whether it's a player-controlled session.
             var playArea = Dependencies.Get<PlayAreaContainer>();
             var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
             var touchEffectDisplay = Dependencies.Get<TouchEffectDisplay>();
 
+            // TODO: Determine whether it's a player-controlled session.
             // Initialize inputter
             var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
             Dependencies.Inject(localPlayerInputter);

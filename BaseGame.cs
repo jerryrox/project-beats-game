@@ -187,7 +187,7 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
-            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2, 5));
 
             // Some default system settings.
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
