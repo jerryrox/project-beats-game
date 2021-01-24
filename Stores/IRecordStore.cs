@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.Data.Users;
@@ -38,5 +39,10 @@ namespace PBGame.Stores
         /// Deletes all records of specified map.
         /// </summary>
         void DeleteRecords(IPlayableMap map);
+
+        /// <summary>
+        /// Returns the file info of the specified record's replay data.
+        /// </summary>
+        FileInfo GetReplayFile(IRecord record);
     }
 }

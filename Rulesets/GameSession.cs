@@ -3,6 +3,7 @@ using System.Linq;
 using PBGame.UI.Models;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Rulesets.UI;
@@ -173,8 +174,8 @@ namespace PBGame.Rulesets
             Game.OnAppFocus -= OnAppFocused;
 
             // Record score.
-            var listener = new TaskListener();
-            listener.OnFinished += () =>
+            var listener = new TaskListener<IRecord>();
+            listener.OnFinished += (record) =>
             {
                 ScoreProcessor = null;
                 GameGui.HideGame(() => OnSoftDispose?.Invoke());

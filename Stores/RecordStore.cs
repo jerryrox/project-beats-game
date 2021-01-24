@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -13,6 +14,14 @@ using PBFramework.Threading;
 namespace PBGame.Stores
 {
     public class RecordStore : DatabaseBackedStore<Record>, IRecordStore {
+
+        private DirectoryInfo replayDirectory;
+
+
+        public RecordStore()
+        {
+            replayDirectory = GameDirectory.Replays;
+        }
 
         public Task Reload(TaskListener listener = null)
         {
@@ -85,6 +94,11 @@ namespace PBGame.Stores
                 ApplyFilterMap(records, map);
                 Database.Edit().RemoveRange(records.GetResult()).Commit();
             }
+        }
+
+        public FileInfo GetReplayFile(IRecord record)
+        {
+            return new FileInfo(Path.Combine(replayDirectory.FullName, $"{record.Id.ToString()}.replay"));
         }
 
         protected override IDatabase<Record> CreateDatabase()

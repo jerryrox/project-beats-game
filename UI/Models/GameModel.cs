@@ -54,6 +54,11 @@ namespace PBGame.UI.Models
         public IModeService ModeService => currentModeService;
 
         /// <summary>
+        /// Returns the record last made.
+        /// </summary>
+        public IRecord LastRecord => lastRecord;
+
+        /// <summary>
         /// Returns the game screen.
         /// </summary>
         private GameScreen Screen => ScreenNavigator.Get<GameScreen>();
@@ -131,16 +136,16 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Records the specified play record under the current player.
         /// </summary>
-        public Task RecordScore(IScoreProcessor scoreProcessor, int playTime, TaskListener listener = null)
+        public Task<IRecord> RecordScore(IScoreProcessor scoreProcessor, int playTime, TaskListener<IRecord> listener = null)
         {
-            return Task.Run(async () =>
+            return Task.Run<IRecord>(async () =>
             {
                 try
                 {
                     if (scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
                     {
                         listener?.SetFinished();
-                        return;
+                        return null;
                     }
 
                     // Retrieve user and user stats.
@@ -166,12 +171,14 @@ namespace PBGame.UI.Models
                     {
                         userStats.RecordIncompletePlay(newRecord);
                     }
-                    listener?.SetFinished();
+                    listener?.SetFinished(newRecord);
+                    return newRecord;
                 }
                 catch (Exception e)
                 {
                     Logger.LogError($"Error while recording score: {e.Message}\n{e.StackTrace}");
                     listener?.SetFinished();
+                    return null;
                 }
             });
         }

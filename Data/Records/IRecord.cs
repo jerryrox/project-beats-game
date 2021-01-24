@@ -10,6 +10,11 @@ namespace PBGame.Data.Records
     public interface IRecord
     {
         /// <summary>
+        /// Returns the ID of this record.
+        /// </summary>
+        Guid Id { get; }
+
+        /// <summary>
         /// Returns the ID of the user who made this record.
         /// </summary>
         Guid UserId { get; }

@@ -58,6 +58,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         [ReceivesDependency]
         private ITemporaryStore TemporaryStore { get; set; }
 
+        [ReceivesDependency]
+        private IRecordStore RecordStore { get; set; }
+
 
         public LocalPlayerInputter(HitBarDisplay hitBar, HitObjectHolder hitObjectHolder)
         {
@@ -362,6 +365,16 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             keyRecycler = null;
             pointerEvent = null;
             raycastResults = null;
+
+            if (replayFile != null)
+            {
+                var lastRecord = Model.LastRecord;
+                if (lastRecord != null && lastRecord.IsClear)
+                {
+                    var replayFileDest = RecordStore.GetReplayFile(lastRecord);
+                    replayFile.MoveTo(replayFileDest.FullName);
+                }
+            }
 
             GameSession.OnSoftInit -= OnSoftInit;
             GameSession.OnSoftDispose -= OnSoftDispose;
