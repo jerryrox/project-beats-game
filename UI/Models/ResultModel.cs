@@ -22,6 +22,7 @@ namespace PBGame.UI.Models
     {
         private Bindable<IPlayableMap> map = new Bindable<IPlayableMap>();
         private Bindable<IRecord> record = new Bindable<IRecord>();
+        private BindableBool allowsRetry = new BindableBool(true);
 
         private HitTiming hitTiming;
 
@@ -45,6 +46,11 @@ namespace PBGame.UI.Models
         /// Returns whether unicode is preferred.
         /// </summary>
         public IReadOnlyBindable<bool> PreferUnicode => GameConfiguration.PreferUnicode;
+
+        /// <summary>
+        /// Returns whether retry button should be enabled.
+        /// </summary>
+        public IReadOnlyBindable<bool> AllowsRetry => allowsRetry;
 
         /// <summary>
         /// Returns the mode service instance suitable for the current map.
@@ -117,8 +123,10 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Initializes states for specified map and record.
         /// </summary>
-        public void Setup(IPlayableMap map, IRecord record)
+        public void Setup(IPlayableMap map, IRecord record, bool allowRetry = true)
         {
+            allowsRetry.Value = allowRetry;
+
             SetMap(map);
             SetRecord(record);
         }

@@ -193,7 +193,7 @@ namespace PBGame.UI.Models
         public void NavigateToResults(IRecord record)
         {
             var resultScreen = ScreenNavigator.Show<ResultScreen>();
-            resultScreen.Model.Setup(SelectedMap.Value, record);
+            resultScreen.Model.Setup(SelectedMap.Value, record, allowRetry: false);
         }
 
         /// <summary>
