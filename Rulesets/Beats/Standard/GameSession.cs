@@ -8,6 +8,8 @@ namespace PBGame.Rulesets.Beats.Standard
 {
     public class GameSession : Rulesets.GameSession<HitObject> {
 
+        private GameModuleProvider moduleProvider;
+
         // TODO: Support for different types of game inputter.
         private IGameInputter gameInputter;
 
@@ -19,6 +21,9 @@ namespace PBGame.Rulesets.Beats.Standard
         [InitWithDependency]
         private void Init()
         {
+            moduleProvider = new GameModuleProvider(Dependencies);
+            Dependencies.Cache(moduleProvider);
+
             base.OnHardInit += () =>
             {
                 InitInputter();
@@ -39,17 +44,12 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         private void InitInputter()
         {
-            var playArea = Dependencies.Get<PlayAreaContainer>();
-            var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
-            var touchEffectDisplay = Dependencies.Get<TouchEffectDisplay>();
-
-            // TODO: Determine whether it's a player-controlled session.
             // Initialize inputter
-            var localPlayerInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
-            Dependencies.Inject(localPlayerInputter);
-            gameInputter = localPlayerInputter;
+            var inputter = moduleProvider.GetGameInputter();
 
             // Pass inputter to dependencies.
+            var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
+            var touchEffectDisplay = Dependencies.Get<TouchEffectDisplay>();
             hitObjectHolder.SetInputter(gameInputter);
             touchEffectDisplay.SetInputter(gameInputter);
         }
