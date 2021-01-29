@@ -79,6 +79,7 @@ namespace PBGame.UI.Components.Result
             base.OnEnableInited();
 
             Model.AllowsRetry.BindAndTrigger(OnAllowsRetryChanged);
+            Model.HasReplay.BindAndTrigger(OnHasReplayChanged);
         }
         
         protected override void OnDisable()
@@ -86,6 +87,7 @@ namespace PBGame.UI.Components.Result
             base.OnDisable();
 
             Model.AllowsRetry.Unbind(OnAllowsRetryChanged);
+            Model.HasReplay.Unbind(OnHasReplayChanged);
         }
 
         /// <summary>
@@ -94,6 +96,14 @@ namespace PBGame.UI.Components.Result
         private void OnAllowsRetryChanged(bool allowsRetry)
         {
             retryButton.Active = allowsRetry;
+        }
+
+        /// <summary>
+        /// Event called when the replay existence flag has changed.
+        /// </summary>
+        private void OnHasReplayChanged(bool hasReplay)
+        {
+            replayButton.Active = hasReplay;
         }
     }
 }
