@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.UI.Models;
 using PBGame.UI.Components.Result;
 using PBGame.UI.Components.Common;
@@ -8,7 +5,6 @@ using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.UI.Navigations.Screens
 {

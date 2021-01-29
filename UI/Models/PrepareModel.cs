@@ -188,6 +188,15 @@ namespace PBGame.UI.Models
         }
 
         /// <summary>
+        /// Navigates away to the results screen to view the specified record.
+        /// </summary>
+        public void NavigateToResults(IRecord record)
+        {
+            var resultScreen = ScreenNavigator.Show<ResultScreen>();
+            resultScreen.Model.Setup(SelectedMap.Value, record);
+        }
+
+        /// <summary>
         /// Sets the type of rank display source.
         /// </summary>
         public void SetRankDisplay(RankDisplayType type)
