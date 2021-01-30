@@ -161,8 +161,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             // }
 
             replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxTouchCount * 60, 500);
-            for (int i = 0; i < replayInputWriter.RawBuffer.Length; i++)
-                replayInputWriter.RawBuffer[i] = new ReplayableInput();
             task.SetFinished();
         }
 
@@ -171,9 +169,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void RecordInputData(float curTime, ICursor cursor)
         {
-            var nextData = replayInputWriter.RawBuffer[replayInputWriter.NextPushIndex];
+            var nextData = replayInputWriter.NextWriteItem;
             nextData.SetFromCursor(curTime, cursor);
-            replayInputWriter.PushData(nextData);
+            replayInputWriter.WriteData(nextData);
         }
 
         /// <summary>
