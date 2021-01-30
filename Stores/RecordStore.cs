@@ -101,6 +101,11 @@ namespace PBGame.Stores
             return new FileInfo(Path.Combine(replayDirectory.FullName, $"{record.Id.ToString()}.replay"));
         }
 
+        public bool HasReplayData(IRecord record)
+        {
+            return GetReplayFile(record).Exists;
+        }
+
         protected override IDatabase<Record> CreateDatabase()
         {
             return new Database<Record>(GameDirectory.Records);

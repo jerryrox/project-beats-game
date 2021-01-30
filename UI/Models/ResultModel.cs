@@ -5,6 +5,7 @@ using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
 using PBGame.Maps;
 using PBGame.Data.Records;
+using PBGame.Stores;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
@@ -22,6 +23,8 @@ namespace PBGame.UI.Models
     {
         private Bindable<IPlayableMap> map = new Bindable<IPlayableMap>();
         private Bindable<IRecord> record = new Bindable<IRecord>();
+        private BindableBool allowsRetry = new BindableBool(true);
+        private BindableBool hasReplay = new BindableBool(false);
 
         private HitTiming hitTiming;
 
@@ -47,6 +50,16 @@ namespace PBGame.UI.Models
         public IReadOnlyBindable<bool> PreferUnicode => GameConfiguration.PreferUnicode;
 
         /// <summary>
+        /// Returns whether retry button should be enabled.
+        /// </summary>
+        public IReadOnlyBindable<bool> AllowsRetry => allowsRetry;
+
+        /// <summary>
+        /// Returns whether there is a replay data for the current record.
+        /// </summary>
+        public IReadOnlyBindable<bool> HasReplay => hasReplay;
+
+        /// <summary>
         /// Returns the mode service instance suitable for the current map.
         /// </summary>
         private IModeService ModeService => ModeManager.GetService(map.Value.PlayableMode);
@@ -56,6 +69,9 @@ namespace PBGame.UI.Models
 
         [ReceivesDependency]
         private IModeManager ModeManager { get; set; }
+
+        [ReceivesDependency]
+        private IRecordStore RecordStore { get; set; }
 
         [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
@@ -117,10 +133,14 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Initializes states for specified map and record.
         /// </summary>
-        public void Setup(IPlayableMap map, IRecord record)
+        public void Setup(IPlayableMap map, IRecord record, bool allowRetry = true)
         {
+            allowsRetry.Value = allowRetry;
+
             SetMap(map);
             SetRecord(record);
+
+            hasReplay.Value = RecordStore.HasReplayData(record);
         }
 
         /// <summary>

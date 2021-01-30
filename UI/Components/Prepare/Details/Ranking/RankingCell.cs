@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using PBGame.UI.Models;
+using PBGame.UI.Components.Common;
 using PBGame.Data.Rankings;
 using PBGame.Graphics;
 using PBGame.Rulesets;
@@ -12,8 +14,9 @@ using UnityEngine;
 
 namespace PBGame.UI.Components.Prepare.Details.Ranking
 {
-    public class RankingCell : UguiSprite, IListItem {
+    public class RankingCell : HoverableTrigger, IListItem {
 
+        private ISprite bgSprite;
         private ILabel rank;
         private IGraphicObject scoreHolder;
         private ILabel rankIcon;
@@ -26,6 +29,8 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         private IGrid judgementGrid;
         private List<ILabel> judgementLabels = new List<ILabel>();
 
+        private RankInfo myRank;
+
 
         public int ItemIndex { get; set; }
 
@@ -34,8 +39,11 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// </summary>
         public bool IsEvenCell
         {
-            set => Alpha = value ? 0.0625f : 0f;
+            set => bgSprite.Alpha = value ? 0.0625f : 0f;
         }
+
+        [ReceivesDependency]
+        private PrepareModel Model { get; set; }
 
         [ReceivesDependency]
         private IModeManager ModeManager { get; set; }
@@ -47,19 +55,29 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         [InitWithDependency]
         private void Init()
         {
-            Alpha = 0f;
+            OnTriggered += () =>
+            {
+                if(myRank != null)
+                    Model.NavigateToResults(myRank.Record);
+            };
 
-            rank = CreateChild<Label>("rank", 0);
+            bgSprite = CreateChild<UguiSprite>("bg", -1);
+            {
+                bgSprite.Alpha = 0f;
+                bgSprite.Anchor = AnchorType.Fill;
+                bgSprite.Offset = Offset.Zero;
+            }
+            rank = CreateChild<Label>("rank");
             {
                 SetupLabelStyle(rank);
             }
-            scoreHolder = CreateChild<UguiObject>("score-holder", 1);
+            scoreHolder = CreateChild<UguiObject>("score-holder");
             {
                 scoreHolder.Anchor = AnchorType.CenterStretch;
                 scoreHolder.Pivot = PivotType.Left;
                 scoreHolder.SetOffsetVertical(0f);
 
-                rankIcon = scoreHolder.CreateChild<Label>("icon", 0);
+                rankIcon = scoreHolder.CreateChild<Label>("icon");
                 {
                     rankIcon.Anchor = AnchorType.LeftStretch;
                     rankIcon.Pivot = PivotType.Left;
@@ -69,25 +87,25 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
                     rankIcon.IsBold = true;
                     rankIcon.SetOffsetVertical(0f);
                 }
-                score = scoreHolder.CreateChild<Label>("score", 1);
+                score = scoreHolder.CreateChild<Label>("score");
                 {
                     SetupLabelStyle(score);
                     score.X = -5f;
                 }
             }
-            accuracy = CreateChild<Label>("acc", 2);
+            accuracy = CreateChild<Label>("acc");
             {
                 SetupLabelStyle(accuracy);
             }
-            username = CreateChild<Label>("username", 3);
+            username = CreateChild<Label>("username");
             {
                 SetupLabelStyle(username);
             }
-            maxCombo = CreateChild<Label>("max-combo", 4);
+            maxCombo = CreateChild<Label>("max-combo");
             {
                 SetupLabelStyle(maxCombo);
             }
-            judgementGrid = CreateChild<UguiGrid>("judgements", 5);
+            judgementGrid = CreateChild<UguiGrid>("judgements");
             {
                 judgementGrid.Anchor = AnchorType.CenterStretch;
                 judgementGrid.Pivot = PivotType.Right;
@@ -104,10 +122,12 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
                     judgementLabels.Add(label);
                 }
             }
-            mods = CreateChild<Label>("mods", 6);
+            mods = CreateChild<Label>("mods");
             {
                 SetupLabelStyle(mods);
             }
+
+            UseDefaultHoverAni();
         }
 
         /// <summary>
@@ -135,8 +155,9 @@ namespace PBGame.UI.Components.Prepare.Details.Ranking
         /// </summary>
         public void SetRank(RankInfo info)
         {
-            var record = info.Record;
+            myRank = info;
 
+            var record = myRank.Record;
             rank.Text = $"#{info.Rank}";
             rankIcon.Text = record.Rank.ToDisplayedString();
             rankIcon.Color = ColorPreset.GetRankColor(record.Rank);
