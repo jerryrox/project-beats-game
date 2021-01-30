@@ -66,11 +66,14 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public string ToStreamData()
         {
-            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}\n";
+            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}";
         }
 
         public void FromStreamData(string data)
         {
+            if (data.Length == 0)
+                return;
+
             Func<string, Vector2> parseVector = (string rawData) =>
             {
                 int commaInx = rawData.IndexOf(',');

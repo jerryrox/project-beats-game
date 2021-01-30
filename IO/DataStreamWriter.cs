@@ -109,7 +109,7 @@ namespace PBGame.IO
                         break;
 
                     var item = pool[curCount % poolSize];
-                    myStream.Write(item.ToStreamData());
+                    myStream.WriteLine(item.ToStreamData());
                     curCount++;
                 }
             };
