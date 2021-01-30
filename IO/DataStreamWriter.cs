@@ -7,7 +7,7 @@ namespace PBGame.IO
     /// <summary>
     /// Class which saves incoming data as a stream to the destination file.
     /// </summary>
-    public class DataStreamSaver<T>
+    public class DataStreamWriter<T>
         where T : IStreamableData
     {
         private int poolSize;
@@ -34,7 +34,7 @@ namespace PBGame.IO
         public int NextPushIndex => dataCount % poolSize;
 
 
-        public DataStreamSaver(int poolSize, int saveInterval = 60)
+        public DataStreamWriter(int poolSize, int saveInterval = 60)
         {
             this.poolSize = poolSize;
             this.saveInterval = saveInterval;
@@ -53,7 +53,7 @@ namespace PBGame.IO
             if (!writer.BaseStream.CanWrite)
                 throw new Exception("The specified stream cannot be written to.");
             if (this.writer != null)
-                throw new Exception("There is already a writer initialized to the saver.");
+                throw new Exception("There is already a writer initialized to the writer.");
 
             this.writer = writer;
             isStarted = true;

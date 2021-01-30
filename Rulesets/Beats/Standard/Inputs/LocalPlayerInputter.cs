@@ -32,7 +32,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private PointerEventData pointerEvent;
         private List<RaycastResult> raycastResults = new List<RaycastResult>();
 
-        private DataStreamSaver<ReplayableInput> replayInputSaver;
+        private DataStreamWriter<ReplayableInput> replayInputWriter;
         private FileInfo replayFile;
         private StreamWriter replayWriteStream;
 
@@ -83,8 +83,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
             pointerEvent = new PointerEventData(Root3D.EventSystem);
 
-            // Initialize replay input saver via another task due to potential spike in fps.
-            Model.AddAsLoader(new ManualTask(InitReplayInputSaver));
+            // Initialize replay input writer via another task due to potential spike in fps.
+            Model.AddAsLoader(new ManualTask(InitReplayInputWriter));
         }
 
         public bool ProcessInput()
@@ -132,7 +132,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     }
 
                     // Record replay input data
-                    if (replayInputSaver != null)
+                    if (replayInputWriter != null)
                         RecordInputData(curTime, cursor);
                 }
             }
@@ -150,9 +150,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         void IInputReceiver.PrepareInputSort() { }
 
         /// <summary>
-        /// Initializes the replay input saver instance.
+        /// Initializes the replay input writer instance.
         /// </summary>
-        private void InitReplayInputSaver(ManualTask task)
+        private void InitReplayInputWriter(ManualTask task)
         {
             // TODO: Handle only if saving replay option is enabled.
             // {
@@ -160,9 +160,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             //     return;
             // }
 
-            replayInputSaver = new DataStreamSaver<ReplayableInput>(InputManager.MaxTouchCount * 60, 500);
-            for (int i = 0; i < replayInputSaver.RawBuffer.Length; i++)
-                replayInputSaver.RawBuffer[i] = new ReplayableInput();
+            replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxTouchCount * 60, 500);
+            for (int i = 0; i < replayInputWriter.RawBuffer.Length; i++)
+                replayInputWriter.RawBuffer[i] = new ReplayableInput();
             task.SetFinished();
         }
 
@@ -171,9 +171,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         private void RecordInputData(float curTime, ICursor cursor)
         {
-            var nextData = replayInputSaver.RawBuffer[replayInputSaver.NextPushIndex];
+            var nextData = replayInputWriter.RawBuffer[replayInputWriter.NextPushIndex];
             nextData.SetFromCursor(curTime, cursor);
-            replayInputSaver.PushData(nextData);
+            replayInputWriter.PushData(nextData);
         }
 
         /// <summary>
@@ -326,12 +326,12 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         {
             InputManager.AddReceiver(this);
             
-            // Setup input saver
-            if (replayInputSaver != null)
+            // Setup input writer
+            if (replayInputWriter != null)
             {
                 replayFile = TemporaryStore.GetReplayDataFile(Guid.NewGuid().ToString());
                 replayWriteStream = new StreamWriter(replayFile.OpenWrite());
-                replayInputSaver.StartStream(replayWriteStream);
+                replayInputWriter.StartStream(replayWriteStream);
             }
         }
 
@@ -345,8 +345,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             raycastResults.Clear();
             InputManager.RemoveReceiver(this);
 
-            if (replayInputSaver != null)
-                replayInputSaver.StopStream();
+            if (replayInputWriter != null)
+                replayInputWriter.StopStream();
             if (replayWriteStream != null)
                 replayWriteStream.Dispose();
             replayWriteStream = null;
