@@ -96,11 +96,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             if (replayWriteStream != null)
                 replayWriteStream.Dispose();
             replayWriteStream = null;
-        }
-
-        protected override void OnHardDispose()
-        {
-            base.OnHardDispose();
 
             if (replayFile != null)
             {
