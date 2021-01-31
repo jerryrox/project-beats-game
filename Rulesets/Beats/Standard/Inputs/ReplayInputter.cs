@@ -1,11 +1,13 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.UI;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBFramework.Inputs;
 using PBFramework.Dependencies;
+using UnityEngine;
 
 namespace PBGame.Rulesets.Beats.Standard.Inputs
 {
@@ -13,6 +15,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
     {
         private StreamReader replayStream;
         private DataStreamReader<ReplayableInput> replayReader;
+
+        private Dictionary<KeyCode, ReplayableInput> playbackInputs = new Dictionary<KeyCode, ReplayableInput>();
 
 
         public int InputLayer => InputLayers.GameScreenComponents;
@@ -42,16 +46,18 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             {
                 while (true)
                 {
-                    var input = replayReader.PeekData();
-                    if (input == null || input.Time > curTime)
+                    var rawInput = replayReader.PeekData();
+                    if (rawInput == null || rawInput.Time > curTime)
                         break;
 
-                    if (input.State.Value == InputState.Press)
+                    var playbackInput = GetPlaybackInput(rawInput);
+
+                    if (playbackInput.State.Value == InputState.Press)
                     {
-                        if (!hitBarCursor.IsActive && IsOnHitBar(input, out float pos))
-                            TriggerCursorPress(input, pos);
+                        if (!hitBarCursor.IsActive && IsOnHitBar(playbackInput, out float pos))
+                            TriggerCursorPress(playbackInput, pos);
                         else
-                            TriggerKeyPress(input, input);
+                            TriggerKeyPress(playbackInput, playbackInput);
                     }
                     replayReader.AdvanceIndex();
                 }
@@ -84,5 +90,17 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         void IInputReceiver.PrepareInputSort() { }
 
+        /// <summary>
+        /// Returns the ReplayableInput instance for playback.
+        /// </summary>
+        private ReplayableInput GetPlaybackInput(ReplayableInput rawInput)
+        {
+            ReplayableInput input = null;
+            if (!playbackInputs.TryGetValue(rawInput.Key, out input))
+                playbackInputs.Add(rawInput.Key, input = new ReplayableInput());
+
+            input.SetFromCursor(rawInput.Time, rawInput);
+            return input;
+        }
     }
 }
