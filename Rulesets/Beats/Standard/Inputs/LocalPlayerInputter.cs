@@ -59,7 +59,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     }
 
                     // Record replay input data
-                    if (replayInputWriter != null)
+                    if (replayInputWriter != null && cursor.IsActive.Value)
                         RecordInputData(curTime, cursor);
                 }
             }
