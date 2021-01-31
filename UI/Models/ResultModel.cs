@@ -126,6 +126,7 @@ namespace PBGame.UI.Models
                 {
                     Map = Map.Value,
                     ReplayFile = replayFile,
+                    Record = record.Value,
                 });
             }
         }

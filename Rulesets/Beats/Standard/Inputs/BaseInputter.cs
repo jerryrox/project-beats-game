@@ -200,7 +200,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Triggers a new hit bar cursor aiming event.
         /// </summary>
-        protected void TriggerCursorPress(ICursor cursor, float pos)
+        protected void TriggerCursorPress(float time, ICursor cursor, float pos)
         {
             hitBarCursor.OnRecycleNew();
             hitBarCursor.Input = cursor;
@@ -209,13 +209,13 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
             // Cursor press should be treated as key stroke
             // TODO: This can be overridden by configurations.
-            TriggerKeyPress(cursor);
+            TriggerKeyPress(time, cursor);
         }
 
         /// <summary>
         /// Triggers a new key stroke press event for specified input.
         /// </summary>
-        protected void TriggerKeyPress(IInput input, ICursor cursor = null)
+        protected void TriggerKeyPress(float time, IInput input, ICursor cursor = null)
         {
             var beatsKey = keyRecycler.GetNext();
             beatsKey.Input = input;
@@ -225,7 +225,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 beatsKey.SetHitCursor(hitBarCursor);
 
             InvokeKeyPress(beatsKey);
-            JudgeKeyPress(beatsKey);
+            JudgeKeyPress(time, beatsKey);
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Judges the specified key press against hit objects.
         /// </summary>
-        private void JudgeKeyPress(BeatsKey key)
+        private void JudgeKeyPress(float time, BeatsKey key)
         {
             // Return if no cursor is active.
             if(!hitBarCursor.IsActive)
@@ -266,7 +266,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     // Associate the hit object view with the key stroke.
                     if(objView is DraggerView draggerView)
                         key.DraggerView = draggerView;
-                    AddJudgement(objView.JudgeInput(hitObjectHolder.CurrentTime, key.Input));
+                    AddJudgement(objView.JudgeInput(time, key.Input));
                     break;
                 }
             }

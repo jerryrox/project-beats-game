@@ -126,12 +126,17 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Makes the user exit the game with a clear result.
         /// </summary>
-        public void ExitGameWithClear() => ExitTo<ResultScreen>();
+        public void ExitGameToResult()
+        {
+            var record = currentParameter.Record ?? lastRecord;
+            var screen = ScreenNavigator.Show<ResultScreen>();
+            screen.Model.Setup(currentParameter.Map, record);
+        }
 
         /// <summary>
         /// Makes the user exit the game back to preparation screen.
         /// </summary>
-        public void ExitGameForceful() => ExitTo<PrepareScreen>();
+        public void ExitGameForceful() => ScreenNavigator.Show<PrepareScreen>();
 
         /// <summary>
         /// Records the specified play record under the current player.
@@ -203,18 +208,6 @@ namespace PBGame.UI.Models
             currentParameter = null;
             currentModeService = null;
             lastRecord = null;
-        }
-
-        /// <summary>
-        /// Makes the user exit to the specified screen.
-        /// </summary>
-        private void ExitTo<T>()
-            where T : MonoBehaviour, INavigationView
-        {
-            var record = lastRecord;
-            var screen = ScreenNavigator.Show<T>();
-            if (screen is ResultScreen resultScreen)
-                resultScreen.Model.Setup(currentParameter.Map, record);
         }
 
         /// <summary>

@@ -271,7 +271,7 @@ namespace PBGame.Rulesets
                 {
                     Limit = 2f,
                 };
-                autoExitTimer.OnFinished += Model.ExitGameWithClear;
+                autoExitTimer.OnFinished += Model.ExitGameToResult;
                 autoExitTimer.Start();
             });
 

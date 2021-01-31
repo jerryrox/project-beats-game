@@ -55,9 +55,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     if (playbackInput.State.Value == InputState.Press)
                     {
                         if (!hitBarCursor.IsActive && IsOnHitBar(playbackInput, out float pos))
-                            TriggerCursorPress(playbackInput, pos);
+                            TriggerCursorPress(playbackInput.Time, playbackInput, pos);
                         else
-                            TriggerKeyPress(playbackInput, playbackInput);
+                            TriggerKeyPress(playbackInput.Time, playbackInput, playbackInput);
                     }
                     replayReader.AdvanceIndex();
                 }

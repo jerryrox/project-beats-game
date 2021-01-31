@@ -52,10 +52,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     {
                         // If hit on the hit bar, register this as a new BeatsCursor.
                         if (!hitBarCursor.IsActive && IsOnHitBar(cursor, out float pos))
-                            TriggerCursorPress(cursor, pos);
+                            TriggerCursorPress(curTime, cursor, pos);
                         // If not hit on hit bar, this is treated as a key stoke.
                         else
-                            TriggerKeyPress(cursor, cursor);
+                            TriggerKeyPress(curTime, cursor, cursor);
                     }
 
                     // Record replay input data
