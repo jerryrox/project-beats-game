@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.UI;
 using PBGame.Rulesets.Beats.Standard.UI;
@@ -26,8 +24,12 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         public ReplayInputter(FileInfo replayFile, HitBarDisplay hitBar, HitObjectHolder hitObjectHolder) : base(hitBar, hitObjectHolder)
         {
             base.replayFile = replayFile;
+        }
 
-            replayReader = new DataStreamReader<ReplayableInput>(InputManager.MaxTouchCount * 60, readInterval: 500);
+        [InitWithDependency]
+        private void Init()
+        {
+            replayReader = new DataStreamReader<ReplayableInput>(InputManager.MaxCursorCount * 60, readInterval: 500);
         }
 
         public bool ProcessInput()

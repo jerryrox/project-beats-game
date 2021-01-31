@@ -184,7 +184,10 @@ namespace PBGame.UI.Models
         public void NavigateToGame()
         {
             ScreenNavigator.Hide<PrepareScreen>();
-            OverlayNavigator.Show<GameLoadOverlay>();
+            OverlayNavigator.Show<GameLoadOverlay>().Model.StartLoad(new GameParameter()
+            {
+                Map = SelectedMap.Value,
+            });
         }
 
         /// <summary>

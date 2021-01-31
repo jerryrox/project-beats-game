@@ -123,7 +123,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             //     return;
             // }
 
-            replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxTouchCount * 60, writeInterval: 500);
+            replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxCursorCount * 60, writeInterval: 500);
         }
 
         /// <summary>

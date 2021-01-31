@@ -25,7 +25,7 @@ namespace PBGame.UI.Models
         private List<ITask> gameLoaders = new List<ITask>();
         private MultiTask gameLoader;
 
-        private IPlayableMap currentMap;
+        private GameParameter currentParameter;
         private IModeService currentModeService;
         private IGameSession currentSession;
         private IRecord lastRecord;
@@ -88,19 +88,19 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Starts loading the game for the specified map and mode service.
         /// </summary>
-        public void LoadGame(IPlayableMap map, IModeService modeService)
+        public void LoadGame(GameParameter parameter, IModeService modeService)
         {
             if(loadState.Value != GameLoadState.Idle)
                 return;
-            if(!ValidateLoadParams(map, modeService))
+            if(!ValidateLoadParams(parameter.Map, modeService))
                 return;
 
             loadState.Value = GameLoadState.Loading;
 
-            currentMap = map;
+            currentParameter = parameter;
             currentModeService = modeService;
 
-            InitSession();
+            InitSession(parameter);
             CleanUpResources();
             
             InitLoader();
@@ -149,6 +149,7 @@ namespace PBGame.UI.Models
                     }
 
                     // Retrieve user and user stats.
+                    var currentMap = currentParameter.Map;
                     var user = UserManager.CurrentUser.Value;
                     var userStats = user.GetStatistics(currentMap.PlayableMode);
 
@@ -199,7 +200,7 @@ namespace PBGame.UI.Models
             DisposeSession();
             DisposeLoader();
 
-            currentMap = null;
+            currentParameter = null;
             currentModeService = null;
             lastRecord = null;
         }
@@ -213,7 +214,7 @@ namespace PBGame.UI.Models
             var record = lastRecord;
             var screen = ScreenNavigator.Show<T>();
             if (screen is ResultScreen resultScreen)
-                resultScreen.Model.Setup(currentMap, record);
+                resultScreen.Model.Setup(currentParameter.Map, record);
         }
 
         /// <summary>
@@ -227,13 +228,13 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Initializes a new game session and starts loading the game.
         /// </summary>
-        private void InitSession()
+        private void InitSession(GameParameter parameter)
         {
             if(currentSession != null)
                 throw new InvalidOperationException("Attempted to initialize a redundant game session.");
 
             currentSession = currentModeService.GetSession(Screen, Dependency);
-            currentSession.SetMap(currentMap);
+            currentSession.SetParameter(parameter);
             currentSession.InvokeHardInit();
         }
 

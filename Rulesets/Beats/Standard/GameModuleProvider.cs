@@ -20,16 +20,23 @@ namespace PBGame.Rulesets.Beats.Standard
         /// <summary>
         /// Returns the game inputter instance suitable for current game state.
         /// </summary>
-        public IGameInputter GetGameInputter()
+        public IGameInputter GetGameInputter(GameParameter parameter)
         {
-            // TODO: Check if replay.
-
-
             var playArea = dependency.Get<PlayAreaContainer>();
             var hitObjectHolder = dependency.Get<HitObjectHolder>();
-            var localInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
-            dependency.Inject(localInputter);
-            return localInputter;
+
+            if (parameter.IsReplay)
+            {
+                var replayInputter = new ReplayInputter(parameter.ReplayFile, playArea.HitBar, hitObjectHolder);
+                dependency.Inject(replayInputter);
+                return replayInputter;
+            }
+            else
+            {
+                var localInputter = new LocalPlayerInputter(playArea.HitBar, hitObjectHolder);
+                dependency.Inject(localInputter);
+                return localInputter;
+            }
         }
     }
 }

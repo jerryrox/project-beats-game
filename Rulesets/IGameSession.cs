@@ -56,6 +56,11 @@ namespace PBGame.Rulesets
 
 
         /// <summary>
+        /// The current parameter being used to play the session.
+        /// </summary>
+        GameParameter CurrentParameter { get; }
+
+        /// <summary>
         /// Returns the store for loading map assets.
         /// </summary>
         MapAssetStore MapAssetStore { get; }
@@ -97,9 +102,9 @@ namespace PBGame.Rulesets
         int GetPlayTime();
 
         /// <summary>
-        /// Sets the map to play.
+        /// Sets the parameter of the gameplay session.
         /// </summary>
-        void SetMap(IPlayableMap map);
+        void SetParameter(GameParameter parameter);
 
         /// <summary>
         /// Invokes hard initialization event.
