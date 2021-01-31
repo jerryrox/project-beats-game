@@ -1,17 +1,11 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
 using PBGame.UI;
-using PBGame.UI.Models;
 using PBGame.IO;
 using PBGame.Stores;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
-using PBGame.Rulesets.Judgements;
-using PBGame.Graphics;
 using PBFramework.Inputs;
-using PBFramework.Threading;
-using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine.EventSystems;
 
@@ -35,46 +29,20 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
 
         public LocalPlayerInputter(HitBarDisplay hitBar, HitObjectHolder hitObjectHolder) : base(hitBar, hitObjectHolder)
-        {
-        }
+        { }
 
         [InitWithDependency]
         private void Init()
         {
-            pointerEvent = new PointerEventData(Root3D.EventSystem);
-
             InitReplayInputWriter();
         }
 
         public bool ProcessInput()
         {
             float curTime = hitObjectHolder.CurrentTime;
-                
-            // Process beats cursor aiming.
-            if (hitBarCursor.IsActive)
-            {
-                // Aiming on hit bar?
-                if (IsOnHitBar(hitBarCursor.Input, out float pos))
-                {
-                    hitBarCursor.HitBarPos = pos;
-                    hitBarCursor.IsOnHitBar.Value = true;
-                }
-                else
-                {
-                    hitBarCursor.IsOnHitBar.Value = false;
-                }
 
-                // Check all key strokes whether the cursor is within the hit object boundary.
-                foreach (var key in keyRecycler.ActiveObjects)
-                {
-                    if (key.IsActive && key.DraggerView != null)
-                    {
-                        key.DraggerView.StartCircle.SetHold(key.DraggerView.IsCursorInRange(pos), curTime);
-                    }
-                }
-            }
+            UpdateInputs(curTime);
 
-            // Process new input presses only if not paused.
             if (!GameSession.IsPaused)
             {
                 var cursors = InputManager.GetCursors();
@@ -155,7 +123,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             //     return;
             // }
 
-            replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxTouchCount * 60, 500);
+            replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxTouchCount * 60, writeInterval: 500);
         }
 
         /// <summary>

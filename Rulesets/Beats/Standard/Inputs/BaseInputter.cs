@@ -65,12 +65,44 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             GameSession.OnSoftInit += OnSoftInit;
             GameSession.OnSoftDispose += OnSoftDispose;
             GameSession.OnHardDispose += OnHardDispose;
+
+            pointerEvent = new PointerEventData(Root3D.EventSystem);
         }
 
         public void JudgePassive(float curTime, HitObjectView view)
         {
             foreach(var judgement in view.JudgePassive(curTime))
                 AddJudgement(judgement);
+        }
+
+        /// <summary>
+        /// Performs update logic for all the active inputs.
+        /// </summary>
+        protected void UpdateInputs(float curTime)
+        {
+            // Process beats cursor aiming.
+            if (hitBarCursor.IsActive)
+            {
+                // Aiming on hit bar?
+                if (IsOnHitBar(hitBarCursor.Input, out float pos))
+                {
+                    hitBarCursor.HitBarPos = pos;
+                    hitBarCursor.IsOnHitBar.Value = true;
+                }
+                else
+                {
+                    hitBarCursor.IsOnHitBar.Value = false;
+                }
+
+                // Check all key strokes whether the cursor is within the hit object boundary.
+                foreach (var key in keyRecycler.ActiveObjects)
+                {
+                    if (key.IsActive && key.DraggerView != null)
+                    {
+                        key.DraggerView.StartCircle.SetHold(key.DraggerView.IsCursorInRange(pos), curTime);
+                    }
+                }
+            }
         }
 
         /// <summary>
