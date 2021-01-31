@@ -69,7 +69,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             pointerEvent = new PointerEventData(Root3D.EventSystem);
         }
 
-        public void JudgePassive(float curTime, HitObjectView view)
+        public virtual void JudgePassive(float curTime, HitObjectView view)
         {
             foreach(var judgement in view.JudgePassive(curTime))
                 AddJudgement(judgement);
