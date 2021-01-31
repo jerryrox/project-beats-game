@@ -118,7 +118,17 @@ namespace PBGame.UI.Models
         /// </summary>
         public void Replay()
         {
-            // TODO:
+            var replayFile = RecordStore.GetReplayFile(record.Value);
+            if (replayFile != null && replayFile.Exists)
+            {
+                ScreenNavigator.Hide<ResultScreen>();
+                OverlayNavigator.Show<GameLoadOverlay>().Model.StartLoad(new GameParameter()
+                {
+                    Map = Map.Value,
+                    ReplayFile = replayFile,
+                    Record = record.Value,
+                });
+            }
         }
 
         /// <summary>
@@ -127,7 +137,10 @@ namespace PBGame.UI.Models
         public void Retry()
         {
             ScreenNavigator.Hide<ResultScreen>();
-            OverlayNavigator.Show<GameLoadOverlay>();
+            OverlayNavigator.Show<GameLoadOverlay>().Model.StartLoad(new GameParameter()
+            {
+                Map = Map.Value,
+            });
         }
 
         /// <summary>

@@ -7,37 +7,31 @@ namespace PBGame.IO
     /// <summary>
     /// Class which saves incoming data as a stream to the destination file.
     /// </summary>
-    public class DataStreamSaver<T>
-        where T : IStreamableData
+    public class DataStreamWriter<T>
+        where T : class, IStreamableData, new()
     {
         private int poolSize;
-        private int saveInterval;
+        private int writeInterval;
         private T[] pool;
 
         private StreamWriter writer;
         private Thread streamingThread;
         private bool isStarted = false;
-        private int dataCount = 0;
+        private int writeCount = 0;
 
         private object locker = new object();
 
 
         /// <summary>
-        /// Returns the raw value array.
-        /// This shouldn't be modified unless you know what you're doing.
+        /// Returns the next item in the internal buffer where the next data will be set to.
         /// </summary>
-        public T[] RawBuffer => pool;
-
-        /// <summary>
-        /// Returns the next index of the internal buffer where the next data will be set to.
-        /// </summary>
-        public int NextPushIndex => dataCount % poolSize;
+        public T NextWriteItem => pool[writeCount % poolSize];
 
 
-        public DataStreamSaver(int poolSize, int saveInterval = 60)
+        public DataStreamWriter(int poolSize, int writeInterval = 60)
         {
             this.poolSize = poolSize;
-            this.saveInterval = saveInterval;
+            this.writeInterval = writeInterval;
             this.pool = new T[poolSize];
         }
 
@@ -48,12 +42,10 @@ namespace PBGame.IO
         {
             if (writer == null)
                 throw new ArgumentNullException(nameof(writer));
-            if (writer.BaseStream == null)
-                throw new Exception("The base stream of specifier writer is null.");
             if (!writer.BaseStream.CanWrite)
                 throw new Exception("The specified stream cannot be written to.");
             if (this.writer != null)
-                throw new Exception("There is already a writer initialized to the saver.");
+                throw new Exception("There is already a writer initialized to this instance.");
 
             this.writer = writer;
             isStarted = true;
@@ -72,29 +64,35 @@ namespace PBGame.IO
             if (streamingThread != null)
                 streamingThread.Join();
             streamingThread = null;
-            dataCount = 0;
+            writeCount = 0;
         }
 
         /// <summary>
-        /// Pushes the specified data to stream.
+        /// Writes the specified data to stream.
         /// </summary>
-        public void PushData(T data)
+        public void WriteData(T data)
         {
             if (writer == null)
-                throw new Exception("There is no stream to push the data to.");
+                throw new Exception("There is no stream to write the data to.");
 
             lock (locker)
             {
-                pool[dataCount % poolSize] = data;
-                dataCount++;
+                pool[writeCount % poolSize] = data;
+                writeCount++;
             }
         }
 
         /// <summary>
-        /// Handles the actual saving of the incoming data.
+        /// Handles the actual writing of the incoming data.
         /// </summary>
         private void HandleStreaming(object writer)
         {
+            for (int i = 0; i < pool.Length; i++)
+            {
+                if (pool[i] == null)
+                    pool[i] = new T();
+            }
+
             var myStream = writer as StreamWriter;
             int curCount = 0;
 
@@ -103,7 +101,7 @@ namespace PBGame.IO
                 int targetCount = 0;
                 lock (locker)
                 {
-                    targetCount = dataCount;
+                    targetCount = writeCount;
                 }
                 while (true)
                 {
@@ -111,7 +109,7 @@ namespace PBGame.IO
                         break;
 
                     var item = pool[curCount % poolSize];
-                    myStream.Write(item.ToStreamData());
+                    myStream.WriteLine(item.ToStreamData());
                     curCount++;
                 }
             };
@@ -122,7 +120,7 @@ namespace PBGame.IO
                 // Wait a delay until there is potentially enough data.
                 try
                 {
-                    Thread.Sleep(saveInterval);
+                    Thread.Sleep(writeInterval);
                 }
                 catch {}
             }

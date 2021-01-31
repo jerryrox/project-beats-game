@@ -37,9 +37,11 @@ namespace PBGame.Rulesets
         private IGraphicObject containerObject;
 
 
+        public GameParameter CurrentParameter { get; private set; }
+
         public MapAssetStore MapAssetStore { get; private set; }
 
-        public IPlayableMap CurrentMap { get; protected set; }
+        public IPlayableMap CurrentMap => CurrentParameter.Map;
 
         public IScoreProcessor ScoreProcessor { get; private set; }
 
@@ -109,10 +111,12 @@ namespace PBGame.Rulesets
             }
         }
 
-        public void SetMap(IPlayableMap map)
+        public void SetParameter(GameParameter parameter)
         {
-            CurrentMap = map;
-            MapAssetStore = new MapAssetStore(map, SoundTable);
+            CurrentParameter = parameter;
+            
+            // Set map
+            MapAssetStore = new MapAssetStore(parameter.Map, SoundTable);
         }
 
         public int GetPlayTime()
@@ -173,20 +177,28 @@ namespace PBGame.Rulesets
             Game.OnAppPause -= OnAppPaused;
             Game.OnAppFocus -= OnAppFocused;
 
-            // Record score.
-            var listener = new TaskListener<IRecord>();
-            listener.OnFinished += (record) =>
+            // Record score if not replay mode.
+            if (!CurrentParameter.IsReplay)
             {
-                ScoreProcessor = null;
+                var listener = new TaskListener<IRecord>();
+                listener.OnFinished += (record) =>
+                {
+                    ScoreProcessor = null;
+                    GameGui.HideGame(() => OnSoftDispose?.Invoke());
+                };
+                Model?.RecordScore(ScoreProcessor, playTime, listener);
+            }
+            else
+            {
                 GameGui.HideGame(() => OnSoftDispose?.Invoke());
-            };
-            Model?.RecordScore(ScoreProcessor, playTime, listener);
+            }
         }
 
         public void InvokeHardDispose()
         {
             IsPlaying = false;
-            CurrentMap = null;
+
+            CurrentParameter = null;
 
             // Before destroying custom hitsounds in the asset store, they must first be unmounted from the sound pool.
             SoundPool.UnmountAll();
@@ -259,7 +271,7 @@ namespace PBGame.Rulesets
                 {
                     Limit = 2f,
                 };
-                autoExitTimer.OnFinished += Model.ExitGameWithClear;
+                autoExitTimer.OnFinished += Model.ExitGameToResult;
                 autoExitTimer.Start();
             });
 

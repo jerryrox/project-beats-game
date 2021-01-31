@@ -45,7 +45,7 @@ namespace PBGame.Rulesets.Beats.Standard
         private void InitInputter()
         {
             // Initialize inputter
-            var inputter = moduleProvider.GetGameInputter();
+            gameInputter = moduleProvider.GetGameInputter(CurrentParameter);
 
             // Pass inputter to dependencies.
             var hitObjectHolder = Dependencies.Get<HitObjectHolder>();

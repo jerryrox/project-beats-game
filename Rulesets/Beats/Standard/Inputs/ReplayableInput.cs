@@ -1,3 +1,4 @@
+using System;
 using PBGame.IO;
 using PBFramework.Data.Bindables;
 using PBFramework.Inputs;
@@ -65,7 +66,30 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public string ToStreamData()
         {
-            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}\n";
+            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}";
+        }
+
+        public void FromStreamData(string data)
+        {
+            if (data.Length == 0)
+                return;
+
+            Func<string, Vector2> parseVector = (string rawData) =>
+            {
+                int commaInx = rawData.IndexOf(',');
+                return new Vector2(float.Parse(rawData.Substring(0, commaInx)), float.Parse(rawData.Substring(commaInx + 1)));
+            };
+
+            string[] segments = data.Split(';');
+            int i = 0;
+            Time = float.Parse(segments[i++]);
+            Key = (KeyCode)Enum.Parse(typeof(KeyCode), segments[i++]);
+            state.Value = (InputState)Enum.Parse(typeof(InputState), segments[i++]);
+            isActive.Value = segments[i++] == "1";
+            RawPosition = parseVector(segments[i++]);
+            RawDelta = parseVector(segments[i++]);
+            Position = parseVector(segments[i++]);
+            Delta = parseVector(segments[i++]);
         }
 
         void IInput.Release() {}
