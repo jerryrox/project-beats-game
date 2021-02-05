@@ -1,5 +1,4 @@
 using PBGame.Rulesets.Beats.Standard.UI;
-using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
@@ -8,10 +7,10 @@ namespace PBGame.Rulesets.Beats.Standard
 {
     public class GameSession : Rulesets.GameSession<HitObject> {
 
-        private GameModuleProvider moduleProvider;
+        private BeatsStandardProcessor gameProcessor;
 
-        // TODO: Support for different types of game inputter.
-        private IGameInputter gameInputter;
+
+        public override GameProcessor GameProcessor => gameProcessor;
 
 
         public GameSession(IGraphicObject container) : base(container)
@@ -21,16 +20,13 @@ namespace PBGame.Rulesets.Beats.Standard
         [InitWithDependency]
         private void Init()
         {
-            moduleProvider = new GameModuleProvider(Dependencies);
-            Dependencies.Cache(moduleProvider);
-
             base.OnHardInit += () =>
             {
-                InitInputter();
+                InitGameProcessor();
             };
             base.OnHardDispose += () =>
             {
-                gameInputter = null;
+                gameProcessor = null;
             };
         }
 
@@ -40,18 +36,16 @@ namespace PBGame.Rulesets.Beats.Standard
         }
 
         /// <summary>
-        /// Initializes inputter for gameplay.
+        /// Initializes the game processor instance.
         /// </summary>
-        private void InitInputter()
+        private void InitGameProcessor()
         {
-            // Initialize inputter
-            gameInputter = moduleProvider.GetGameInputter(CurrentParameter);
+            if (CurrentParameter.IsReplay)
+                gameProcessor = GameGui.CreateChild<ReplayGameProcessor>();
+            else
+                gameProcessor = GameGui.CreateChild<LocalGameProcessor>();
 
-            // Pass inputter to dependencies.
-            var hitObjectHolder = Dependencies.Get<HitObjectHolder>();
-            var touchEffectDisplay = Dependencies.Get<TouchEffectDisplay>();
-            hitObjectHolder.SetInputter(gameInputter);
-            touchEffectDisplay.SetInputter(gameInputter);
+            Dependencies.Cache(gameProcessor);
         }
     }
 }

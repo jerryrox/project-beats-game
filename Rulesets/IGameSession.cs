@@ -56,6 +56,11 @@ namespace PBGame.Rulesets
 
 
         /// <summary>
+        /// Returns the current game processor managing the gameplay.
+        /// </summary>
+        GameProcessor GameProcessor { get; }
+
+        /// <summary>
         /// The current parameter being used to play the session.
         /// </summary>
         GameParameter CurrentParameter { get; }

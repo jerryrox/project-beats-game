@@ -45,8 +45,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
 
         /// <summary>
-        /// Handles passive judgements for the specified object.
+        /// Sets the game processor instance to report judgements to.
         /// </summary>
-        void JudgePassive(float curTime, HitObjectView view);
+        void SetGameProcessor(BeatsStandardProcessor gameProcessor);
     }
 }

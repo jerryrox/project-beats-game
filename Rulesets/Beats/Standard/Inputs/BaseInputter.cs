@@ -5,7 +5,6 @@ using PBGame.UI.Models;
 using PBGame.Graphics;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
-using PBGame.Rulesets.Judgements;
 using PBFramework.Inputs;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
@@ -29,6 +28,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         protected BeatsCursor hitBarCursor;
         protected FileInfo replayFile;
+
+        protected BeatsStandardProcessor gameProcessor;
 
 
         public BeatsCursor HitBarCursor => hitBarCursor;
@@ -69,41 +70,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             pointerEvent = new PointerEventData(Root3D.EventSystem);
         }
 
-        public virtual void JudgePassive(float curTime, HitObjectView view)
+        public void SetGameProcessor(BeatsStandardProcessor gameProcessor)
         {
-            foreach(var judgement in view.JudgePassive(curTime))
-                AddJudgement(judgement);
-        }
-
-        /// <summary>
-        /// Performs update logic for all the active inputs.
-        /// </summary>
-        protected void UpdateInputs(float curTime)
-        {
-            // Process beats cursor aiming.
-            if (hitBarCursor.IsActive)
-            {
-                // Aiming on hit bar?
-                if (IsOnHitBar(hitBarCursor.Input, out float pos))
-                {
-                    hitBarCursor.HitBarPos = pos;
-                    hitBarCursor.IsOnHitBar.Value = true;
-                }
-                else
-                {
-                    hitBarCursor.IsOnHitBar.Value = false;
-                }
-
-                // Check all key strokes whether the cursor is within the hit object boundary.
-                foreach (var key in keyRecycler.ActiveObjects)
-                {
-                    key.LastUpdateTime = curTime;
-                    if (key.IsActive && key.DraggerView != null)
-                    {
-                        key.DraggerView.StartCircle.SetHold(key.DraggerView.IsCursorInRange(pos), curTime);
-                    }
-                }
-            }
+            this.gameProcessor = gameProcessor;
         }
 
         /// <summary>
@@ -161,20 +130,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         }
 
         /// <summary>
-        /// Adds the specified judgement result to the score processor.
-        /// </summary>
-        protected void AddJudgement(JudgementResult result)
-        {
-            if (result != null)
-            {
-                if(hitBarCursor.IsActive)
-                    hitBarCursor.ReportNewResult(result);
-
-                GameSession?.ScoreProcessor.ProcessJudgement(result);
-            }
-        }
-
-        /// <summary>
         /// Returns whether the specified cursor was on hit bar on press.
         /// Outputs position relative to the hit bar sprite, if the cursor is on the hit bar.
         /// </summary>
@@ -200,8 +155,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         /// <summary>
         /// Triggers a new hit bar cursor aiming event.
+        /// Returns the key that was newly pressed.
         /// </summary>
-        protected void TriggerCursorPress(float time, ICursor cursor, float pos)
+        protected BeatsKey TriggerCursorPress(float time, ICursor cursor, float pos)
         {
             hitBarCursor.OnRecycleNew();
             hitBarCursor.Input = cursor;
@@ -210,13 +166,14 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
             // Cursor press should be treated as key stroke
             // TODO: This can be overridden by configurations.
-            TriggerKeyPress(time, cursor);
+            return TriggerKeyPress(time, cursor);
         }
 
         /// <summary>
         /// Triggers a new key stroke press event for specified input.
+        /// Returns the key that was newly pressed.
         /// </summary>
-        protected void TriggerKeyPress(float time, IInput input, ICursor cursor = null)
+        protected BeatsKey TriggerKeyPress(float time, IInput input, ICursor cursor = null)
         {
             var beatsKey = keyRecycler.GetNext();
             beatsKey.Input = input;
@@ -226,7 +183,17 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 beatsKey.SetHitCursor(hitBarCursor);
 
             InvokeKeyPress(beatsKey);
-            JudgeKeyPress(time, beatsKey);
+            return beatsKey;
+        }
+
+        /// <summary>
+        /// Event called on key stroke release state.
+        /// </summary>
+        protected virtual void OnKeyStateRelease(BeatsKey key)
+        {
+            InvokeKeyRelease(key);
+            
+            keyRecycler.Return(key);
         }
 
         /// <summary>
@@ -249,41 +216,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             return key;
         }
 
-
-        /// <summary>
-        /// Judges the specified key press against hit objects.
-        /// </summary>
-        private void JudgeKeyPress(float time, BeatsKey key)
-        {
-            // Return if no cursor is active.
-            if(!hitBarCursor.IsActive)
-                return;
-
-            // Find the first hit object where the cursor is within the X range.
-            foreach (var objView in hitObjectHolder.GetActiveObjects())
-            {
-                if (objView.IsCursorInRange(hitBarCursor.HitBarPos))
-                {
-                    // Associate the hit object view with the key stroke.
-                    if(objView is DraggerView draggerView)
-                        key.DraggerView = draggerView;
-                    AddJudgement(objView.JudgeInput(time, key.Input));
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Judges the specified key release against hit objects.
-        /// </summary>
-        private void JudgeKeyRelease(BeatsKey key)
-        {
-            if (key.DraggerView == null)
-                return;
-
-            key.DraggerView.StartCircle.SetHold(false, key.LastUpdateTime);
-        }
-
         /// <summary>
         /// Event called on cursor release state.
         /// </summary>
@@ -291,17 +223,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         {
             InvokeCursorRelease(cursor);
             cursor.OnRecycleDestroy();
-        }
-
-        /// <summary>
-        /// Event called on key stroke release state.
-        /// </summary>
-        private void OnKeyStateRelease(BeatsKey key)
-        {
-            InvokeKeyRelease(key);
-            JudgeKeyRelease(key);
-            
-            keyRecycler.Return(key);
         }
     }
 }

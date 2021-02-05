@@ -17,7 +17,8 @@ using UnityEngine;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
-    public class HitObjectHolder : UguiObject {
+    public class HitObjectHolder : UguiObject
+    {
 
         private ManagedRecycler<HitCircleView> hitCircleRecycler;
         private ManagedRecycler<DraggerCircleView> draggerCircleRecycler;
@@ -29,13 +30,8 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private int curComboOffset;
         private List<Color> comboColors;
 
-        private IGameInputter gameInputter;
+        private BeatsStandardProcessor gameProcessor;
 
-
-        /// <summary>
-        /// Returns the current music play time.
-        /// </summary>
-        public float CurrentTime => MusicController.CurrentTime;
 
         [ReceivesDependency]
         private IGameSession GameSession { get; set; }
@@ -79,6 +75,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         }
 
         /// <summary>
+        /// Sets the current game processor instance.
+        /// </summary>
+        public void SetGameProcessor(BeatsStandardProcessor gameProcessor)
+        {
+            this.gameProcessor = gameProcessor;
+        }
+
+        /// <summary>
         /// Returns all active hit object views in the holder.
         /// </summary>
         public IEnumerable<HitObjectView> GetActiveObjects()
@@ -88,26 +92,20 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         }
 
         /// <summary>
-        /// Sets the inputter to use for handling passive judgements.
+        /// Updates the contained hit objects based on the specified time.
         /// </summary>
-        public void SetInputter(IGameInputter gameInputter)
-        {
-            this.gameInputter = gameInputter;
-        }
-
-        protected void Update()
+        public void UpdateObjects(float curTime)
         {
             if(!GameSession.IsPlaying)
                 return;
-                
-            float curTime = CurrentTime;
+            
             bool advanceLowIndex = true;
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
             {
                 var view = hitObjectViews[i];
 
                 // Process any passive judgements to be made.
-                gameInputter.JudgePassive(curTime, view);
+                gameProcessor.JudgePassive(curTime, view);
 
                 if (view.IsFullyJudged)
                 {

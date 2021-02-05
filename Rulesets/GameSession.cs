@@ -37,6 +37,8 @@ namespace PBGame.Rulesets
         private IGraphicObject containerObject;
 
 
+        public abstract GameProcessor GameProcessor { get; }
+
         public GameParameter CurrentParameter { get; private set; }
 
         public MapAssetStore MapAssetStore { get; private set; }
