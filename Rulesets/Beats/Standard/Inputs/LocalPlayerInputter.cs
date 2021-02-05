@@ -7,7 +7,6 @@ using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBFramework.Inputs;
 using PBFramework.Dependencies;
-using UnityEngine.EventSystems;
 
 namespace PBGame.Rulesets.Beats.Standard.Inputs
 {

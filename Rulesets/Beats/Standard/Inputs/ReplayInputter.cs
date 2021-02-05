@@ -17,6 +17,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private DataStreamReader<ReplayableInput> replayReader;
 
         private Dictionary<KeyCode, ReplayableInput> playbackInputs = new Dictionary<KeyCode, ReplayableInput>();
+        private float lastInputTime;
 
 
         public int InputLayer => InputLayers.GameScreenComponents;
@@ -36,12 +37,17 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             replayReader = new DataStreamReader<ReplayableInput>(InputManager.MaxCursorCount * 60, readInterval: 500);
         }
 
+        public override void JudgePassive(float curTime, HitObjectView view)
+        {
+            base.JudgePassive(lastInputTime, view);
+        }
+
         public bool ProcessInput()
         {
             float curTime = hitObjectHolder.CurrentTime;
+            lastInputTime = curTime;
 
-            UpdateInputs(curTime);
-
+            // First replay input pass - Process movement changes
             if (!GameSession.IsPaused)
             {
                 while (true)
@@ -49,9 +55,19 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     var rawInput = replayReader.PeekData();
                     if (rawInput == null || rawInput.Time > curTime)
                         break;
-
                     var playbackInput = GetPlaybackInput(rawInput);
+                    lastInputTime = rawInput.Time;
+                    replayReader.AdvanceIndex();
+                }
+            }
+            
+            UpdateInputs(curTime);
 
+            // Second replay input pass - Process key press.
+            if (!GameSession.IsPaused)
+            {
+                foreach (var playbackInput in playbackInputs.Values)
+                {
                     if (playbackInput.State.Value == InputState.Press)
                     {
                         if (!hitBarCursor.IsActive && IsOnHitBar(playbackInput, out float pos))
@@ -59,7 +75,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                         else
                             TriggerKeyPress(playbackInput.Time, playbackInput, playbackInput);
                     }
-                    replayReader.AdvanceIndex();
                 }
             }
 

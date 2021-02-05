@@ -97,6 +97,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 // Check all key strokes whether the cursor is within the hit object boundary.
                 foreach (var key in keyRecycler.ActiveObjects)
                 {
+                    key.LastUpdateTime = curTime;
                     if (key.IsActive && key.DraggerView != null)
                     {
                         key.DraggerView.StartCircle.SetHold(key.DraggerView.IsCursorInRange(pos), curTime);
@@ -280,7 +281,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             if (key.DraggerView == null)
                 return;
 
-            key.DraggerView.StartCircle.SetHold(false, hitObjectHolder.CurrentTime);
+            key.DraggerView.StartCircle.SetHold(false, key.LastUpdateTime);
         }
 
         /// <summary>
