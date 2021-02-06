@@ -192,6 +192,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     var hitCircleView = hitCircleRecycler.GetNext();
                     hitCircleView.Depth = hitObjectViews.Count;
+                    hitCircleView.ObjectIndex = hitObjectViews.Count;
                     hitCircleView.SetHitObject(hitCircle);
 
                     hitObjectViews.Add(hitCircleView);
@@ -201,6 +202,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     var draggerView = draggerRecycler.GetNext();
                     draggerView.Depth = hitObjectViews.Count;
+                    draggerView.ObjectIndex = hitObjectViews.Count;
                     draggerView.SetHitObject(dragger);
 
                     hitObjectViews.Add(draggerView);

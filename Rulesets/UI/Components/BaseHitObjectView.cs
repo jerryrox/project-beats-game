@@ -20,7 +20,6 @@ namespace PBGame.Rulesets.UI.Components
         IHasAlpha,
         IHasTint
     {
-
         protected CanvasGroup canvasGroup;
 
         protected float startTime;
@@ -41,6 +40,11 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         private List<BaseHitObjectView> nestedObjects = new List<BaseHitObjectView>();
 
+
+        /// <summary>
+        /// The index of the hit object which allows for automatically played inputters to refer them easily.
+        /// </summary>
+        public int ObjectIndex { get; set; }
 
         /// <summary>
         /// Returns the base hit object view containing this nested object.

@@ -97,6 +97,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// </summary>
         public virtual void AddNestedObject(HitObjectView hitObject)
         {
+            hitObject.ObjectIndex = BaseNestedObjects.Count;
             base.AddBaseNestedObject(hitObject);
         }
 
