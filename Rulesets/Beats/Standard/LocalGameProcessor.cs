@@ -21,7 +21,8 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override void JudgePassive(float curTime, HitObjectView hitObjectView)
         {
-            // TODO:
+            foreach (var judgement in hitObjectView.JudgePassive(curTime))
+                AddJudgement(judgement);
         }
 
         protected override IGameInputter CreateGameInputter()
