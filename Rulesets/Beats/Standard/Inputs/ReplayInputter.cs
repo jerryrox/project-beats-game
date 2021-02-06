@@ -42,21 +42,21 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
             if (!GameSession.IsPaused)
             {
-                while (true)
-                {
-                    var rawInput = replayReader.PeekData();
-                    if (rawInput == null || rawInput.Time > curTime)
-                        break;
-                    var playbackInput = GetPlaybackInput(rawInput);
-                    if (playbackInput.State.Value == InputState.Press)
-                    {
-                        if (!hitBarCursor.IsActive && IsOnHitBar(playbackInput, out float pos))
-                            TriggerCursorPress(playbackInput.Time, playbackInput, pos);
-                        else
-                            TriggerKeyPress(playbackInput.Time, playbackInput, playbackInput);
-                    }
-                    replayReader.AdvanceIndex();
-                }
+                // while (true)
+                // {
+                //     var rawInput = replayReader.PeekData();
+                //     if (rawInput == null || rawInput.Time > curTime)
+                //         break;
+                //     var playbackInput = GetPlaybackInput(rawInput);
+                //     if (playbackInput.State.Value == InputState.Press)
+                //     {
+                //         if (!hitBarCursor.IsActive && IsOnHitBar(playbackInput, out float pos))
+                //             TriggerCursorPress(playbackInput.Time, playbackInput, pos);
+                //         else
+                //             TriggerKeyPress(playbackInput.Time, playbackInput, playbackInput);
+                //     }
+                //     replayReader.AdvanceIndex();
+                // }
             }
 
             return true;
@@ -92,10 +92,10 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private ReplayableInput GetPlaybackInput(ReplayableInput rawInput)
         {
             ReplayableInput input = null;
-            if (!playbackInputs.TryGetValue(rawInput.Key, out input))
-                playbackInputs.Add(rawInput.Key, input = new ReplayableInput());
+            // if (!playbackInputs.TryGetValue(rawInput.Key, out input))
+            //     playbackInputs.Add(rawInput.Key, input = new ReplayableInput());
 
-            input.SetFromCursor(rawInput.Time, rawInput);
+            // input.SetFromCursor(rawInput.Time, rawInput);
             return input;
         }
     }

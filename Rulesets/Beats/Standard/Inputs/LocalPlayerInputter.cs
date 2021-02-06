@@ -193,7 +193,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         private void RecordInputData(float curTime, ICursor cursor)
         {
             var nextData = replayInputWriter.NextWriteItem;
-            nextData.SetFromCursor(curTime, cursor);
+            nextData.SetFromCursor(cursor);
             replayInputWriter.WriteData(nextData);
         }
     }
