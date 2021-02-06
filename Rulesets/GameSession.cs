@@ -123,7 +123,7 @@ namespace PBGame.Rulesets
 
         public int GetPlayTime()
         {
-            int playTime = (int)MusicController.Clock.CurrentTime;
+            int playTime = (int)GameProcessor.CurrentTime;
             if (ScoreProcessor.JudgeCount > 0)
             {
                 playTime -= (int)(CurrentMap.HitObjects.First().StartTime / 1000f);
@@ -214,7 +214,7 @@ namespace PBGame.Rulesets
         {
             if(IsPaused)
                 return;
-            if(MusicController.CurrentTime < 0f)
+            if(GameProcessor.CurrentTime < 0f)
                 return;
             if(MusicController.IsPlaying)
                 MusicController.Pause();
