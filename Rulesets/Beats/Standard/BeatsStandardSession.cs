@@ -5,7 +5,7 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.Beats.Standard
 {
-    public class GameSession : Rulesets.GameSession<HitObject> {
+    public class BeatsStandardSession : GameSession<HitObject> {
 
         private BeatsStandardProcessor gameProcessor;
 
@@ -13,7 +13,7 @@ namespace PBGame.Rulesets.Beats.Standard
         public override GameProcessor GameProcessor => gameProcessor;
 
 
-        public GameSession(IGraphicObject container) : base(container)
+        public BeatsStandardSession(IGraphicObject container) : base(container)
         {
         }
 
