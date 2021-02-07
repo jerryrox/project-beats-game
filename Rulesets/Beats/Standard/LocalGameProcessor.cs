@@ -54,6 +54,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
             GameSession.OnSoftInit += OnSoftInit;
             GameSession.OnSoftDispose += OnSoftDispose;
+            GameSession.OnSkipped += OnSkipped;
         }
 
         /// <summary>
@@ -117,6 +118,7 @@ namespace PBGame.Rulesets.Beats.Standard
         {
             GameSession.OnSoftInit -= OnSoftInit;
             GameSession.OnSoftDispose -= OnSoftDispose;
+            GameSession.OnSkipped -= OnSkipped;
         }
 
         protected override void Update()
@@ -210,6 +212,15 @@ namespace PBGame.Rulesets.Beats.Standard
         {
             DisposeReplayWriter();
             DisposeReplayRecyclers();
+        }
+
+        /// <summary>
+        /// Event called when the user pressed the skip button.
+        /// </summary>
+        private void OnSkipped(float time)
+        {
+            if (nextFrame != null)
+                nextFrame.IsSkipped = true;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace PBGame.Rulesets.Beats.Standard
         private ReplayInputter inputter;
 
         private float lastFrameTime;
+        private bool didSkip;
 
         private FileInfo replayFile;
         private DataStreamReader<ReplayFrame> replayReader;
@@ -58,9 +59,14 @@ namespace PBGame.Rulesets.Beats.Standard
             {
                 var frame = replayReader.PeekData();
                 if (frame == null || frame.Time > musicTime)
+                {
+                    if (didSkip)
+                        lastFrameTime = musicTime;
                     break;
+                }
 
                 lastFrameTime = frame.Time;
+                didSkip = frame.IsSkipped;
 
                 // Process update for other game modules.
                 inputter.UpdateInputs(frame.Time, frame.Inputs);

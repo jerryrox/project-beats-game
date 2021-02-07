@@ -35,6 +35,7 @@ namespace PBGame.Rulesets
         public event Action OnRetry;
         public event Action OnForceQuit;
         public event Action OnCompletion;
+        public event Action<float> OnSkipped;
 
         protected ManagedRecycler<ReplayableJudgement> replayJudgementsRecycler;
         
@@ -290,6 +291,12 @@ namespace PBGame.Rulesets
             };
             initialTimer.OnFinished += InvokeSoftDispose;
             initialTimer.Start();
+        }
+
+        public void InvokeSkipped(float time)
+        {
+            MusicController.Seek(time);
+            OnSkipped?.Invoke(time);
         }
 
         /// <summary>

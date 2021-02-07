@@ -20,6 +20,11 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         public float Time { get; set; }
 
         /// <summary>
+        /// Whether the user has skipped from this frame.
+        /// </summary>
+        public bool IsSkipped { get; set; }
+
+        /// <summary>
         /// The list of inputs that occurred in this frame.
         /// </summary>
         public List<ReplayableInput> Inputs { get; } = new List<ReplayableInput>();
@@ -54,6 +59,7 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         public void Reset()
         {
             Time = 0;
+            IsSkipped = false;
             Inputs.Clear();
             DraggersHeld.Clear();
             DraggersReleased.Clear();
@@ -107,6 +113,8 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             StringBuilder sb = new StringBuilder();
             sb.Append(Time);
             sb.Append('/');
+            sb.Append(IsSkipped ? "1" : "0");
+            sb.Append('/');
             for (int i = 0; i < Inputs.Count; i++)
             {
                 if (i > 0)
@@ -145,9 +153,11 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
 
             Time = float.Parse(splits[0]);
 
-            if (splits[1].Length > 0)
+            IsSkipped = splits[1] == "1";
+
+            if (splits[2].Length > 0)
             {
-                foreach (string inputData in splits[1].Split('|'))
+                foreach (string inputData in splits[2].Split('|'))
                 {
                     var input = replayInputRecycler.GetNext();
                     input.FromStreamData(inputData);
@@ -155,21 +165,21 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
                 }
             }
 
-            if (splits[2].Length > 0)
-            {
-                foreach (string draggerIndexData in splits[2].Split('|'))
-                    DraggersHeld.Add(int.Parse(draggerIndexData));
-            }
-
             if (splits[3].Length > 0)
             {
                 foreach (string draggerIndexData in splits[3].Split('|'))
-                    DraggersReleased.Add(int.Parse(draggerIndexData));
+                    DraggersHeld.Add(int.Parse(draggerIndexData));
             }
 
             if (splits[4].Length > 0)
             {
-                foreach (string judgementData in splits[4].Split('|'))
+                foreach (string draggerIndexData in splits[4].Split('|'))
+                    DraggersReleased.Add(int.Parse(draggerIndexData));
+            }
+
+            if (splits[5].Length > 0)
+            {
+                foreach (string judgementData in splits[5].Split('|'))
                 {
                     var judgement = replayJudgementRecycler.GetNext();
                     judgement.FromStreamData(judgementData);
