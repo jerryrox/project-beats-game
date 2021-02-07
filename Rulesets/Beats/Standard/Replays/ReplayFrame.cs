@@ -10,7 +10,6 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
 {
     public class ReplayFrame : IStreamableData, IRecyclable<ReplayFrame>
     {
-
         private IRecycler<ReplayableInput> replayInputRecycler;
         private IRecycler<ReplayableJudgement> replayJudgementRecycler;
 

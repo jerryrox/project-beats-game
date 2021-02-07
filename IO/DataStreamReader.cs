@@ -85,7 +85,7 @@ namespace PBGame.IO
         public T PeekData()
         {
             if (reader == null)
-                throw new Exception("There is no s tream to read the data from.");
+                throw new Exception("There is no stream to read the data from.");
 
             if (readCount == bufferedCount)
                 return null;

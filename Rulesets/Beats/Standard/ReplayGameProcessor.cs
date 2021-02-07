@@ -13,13 +13,13 @@ namespace PBGame.Rulesets.Beats.Standard
     {
         private ReplayInputter inputter;
 
-        private ReplayFrame curFrame;
+        private float lastFrameTime;
 
         private FileInfo replayFile;
         private DataStreamReader<ReplayFrame> replayReader;
         private StreamReader replayReadStream;
 
-        public override float CurrentTime => curFrame?.Time ?? -10000;
+        public override float CurrentTime => lastFrameTime;
 
         
         [InitWithDependency]
@@ -35,7 +35,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
             GameSession.OnSoftInit += () =>
             {
-                curFrame = null;
+                lastFrameTime = -10000;
                 InitReplayReader();
             };
             GameSession.OnSoftDispose += () =>
@@ -61,7 +61,7 @@ namespace PBGame.Rulesets.Beats.Standard
                 if (frame == null || frame.Time > musicTime)
                     break;
 
-                curFrame = frame;
+                lastFrameTime = frame.Time;
 
                 // Process update for other game modules.
                 inputter.UpdateInputs(frame.Time, frame.Inputs);

@@ -100,9 +100,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// </summary>
         public void UpdateObjects(float curTime)
         {
-            if(!GameSession.IsPlaying)
-                return;
-            
             bool advanceLowIndex = true;
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
             {
