@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using PBGame.UI;
-using PBGame.IO;
 using PBGame.Stores;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
@@ -10,36 +8,27 @@ using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.Beats.Standard.Inputs
 {
-    public class LocalPlayerInputter : BaseInputter, IInputReceiver
+    public class LocalPlayerInputter : BaseInputter
     {
-        private DataStreamWriter<ReplayableInput> replayInputWriter;
-        private StreamWriter replayWriteStream;
-
-        public int InputLayer => InputLayers.GameScreenComponents;
+        private LocalGameProcessor gameProcessor;
 
         [ReceivesDependency]
         private IInputManager InputManager { get; set; }
-
-        [ReceivesDependency]
-        private ITemporaryStore TemporaryStore { get; set; }
-
-        [ReceivesDependency]
-        private IRecordStore RecordStore { get; set; }
 
 
         public LocalPlayerInputter(HitBarDisplay hitBar, HitObjectHolder hitObjectHolder) : base(hitBar, hitObjectHolder)
         { }
 
-        [InitWithDependency]
-        private void Init()
+        /// <summary>
+        /// Sets the game processor that manages this inputter.
+        /// </summary>
+        public void SetGameProcessor(LocalGameProcessor gameProcessor)
         {
-            InitReplayInputWriter();
+            this.gameProcessor = gameProcessor;
         }
 
-        public bool ProcessInput()
+        public void UpdateInputs(float curTime)
         {
-            float curTime = gameProcessor.CurrentTime;
-
             if (!GameSession.IsPaused)
             {
                 // Process beats cursor aiming.
@@ -62,7 +51,12 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                         key.LastUpdateTime = curTime;
                         if (key.IsActive && key.DraggerView != null)
                         {
-                            key.DraggerView.StartCircle.SetHold(key.DraggerView.IsCursorInRange(pos), curTime);
+                            var dragger = key.DraggerView;
+                            bool isHolding = dragger.IsCursorInRange(pos);
+                            dragger.StartCircle.SetHold(isHolding, curTime);
+
+                            if (isHolding)
+                                gameProcessor.RecordHoldingDragger(dragger.ObjectIndex);
                         }
                     }
                 }
@@ -83,51 +77,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     }
 
                     // Record replay input data
-                    if (replayInputWriter != null && cursor.IsActive.Value)
-                        RecordInputData(curTime, cursor);
-                }
-            }
-            return true;
-        }
-
-        int IComparable<IInputReceiver>.CompareTo(IInputReceiver other) => other.InputLayer.CompareTo(InputLayer);
-
-        void IInputReceiver.PrepareInputSort() { }
-
-        protected override void OnSoftInit()
-        {
-            base.OnSoftInit();
-
-            InputManager.AddReceiver(this);
-
-            // Setup input writer
-            if (replayInputWriter != null)
-            {
-                replayFile = TemporaryStore.GetReplayDataFile(Guid.NewGuid().ToString());
-                replayWriteStream = new StreamWriter(replayFile.OpenWrite());
-                replayInputWriter.StartStream(replayWriteStream);
-            }
-        }
-
-        protected override void OnSoftDispose()
-        {
-            base.OnSoftDispose();
-
-            InputManager.RemoveReceiver(this);
-
-            if (replayInputWriter != null)
-                replayInputWriter.StopStream();
-            if (replayWriteStream != null)
-                replayWriteStream.Dispose();
-            replayWriteStream = null;
-
-            if (replayFile != null)
-            {
-                var lastRecord = Model.LastRecord;
-                if (lastRecord != null && lastRecord.IsClear)
-                {
-                    var replayFileDest = RecordStore.GetReplayFile(lastRecord);
-                    replayFile.MoveTo(replayFileDest.FullName);
+                    if (cursor.IsActive.Value)
+                        gameProcessor.RecordInput(cursor);
                 }
             }
         }
@@ -138,19 +89,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             JudgeKeyRelease(key);
             
             keyRecycler.Return(key);
-        }
-
-        /// <summary>
-        /// Initializes the replay input writer instance.
-        /// </summary>
-        private void InitReplayInputWriter()
-        {
-            // TODO: Handle only if saving replay option is enabled.
-            // {
-            //     return;
-            // }
-
-            replayInputWriter = new DataStreamWriter<ReplayableInput>(InputManager.MaxCursorCount * 60, writeInterval: 500);
         }
 
         /// <summary>
@@ -185,16 +123,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                 return;
 
             key.DraggerView.StartCircle.SetHold(false, key.LastUpdateTime);
-        }
-
-        /// <summary>
-        /// Records the specified input for replay feature.
-        /// </summary>
-        private void RecordInputData(float curTime, ICursor cursor)
-        {
-            var nextData = replayInputWriter.NextWriteItem;
-            nextData.SetFromCursor(cursor);
-            replayInputWriter.WriteData(nextData);
         }
     }
 }
