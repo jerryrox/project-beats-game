@@ -4,9 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.Stores;
+using PBGame.Rulesets.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Replays;
-using PBFramework.UI;
+using PBGame.Rulesets.Judgements;
 using PBFramework.Inputs;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
@@ -17,7 +18,6 @@ using PBGame.Rulesets.Beats.Standard.UI.Components;
 
 namespace PBGame.Rulesets.Beats.Standard
 {
-    // TODO: Record judgements.
     public class LocalGameProcessor : BeatsStandardProcessor
     {
         private LocalPlayerInputter inputter;
@@ -69,7 +69,7 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         public void RecordInput(ICursor cursor)
         {
-            if(nextFrame != null)
+            if(nextFrame != null && cursor != null)
                 nextFrame.AddInput((input) => input.SetFromCursor(cursor));
         }
 
@@ -82,10 +82,32 @@ namespace PBGame.Rulesets.Beats.Standard
                 nextFrame.AddHoldingDragger(draggerIndex);
         }
 
+        /// <summary>
+        /// Records the judgement result for the specified hit object.
+        /// </summary>
+        public void RecordJudgement(BaseHitObjectView hitObjectView, JudgementResult judgement)
+        {
+            if (nextFrame != null && judgement != null && hitObjectView != null)
+            {
+                nextFrame.AddJudgement((j) =>
+                {
+                    j.SetFromJudgementResult(judgement);
+                    while (hitObjectView != null)
+                    {
+                        j.HitObjectIndexPath.Insert(0, hitObjectView.ObjectIndex);
+                        hitObjectView = hitObjectView.BaseParentView;
+                    }
+                });
+            }
+        }
+
         public override void JudgePassive(float curTime, HitObjectView hitObjectView)
         {
-            foreach (var judgement in hitObjectView.JudgePassive(curTime))
-                AddJudgement(judgement);
+            foreach (var result in hitObjectView.JudgePassive(curTime))
+            {
+                AddJudgement(result.Value);
+                RecordJudgement(result.Key, result.Value);
+            }
         }
 
         protected override void Update()

@@ -58,7 +58,7 @@ namespace PBGame.Rulesets.Beats.Standard
         /// <summary>
         /// Creates a new replay frame instance for recycler.
         /// </summary>
-        private ReplayFrame CreateReplayFrame() => new ReplayFrame(replayInputRecycler);
+        private ReplayFrame CreateReplayFrame() => new ReplayFrame(replayInputRecycler, replayJudgementsRecycler);
 
         /// <summary>
         /// Initializes the game processor instance.

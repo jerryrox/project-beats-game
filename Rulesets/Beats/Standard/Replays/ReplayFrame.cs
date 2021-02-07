@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.Rulesets.Beats.Standard.Inputs;
+using PBGame.Rulesets.Judgements;
 using PBFramework.Allocation.Recyclers;
 
 namespace PBGame.Rulesets.Beats.Standard.Replays
@@ -10,6 +11,7 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
     public class ReplayFrame : IStreamableData, IRecyclable<ReplayFrame> {
 
         private IRecycler<ReplayableInput> replayInputRecycler;
+        private IRecycler<ReplayableJudgement> replayJudgementRecycler;
 
 
         /// <summary>
@@ -27,12 +29,18 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         /// </summary>
         public List<int> DraggersOnHold { get; } = new List<int>();
 
+        /// <summary>
+        /// The list of judgements that occurred in this frame.
+        /// </summary>
+        public List<ReplayableJudgement> Judgements { get; } = new List<ReplayableJudgement>();
+
         IRecycler<ReplayFrame> IRecyclable<ReplayFrame>.Recycler { get; set; }
 
 
-        public ReplayFrame(IRecycler<ReplayableInput> replayInputRecycler)
+        public ReplayFrame(IRecycler<ReplayableInput> replayInputRecycler, IRecycler<ReplayableJudgement> replayJudgementRecycler)
         {
             this.replayInputRecycler = replayInputRecycler;
+            this.replayJudgementRecycler = replayJudgementRecycler;
         }
 
         /// <summary>
@@ -45,6 +53,8 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
                 replayInputRecycler.Return(input);
             Inputs.Clear();
             DraggersOnHold.Clear();
+            foreach (var judgement in Judgements)
+                replayJudgementRecycler.Return(judgement);
         }
 
         /// <summary>
@@ -68,6 +78,17 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             return draggerIndex;
         }
 
+        /// <summary>
+        /// Adds a new replayable judgement result data to the frame and returns it.
+        /// </summary>
+        public ReplayableJudgement AddJudgement(Action<ReplayableJudgement> initializer)
+        {
+            var judgement = replayJudgementRecycler.GetNext();
+            initializer.Invoke(judgement);
+            Judgements.Add(judgement);
+            return judgement;
+        }
+
         public string ToStreamData()
         {
             StringBuilder sb = new StringBuilder();
@@ -86,6 +107,13 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
                     sb.Append('|');
                 sb.Append(DraggersOnHold[i]);
             }
+            sb.Append('/');
+            for (int i = 0; i < Judgements.Count; i++)
+            {
+                if (i > 0)
+                    sb.Append('|');
+                sb.Append(Judgements[i].ToStreamData());
+            }
             return sb.ToString();
         }
 
@@ -101,7 +129,7 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             {
                 foreach (string inputData in splits[1].Split('|'))
                 {
-                    var input = new ReplayableInput();
+                    var input = replayInputRecycler.GetNext();
                     input.FromStreamData(inputData);
                     Inputs.Add(input);
                 }
@@ -111,6 +139,16 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             {
                 foreach (string draggerIndexData in splits[2].Split('|'))
                     DraggersOnHold.Add(int.Parse(draggerIndexData));
+            }
+
+            if (splits[3].Length > 0)
+            {
+                foreach (string judgementData in splits[3].Split('|'))
+                {
+                    var judgement = replayJudgementRecycler.GetNext();
+                    judgement.FromStreamData(judgementData);
+                    Judgements.Add(judgement);
+                }
             }
         }
 

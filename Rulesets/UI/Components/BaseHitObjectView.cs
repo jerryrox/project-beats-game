@@ -156,16 +156,13 @@ namespace PBGame.Rulesets.UI.Components
         /// <summary>
         /// Evaluates this and all nested objects for judgements that occurred as a result of simply passing time.
         /// </summary>
-        public virtual IEnumerable<JudgementResult> JudgePassive(float curTime)
+        public virtual IEnumerable<KeyValuePair<BaseHitObjectView, JudgementResult>> JudgePassive(float curTime)
         {
             // Judge all inner objects recursively.
             for (int i = 0; i < nestedObjects.Count; i++)
             {
                 foreach (var result in nestedObjects[i].JudgePassive(curTime))
-                {
-                    if(result != null)
-                        yield return result;
-                }
+                    yield return result;
             }
 
             // Judge self only after all nested objects are judged.
@@ -176,7 +173,7 @@ namespace PBGame.Rulesets.UI.Components
                     EvalPassiveJudgement();
                     if(!IsJudged)
                         throw new Exception("Evaluation of passive judgement must output a valid judgement result!");
-                    yield return Result;
+                    yield return new KeyValuePair<BaseHitObjectView, JudgementResult>(this, Result);
                 }
             }
         }

@@ -108,7 +108,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     // Associate the hit object view with the key stroke.
                     if(objView is DraggerView draggerView)
                         key.DraggerView = draggerView;
-                    gameProcessor.AddJudgement(objView.JudgeInput(time, key.Input));
+                    var judgement = objView.JudgeInput(time, key.Input);
+                    gameProcessor.AddJudgement(judgement);
+                    gameProcessor.RecordJudgement(objView, judgement);
                     break;
                 }
             }
