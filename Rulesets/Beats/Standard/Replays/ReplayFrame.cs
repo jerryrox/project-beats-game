@@ -97,16 +97,20 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
 
             Time = float.Parse(splits[0]);
 
-            foreach (string inputData in splits[1].Split('|'))
+            if (splits[1].Length > 0)
             {
-                var input = new ReplayableInput();
-                input.FromStreamData(inputData);
-                Inputs.Add(input);
+                foreach (string inputData in splits[1].Split('|'))
+                {
+                    var input = new ReplayableInput();
+                    input.FromStreamData(inputData);
+                    Inputs.Add(input);
+                }
             }
 
-            foreach (string draggerIndexData in splits[2].Split('|'))
+            if (splits[2].Length > 0)
             {
-                DraggersOnHold.Add(int.Parse(draggerIndexData));
+                foreach (string draggerIndexData in splits[2].Split('|'))
+                    DraggersOnHold.Add(int.Parse(draggerIndexData));
             }
         }
 

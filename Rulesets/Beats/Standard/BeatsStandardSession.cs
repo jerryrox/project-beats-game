@@ -40,6 +40,7 @@ namespace PBGame.Rulesets.Beats.Standard
                 replayInputRecycler.ReturnAll();
                 replayFrameRecycler.ReturnAll();
 
+                gameProcessor.Destroy();
                 gameProcessor = null;
             };
         }

@@ -53,7 +53,7 @@ namespace PBGame.Rulesets.Beats.Standard
         public override void JudgePassive(float curTime, HitObjectView hitObjectView)
         {
             // TODO:
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         protected override void Update()
@@ -65,7 +65,7 @@ namespace PBGame.Rulesets.Beats.Standard
             while (true)
             {
                 var frame = replayReader.PeekData();
-                if (frame.Time > musicTime)
+                if (frame == null || frame.Time > musicTime)
                     break;
 
                 curFrame = frame;
