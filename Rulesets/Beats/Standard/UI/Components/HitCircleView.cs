@@ -92,6 +92,16 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 hitAni.Stop();
         }
 
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            var judgement = base.SetResult(hitResult, offset);
+            if (hitResult == HitResultType.Miss)
+                Active = false;
+            else
+                hitAni.PlayFromStart();
+            return judgement;
+        }
+
         public override JudgementResult JudgeInput(float curTime, IInput input)
         {
             if(IsJudged)
@@ -103,7 +113,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 var resultType = hitObject.Timing.GetHitResult(offset);
                 if (resultType != HitResultType.None)
                 {
-                    hitAni.PlayFromStart();
                     return SetResult(resultType, offset);
                 }
             }
@@ -113,7 +122,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected override void EvalPassiveJudgement()
         {
             SetResult(HitResultType.Miss, judgeEndTime);
-            Active = false;
         }
     }
 }

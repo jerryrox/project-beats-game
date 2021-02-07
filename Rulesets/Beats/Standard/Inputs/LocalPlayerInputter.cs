@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using PBGame.Stores;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBFramework.Inputs;
@@ -56,7 +53,9 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                             dragger.StartCircle.SetHold(isHolding, curTime);
 
                             if (isHolding)
-                                gameProcessor.RecordHoldingDragger(dragger.ObjectIndex);
+                                gameProcessor.RecordHeldDragger(dragger.ObjectIndex);
+                            else
+                                gameProcessor.RecordReleasedDragger(dragger.ObjectIndex);
                         }
                     }
                 }
@@ -109,8 +108,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     if(objView is DraggerView draggerView)
                         key.DraggerView = draggerView;
                     var judgement = objView.JudgeInput(time, key.Input);
+                    gameProcessor.RecordJudgement(objView, judgement, false, keyCode: key.Input.Key);
                     gameProcessor.AddJudgement(judgement);
-                    gameProcessor.RecordJudgement(objView, judgement);
                     break;
                 }
             }
@@ -124,6 +123,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             if (key.DraggerView == null)
                 return;
 
+            gameProcessor.RecordReleasedDragger(key.DraggerView.ObjectIndex);
             key.DraggerView.StartCircle.SetHold(false, key.LastUpdateTime);
         }
     }

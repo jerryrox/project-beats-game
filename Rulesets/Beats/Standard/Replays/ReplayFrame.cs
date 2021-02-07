@@ -8,7 +8,8 @@ using PBFramework.Allocation.Recyclers;
 
 namespace PBGame.Rulesets.Beats.Standard.Replays
 {
-    public class ReplayFrame : IStreamableData, IRecyclable<ReplayFrame> {
+    public class ReplayFrame : IStreamableData, IRecyclable<ReplayFrame>
+    {
 
         private IRecycler<ReplayableInput> replayInputRecycler;
         private IRecycler<ReplayableJudgement> replayJudgementRecycler;
@@ -27,7 +28,12 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         /// <summary>
         /// The list of hit object index of draggers that were pressed during this frame.
         /// </summary>
-        public List<int> DraggersOnHold { get; } = new List<int>();
+        public List<int> DraggersHeld { get; } = new List<int>();
+
+        /// <summary>
+        /// The list of hit object index of draggers that were released during this frame.
+        /// </summary>
+        public List<int> DraggersReleased { get; } = new List<int>();
 
         /// <summary>
         /// The list of judgements that occurred in this frame.
@@ -52,9 +58,11 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             foreach (var input in Inputs)
                 replayInputRecycler.Return(input);
             Inputs.Clear();
-            DraggersOnHold.Clear();
+            DraggersHeld.Clear();
+            DraggersReleased.Clear();
             foreach (var judgement in Judgements)
                 replayJudgementRecycler.Return(judgement);
+            Judgements.Clear();
         }
 
         /// <summary>
@@ -72,9 +80,19 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         /// Adds the specified dragger index to the dragger holding flags list.
         /// Returns the index that was passed as parameter.
         /// </summary>
-        public int AddHoldingDragger(int draggerIndex)
+        public int AddHeldDragger(int draggerIndex)
         {
-            DraggersOnHold.Add(draggerIndex);
+            DraggersHeld.Add(draggerIndex);
+            return draggerIndex;
+        }
+
+        /// <summary>
+        /// Adds the specified dragger index to the dragger released flags list.
+        /// Returns the index that was passed as parameter.
+        /// </summary>
+        public int AddReleasedDragger(int draggerIndex)
+        {
+            DraggersReleased.Add(draggerIndex);
             return draggerIndex;
         }
 
@@ -101,11 +119,18 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
                 sb.Append(Inputs[i].ToStreamData());
             }
             sb.Append('/');
-            for (int i = 0; i < DraggersOnHold.Count; i++)
+            for (int i = 0; i < DraggersHeld.Count; i++)
             {
                 if (i > 0)
                     sb.Append('|');
-                sb.Append(DraggersOnHold[i]);
+                sb.Append(DraggersHeld[i]);
+            }
+            sb.Append('/');
+            for (int i = 0; i < DraggersReleased.Count; i++)
+            {
+                if (i > 0)
+                    sb.Append('|');
+                sb.Append(DraggersReleased[i]);
             }
             sb.Append('/');
             for (int i = 0; i < Judgements.Count; i++)
@@ -138,12 +163,18 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             if (splits[2].Length > 0)
             {
                 foreach (string draggerIndexData in splits[2].Split('|'))
-                    DraggersOnHold.Add(int.Parse(draggerIndexData));
+                    DraggersHeld.Add(int.Parse(draggerIndexData));
             }
 
             if (splits[3].Length > 0)
             {
-                foreach (string judgementData in splits[3].Split('|'))
+                foreach (string draggerIndexData in splits[3].Split('|'))
+                    DraggersReleased.Add(int.Parse(draggerIndexData));
+            }
+
+            if (splits[4].Length > 0)
+            {
+                foreach (string judgementData in splits[4].Split('|'))
                 {
                     var judgement = replayJudgementRecycler.GetNext();
                     judgement.FromStreamData(judgementData);

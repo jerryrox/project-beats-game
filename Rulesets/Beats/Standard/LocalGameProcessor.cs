@@ -76,22 +76,33 @@ namespace PBGame.Rulesets.Beats.Standard
         /// <summary>
         /// Records the dragging flag for the specified dragger index.
         /// </summary>
-        public void RecordHoldingDragger(int draggerIndex)
+        public void RecordHeldDragger(int draggerIndex)
         {
             if(nextFrame != null)
-                nextFrame.AddHoldingDragger(draggerIndex);
+                nextFrame.AddHeldDragger(draggerIndex);
+        }
+
+        /// <summary>
+        /// Records the released flag for the specified dragger index.
+        /// </summary>
+        public void RecordReleasedDragger(int draggerIndex)
+        {
+            if(nextFrame != null)
+                nextFrame.AddReleasedDragger(draggerIndex);
         }
 
         /// <summary>
         /// Records the judgement result for the specified hit object.
         /// </summary>
-        public void RecordJudgement(BaseHitObjectView hitObjectView, JudgementResult judgement)
+        public void RecordJudgement(BaseHitObjectView hitObjectView, JudgementResult judgement, bool isPassive, KeyCode keyCode = KeyCode.None)
         {
-            if (nextFrame != null && judgement != null && hitObjectView != null)
+            if (nextFrame != null && judgement != null && hitObjectView != null && judgement.HitResult != HitResultType.None)
             {
                 nextFrame.AddJudgement((j) =>
                 {
                     j.SetFromJudgementResult(judgement);
+                    j.IsPassive = isPassive;
+                    j.InputKey = keyCode;
                     while (hitObjectView != null)
                     {
                         j.HitObjectIndexPath.Insert(0, hitObjectView.ObjectIndex);
@@ -105,8 +116,8 @@ namespace PBGame.Rulesets.Beats.Standard
         {
             foreach (var result in hitObjectView.JudgePassive(curTime))
             {
+                RecordJudgement(result.Key, result.Value, true);
                 AddJudgement(result.Value);
-                RecordJudgement(result.Key, result.Value);
             }
         }
 

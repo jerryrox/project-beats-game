@@ -119,7 +119,7 @@ namespace PBGame.Rulesets.UI.Components
         /// List of nested objects returned as base hit object view type.
         /// If you'd like to retrieve a more specialized type of nested objects, they should be stored by the derived classes.
         /// </summary>
-        protected List<BaseHitObjectView> BaseNestedObjects => nestedObjects;
+        public List<BaseHitObjectView> BaseNestedObjects => nestedObjects;
 
         /// <summary>
         /// Just a dummy implementation of IRecyclable, only to define the other interface methods virtual.

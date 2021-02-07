@@ -19,7 +19,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 {
     public class HitObjectHolder : UguiObject
     {
-
         private ManagedRecycler<HitCircleView> hitCircleRecycler;
         private ManagedRecycler<DraggerCircleView> draggerCircleRecycler;
         private ManagedRecycler<DraggerTickView> tickRecycler;
@@ -32,6 +31,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
         private BeatsStandardProcessor gameProcessor;
 
+
+        /// <summary>
+        /// Returns the list of views currently being managed.
+        /// </summary>
+        public RangedList<HitObjectView> HitObjectViews => hitObjectViews;
 
         [ReceivesDependency]
         private IGameSession GameSession { get; set; }

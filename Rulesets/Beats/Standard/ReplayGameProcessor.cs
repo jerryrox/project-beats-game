@@ -1,17 +1,11 @@
-using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.IO;
+using PBGame.Rulesets.UI.Components;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Replays;
-using PBFramework.UI;
-using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard
 {
@@ -52,8 +46,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override void JudgePassive(float curTime, HitObjectView hitObjectView)
         {
-            // TODO:
-            // throw new NotImplementedException();
+            // Nothing to do. All judgements should be simulated in Update.
         }
 
         protected override void Update()
@@ -73,8 +66,7 @@ namespace PBGame.Rulesets.Beats.Standard
                 // Process update for other game modules.
                 inputter.UpdateInputs(frame.Time, frame.Inputs);
                 HitObjectHolder.UpdateObjects(frame.Time);
-
-                // TODO: Playback judgements.
+                UpdateJudgements(frame);
 
                 replayReader.AdvanceIndex();
             }
@@ -89,6 +81,55 @@ namespace PBGame.Rulesets.Beats.Standard
             );
             Dependencies.Inject(inputter);
             return inputter;
+        }
+
+        /// <summary>
+        /// Performs update replay playback.
+        /// </summary>
+        private void UpdateJudgements(ReplayFrame frame)
+        {
+            var views = HitObjectHolder.HitObjectViews;
+            foreach (var judgement in frame.Judgements)
+            {
+                // Find the target hit object from path.
+                var path = judgement.HitObjectIndexPath;
+                BaseHitObjectView hitObjectView = views[path[0]];
+                for (int i = 1; i < path.Count; i++)
+                {
+                    int node = path[i];
+                    hitObjectView = hitObjectView.BaseNestedObjects[node];
+                }
+
+                if (judgement.IsPassive)
+                {
+                    foreach (var passiveJudgement in hitObjectView.JudgePassive(frame.Time))
+                        AddJudgement(passiveJudgement.Value);
+                }
+                else
+                {
+                    var input = frame.Inputs.Find((i) => i.Key == judgement.InputKey);
+                    AddJudgement(
+                        (hitObjectView as HitObjectView).JudgeInput(frame.Time, input)
+                    );
+                }
+            }
+
+            foreach (var index in frame.DraggersReleased)
+            {
+                var dragger = views[index] as DraggerView;
+                if (dragger != null)
+                {
+                    dragger.StartCircle.SetHold(false, frame.Time);
+                }
+            }
+            foreach (var index in frame.DraggersHeld)
+            {
+                var dragger = views[index] as DraggerView;
+                if (dragger != null)
+                {
+                    dragger.StartCircle.SetHold(true, frame.Time);
+                }
+            }
         }
 
         /// <summary>
