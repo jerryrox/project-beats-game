@@ -54,13 +54,9 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         public void Reset()
         {
             Time = 0;
-            foreach (var input in Inputs)
-                replayInputRecycler.Return(input);
             Inputs.Clear();
             DraggersHeld.Clear();
             DraggersReleased.Clear();
-            foreach (var judgement in Judgements)
-                replayJudgementRecycler.Return(judgement);
             Judgements.Clear();
         }
 

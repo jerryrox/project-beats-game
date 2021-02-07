@@ -44,24 +44,16 @@ namespace PBGame.Rulesets.Beats.Standard
 
 
         [InitWithDependency]
-        private void Init(IRecycler<ReplayFrame> replayFrameRecycler)
+        private void Init()
         {
             replayWriter = new DataStreamWriter<ReplayFrame>(
-                replayFrameRecycler.GetNext,
+                ReplayFrameRecycler.GetNext,
                 60 * 2,
                 writeInterval: 100
             );
 
-            GameSession.OnSoftInit += () =>
-            {
-                curTime = -10000;
-
-                InitReplayWriter();
-            };
-            GameSession.OnSoftDispose += () =>
-            {
-                DisposeReplayWriter();
-            };
+            GameSession.OnSoftInit += OnSoftInit;
+            GameSession.OnSoftDispose += OnSoftDispose;
         }
 
         /// <summary>
@@ -119,6 +111,12 @@ namespace PBGame.Rulesets.Beats.Standard
                 RecordJudgement(result.Key, result.Value, true);
                 AddJudgement(result.Value);
             }
+        }
+
+        protected void OnDestroy()
+        {
+            GameSession.OnSoftInit -= OnSoftInit;
+            GameSession.OnSoftDispose -= OnSoftDispose;
         }
 
         protected override void Update()
@@ -194,6 +192,24 @@ namespace PBGame.Rulesets.Beats.Standard
                     replayFile.MoveTo(replayFileDest.FullName);
                 }
             }
+        }
+
+        /// <summary>
+        /// Event called when the game session is soft initializing.
+        /// </summary>
+        private void OnSoftInit()
+        {
+            curTime = -10000;
+            InitReplayWriter();
+        }
+
+        /// <summary>
+        /// Event called when the game session is soft disposing.
+        /// </summary>
+        private void OnSoftDispose()
+        {
+            DisposeReplayWriter();
+            DisposeReplayRecyclers();
         }
     }
 }

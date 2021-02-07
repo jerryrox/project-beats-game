@@ -33,20 +33,19 @@ namespace PBGame.Rulesets.Beats.Standard
                 readInterval: 100
             );
 
-            GameSession.OnSoftInit += () =>
-            {
-                lastFrameTime = -10000;
-                InitReplayReader();
-            };
-            GameSession.OnSoftDispose += () =>
-            {
-                DisposeReplayReader();
-            };
+            GameSession.OnSoftInit += OnSoftInit;
+            GameSession.OnSoftDispose += OnSoftDispose;
         }
 
         public override void JudgePassive(float curTime, HitObjectView hitObjectView)
         {
             // Nothing to do. All judgements should be simulated in Update.
+        }
+
+        protected void OnDestroy()
+        {
+            GameSession.OnSoftInit -= OnSoftInit;
+            GameSession.OnSoftDispose -= OnSoftDispose;
         }
 
         protected override void Update()
@@ -147,7 +146,26 @@ namespace PBGame.Rulesets.Beats.Standard
         private void DisposeReplayReader()
         {
             replayReader.StopStream();
+            replayReadStream.Dispose();
             replayReadStream = null;
+        }
+
+        /// <summary>
+        /// Event called when the game session is soft initializing.
+        /// </summary>
+        private void OnSoftInit()
+        {
+            lastFrameTime = -10000;
+            InitReplayReader();
+        }
+
+        /// <summary>
+        /// Event called when the game session is soft disposing.
+        /// </summary>
+        private void OnSoftDispose()
+        {
+            DisposeReplayReader();
+            DisposeReplayRecyclers();
         }
     }
 }

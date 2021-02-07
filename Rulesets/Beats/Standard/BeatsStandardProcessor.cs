@@ -2,7 +2,9 @@ using PBGame.UI.Models;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
+using PBGame.Rulesets.Beats.Standard.Replays;
 using PBGame.Rulesets.Judgements;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 
 namespace PBGame.Rulesets.Beats.Standard
@@ -20,6 +22,15 @@ namespace PBGame.Rulesets.Beats.Standard
 
         [ReceivesDependency]
         protected TouchEffectDisplay TouchEffectDisplay { get; set; }
+
+        [ReceivesDependency]
+        protected IRecycler<ReplayFrame> ReplayFrameRecycler { get; set; }
+
+        [ReceivesDependency]
+        protected IRecycler<ReplayableJudgement> ReplayJudgementRecycler { get; set; }
+
+        [ReceivesDependency]
+        protected IRecycler<ReplayableInput> ReplayInputRecycler { get; set; }
 
         [ReceivesDependency]
         protected GameModel Model { get; set; }
@@ -61,5 +72,15 @@ namespace PBGame.Rulesets.Beats.Standard
         /// Creates a new game inputter instance.
         /// </summary>
         protected abstract IGameInputter CreateGameInputter();
+
+        /// <summary>
+        /// Cleans up the replay-related object recyclers.
+        /// </summary>
+        protected void DisposeReplayRecyclers()
+        {
+            (ReplayFrameRecycler as ManagedRecycler<ReplayFrame>)?.ReturnAll();
+            (ReplayJudgementRecycler as ManagedRecycler<ReplayableJudgement>)?.ReturnAll();
+            (ReplayInputRecycler as ManagedRecycler<ReplayableInput>)?.ReturnAll();
+        }
     }
 }

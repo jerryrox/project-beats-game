@@ -12,7 +12,16 @@ namespace PBGame.Rulesets.Beats.Standard
 
         private BeatsStandardProcessor gameProcessor;
 
+        /// <summary>
+        /// Replayable input instance recycler.
+        /// Should be used ONLY for replay processor.
+        /// </summary>
         private ManagedRecycler<ReplayableInput> replayInputRecycler;
+
+        /// <summary>
+        /// Replay playback frame instance recycler.
+        /// Should be used ONLY for replay processor.
+        /// </summary>
         private ManagedRecycler<ReplayFrame> replayFrameRecycler;
 
 
@@ -37,9 +46,7 @@ namespace PBGame.Rulesets.Beats.Standard
             };
             base.OnHardDispose += () =>
             {
-                replayInputRecycler.ReturnAll();
-                replayFrameRecycler.ReturnAll();
-
+                Dependencies.Remove(gameProcessor);
                 gameProcessor.Destroy();
                 gameProcessor = null;
             };

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBFramework.Inputs;
-using PBFramework.Allocation.Recyclers;
-using PBFramework.Dependencies;
 using UnityEngine;
 
 namespace PBGame.Rulesets.Beats.Standard.Inputs
@@ -12,10 +10,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
     public class ReplayInputter : BaseInputter
     {
         private Dictionary<KeyCode, ReplayableInput> playbackInputs = new Dictionary<KeyCode, ReplayableInput>();
-
-
-        [ReceivesDependency]
-        private IRecycler<ReplayableInput> replayInputRecycler { get; set; }
 
 
         public ReplayInputter(FileInfo replayFile, HitBarDisplay hitBar, HitObjectHolder hitObjectHolder) : base(hitBar, hitObjectHolder)
@@ -48,7 +42,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         {
             ReplayableInput input = null;
             if (!playbackInputs.TryGetValue(rawInput.Key, out input))
-                playbackInputs.Add(rawInput.Key, input = replayInputRecycler.GetNext());
+                playbackInputs.Add(rawInput.Key, input = new ReplayableInput());
 
             input.SetFromCursor(rawInput);
             return input;
