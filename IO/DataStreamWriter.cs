@@ -8,8 +8,9 @@ namespace PBGame.IO
     /// Class which saves incoming data as a stream to the destination file.
     /// </summary>
     public class DataStreamWriter<T>
-        where T : class, IStreamableData, new()
+        where T : class, IStreamableData
     {
+        private Func<T> instantiator;
         private int poolSize;
         private int writeInterval;
         private T[] pool;
@@ -28,8 +29,9 @@ namespace PBGame.IO
         public T NextWriteItem => pool[writeCount % poolSize];
 
 
-        public DataStreamWriter(int poolSize, int writeInterval = 60)
+        public DataStreamWriter(Func<T> instantiator, int poolSize, int writeInterval = 60)
         {
+            this.instantiator = instantiator;
             this.poolSize = poolSize;
             this.writeInterval = writeInterval;
             this.pool = new T[poolSize];
@@ -90,7 +92,7 @@ namespace PBGame.IO
             for (int i = 0; i < pool.Length; i++)
             {
                 if (pool[i] == null)
-                    pool[i] = new T();
+                    pool[i] = instantiator.Invoke();
             }
 
             var myStream = writer as StreamWriter;

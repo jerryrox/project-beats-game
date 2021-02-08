@@ -29,7 +29,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
         protected override IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency)
         {
-            var session = new GameSession(container);
+            var session = new BeatsStandardSession(container);
             dependency.Inject(session);
             return session;
         }

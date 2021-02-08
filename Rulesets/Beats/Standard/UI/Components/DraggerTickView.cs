@@ -121,6 +121,16 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             RemoveDragger();
         }
 
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            var judgement = base.SetResult(hitResult, offset);
+            if (judgement.IsHit)
+                hitAni.PlayFromStart();
+            else
+                Active = false;
+            return judgement;
+        }
+
         public void UpdatePosition()
         {
             this.Y = Mathf.Max(draggerView.StartCircle.Position.y, this.Y);
@@ -129,18 +139,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         protected override void EvalPassiveJudgement()
         {
             if (draggerView != null && draggerView.StartCircle != null)
-            {
                 SetResult(draggerView.StartCircle.IsHolding() ? HitResultType.Perfect : HitResultType.Miss, 0f);
-                if(Result.IsHit)
-                    hitAni.PlayFromStart();
-                else
-                    Active = false;
-            }
             else
-            {
                 SetResult(HitResultType.Miss, 0f);
-                Active = false;
-            }
         }
 
         /// <summary>

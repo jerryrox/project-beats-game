@@ -10,12 +10,14 @@ using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
+using PBGame.Rulesets.Judgements;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -33,9 +35,14 @@ namespace PBGame.Rulesets
         public event Action OnRetry;
         public event Action OnForceQuit;
         public event Action OnCompletion;
+        public event Action<float> OnSkipped;
 
+        protected ManagedRecycler<ReplayableJudgement> replayJudgementsRecycler;
+        
         private IGraphicObject containerObject;
 
+
+        public abstract GameProcessor GameProcessor { get; }
 
         public GameParameter CurrentParameter { get; private set; }
 
@@ -103,6 +110,9 @@ namespace PBGame.Rulesets
             this.Dependencies.CacheAs<IGameSession<T>>(this);
             this.Dependencies.CacheAs<IGameSession>(this);
 
+            replayJudgementsRecycler = new ManagedRecycler<ReplayableJudgement>(CreateReplayJudgement);
+            this.Dependencies.CacheAs<IRecycler<ReplayableJudgement>>(replayJudgementsRecycler);
+
             // Create game gui.
             GameGui = CreateGameGui(containerObject, this.Dependencies);
             {
@@ -121,7 +131,7 @@ namespace PBGame.Rulesets
 
         public int GetPlayTime()
         {
-            int playTime = (int)MusicController.Clock.CurrentTime;
+            int playTime = (int)GameProcessor.CurrentTime;
             if (ScoreProcessor.JudgeCount > 0)
             {
                 playTime -= (int)(CurrentMap.HitObjects.First().StartTime / 1000f);
@@ -212,7 +222,7 @@ namespace PBGame.Rulesets
         {
             if(IsPaused)
                 return;
-            if(MusicController.CurrentTime < 0f)
+            if(GameProcessor.CurrentTime < 0f)
                 return;
             if(MusicController.IsPlaying)
                 MusicController.Pause();
@@ -283,6 +293,12 @@ namespace PBGame.Rulesets
             initialTimer.Start();
         }
 
+        public void InvokeSkipped(float time)
+        {
+            MusicController.Seek(time);
+            OnSkipped?.Invoke(time);
+        }
+
         /// <summary>
         /// Event called on application pause.
         /// </summary>
@@ -305,5 +321,13 @@ namespace PBGame.Rulesets
         /// Creates a new instance of the game gui under the specified container object.
         /// </summary>
         protected abstract GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies);
+
+        /// <summary>
+        /// Creates a new replayable judgement instance for the recycler.
+        /// </summary>
+        private ReplayableJudgement CreateReplayJudgement()
+        {
+            return new ReplayableJudgement();
+        }
     }
 }
