@@ -30,14 +30,9 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         public List<ReplayableInput> Inputs { get; } = new List<ReplayableInput>();
 
         /// <summary>
-        /// The list of hit object index of draggers that were pressed during this frame.
+        /// The list of dragger object index mapped to a flag indicating whether the dragger was pressed or released on this frame.
         /// </summary>
-        public List<int> DraggersHeld { get; } = new List<int>();
-
-        /// <summary>
-        /// The list of hit object index of draggers that were released during this frame.
-        /// </summary>
-        public List<int> DraggersReleased { get; } = new List<int>();
+        public List<KeyValuePair<int, bool>> DraggerHoldFlags = new List<KeyValuePair<int, bool>>();
 
         /// <summary>
         /// The list of judgements that occurred in this frame.
@@ -61,8 +56,7 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             Time = 0;
             IsSkipped = false;
             Inputs.Clear();
-            DraggersHeld.Clear();
-            DraggersReleased.Clear();
+            DraggerHoldFlags.Clear();
             Judgements.Clear();
         }
 
@@ -78,23 +72,11 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
         }
 
         /// <summary>
-        /// Adds the specified dragger index to the dragger holding flags list.
-        /// Returns the index that was passed as parameter.
+        /// Adds the specified holding/released flag for the dragger object index.
         /// </summary>
-        public int AddHeldDragger(int draggerIndex)
+        public void AddDraggerHoldFlag(int draggerIndex, bool isHeld)
         {
-            DraggersHeld.Add(draggerIndex);
-            return draggerIndex;
-        }
-
-        /// <summary>
-        /// Adds the specified dragger index to the dragger released flags list.
-        /// Returns the index that was passed as parameter.
-        /// </summary>
-        public int AddReleasedDragger(int draggerIndex)
-        {
-            DraggersReleased.Add(draggerIndex);
-            return draggerIndex;
+            DraggerHoldFlags.Add(new KeyValuePair<int, bool>(draggerIndex, isHeld));
         }
 
         /// <summary>
@@ -122,18 +104,11 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
                 sb.Append(Inputs[i].ToStreamData());
             }
             sb.Append('/');
-            for (int i = 0; i < DraggersHeld.Count; i++)
+            for (int i = 0; i < DraggerHoldFlags.Count; i++)
             {
                 if (i > 0)
                     sb.Append('|');
-                sb.Append(DraggersHeld[i]);
-            }
-            sb.Append('/');
-            for (int i = 0; i < DraggersReleased.Count; i++)
-            {
-                if (i > 0)
-                    sb.Append('|');
-                sb.Append(DraggersReleased[i]);
+                sb.Append(DraggerHoldFlags[i].Key).Append(",").Append(DraggerHoldFlags[i].Value ? "1" : "0");
             }
             sb.Append('/');
             for (int i = 0; i < Judgements.Count; i++)
@@ -167,19 +142,16 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
 
             if (splits[3].Length > 0)
             {
-                foreach (string draggerIndexData in splits[3].Split('|'))
-                    DraggersHeld.Add(int.Parse(draggerIndexData));
+                foreach (string draggerHoldData in splits[3].Split('|'))
+                {
+                    string[] pair = draggerHoldData.Split(',');
+                    DraggerHoldFlags.Add(new KeyValuePair<int, bool>(int.Parse(pair[0]), pair[1] == "1"));
+                }
             }
 
             if (splits[4].Length > 0)
             {
-                foreach (string draggerIndexData in splits[4].Split('|'))
-                    DraggersReleased.Add(int.Parse(draggerIndexData));
-            }
-
-            if (splits[5].Length > 0)
-            {
-                foreach (string judgementData in splits[5].Split('|'))
+                foreach (string judgementData in splits[4].Split('|'))
                 {
                     var judgement = replayJudgementRecycler.GetNext();
                     judgement.FromStreamData(judgementData);

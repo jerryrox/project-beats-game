@@ -28,8 +28,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         /// <summary>
         /// Current y distance under the hit position.
         /// </summary>
-        /// <value></value>
         public float DistUnderHitPos => PlayArea.HitPosition - this.Y;
+
+        public override bool IsHoldable => true;
 
         public override Color Tint
         {
@@ -96,6 +97,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             // Direct judgements via input will only be done for the start circle.
             // For this and other nested objects, they must be handled through passive judgement.
             return startCircle.JudgeInput(curTime, input);
+        }
+
+        public override bool IsHolding(float? curTime)
+        {
+            return startCircle.IsHolding(curTime);
         }
 
         public override bool IsCursorInRange(float x)

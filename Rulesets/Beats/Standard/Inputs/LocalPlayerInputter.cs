@@ -51,11 +51,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                             var dragger = key.DraggerView;
                             bool isHolding = dragger.IsCursorInRange(pos);
                             dragger.StartCircle.SetHold(isHolding, curTime);
-
-                            if (isHolding)
-                                gameProcessor.RecordHeldDragger(dragger.ObjectIndex);
-                            else
-                                gameProcessor.RecordReleasedDragger(dragger.ObjectIndex);
                         }
                     }
                 }
@@ -123,7 +118,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             if (key.DraggerView == null)
                 return;
 
-            gameProcessor.RecordReleasedDragger(key.DraggerView.ObjectIndex);
             key.DraggerView.StartCircle.SetHold(false, key.LastUpdateTime);
         }
     }

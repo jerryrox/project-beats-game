@@ -52,6 +52,11 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         public abstract void JudgePassive(float curTime, HitObjectView hitObjectView);
 
+        /// <summary>
+        /// Records the dragging flag for the specified dragger index.
+        /// </summary>
+        public virtual void RecordDraggerHoldFlag(int draggerIndex, bool isHolding) {}
+
         protected abstract void Update();
 
         /// <summary>

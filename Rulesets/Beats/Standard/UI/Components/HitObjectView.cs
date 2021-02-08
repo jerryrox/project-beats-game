@@ -1,15 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
-using PBFramework.UI;
 using PBFramework.Inputs;
-using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard.UI.Components
 {
@@ -17,6 +11,9 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
     {
         protected float xPos;
         protected float radius;
+
+
+        public override bool IsHoldable => false;
 
         [ReceivesDependency]
         private PlayAreaContainer PlayArea { get; set; }

@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.IO;
 using PBGame.Stores;
 using PBGame.Rulesets.UI.Components;
@@ -9,11 +7,8 @@ using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Replays;
 using PBGame.Rulesets.Judgements;
 using PBFramework.Inputs;
-using PBFramework.Graphics;
-using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 
 namespace PBGame.Rulesets.Beats.Standard
@@ -66,22 +61,10 @@ namespace PBGame.Rulesets.Beats.Standard
                 nextFrame.AddInput((input) => input.SetFromCursor(cursor));
         }
 
-        /// <summary>
-        /// Records the dragging flag for the specified dragger index.
-        /// </summary>
-        public void RecordHeldDragger(int draggerIndex)
+        public override void RecordDraggerHoldFlag(int draggerIndex, bool isHolding)
         {
             if(nextFrame != null)
-                nextFrame.AddHeldDragger(draggerIndex);
-        }
-
-        /// <summary>
-        /// Records the released flag for the specified dragger index.
-        /// </summary>
-        public void RecordReleasedDragger(int draggerIndex)
-        {
-            if(nextFrame != null)
-                nextFrame.AddReleasedDragger(draggerIndex);
+                nextFrame.AddDraggerHoldFlag(draggerIndex, isHolding);
         }
 
         /// <summary>

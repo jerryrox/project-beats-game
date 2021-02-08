@@ -55,6 +55,7 @@ namespace PBGame.Rulesets.Beats.Standard
                 return;
 
             float musicTime = MusicController.CurrentTime;
+            
             while (true)
             {
                 var frame = replayReader.PeekData();
@@ -70,7 +71,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
                 // Process update for other game modules.
                 inputter.UpdateInputs(frame.Time, frame.Inputs);
-                HitObjectHolder.UpdateObjects(frame.Time);
+                HitObjectHolder.UpdateObjects(musicTime);
                 UpdateJudgements(frame);
 
                 replayReader.AdvanceIndex();
@@ -94,16 +95,26 @@ namespace PBGame.Rulesets.Beats.Standard
         private void UpdateJudgements(ReplayFrame frame)
         {
             var views = HitObjectHolder.HitObjectViews;
+
+            foreach (var pair in frame.DraggerHoldFlags)
+            {
+                var dragger = views[pair.Key] as DraggerView;
+                if (dragger != null)
+                {
+                    dragger.StartCircle.SetHold(pair.Value, frame.Time);
+                }
+            }
+            
             foreach (var judgement in frame.Judgements)
             {
                 // Find the target hit object from path.
                 var path = judgement.HitObjectIndexPath;
                 BaseHitObjectView hitObjectView = views[path[0]];
-                for (int i = 1; i < path.Count; i++)
-                {
-                    int node = path[i];
-                    hitObjectView = hitObjectView.BaseNestedObjects[node];
-                }
+                // for (int i = 1; i < path.Count; i++)
+                // {
+                //     int node = path[i];
+                //     hitObjectView = hitObjectView.BaseNestedObjects[node];
+                // }
 
                 if (judgement.IsPassive)
                 {
@@ -116,23 +127,6 @@ namespace PBGame.Rulesets.Beats.Standard
                     AddJudgement(
                         (hitObjectView as HitObjectView).JudgeInput(frame.Time, input)
                     );
-                }
-            }
-
-            foreach (var index in frame.DraggersReleased)
-            {
-                var dragger = views[index] as DraggerView;
-                if (dragger != null)
-                {
-                    dragger.StartCircle.SetHold(false, frame.Time);
-                }
-            }
-            foreach (var index in frame.DraggersHeld)
-            {
-                var dragger = views[index] as DraggerView;
-                if (dragger != null)
-                {
-                    dragger.StartCircle.SetHold(true, frame.Time);
                 }
             }
         }

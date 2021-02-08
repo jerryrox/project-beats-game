@@ -5,9 +5,7 @@ using PBGame.Data;
 using PBGame.Graphics;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
-using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
-using PBGame.Rulesets.Judgements;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
@@ -104,6 +102,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
             {
                 var view = hitObjectViews[i];
+
+                // Record dragging flag.
+                // Ensure we don't apply the generous release handicap here as it'll screw up the replay score sync.
+                if(view.IsHoldable)
+                    gameProcessor.RecordDraggerHoldFlag(view.ObjectIndex, view.IsHolding(null));
 
                 // Process any passive judgements to be made.
                 gameProcessor.JudgePassive(curTime, view);

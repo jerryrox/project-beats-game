@@ -162,11 +162,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             wasHolding = isHolding;
         }
 
-        /// <summary>
-        /// Returns whether the circle is currently being held down.
-        /// Optionally provide curTime to check with a more generous release time.
-        /// </summary>
-        public bool IsHolding(float? curTime = null)
+        public override bool IsHolding(float? curTime = null)
         {
             if(!curTime.HasValue)
                 return isHolding;

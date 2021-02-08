@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Audio;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Judgements;
-using PBFramework.UI;
-using PBFramework.Data;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.UI.Components
 {
@@ -91,6 +87,11 @@ namespace PBGame.Rulesets.UI.Components
         /// Returns whether this object has been judged.
         /// </summary>
         public bool IsJudged => Result == null ? true : Result.HasResult;
+
+        /// <summary>
+        /// Returns whether the hit object can be held.
+        /// </summary>
+        public abstract bool IsHoldable { get; }
 
         /// <summary>
         /// Returns whether this object has an ending time interface.
@@ -246,6 +247,12 @@ namespace PBGame.Rulesets.UI.Components
         {
             return curTime > judgeEndTime;
         }
+
+        /// <summary>
+        /// Returns whether the hit object is considered being held.
+        /// Optionally provide curTime to check with a more generous release time, if the ruleset allows for it.
+        /// </summary>
+        public virtual bool IsHolding(float? curTime) => false;
 
         /// <summary>
         /// Returns the progress at which the object is approaching its perfect hit timing at 1.0
