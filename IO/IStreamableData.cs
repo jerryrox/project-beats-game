@@ -1,15 +1,17 @@
+using System.IO;
+
 namespace PBGame.IO
 {
     public interface IStreamableData {
 
         /// <summary>
-        /// Returns the data in a form which can be saved using the DataStreamWriter.
+        /// Writes the stream data of this object to the specified writer.
         /// </summary>
-        string ToStreamData();
+        void WriteStreamData(BinaryWriter writer);
 
         /// <summary>
-        /// Modifies the state based on the specified data given during write operation.
+        /// Modifies the state based on the specified reader's data given during write operation.
         /// </summary>
-        void FromStreamData(string data);
+        void ReadStreamData(BinaryReader reader);
     }
 }

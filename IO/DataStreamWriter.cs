@@ -15,7 +15,7 @@ namespace PBGame.IO
         private int writeInterval;
         private T[] pool;
 
-        private StreamWriter writer;
+        private BinaryWriter writer;
         private Thread streamingThread;
         private bool isStarted = false;
         private int writeCount = 0;
@@ -40,7 +40,7 @@ namespace PBGame.IO
         /// <summary>
         /// Starts the streaming process for the specified target.
         /// </summary>
-        public void StartStream(StreamWriter writer)
+        public void StartStream(BinaryWriter writer)
         {
             if (writer == null)
                 throw new ArgumentNullException(nameof(writer));
@@ -95,7 +95,7 @@ namespace PBGame.IO
                     pool[i] = instantiator.Invoke();
             }
 
-            var myStream = writer as StreamWriter;
+            var myStream = writer as BinaryWriter;
             int curCount = 0;
 
             Action seekAndWrite = () =>
@@ -111,7 +111,7 @@ namespace PBGame.IO
                         break;
 
                     var item = pool[curCount % poolSize];
-                    myStream.WriteLine(item.ToStreamData());
+                    item.WriteStreamData(myStream);
                     curCount++;
                 }
             };

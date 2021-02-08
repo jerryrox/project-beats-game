@@ -26,7 +26,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
         private FileInfo replayFile;
         private DataStreamWriter<ReplayFrame> replayWriter;
-        private StreamWriter replayWriteStream;
+        private BinaryWriter replayWriteStream;
 
 
         public override float CurrentTime => curTime;
@@ -152,7 +152,7 @@ namespace PBGame.Rulesets.Beats.Standard
             if (replayWriter != null)
             {
                 replayFile = TemporaryStore.GetReplayDataFile(Guid.NewGuid().ToString());
-                replayWriteStream = new StreamWriter(replayFile.OpenWrite());
+                replayWriteStream = new BinaryWriter(replayFile.OpenWrite());
                 replayWriter.StartStream(replayWriteStream);
             }
         }

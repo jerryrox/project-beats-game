@@ -1,4 +1,4 @@
-using System;
+using System.IO;
 using PBGame.IO;
 using PBFramework.Data.Bindables;
 using PBFramework.Inputs;
@@ -60,31 +60,42 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             Delta = DefaultPosition;
         }
 
-        public string ToStreamData()
+        public void WriteStreamData(BinaryWriter writer)
         {
-            return $"{(int)Key};{(int)state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}";
+            writer.Write((int)Key);
+
+            writer.Write((int)state.Value);
+
+            writer.Write(isActive.Value);
+
+            writer.Write(RawPosition.x);
+            writer.Write(RawPosition.y);
+
+            writer.Write(RawDelta.x);
+            writer.Write(RawDelta.y);
+
+            writer.Write(Position.x);
+            writer.Write(Position.y);
+
+            writer.Write(Delta.x);
+            writer.Write(Delta.y);
         }
 
-        public void FromStreamData(string data)
+        public void ReadStreamData(BinaryReader reader)
         {
-            if (data.Length == 0)
-                return;
+            Key = (KeyCode)reader.ReadInt32();
 
-            Func<string, Vector2> parseVector = (string rawData) =>
-            {
-                int commaInx = rawData.IndexOf(',');
-                return new Vector2(float.Parse(rawData.Substring(0, commaInx)), float.Parse(rawData.Substring(commaInx + 1)));
-            };
+            state.Value = (InputState)reader.ReadInt32();
 
-            string[] segments = data.Split(';');
-            int i = 0;
-            Key = (KeyCode)int.Parse(segments[i++]);
-            state.Value = (InputState)int.Parse(segments[i++]);
-            isActive.Value = segments[i++] == "1";
-            RawPosition = parseVector(segments[i++]);
-            RawDelta = parseVector(segments[i++]);
-            Position = parseVector(segments[i++]);
-            Delta = parseVector(segments[i++]);
+            isActive.Value = reader.ReadBoolean();
+
+            RawPosition = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+
+            RawDelta = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+
+            Position = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+
+            Delta = new Vector2(reader.ReadSingle(), reader.ReadSingle());
         }
 
         void IRecyclable.OnRecycleNew() {}

@@ -1,4 +1,4 @@
-using System.Text;
+using System.IO;
 using System.Collections.Generic;
 using PBGame.IO;
 using PBFramework.Allocation.Recyclers;
@@ -58,43 +58,34 @@ namespace PBGame.Rulesets.Judgements
             HitOffset = result.HitOffset;
         }
 
-        public string ToStreamData()
+        public void WriteStreamData(BinaryWriter writer)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append((int)HitResult);
-            sb.Append(';');
-            sb.Append(HitOffset);
-            sb.Append(';');
-            sb.Append(IsPassive ? "1" : "0");
-            sb.Append(';');
-            sb.Append((int)InputKey);
-            sb.Append(';');
+            writer.Write((int)HitResult);
+
+            writer.Write(HitOffset);
+
+            writer.Write(IsPassive);
+
+            writer.Write((int)InputKey);
+
+            writer.Write(HitObjectIndexPath.Count);
             for (int i = 0; i < HitObjectIndexPath.Count; i++)
-            {
-                if (i > 0)
-                    sb.Append(',');
-                sb.Append(HitObjectIndexPath[i]);
-            }
-            return sb.ToString();
+                writer.Write(HitObjectIndexPath[i]);
         }
 
-        public void FromStreamData(string data)
+        public void ReadStreamData(BinaryReader reader)
         {
-            string[] splits = data.Split(';');
+            HitResult = (HitResultType)reader.ReadInt32();
 
-            HitResult = (HitResultType)int.Parse(splits[0]);
+            HitOffset = reader.ReadSingle();
 
-            HitOffset = float.Parse(splits[1]);
+            IsPassive = reader.ReadBoolean();
 
-            IsPassive = splits[2] == "1";
+            InputKey = (KeyCode)reader.ReadInt32();
 
-            InputKey = (KeyCode)int.Parse(splits[3]);
-
-            if (splits[4].Length > 0)
-            {
-                foreach (string indexData in splits[4].Split(','))
-                    HitObjectIndexPath.Add(int.Parse(indexData));
-            }
+            int indexPathCount = reader.ReadInt32();
+            for (int i = 0; i < indexPathCount; i++)
+                HitObjectIndexPath.Add(reader.ReadInt32());
         }
 
         void IRecyclable.OnRecycleNew()

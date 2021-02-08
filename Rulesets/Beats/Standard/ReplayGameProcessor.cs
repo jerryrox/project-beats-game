@@ -18,7 +18,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
         private FileInfo replayFile;
         private DataStreamReader<ReplayFrame> replayReader;
-        private StreamReader replayReadStream;
+        private BinaryReader replayReadStream;
 
         public override float CurrentTime => lastFrameTime;
 
@@ -139,7 +139,7 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         private void InitReplayReader()
         {
-            replayReadStream = new StreamReader(replayFile.OpenRead());
+            replayReadStream = new BinaryReader(replayFile.OpenRead());
             replayReader.StartStream(replayReadStream);
         }
 

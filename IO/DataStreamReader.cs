@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace PBGame.IO
 {
@@ -14,7 +12,7 @@ namespace PBGame.IO
         private int readInterval;
         private T[] pool;
 
-        private StreamReader reader;
+        private BinaryReader reader;
         private Thread streamingThread;
         private bool isStarted = false;
         /// <summary>
@@ -46,7 +44,7 @@ namespace PBGame.IO
         /// <summary>
         /// Starts the streaming process for the specified target.
         /// </summary>
-        public void StartStream(StreamReader reader)
+        public void StartStream(BinaryReader reader)
         {
             if (reader == null)
                 throw new ArgumentNullException(nameof(reader));
@@ -124,18 +122,16 @@ namespace PBGame.IO
                     pool[i] = instantiator.Invoke();
             }
 
-            var myStream = reader as StreamReader;
+            var myStream = reader as BinaryReader;
 
             while (isStarted)
             {
                 int lastReadCount = readCount;
 
-                while (isStarted && bufferedCount - lastReadCount < poolSize && !myStream.EndOfStream)
+                while (isStarted && bufferedCount - lastReadCount < poolSize && myStream.BaseStream.Position < myStream.BaseStream.Length)
                 {
                     var item = pool[bufferedCount % poolSize];
-                    var line = myStream.ReadLine();
-                    if(line != null)
-                        item.FromStreamData(line);
+                    item.ReadStreamData(myStream);
                     bufferedCount++;
                 }
 

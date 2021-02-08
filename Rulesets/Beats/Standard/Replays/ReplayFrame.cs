@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using PBGame.IO;
@@ -90,73 +91,56 @@ namespace PBGame.Rulesets.Beats.Standard.Replays
             return judgement;
         }
 
-        public string ToStreamData()
+        public void WriteStreamData(BinaryWriter writer)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(Time);
-            sb.Append('/');
-            sb.Append(IsSkipped ? "1" : "0");
-            sb.Append('/');
+            writer.Write(Time);
+
+            writer.Write(IsSkipped);
+
+            writer.Write(Inputs.Count);
             for (int i = 0; i < Inputs.Count; i++)
-            {
-                if (i > 0)
-                    sb.Append('|');
-                sb.Append(Inputs[i].ToStreamData());
-            }
-            sb.Append('/');
+                Inputs[i].WriteStreamData(writer);
+
+            writer.Write(DraggerHoldFlags.Count);
             for (int i = 0; i < DraggerHoldFlags.Count; i++)
             {
-                if (i > 0)
-                    sb.Append('|');
-                sb.Append(DraggerHoldFlags[i].Key).Append(",").Append(DraggerHoldFlags[i].Value ? "1" : "0");
+                writer.Write(DraggerHoldFlags[i].Key);
+                writer.Write(DraggerHoldFlags[i].Value);
             }
-            sb.Append('/');
+
+            writer.Write(Judgements.Count);
             for (int i = 0; i < Judgements.Count; i++)
-            {
-                if (i > 0)
-                    sb.Append('|');
-                sb.Append(Judgements[i].ToStreamData());
-            }
-            return sb.ToString();
+                Judgements[i].WriteStreamData(writer);
         }
 
-        public void FromStreamData(string data)
+        public void ReadStreamData(BinaryReader reader)
         {
             Reset();
-            
-            string[] splits = data.Split('/');
 
-            Time = float.Parse(splits[0]);
+            Time = reader.ReadSingle();
 
-            IsSkipped = splits[1] == "1";
+            IsSkipped = reader.ReadBoolean();
 
-            if (splits[2].Length > 0)
+            int inputCount = reader.ReadInt32();
+            for (int i = 0; i < inputCount; i++)
             {
-                foreach (string inputData in splits[2].Split('|'))
-                {
-                    var input = replayInputRecycler.GetNext();
-                    input.FromStreamData(inputData);
-                    Inputs.Add(input);
-                }
+                var input = replayInputRecycler.GetNext();
+                input.ReadStreamData(reader);
+                Inputs.Add(input);
             }
 
-            if (splits[3].Length > 0)
+            int holdFlagCount = reader.ReadInt32();
+            for (int i = 0; i < holdFlagCount; i++)
             {
-                foreach (string draggerHoldData in splits[3].Split('|'))
-                {
-                    string[] pair = draggerHoldData.Split(',');
-                    DraggerHoldFlags.Add(new KeyValuePair<int, bool>(int.Parse(pair[0]), pair[1] == "1"));
-                }
+                DraggerHoldFlags.Add(new KeyValuePair<int, bool>(reader.ReadInt32(), reader.ReadBoolean()));
             }
 
-            if (splits[4].Length > 0)
+            int judgementCount = reader.ReadInt32();
+            for (int i = 0; i < judgementCount; i++)
             {
-                foreach (string judgementData in splits[4].Split('|'))
-                {
-                    var judgement = replayJudgementRecycler.GetNext();
-                    judgement.FromStreamData(judgementData);
-                    Judgements.Add(judgement);
-                }
+                var judgement = replayJudgementRecycler.GetNext();
+                judgement.ReadStreamData(reader);
+                Judgements.Add(judgement);
             }
         }
 
