@@ -110,24 +110,27 @@ namespace PBGame.Rulesets.Beats.Standard
                 // Find the target hit object from path.
                 var path = judgement.HitObjectIndexPath;
                 BaseHitObjectView hitObjectView = views[path[0]];
-                // for (int i = 1; i < path.Count; i++)
-                // {
-                //     int node = path[i];
-                //     hitObjectView = hitObjectView.BaseNestedObjects[node];
-                // }
+                for (int i = 1; i < path.Count; i++)
+                {
+                    int node = path[i];
+                    hitObjectView = hitObjectView.BaseNestedObjects[node];
+                }
 
-                if (judgement.IsPassive)
-                {
-                    foreach (var passiveJudgement in hitObjectView.JudgePassive(frame.Time))
-                        AddJudgement(passiveJudgement.Value);
-                }
-                else
-                {
-                    var input = frame.Inputs.Find((i) => i.Key == judgement.InputKey);
-                    AddJudgement(
-                        (hitObjectView as HitObjectView).JudgeInput(frame.Time, input)
-                    );
-                }
+                AddJudgement(
+                    hitObjectView.SetResult(judgement.HitResult, judgement.HitOffset)
+                );
+                // if (judgement.IsPassive)
+                // {
+                //     foreach (var passiveJudgement in hitObjectView.JudgePassive(frame.Time))
+                //         AddJudgement(passiveJudgement.Value);
+                // }
+                // else
+                // {
+                //     var input = frame.Inputs.Find((i) => i.Key == judgement.InputKey);
+                //     AddJudgement(
+                //         (hitObjectView as HitObjectView).JudgeInput(frame.Time, input)
+                //     );
+                // }
             }
         }
 

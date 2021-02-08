@@ -127,12 +127,27 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             draggerBody.Active = false;
         }
 
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            if (!startCircle.IsJudged)
+                return startCircle.SetResult(hitResult, offset);
+
+            var judgement = base.SetResult(hitResult, offset);
+            if (judgement.HitResult == HitResultType.Miss)
+                Active = false;
+            else
+            {
+                draggerBody.Active = false;
+                startCircle.PlayHit();
+                startCircle.SetHold(true, judgeEndTime);
+            }
+            return judgement;
+        }
+
         protected override float GetPosOnJudgement() => hitObject.X + hitObject.EndX;
 
         protected override void EvalPassiveJudgement()
         {
-            // Make the dragger circle released.
-            startCircle.SetHold(false, judgeEndTime);
 
             var judgementsCount = BaseNestedObjects.Count + 1;
             var judgementsHit = BaseNestedObjects.Count(o => o.Result.IsHit) + (startCircle.IsHolding(judgeEndTime) ? 1 : 0);
@@ -147,14 +162,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 resultType = HitResultType.Good;
 
             SetResult(resultType, judgeEndTime);
-
-            if (resultType != HitResultType.Miss)
-            {
-                draggerBody.Active = false;
-                startCircle.PlayHit();
-            }
-            else
-                Active = false;
         }
 
         protected override PlayableHitsound CreatePlayableHitsound()

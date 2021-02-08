@@ -103,8 +103,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
                     if(objView is DraggerView draggerView)
                         key.DraggerView = draggerView;
                     var judgement = objView.JudgeInput(time, key.Input);
-                    gameProcessor.RecordJudgement(objView, judgement, false, keyCode: key.Input.Key);
-                    gameProcessor.AddJudgement(judgement);
+                    if (judgement != null)
+                    {
+                        gameProcessor.RecordJudgement(objView, judgement, false, keyCode: key.Input.Key);
+                        gameProcessor.AddJudgement(judgement);
+                    }
                     break;
                 }
             }

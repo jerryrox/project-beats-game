@@ -169,6 +169,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             return isHolding || curTime.Value < releaseTime + BonusReleaseTime;
         }
 
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            var judgement = base.SetResult(hitResult, offset);
+            if (hitAni.IsPlaying)
+                hitAni.Stop();
+            return judgement;
+        }
+
         public override JudgementResult JudgeInput(float curTime, IInput input)
         {
             JudgementResult result = base.JudgeInput(curTime, input);
