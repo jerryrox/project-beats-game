@@ -54,6 +54,11 @@ namespace PBGame.Rulesets
         /// </summary>
         event Action OnCompletion;
 
+        /// <summary>
+        /// Event called on user pressing the skip button.
+        /// </summary>
+        event Action<float> OnSkipped;
+
 
         /// <summary>
         /// Returns the current game processor managing the gameplay.
@@ -155,6 +160,11 @@ namespace PBGame.Rulesets
         /// Invokes play completion event.
         /// </summary>
         void InvokeCompletion();
+
+        /// <summary>
+        /// Invokes skipped event.
+        /// </summary>
+        void InvokeSkipped(float time);
     }
 
     public interface IGameSession<T> : IGameSession

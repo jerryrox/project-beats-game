@@ -29,8 +29,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         protected BeatsCursor hitBarCursor;
         protected FileInfo replayFile;
 
-        protected BeatsStandardProcessor gameProcessor;
-
 
         public BeatsCursor HitBarCursor => hitBarCursor;
 
@@ -68,11 +66,6 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
             GameSession.OnHardDispose += OnHardDispose;
 
             pointerEvent = new PointerEventData(Root3D.EventSystem);
-        }
-
-        public void SetGameProcessor(BeatsStandardProcessor gameProcessor)
-        {
-            this.gameProcessor = gameProcessor;
         }
 
         /// <summary>

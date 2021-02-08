@@ -37,16 +37,5 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// List of inputs serving press/hold/release actions.
         /// </summary>
         List<BeatsKey> KeyInputs { get; }
-
-        /// <summary>
-        /// Returns the file containing new or existing replay data.
-        /// </summary>
-        FileInfo ReplayFile { get; }
-
-
-        /// <summary>
-        /// Sets the game processor instance to report judgements to.
-        /// </summary>
-        void SetGameProcessor(BeatsStandardProcessor gameProcessor);
     }
 }

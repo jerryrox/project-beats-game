@@ -1,16 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PBGame.UI.Models;
 using PBGame.Rulesets.Beats.Standard.UI;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
+using PBGame.Rulesets.Beats.Standard.Replays;
 using PBGame.Rulesets.Judgements;
-using PBFramework.UI;
-using PBFramework.Audio;
-using PBFramework.Graphics;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard
 {
@@ -28,6 +23,18 @@ namespace PBGame.Rulesets.Beats.Standard
         [ReceivesDependency]
         protected TouchEffectDisplay TouchEffectDisplay { get; set; }
 
+        [ReceivesDependency]
+        protected IRecycler<ReplayFrame> ReplayFrameRecycler { get; set; }
+
+        [ReceivesDependency]
+        protected IRecycler<ReplayableJudgement> ReplayJudgementRecycler { get; set; }
+
+        [ReceivesDependency]
+        protected IRecycler<ReplayableInput> ReplayInputRecycler { get; set; }
+
+        [ReceivesDependency]
+        protected GameModel Model { get; set; }
+
 
         [InitWithDependency]
         private void Init()
@@ -37,7 +44,6 @@ namespace PBGame.Rulesets.Beats.Standard
             TouchEffectDisplay.SetInputter(inputter);
 
             // Assign processor instance to other game modules.
-            inputter.SetGameProcessor(this);
             HitObjectHolder.SetGameProcessor(this);
         }
 
@@ -46,15 +52,12 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         public abstract void JudgePassive(float curTime, HitObjectView hitObjectView);
 
-        protected void Update()
-        {
-            if (!GameSession.IsPlaying)
-                return;
+        /// <summary>
+        /// Records the dragging flag for the specified dragger index.
+        /// </summary>
+        public virtual void RecordDraggerHoldFlag(int draggerIndex, bool isHolding) {}
 
-            float curTime = CurrentTime;
-
-            HitObjectHolder.UpdateObjects(curTime);
-        }
+        protected abstract void Update();
 
         /// <summary>
         /// Adds the specified judgement result to the score processor.
@@ -74,5 +77,15 @@ namespace PBGame.Rulesets.Beats.Standard
         /// Creates a new game inputter instance.
         /// </summary>
         protected abstract IGameInputter CreateGameInputter();
+
+        /// <summary>
+        /// Cleans up the replay-related object recyclers.
+        /// </summary>
+        protected void DisposeReplayRecyclers()
+        {
+            (ReplayFrameRecycler as ManagedRecycler<ReplayFrame>)?.ReturnAll();
+            (ReplayJudgementRecycler as ManagedRecycler<ReplayableJudgement>)?.ReturnAll();
+            (ReplayInputRecycler as ManagedRecycler<ReplayableInput>)?.ReturnAll();
+        }
     }
 }

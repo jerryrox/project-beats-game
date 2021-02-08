@@ -2,22 +2,18 @@ using System;
 using PBGame.IO;
 using PBFramework.Data.Bindables;
 using PBFramework.Inputs;
+using PBFramework.Allocation.Recyclers;
 using UnityEngine;
 
 namespace PBGame.Rulesets.Beats.Standard.Inputs
 {
-    public class ReplayableInput : ICursor, IStreamableData
+    public class ReplayableInput : ICursor, IStreamableData, IRecyclable<ReplayableInput>
     {
         private static readonly Vector2 DefaultPosition = new Vector2(10000, 10000);
 
         private Bindable<InputState> state = new Bindable<InputState>();
         private BindableBool isActive = new BindableBool();
 
-
-        /// <summary>
-        /// The time of input in milliseconds.
-        /// </summary>
-        public float Time { get; set; }
 
         public KeyCode Key { get; set; }
 
@@ -33,13 +29,14 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public Vector2 Delta { get; set; }
 
+        IRecycler<ReplayableInput> IRecyclable<ReplayableInput>.Recycler { get; set; }
+
 
         /// <summary>
         /// Sets the attributes based on the specified cursor.
         /// </summary>
-        public void SetFromCursor(float time, ICursor cursor)
+        public void SetFromCursor(ICursor cursor)
         {
-            Time = time;
             Key = cursor.Key;
             state.Value = cursor.State.Value;
             isActive.Value = cursor.IsActive.Value;
@@ -52,9 +49,8 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// <summary>
         /// Sets the attributes based on the specified input (most likely a key).
         /// </summary>
-        public void SetFromInput(float time, IInput input)
+        public void SetFromInput(IInput input)
         {
-            Time = time;
             Key = input.Key;
             state.Value = input.State.Value;
             isActive.Value = input.IsActive.Value;
@@ -66,7 +62,7 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
         public string ToStreamData()
         {
-            return $"{Time};{Key};{state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}";
+            return $"{(int)Key};{(int)state.Value};{(isActive.Value ? 1 : 0)};{RawPosition.x},{RawPosition.y};{RawDelta.x},{RawDelta.y};{Position.x},{Position.y};{Delta.x},{Delta.y}";
         }
 
         public void FromStreamData(string data)
@@ -82,14 +78,21 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
 
             string[] segments = data.Split(';');
             int i = 0;
-            Time = float.Parse(segments[i++]);
-            Key = (KeyCode)Enum.Parse(typeof(KeyCode), segments[i++]);
-            state.Value = (InputState)Enum.Parse(typeof(InputState), segments[i++]);
+            Key = (KeyCode)int.Parse(segments[i++]);
+            state.Value = (InputState)int.Parse(segments[i++]);
             isActive.Value = segments[i++] == "1";
             RawPosition = parseVector(segments[i++]);
             RawDelta = parseVector(segments[i++]);
             Position = parseVector(segments[i++]);
             Delta = parseVector(segments[i++]);
+        }
+
+        void IRecyclable.OnRecycleNew() {}
+
+        void IRecyclable.OnRecycleDestroy()
+        {
+            state.UnbindAll();
+            isActive.UnbindAll();
         }
 
         void IInput.Release() {}

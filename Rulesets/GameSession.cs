@@ -10,12 +10,14 @@ using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
+using PBGame.Rulesets.Judgements;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -33,7 +35,10 @@ namespace PBGame.Rulesets
         public event Action OnRetry;
         public event Action OnForceQuit;
         public event Action OnCompletion;
+        public event Action<float> OnSkipped;
 
+        protected ManagedRecycler<ReplayableJudgement> replayJudgementsRecycler;
+        
         private IGraphicObject containerObject;
 
 
@@ -104,6 +109,9 @@ namespace PBGame.Rulesets
             this.Dependencies = dependencies.Clone();
             this.Dependencies.CacheAs<IGameSession<T>>(this);
             this.Dependencies.CacheAs<IGameSession>(this);
+
+            replayJudgementsRecycler = new ManagedRecycler<ReplayableJudgement>(CreateReplayJudgement);
+            this.Dependencies.CacheAs<IRecycler<ReplayableJudgement>>(replayJudgementsRecycler);
 
             // Create game gui.
             GameGui = CreateGameGui(containerObject, this.Dependencies);
@@ -285,6 +293,12 @@ namespace PBGame.Rulesets
             initialTimer.Start();
         }
 
+        public void InvokeSkipped(float time)
+        {
+            MusicController.Seek(time);
+            OnSkipped?.Invoke(time);
+        }
+
         /// <summary>
         /// Event called on application pause.
         /// </summary>
@@ -307,5 +321,13 @@ namespace PBGame.Rulesets
         /// Creates a new instance of the game gui under the specified container object.
         /// </summary>
         protected abstract GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies);
+
+        /// <summary>
+        /// Creates a new replayable judgement instance for the recycler.
+        /// </summary>
+        private ReplayableJudgement CreateReplayJudgement()
+        {
+            return new ReplayableJudgement();
+        }
     }
 }

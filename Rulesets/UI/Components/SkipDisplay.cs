@@ -144,7 +144,7 @@ namespace PBGame.Rulesets.UI.Components
             if(IsAnimating)
                 return;
 
-            MusicController.Seek(skipToTime);
+            GameSession.InvokeSkipped(skipToTime);
             hideAni.PlayFromStart();
         }
 

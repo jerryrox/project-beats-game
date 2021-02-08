@@ -7,8 +7,9 @@ using System.Collections.Generic;
 namespace PBGame.IO
 {
     public class DataStreamReader<T>
-        where T : class, IStreamableData, new()
+        where T : class, IStreamableData
     {
+        private Func<T> instantiator;
         private int poolSize;
         private int readInterval;
         private T[] pool;
@@ -34,8 +35,9 @@ namespace PBGame.IO
         public int BufferedCount => bufferedCount - readCount;
 
 
-        public DataStreamReader(int poolSize, int readInterval = 60)
+        public DataStreamReader(Func<T> instantiator, int poolSize, int readInterval = 60)
         {
+            this.instantiator = instantiator;
             this.poolSize = poolSize;
             this.readInterval = readInterval;
             this.pool = new T[poolSize];
@@ -83,7 +85,7 @@ namespace PBGame.IO
         public T PeekData()
         {
             if (reader == null)
-                throw new Exception("There is no s tream to read the data from.");
+                throw new Exception("There is no stream to read the data from.");
 
             if (readCount == bufferedCount)
                 return null;
@@ -119,7 +121,7 @@ namespace PBGame.IO
             for (int i = 0; i < pool.Length; i++)
             {
                 if (pool[i] == null)
-                    pool[i] = new T();
+                    pool[i] = instantiator.Invoke();
             }
 
             var myStream = reader as StreamReader;

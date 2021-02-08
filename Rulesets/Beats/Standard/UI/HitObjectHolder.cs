@@ -5,9 +5,7 @@ using PBGame.Data;
 using PBGame.Graphics;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
-using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
-using PBGame.Rulesets.Judgements;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
@@ -19,7 +17,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 {
     public class HitObjectHolder : UguiObject
     {
-
         private ManagedRecycler<HitCircleView> hitCircleRecycler;
         private ManagedRecycler<DraggerCircleView> draggerCircleRecycler;
         private ManagedRecycler<DraggerTickView> tickRecycler;
@@ -32,6 +29,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI
 
         private BeatsStandardProcessor gameProcessor;
 
+
+        /// <summary>
+        /// Returns the list of views currently being managed.
+        /// </summary>
+        public RangedList<HitObjectView> HitObjectViews => hitObjectViews;
 
         [ReceivesDependency]
         private IGameSession GameSession { get; set; }
@@ -96,13 +98,15 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         /// </summary>
         public void UpdateObjects(float curTime)
         {
-            if(!GameSession.IsPlaying)
-                return;
-            
             bool advanceLowIndex = true;
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
             {
                 var view = hitObjectViews[i];
+
+                // Record dragging flag.
+                // Ensure we don't apply the generous release handicap here as it'll screw up the replay score sync.
+                if(view.IsHoldable)
+                    gameProcessor.RecordDraggerHoldFlag(view.ObjectIndex, view.IsHolding(null));
 
                 // Process any passive judgements to be made.
                 gameProcessor.JudgePassive(curTime, view);
@@ -192,6 +196,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     var hitCircleView = hitCircleRecycler.GetNext();
                     hitCircleView.Depth = hitObjectViews.Count;
+                    hitCircleView.ObjectIndex = hitObjectViews.Count;
                     hitCircleView.SetHitObject(hitCircle);
 
                     hitObjectViews.Add(hitCircleView);
@@ -201,6 +206,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     var draggerView = draggerRecycler.GetNext();
                     draggerView.Depth = hitObjectViews.Count;
+                    draggerView.ObjectIndex = hitObjectViews.Count;
                     draggerView.SetHitObject(dragger);
 
                     hitObjectViews.Add(draggerView);
