@@ -148,7 +148,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
 
         protected override void EvalPassiveJudgement()
         {
-
             var judgementsCount = BaseNestedObjects.Count + 1;
             var judgementsHit = BaseNestedObjects.Count(o => o.Result.IsHit) + (startCircle.IsHolding(judgeEndTime) ? 1 : 0);
             var hitRatio = (float)judgementsHit / judgementsCount;

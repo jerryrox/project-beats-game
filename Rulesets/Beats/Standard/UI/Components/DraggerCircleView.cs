@@ -172,6 +172,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public override JudgementResult SetResult(HitResultType hitResult, float offset)
         {
             var judgement = base.SetResult(hitResult, offset);
+            Active = true;
             if (hitAni.IsPlaying)
                 hitAni.Stop();
             return judgement;
