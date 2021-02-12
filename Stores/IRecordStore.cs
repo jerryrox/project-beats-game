@@ -8,8 +8,8 @@ using PBFramework.Threading;
 
 namespace PBGame.Stores
 {
-    public interface IRecordStore {
-
+    public interface IRecordStore
+    {
         /// <summary>
         /// Reloads the store's cached data for a fresh use.
         /// </summary>

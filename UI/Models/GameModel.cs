@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.UI.Models.Game;
@@ -187,6 +188,21 @@ namespace PBGame.UI.Models
                     return null;
                 }
             });
+        }
+
+        /// <summary>
+        /// Saves the specified replay data with association to the current record.
+        /// </summary>
+        public void SaveReplay(FileInfo replayFile)
+        {
+            if (replayFile == null || lastRecord == null || !lastRecord.IsClear)
+                return;
+
+            var replayFileDest = RecordStore.GetReplayFile(lastRecord);
+            replayFile.MoveTo(replayFileDest.FullName);
+
+            lastRecord.ReplayVersion = currentModeService.LatestReplayVersion;
+            RecordStore.SaveRecord(lastRecord);
         }
 
         protected override void OnPreShow()

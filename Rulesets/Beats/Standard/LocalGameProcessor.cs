@@ -168,15 +168,7 @@ namespace PBGame.Rulesets.Beats.Standard
                 replayWriteStream.Dispose();
             replayWriteStream = null;
 
-            if (replayFile != null)
-            {
-                var lastRecord = Model.LastRecord;
-                if (lastRecord != null && lastRecord.IsClear)
-                {
-                    var replayFileDest = RecordStore.GetReplayFile(lastRecord);
-                    replayFile.MoveTo(replayFileDest.FullName);
-                }
-            }
+            Model.SaveReplay(replayFile);
         }
 
         /// <summary>

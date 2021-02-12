@@ -27,6 +27,11 @@ namespace PBGame.Rulesets
         /// </summary>
         bool IsPlayable { get; }
 
+        /// <summary>
+        /// Returns the lateset replay data version supported by this game mode.
+        /// </summary>
+        int LatestReplayVersion { get; }
+
 
         /// <summary>
         /// Returns the icon name suitable for specified size.
