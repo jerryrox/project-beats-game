@@ -46,6 +46,11 @@ namespace PBGame.Stores
         FileInfo GetReplayFile(IRecord record);
 
         /// <summary>
+        /// Deletes the replay data file for the specified record.
+        /// </summary>
+        void DeleteReplayFile(IRecord record);
+
+        /// <summary>
         /// Returns whether there is a replay data for the specified record.
         /// </summary>
         bool HasReplayData(IRecord record);
