@@ -101,6 +101,19 @@ namespace PBGame.Stores
             return new FileInfo(Path.Combine(replayDirectory.FullName, $"{record.Id.ToString()}.replay"));
         }
 
+        public void DeleteReplayFile(IRecord record)
+        {
+            FileInfo file = GetReplayFile(record);
+            if (file != null || file.Exists)
+            {
+                // Delete the replay data itself
+                file.Delete();
+                // And make sure the replay version is reset so it logically indicates no replay.
+                record.ReplayVersion = 0;
+                SaveRecord(record);
+            }
+        }
+
         public bool HasReplayData(IRecord record)
         {
             return GetReplayFile(record).Exists;

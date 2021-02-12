@@ -8,8 +8,8 @@ using PBFramework.Threading;
 
 namespace PBGame.Stores
 {
-    public interface IRecordStore {
-
+    public interface IRecordStore
+    {
         /// <summary>
         /// Reloads the store's cached data for a fresh use.
         /// </summary>
@@ -44,6 +44,11 @@ namespace PBGame.Stores
         /// Returns the file info of the specified record's replay data.
         /// </summary>
         FileInfo GetReplayFile(IRecord record);
+
+        /// <summary>
+        /// Deletes the replay data file for the specified record.
+        /// </summary>
+        void DeleteReplayFile(IRecord record);
 
         /// <summary>
         /// Returns whether there is a replay data for the specified record.

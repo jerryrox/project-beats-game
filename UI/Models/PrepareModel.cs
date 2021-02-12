@@ -81,6 +81,11 @@ namespace PBGame.UI.Models
         /// </summary>
         public IReadOnlyBindable<string> MapsetDescription => mapsetDescription;
 
+        /// <summary>
+        /// Returns the game mode service matching the current mode.
+        /// </summary>
+        public IModeService CurModeService => ModeManager.GetService(GameMode.Value);
+
         [ReceivesDependency]
         private IMapSelection MapSelection { get; set; }
 
@@ -400,7 +405,13 @@ namespace PBGame.UI.Models
             records.Sort((x, y) => y.Score.CompareTo(x.Score));
 
             int rank = 1;
-            rankList.Value = records.Select((r) => new RankInfo(rank++, r)).ToList();
+            rankList.Value = records.Select((r) =>
+            {
+                // Check whether the record's replay version is outdated. If true, delete the replay data.
+                if (RecordStore.HasReplayData(r) && r.ReplayVersion < CurModeService.LatestReplayVersion)
+                    RecordStore.DeleteReplayFile(r);
+                return new RankInfo(rank++, r);
+            }).ToList();
         }
     }
 }

@@ -20,6 +20,9 @@ namespace PBGame.Data.Records
         public Guid UserId { get; set; }
 
         [Indexed]
+        public int ReplayVersion { get; set; }
+
+        [Indexed]
         public string MapHash { get; set; }
 
         [Indexed]

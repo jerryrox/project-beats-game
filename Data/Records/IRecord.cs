@@ -20,6 +20,11 @@ namespace PBGame.Data.Records
         Guid UserId { get; }
 
         /// <summary>
+        /// The version of the replay data associated with this record.
+        /// </summary>
+        int ReplayVersion { get; set; }
+
+        /// <summary>
         /// Returns the hashcode of the map.
         /// </summary>
         string MapHash { get; }
