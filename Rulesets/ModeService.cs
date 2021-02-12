@@ -25,7 +25,9 @@ namespace PBGame.Rulesets
         public abstract GameModeType GameMode { get; }
 
         public virtual bool IsPlayable => true;
-		
+
+        public virtual int LatestReplayVersion => 0;
+
 
         public string GetIconName(int size) => $"{BaseIconName}-{size}";
 

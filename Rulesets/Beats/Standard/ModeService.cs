@@ -16,6 +16,8 @@ namespace PBGame.Rulesets.Beats.Standard
 
         public override GameModeType GameMode => GameModeType.BeatsStandard;
 
+        public override int LatestReplayVersion => 2;
+
 
         public override Rulesets.Maps.IMapConverter CreateConverter(IOriginalMap map) => new MapConverter(map);
 
@@ -29,7 +31,7 @@ namespace PBGame.Rulesets.Beats.Standard
 
         protected override IGameSession CreateSession(IGraphicObject container, IDependencyContainer dependency)
         {
-            var session = new GameSession(container);
+            var session = new BeatsStandardSession(container);
             dependency.Inject(session);
             return session;
         }

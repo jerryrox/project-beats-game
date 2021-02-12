@@ -20,6 +20,9 @@ namespace PBGame.Data.Records
         public Guid UserId { get; set; }
 
         [Indexed]
+        public int ReplayVersion { get; set; }
+
+        [Indexed]
         public string MapHash { get; set; }
 
         [Indexed]
@@ -49,7 +52,7 @@ namespace PBGame.Data.Records
         public DateTime Date { get; set; }
 
         [JsonIgnore]
-        public bool IsClear => Rank != RankType.F;
+        public bool IsClear { get; private set; }
 
 
         public Record() { }
@@ -66,8 +69,6 @@ namespace PBGame.Data.Records
 
             InitializeAsNew();
 
-            UnityEngine.Debug.LogWarning("Created new record with id: " + Id.ToString());
-
             UserId = user.Id;
             Username = user.Username;
             AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
@@ -80,6 +81,8 @@ namespace PBGame.Data.Records
             Accuracy = (float)scoreProcessor.Accuracy.Value;
             Time = playTime;
             Date = DateTime.Now;
+
+            IsClear = scoreProcessor.IsFinished && !scoreProcessor.IsFailed;
 
             ExtractJudgements(scoreProcessor.Judgements);
         }

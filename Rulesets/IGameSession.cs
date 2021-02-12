@@ -54,6 +54,21 @@ namespace PBGame.Rulesets
         /// </summary>
         event Action OnCompletion;
 
+        /// <summary>
+        /// Event called on user pressing the skip button.
+        /// </summary>
+        event Action<float> OnSkipped;
+
+
+        /// <summary>
+        /// Returns the current game processor managing the gameplay.
+        /// </summary>
+        GameProcessor GameProcessor { get; }
+
+        /// <summary>
+        /// The current parameter being used to play the session.
+        /// </summary>
+        GameParameter CurrentParameter { get; }
 
         /// <summary>
         /// Returns the store for loading map assets.
@@ -97,9 +112,9 @@ namespace PBGame.Rulesets
         int GetPlayTime();
 
         /// <summary>
-        /// Sets the map to play.
+        /// Sets the parameter of the gameplay session.
         /// </summary>
-        void SetMap(IPlayableMap map);
+        void SetParameter(GameParameter parameter);
 
         /// <summary>
         /// Invokes hard initialization event.
@@ -145,6 +160,11 @@ namespace PBGame.Rulesets
         /// Invokes play completion event.
         /// </summary>
         void InvokeCompletion();
+
+        /// <summary>
+        /// Invokes skipped event.
+        /// </summary>
+        void InvokeSkipped(float time);
     }
 
     public interface IGameSession<T> : IGameSession

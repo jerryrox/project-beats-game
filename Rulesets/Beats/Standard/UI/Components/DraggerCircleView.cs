@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.Objects;
 using PBGame.Rulesets.Judgements;
@@ -11,7 +8,6 @@ using PBFramework.Animations;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.Beats.Standard.UI.Components
 {
@@ -46,9 +42,6 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
         public DraggerView DraggerView => draggerView;
 
         IRecycler<DraggerCircleView> IRecyclable<DraggerCircleView>.Recycler { get; set; }
-
-        [ReceivesDependency]
-        private HitObjectHolder ObjectHolder { get; set; }
 
 
         [InitWithDependency]
@@ -169,15 +162,20 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             wasHolding = isHolding;
         }
 
-        /// <summary>
-        /// Returns whether the circle is currently being held down.
-        /// Optionally provide curTime to check with a more generous release time.
-        /// </summary>
-        public bool IsHolding(float? curTime = null)
+        public override bool IsHolding(float? curTime = null)
         {
             if(!curTime.HasValue)
                 return isHolding;
             return isHolding || curTime.Value < releaseTime + BonusReleaseTime;
+        }
+
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            var judgement = base.SetResult(hitResult, offset);
+            Active = true;
+            if (hitAni.IsPlaying)
+                hitAni.Stop();
+            return judgement;
         }
 
         public override JudgementResult JudgeInput(float curTime, IInput input)
@@ -233,7 +231,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
             if(draggerView == null)
                 return;
 
-            float progress = draggerView.GetHitProgress(ObjectHolder.CurrentTime);
+            float progress = draggerView.GetHitProgress(GameSession.GameProcessor.CurrentTime);
             if(progress < 0f)
                 return;
             else if(progress > 1f)

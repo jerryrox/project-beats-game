@@ -101,23 +101,12 @@ namespace PBGame.UI.Models
 
             isShowAniEnded = false;
 
-            var selectedMap = SelectedMap.Value;
-            var modeServicer = ModeManager.GetService(selectedMap.PlayableMode);
-            var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
-            loadingState.BindTo(GameModel.LoadState);
-
-            // Start loading the game.
-            GameModel.LoadGame(SelectedMap.Value, modeServicer);
-
             // Slightly fade out music.
             MusicController.Fade(0.5f);
 
             // Listen to escape key.
             escapeKey = InputManager.AddKey(KeyCode.Escape);
             escapeKey.State.OnNewValue += OnEscapeKeyState;
-
-            // Listen to game screen init event.
-            GameModel.LoadState.BindAndTrigger(OnLoadStateChange);
         }
 
         protected override void OnPreHide()
@@ -132,6 +121,23 @@ namespace PBGame.UI.Models
             UnbindEscape();
 
             GameModel.LoadState.OnNewValue -= OnLoadStateChange;
+        }
+
+        /// <summary>
+        /// Starts loading a new game session instance.
+        /// </summary>
+        public void StartLoad(GameParameter parameter)
+        {
+            var gameScreen = ScreenNavigator.CreateHidden<GameScreen>();
+            var selectedMap = SelectedMap.Value;
+            var modeServicer = ModeManager.GetService(selectedMap.PlayableMode);
+            loadingState.BindTo(GameModel.LoadState);
+
+            // Start loading the game.
+            GameModel.LoadGame(parameter, modeServicer);
+
+            // Listen to game screen init event.
+            GameModel.LoadState.BindAndTrigger(OnLoadStateChange);
         }
 
         /// <summary>

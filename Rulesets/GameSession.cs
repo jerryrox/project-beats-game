@@ -3,18 +3,21 @@ using System.Linq;
 using PBGame.UI.Models;
 using PBGame.UI.Navigations.Screens;
 using PBGame.UI.Navigations.Overlays;
+using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Rulesets.UI;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Scoring;
+using PBGame.Rulesets.Judgements;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 
@@ -32,13 +35,20 @@ namespace PBGame.Rulesets
         public event Action OnRetry;
         public event Action OnForceQuit;
         public event Action OnCompletion;
+        public event Action<float> OnSkipped;
 
+        protected ManagedRecycler<ReplayableJudgement> replayJudgementsRecycler;
+        
         private IGraphicObject containerObject;
 
 
+        public abstract GameProcessor GameProcessor { get; }
+
+        public GameParameter CurrentParameter { get; private set; }
+
         public MapAssetStore MapAssetStore { get; private set; }
 
-        public IPlayableMap CurrentMap { get; protected set; }
+        public IPlayableMap CurrentMap => CurrentParameter.Map;
 
         public IScoreProcessor ScoreProcessor { get; private set; }
 
@@ -100,6 +110,9 @@ namespace PBGame.Rulesets
             this.Dependencies.CacheAs<IGameSession<T>>(this);
             this.Dependencies.CacheAs<IGameSession>(this);
 
+            replayJudgementsRecycler = new ManagedRecycler<ReplayableJudgement>(CreateReplayJudgement);
+            this.Dependencies.CacheAs<IRecycler<ReplayableJudgement>>(replayJudgementsRecycler);
+
             // Create game gui.
             GameGui = CreateGameGui(containerObject, this.Dependencies);
             {
@@ -108,15 +121,17 @@ namespace PBGame.Rulesets
             }
         }
 
-        public void SetMap(IPlayableMap map)
+        public void SetParameter(GameParameter parameter)
         {
-            CurrentMap = map;
-            MapAssetStore = new MapAssetStore(map, SoundTable);
+            CurrentParameter = parameter;
+            
+            // Set map
+            MapAssetStore = new MapAssetStore(parameter.Map, SoundTable);
         }
 
         public int GetPlayTime()
         {
-            int playTime = (int)MusicController.Clock.CurrentTime;
+            int playTime = (int)GameProcessor.CurrentTime;
             if (ScoreProcessor.JudgeCount > 0)
             {
                 playTime -= (int)(CurrentMap.HitObjects.First().StartTime / 1000f);
@@ -172,20 +187,28 @@ namespace PBGame.Rulesets
             Game.OnAppPause -= OnAppPaused;
             Game.OnAppFocus -= OnAppFocused;
 
-            // Record score.
-            var listener = new TaskListener();
-            listener.OnFinished += () =>
+            // Record score if not replay mode.
+            if (!CurrentParameter.IsReplay)
             {
-                ScoreProcessor = null;
+                var listener = new TaskListener<IRecord>();
+                listener.OnFinished += (record) =>
+                {
+                    ScoreProcessor = null;
+                    GameGui.HideGame(() => OnSoftDispose?.Invoke());
+                };
+                Model?.RecordScore(ScoreProcessor, playTime, listener);
+            }
+            else
+            {
                 GameGui.HideGame(() => OnSoftDispose?.Invoke());
-            };
-            Model?.RecordScore(ScoreProcessor, playTime, listener);
+            }
         }
 
         public void InvokeHardDispose()
         {
             IsPlaying = false;
-            CurrentMap = null;
+
+            CurrentParameter = null;
 
             // Before destroying custom hitsounds in the asset store, they must first be unmounted from the sound pool.
             SoundPool.UnmountAll();
@@ -199,7 +222,7 @@ namespace PBGame.Rulesets
         {
             if(IsPaused)
                 return;
-            if(MusicController.CurrentTime < 0f)
+            if(GameProcessor.CurrentTime < 0f)
                 return;
             if(MusicController.IsPlaying)
                 MusicController.Pause();
@@ -258,7 +281,7 @@ namespace PBGame.Rulesets
                 {
                     Limit = 2f,
                 };
-                autoExitTimer.OnFinished += Model.ExitGameWithClear;
+                autoExitTimer.OnFinished += Model.ExitGameToResult;
                 autoExitTimer.Start();
             });
 
@@ -268,6 +291,12 @@ namespace PBGame.Rulesets
             };
             initialTimer.OnFinished += InvokeSoftDispose;
             initialTimer.Start();
+        }
+
+        public void InvokeSkipped(float time)
+        {
+            MusicController.Seek(time);
+            OnSkipped?.Invoke(time);
         }
 
         /// <summary>
@@ -292,5 +321,13 @@ namespace PBGame.Rulesets
         /// Creates a new instance of the game gui under the specified container object.
         /// </summary>
         protected abstract GameGui CreateGameGui(IGraphicObject container, IDependencyContainer dependencies);
+
+        /// <summary>
+        /// Creates a new replayable judgement instance for the recycler.
+        /// </summary>
+        private ReplayableJudgement CreateReplayJudgement()
+        {
+            return new ReplayableJudgement();
+        }
     }
 }

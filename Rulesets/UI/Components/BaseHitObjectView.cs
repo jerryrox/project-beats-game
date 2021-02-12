@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Audio;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Judgements;
-using PBFramework.UI;
-using PBFramework.Data;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PBGame.Rulesets.UI.Components
 {
@@ -20,7 +16,6 @@ namespace PBGame.Rulesets.UI.Components
         IHasAlpha,
         IHasTint
     {
-
         protected CanvasGroup canvasGroup;
 
         protected float startTime;
@@ -41,6 +36,11 @@ namespace PBGame.Rulesets.UI.Components
         /// </summary>
         private List<BaseHitObjectView> nestedObjects = new List<BaseHitObjectView>();
 
+
+        /// <summary>
+        /// The index of the hit object which allows for automatically played inputters to refer them easily.
+        /// </summary>
+        public int ObjectIndex { get; set; }
 
         /// <summary>
         /// Returns the base hit object view containing this nested object.
@@ -89,6 +89,11 @@ namespace PBGame.Rulesets.UI.Components
         public bool IsJudged => Result == null ? true : Result.HasResult;
 
         /// <summary>
+        /// Returns whether the hit object can be held.
+        /// </summary>
+        public abstract bool IsHoldable { get; }
+
+        /// <summary>
         /// Returns whether this object has an ending time interface.
         /// </summary>
         public virtual bool HasEndTime => hasEndTime != null;
@@ -115,7 +120,7 @@ namespace PBGame.Rulesets.UI.Components
         /// List of nested objects returned as base hit object view type.
         /// If you'd like to retrieve a more specialized type of nested objects, they should be stored by the derived classes.
         /// </summary>
-        protected List<BaseHitObjectView> BaseNestedObjects => nestedObjects;
+        public List<BaseHitObjectView> BaseNestedObjects => nestedObjects;
 
         /// <summary>
         /// Just a dummy implementation of IRecyclable, only to define the other interface methods virtual.
@@ -152,16 +157,13 @@ namespace PBGame.Rulesets.UI.Components
         /// <summary>
         /// Evaluates this and all nested objects for judgements that occurred as a result of simply passing time.
         /// </summary>
-        public virtual IEnumerable<JudgementResult> JudgePassive(float curTime)
+        public virtual IEnumerable<KeyValuePair<BaseHitObjectView, JudgementResult>> JudgePassive(float curTime)
         {
             // Judge all inner objects recursively.
             for (int i = 0; i < nestedObjects.Count; i++)
             {
                 foreach (var result in nestedObjects[i].JudgePassive(curTime))
-                {
-                    if(result != null)
-                        yield return result;
-                }
+                    yield return result;
             }
 
             // Judge self only after all nested objects are judged.
@@ -172,7 +174,7 @@ namespace PBGame.Rulesets.UI.Components
                     EvalPassiveJudgement();
                     if(!IsJudged)
                         throw new Exception("Evaluation of passive judgement must output a valid judgement result!");
-                    yield return Result;
+                    yield return new KeyValuePair<BaseHitObjectView, JudgementResult>(this, Result);
                 }
             }
         }
@@ -245,6 +247,12 @@ namespace PBGame.Rulesets.UI.Components
         {
             return curTime > judgeEndTime;
         }
+
+        /// <summary>
+        /// Returns whether the hit object is considered being held.
+        /// Optionally provide curTime to check with a more generous release time, if the ruleset allows for it.
+        /// </summary>
+        public virtual bool IsHolding(float? curTime) => false;
 
         /// <summary>
         /// Returns the progress at which the object is approaching its perfect hit timing at 1.0

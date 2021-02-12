@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using PBGame.IO.Decoding.Osu;
 using PBGame.UI;
 using PBGame.Maps;
 using PBGame.Data.Users;
-using PBGame.Data.Records;
 using PBGame.Audio;
 using PBGame.Stores;
 using PBGame.Assets.Caching;
@@ -85,6 +82,8 @@ namespace PBGame
         protected IDropdownProvider dropdownProvider;
 
         protected InputManager inputManager;
+
+        protected TemporaryStore temporaryStore;
 
 
         public IDependencyContainer Dependencies { get; private set; } = new DependencyContainer(true);
@@ -175,6 +174,8 @@ namespace PBGame
             Dependencies.CacheAs<IScreenNavigator>(screenNavigator = new ScreenNavigator(rootMain));
             Dependencies.CacheAs<IOverlayNavigator>(overlayNavigator = new OverlayNavigator(rootMain));
             Dependencies.CacheAs<IDropdownProvider>(dropdownProvider = new DropdownProvider(rootMain));
+
+            Dependencies.CacheAs<ITemporaryStore>(temporaryStore = new TemporaryStore());
         }
 
         protected virtual void OnApplicationPause(bool paused) => OnAppPause?.Invoke(paused);
@@ -186,7 +187,11 @@ namespace PBGame
         /// </summary>
         protected virtual void PostInitialize()
         {
-            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(rootMain.Resolution, Application.isMobilePlatform ? 0 : 2));
+            Dependencies.CacheAs<IInputManager>(inputManager = InputManager.Create(
+                rootMain.Resolution,
+                Application.isMobilePlatform ? 0 : 2,
+                Application.isMobilePlatform ? 5 : 0
+            ));
 
             // Some default system settings.
             Screen.sleepTimeout = SleepTimeout.NeverSleep;

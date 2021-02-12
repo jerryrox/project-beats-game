@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBGame.UI.Models.Game;
@@ -25,7 +26,7 @@ namespace PBGame.UI.Models
         private List<ITask> gameLoaders = new List<ITask>();
         private MultiTask gameLoader;
 
-        private IPlayableMap currentMap;
+        private GameParameter currentParameter;
         private IModeService currentModeService;
         private IGameSession currentSession;
         private IRecord lastRecord;
@@ -52,6 +53,11 @@ namespace PBGame.UI.Models
         /// Returns the current mode servicer instance.
         /// </summary>
         public IModeService ModeService => currentModeService;
+
+        /// <summary>
+        /// Returns the record last made.
+        /// </summary>
+        public IRecord LastRecord => lastRecord;
 
         /// <summary>
         /// Returns the game screen.
@@ -83,19 +89,19 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Starts loading the game for the specified map and mode service.
         /// </summary>
-        public void LoadGame(IPlayableMap map, IModeService modeService)
+        public void LoadGame(GameParameter parameter, IModeService modeService)
         {
             if(loadState.Value != GameLoadState.Idle)
                 return;
-            if(!ValidateLoadParams(map, modeService))
+            if(!ValidateLoadParams(parameter.Map, modeService))
                 return;
 
             loadState.Value = GameLoadState.Loading;
 
-            currentMap = map;
+            currentParameter = parameter;
             currentModeService = modeService;
 
-            InitSession();
+            InitSession(parameter);
             CleanUpResources();
             
             InitLoader();
@@ -121,29 +127,35 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Makes the user exit the game with a clear result.
         /// </summary>
-        public void ExitGameWithClear() => ExitTo<ResultScreen>();
+        public void ExitGameToResult()
+        {
+            var record = currentParameter.Record ?? lastRecord;
+            var screen = ScreenNavigator.Show<ResultScreen>();
+            screen.Model.Setup(currentParameter.Map, record);
+        }
 
         /// <summary>
         /// Makes the user exit the game back to preparation screen.
         /// </summary>
-        public void ExitGameForceful() => ExitTo<PrepareScreen>();
+        public void ExitGameForceful() => ScreenNavigator.Show<PrepareScreen>();
 
         /// <summary>
         /// Records the specified play record under the current player.
         /// </summary>
-        public Task RecordScore(IScoreProcessor scoreProcessor, int playTime, TaskListener listener = null)
+        public Task<IRecord> RecordScore(IScoreProcessor scoreProcessor, int playTime, TaskListener<IRecord> listener = null)
         {
-            return Task.Run(async () =>
+            return Task.Run<IRecord>(async () =>
             {
                 try
                 {
                     if (scoreProcessor == null || scoreProcessor.JudgeCount <= 0)
                     {
                         listener?.SetFinished();
-                        return;
+                        return null;
                     }
 
                     // Retrieve user and user stats.
+                    var currentMap = currentParameter.Map;
                     var user = UserManager.CurrentUser.Value;
                     var userStats = user.GetStatistics(currentMap.PlayableMode);
 
@@ -166,14 +178,31 @@ namespace PBGame.UI.Models
                     {
                         userStats.RecordIncompletePlay(newRecord);
                     }
-                    listener?.SetFinished();
+                    listener?.SetFinished(newRecord);
+                    return newRecord;
                 }
                 catch (Exception e)
                 {
                     Logger.LogError($"Error while recording score: {e.Message}\n{e.StackTrace}");
                     listener?.SetFinished();
+                    return null;
                 }
             });
+        }
+
+        /// <summary>
+        /// Saves the specified replay data with association to the current record.
+        /// </summary>
+        public void SaveReplay(FileInfo replayFile)
+        {
+            if (replayFile == null || lastRecord == null || !lastRecord.IsClear)
+                return;
+
+            var replayFileDest = RecordStore.GetReplayFile(lastRecord);
+            replayFile.MoveTo(replayFileDest.FullName);
+
+            lastRecord.ReplayVersion = currentModeService.LatestReplayVersion;
+            RecordStore.SaveRecord(lastRecord);
         }
 
         protected override void OnPreShow()
@@ -192,21 +221,9 @@ namespace PBGame.UI.Models
             DisposeSession();
             DisposeLoader();
 
-            currentMap = null;
+            currentParameter = null;
             currentModeService = null;
             lastRecord = null;
-        }
-
-        /// <summary>
-        /// Makes the user exit to the specified screen.
-        /// </summary>
-        private void ExitTo<T>()
-            where T : MonoBehaviour, INavigationView
-        {
-            var record = lastRecord;
-            var screen = ScreenNavigator.Show<T>();
-            if (screen is ResultScreen resultScreen)
-                resultScreen.Model.Setup(currentMap, record);
         }
 
         /// <summary>
@@ -220,13 +237,13 @@ namespace PBGame.UI.Models
         /// <summary>
         /// Initializes a new game session and starts loading the game.
         /// </summary>
-        private void InitSession()
+        private void InitSession(GameParameter parameter)
         {
             if(currentSession != null)
                 throw new InvalidOperationException("Attempted to initialize a redundant game session.");
 
             currentSession = currentModeService.GetSession(Screen, Dependency);
-            currentSession.SetMap(currentMap);
+            currentSession.SetParameter(parameter);
             currentSession.InvokeHardInit();
         }
 

@@ -10,9 +10,19 @@ namespace PBGame.Data.Records
     public interface IRecord
     {
         /// <summary>
+        /// Returns the ID of this record.
+        /// </summary>
+        Guid Id { get; }
+
+        /// <summary>
         /// Returns the ID of the user who made this record.
         /// </summary>
         Guid UserId { get; }
+
+        /// <summary>
+        /// The version of the replay data associated with this record.
+        /// </summary>
+        int ReplayVersion { get; set; }
 
         /// <summary>
         /// Returns the hashcode of the map.

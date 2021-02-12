@@ -21,6 +21,11 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// </summary>
         public DraggerView DraggerView { get; set; }
 
+        /// <summary>
+        /// The last known music time when this key was updated.
+        /// </summary>
+        public float LastUpdateTime { get; set; }
+
         IRecycler<BeatsKey> IRecyclable<BeatsKey>.Recycler { get; set; }
 
 
