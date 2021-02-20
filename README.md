@@ -25,6 +25,8 @@ Slowly making progress 🧩
 - Implemented replay feature.
 - Implemented `PBGame.Threading.ThreadedLoader` to process a list of inputs into outputs using multiple tasks. May be moved to PBFramework in the future.
 - Added support for iOS File Sharing in case download becomes unusable in the future.
+#### Improvements
+- Improved initial loading time by integrating `ThreadedLoader` to `MapsetStore` reload routine.
 #### Changes
 - Make the mobile platform use the acceleration supported by `Cursor` input.
 - Removed judgement detail data from record files.
