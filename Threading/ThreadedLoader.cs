@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PBFramework.Threading;
@@ -8,6 +9,18 @@ namespace PBGame.Threading
     public class ThreadedLoader<TInput, TOutput>
     {
         private Func<TInput, TOutput> loadHandler;
+
+
+        /// <summary>
+        /// Number of milliseconds which the loading completion check will be run at.
+        /// Default is (1000 / 60).
+        /// </summary>
+        public int CompletionCheckInterval { get; set; } = 1000 / 60;
+
+        /// <summary>
+        /// If non-null, the max number of milliseconds to wait for the loading process to finish.
+        /// </summary>
+        public int? Timeout { get; set; } = null;
 
 
         public ThreadedLoader(Func<TInput, TOutput> loadHandler)
@@ -24,15 +37,17 @@ namespace PBGame.Threading
             if (outputs != null && outputs.Length < inputs.Count)
                 throw new ArgumentException("The outputs array length is less than the input count.");
 
-            taskCount = Math.Min(taskCount, inputs.Count);
-
-            if (outputs == null)
-                outputs = new TOutput[inputs.Count];
-
             return Task.Run<TOutput[]>(() =>
             {
-                object locker = new object();
+                taskCount = Math.Min(taskCount, inputs.Count);
+                if (outputs == null)
+                    outputs = new TOutput[inputs.Count];
+
+                object inputLocker = new object();
+                object finishLocker = new object();
                 int curInputIndex = 0;
+                int finishedCount = 0;
+                int loadStartTime = DateTime.UtcNow.Millisecond;
                 for (int i = 0; i < taskCount; i++)
                 {
                     Task.Run(() =>
@@ -41,7 +56,7 @@ namespace PBGame.Threading
                         {
                             // Retrieve the index of next input to process.
                             int inx = -1;
-                            lock (locker)
+                            lock (inputLocker)
                             {
                                 inx = curInputIndex++;
                             }
@@ -49,8 +64,25 @@ namespace PBGame.Threading
                                 break;
 
                             outputs[inx] = loadHandler.Invoke(inputs[inx]);
-                        }
+                            lock (finishLocker)
+                            {
+                                listener?.SetProgress((float)(finishedCount + 1) / inputs.Count);
+                                finishedCount++;
+                            }
+                    }
                     });
+                }
+                while (true)
+                {
+                    Thread.Sleep(CompletionCheckInterval);
+                    if (Timeout.HasValue)
+                    {
+                        int elapsed = DateTime.UtcNow.Millisecond - loadStartTime;
+                        if (elapsed > Timeout.Value)
+                            throw new TimeoutException("The loading process has taken longer than expected.");
+                    }
+                    if (finishedCount >= inputs.Count)
+                        break;
                 }
 
                 listener?.SetFinished(outputs);
