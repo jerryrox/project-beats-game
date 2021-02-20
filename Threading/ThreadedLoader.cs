@@ -69,7 +69,7 @@ namespace PBGame.Threading
                                 listener?.SetProgress((float)(finishedCount + 1) / inputs.Count);
                                 finishedCount++;
                             }
-                    }
+                        }
                     });
                 }
                 while (true)

@@ -7,13 +7,16 @@ using PBGame.IO;
 using PBGame.Stores.Parsers.Maps;
 using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
+using PBGame.Threading;
 using PBFramework;
-using PBFramework.IO;
 using PBFramework.DB;
 using PBFramework.Stores;
 using PBFramework.Storages;
 using PBFramework.Threading;
 using PBFramework.Debugging;
+using UnityEngine;
+
+using Logger = PBFramework.Debugging.Logger;
 
 namespace PBGame.Stores
 {
@@ -48,22 +51,28 @@ namespace PBGame.Stores
                 // Perform internal reloading routine.
                 await base.Reload(listener?.CreateSubListener());
 
+                // Retrieve processor count.
+
                 // Load all mapsets from the storage.
+                var rawMapsets = GetAll().ToList();
+                var threadedLoader = new ThreadedLoader<Mapset, Mapset>(ProcessMapsetLoad);
+                var results = await threadedLoader.StartLoad(
+                    8,
+                    rawMapsets,
+                    listener: listener?.CreateSubListener<Mapset[]>()
+                );
+
+                // Add results to the mapsets list.
                 lock (mapsets)
                 {
                     mapsets.Clear();
-                    var rawMapsets = GetAll().ToList();
-
-                    for (int i = 0; i < rawMapsets.Count; i++)
+                    for (int i = 0; i < results.Length; i++)
                     {
-                        var loadedMapset = LoadData(rawMapsets[i]);
-                        if (loadedMapset != null)
-                            mapsets.Add(loadedMapset);
-
-                        listener?.SetProgress((float)i / rawMapsets.Count);
+                        if (results[i] != null)
+                            mapsets.Add(results[i]);
                     }
-                    listener?.SetFinished();
                 }
+                listener?.SetFinished();
             });
         }
 
@@ -118,6 +127,14 @@ namespace PBGame.Stores
                 Logger.LogError($"MapsetStore.ParseData - Error while parsing mapset: {e.Message}\n{e.StackTrace}");
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Processes the specified input mapset to make it ready for in-game use.
+        /// </summary>
+        private Mapset ProcessMapsetLoad(Mapset input)
+        {
+            return LoadData(input);
         }
     }
 }
