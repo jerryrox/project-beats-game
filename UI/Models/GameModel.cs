@@ -303,7 +303,7 @@ namespace PBGame.UI.Models
                 NotificationBox?.Add(new Notification()
                 {
                     Message = "Map is not specified!",
-                    Type = NotificationType.Negative
+                    Type = NotificationType.Error
                 });
                 loadState.Value = GameLoadState.Fail;
                 return false;
@@ -313,7 +313,7 @@ namespace PBGame.UI.Models
                 NotificationBox?.Add(new Notification()
                 {
                     Message = "Game mode is not specified!",
-                    Type = NotificationType.Negative
+                    Type = NotificationType.Error
                 });
                 loadState.Value = GameLoadState.Fail;
                 return false;

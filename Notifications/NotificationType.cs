@@ -5,9 +5,9 @@ namespace PBGame.Notifications
     /// </summary>
     public enum NotificationType {
     
-        Passive = 0,
-        Positive,
+        Verbose = 0,
+        Info,
         Warning,
-        Negative,
+        Error,
     }
 }

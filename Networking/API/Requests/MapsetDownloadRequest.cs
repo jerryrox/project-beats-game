@@ -32,7 +32,7 @@ namespace PBGame.Networking.API.Requests
                 Id = Mapset.Id.ToString(),
                 Message = $"Downloading {Mapset.Artist} - {Mapset.Title} ({Mapset.Creator})",
                 Scope = NotificationScope.Stored,
-                Type = NotificationType.Passive,
+                Type = NotificationType.Verbose,
                 Actions = new List<NotificationAction>()
                 {
                     new NotificationAction()

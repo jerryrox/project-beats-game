@@ -98,7 +98,7 @@ namespace PBGame.Networking.API
                 {
                     Scope = NotificationScope.Stored,
                     Message = response.ErrorMessage,
-                    Type = NotificationType.Negative
+                    Type = NotificationType.Error
                 });
             }
             else
