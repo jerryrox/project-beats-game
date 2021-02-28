@@ -343,6 +343,12 @@ namespace PBGame
             {
                 NotifyUnplayableMode();
             };
+
+            // Notification related
+            gameConfiguration.PersistNotificationLevel.OnNewValue += (level) =>
+            {
+                notificationBox.ForceStoreLevel = level;
+            };
         }
 
         /// <summary>
