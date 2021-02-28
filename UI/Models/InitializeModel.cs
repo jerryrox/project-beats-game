@@ -110,6 +110,7 @@ namespace PBGame.UI.Models
             GameConfiguration.ResolutionQuality.Trigger();
             GameConfiguration.GlobalOffset.Trigger();
             GameConfiguration.PersistNotificationLevel.Trigger();
+            GameConfiguration.LogToNotificationLevel.Trigger();
 
             LoadMapManager();
         }

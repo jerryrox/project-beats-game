@@ -33,6 +33,11 @@ namespace PBGame
         /// </summary>
         private IMusicOffset mapOffset;
 
+        /// <summary>
+        /// Log service for piping log messages to the notification box.
+        /// </summary>
+        private LogToNotificationService logToNotifService;
+
 
         /// <summary>
         /// Returns whether the initial splash view should be shown automatically.
@@ -45,10 +50,15 @@ namespace PBGame
             base.PostInitialize();
 
             originalScreenSize = new Vector2(Screen.width, Screen.height);
+            // Initialize log service for notification.
+            logToNotifService = new LogToNotificationService()
+            {
+                NotificationBox = base.notificationBox,
+            };
+            Logger.Register(logToNotifService);
 
             // Hook events
             HookEngine();
-            HookLogger();
             HookMusicController();
             HookScreenNavigator();
             HookOverlayNavigator();
@@ -106,31 +116,6 @@ namespace PBGame
                 {
                     Logger.LogError($"Unhandled exception: {condition}\n{stackTrace}");
                 }
-            };
-        }
-
-        /// <summary>
-        /// Triggers actions on certain Logger events.
-        /// </summary>
-        private void HookLogger()
-        {
-            Logger.OnWarning += (message) =>
-            {
-                notificationBox.Add(new Notification()
-                {
-                    Message = message.ToString(),
-                    Scope = NotificationScope.Stored,
-                    Type = NotificationType.Warning,
-                });
-            };
-            Logger.OnError += (message) =>
-            {
-                notificationBox.Add(new Notification()
-                {
-                    Message = message.ToString(),
-                    Scope = NotificationScope.Stored,
-                    Type = NotificationType.Error,
-                });
             };
         }
 
@@ -348,6 +333,10 @@ namespace PBGame
             gameConfiguration.PersistNotificationLevel.OnNewValue += (level) =>
             {
                 notificationBox.ForceStoreLevel = level;
+            };
+            gameConfiguration.LogToNotificationLevel.OnNewValue += (level) =>
+            {
+                logToNotifService.PipeLogLevel = level;
             };
         }
 

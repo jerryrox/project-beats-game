@@ -10,6 +10,7 @@ using PBGame.Notifications;
 using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
 using PBFramework.Storages;
+using PBFramework.Debugging;
 
 namespace PBGame.Configurations
 {
@@ -79,6 +80,7 @@ namespace PBGame.Configurations
         // Other settings
         // ============================================================
         public ProxyBindable<NotificationType> PersistNotificationLevel { get; private set; }
+        public ProxyBindable<LogType> LogToNotificationLevel { get; private set; }
 
 
         public GameConfiguration()
@@ -163,6 +165,7 @@ namespace PBGame.Configurations
             SettingsTab otherTab = Settings.AddTabData(new SettingsTab("Other", "icon-misc"));
             {
                 otherTab.AddEntry(new SettingsEntryEnum<NotificationType>("Persistent notification level", PersistNotificationLevel = InitEnumBindable(nameof(NotificationType), NotificationType.Warning)));
+                otherTab.AddEntry(new SettingsEntryEnum<LogType>("Log to notification level", LogToNotificationLevel = InitEnumBindable(nameof(LogType), LogType.Warning)));
             }
 
             // Version settings

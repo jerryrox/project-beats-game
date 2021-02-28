@@ -43,7 +43,7 @@ namespace PBGame.UI.Components.Common.MetaTags
             var service = ModeManager.GetService(gameMode);
             if (service == null)
             {
-                Logger.Log($"Encountered an unsupported gameMode: {gameMode}");
+                Logger.LogInfo($"Encountered an unsupported gameMode: {gameMode}");
                 return;
             }
 
