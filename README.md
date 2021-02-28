@@ -26,6 +26,7 @@ Slowly making progress 🧩
 - Implemented `PBGame.Threading.ThreadedLoader` to process a list of inputs into outputs using multiple tasks. May be moved to PBFramework in the future.
 - Added support for iOS File Sharing in case download becomes unusable in the future.
 - Added a game configuration entry to set what type of notification is always stored in the notification box.
+- Added a game configuration entry to pipe log messages above certain level to the notification box.
 #### Improvements
 - Improved initial loading time by integrating `ThreadedLoader` to `MapsetStore` reload routine.
 #### Changes
