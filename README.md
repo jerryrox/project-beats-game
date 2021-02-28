@@ -5,11 +5,11 @@ Implementation of Project: Beats game
 Slowly making progress 🧩
 
 ## Dependencies
-- project-beats-framework (Tested on 1.2.1) (https://github.com/jerryrox/project-beats-framework)
+- project-beats-framework (Tested on 1.3.0) (https://github.com/jerryrox/project-beats-framework)
 - pbeffect-coffee (https://github.com/jerryrox/pbeffect-coffee)
 - Newtonsoft.Json (Tested with net45 version)
 ### Extra
-- project-beats-api (Only if using Network feature. Tested on 0.6.0) (https://github.com/jerryrox/project-beats-api)
+- project-beats-api (Only if using Network feature. Tested on 0.6.1) (https://github.com/jerryrox/project-beats-api)
 
 ## Script Execution Order set up
 - `PBFramework.Inputs.InputManager` should be assigned before `Default Time`.
