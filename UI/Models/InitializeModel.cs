@@ -109,6 +109,7 @@ namespace PBGame.UI.Models
             GameConfiguration.UseParallax.Trigger();
             GameConfiguration.ResolutionQuality.Trigger();
             GameConfiguration.GlobalOffset.Trigger();
+            GameConfiguration.PersistNotificationLevel.Trigger();
 
             LoadMapManager();
         }

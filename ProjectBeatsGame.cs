@@ -129,7 +129,7 @@ namespace PBGame
                 {
                     Message = message.ToString(),
                     Scope = NotificationScope.Stored,
-                    Type = NotificationType.Negative,
+                    Type = NotificationType.Error,
                 });
             };
         }
@@ -342,6 +342,12 @@ namespace PBGame
             gameConfiguration.RulesetMode.OnNewValue += (mode) =>
             {
                 NotifyUnplayableMode();
+            };
+
+            // Notification related
+            gameConfiguration.PersistNotificationLevel.OnNewValue += (level) =>
+            {
+                notificationBox.ForceStoreLevel = level;
             };
         }
 

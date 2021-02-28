@@ -6,6 +6,7 @@ using PBGame.Data.Rankings;
 using PBGame.Rulesets;
 using PBGame.Graphics;
 using PBGame.Networking.API;
+using PBGame.Notifications;
 using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
 using PBFramework.Storages;
@@ -74,6 +75,11 @@ namespace PBGame.Configurations
         public ProxyBindable<bool> UseBeatmapHitsounds { get; private set; }
         public ProxyBindable<bool> UseButtonHoverSound { get; private set; }
 
+        // ============================================================
+        // Other settings
+        // ============================================================
+        public ProxyBindable<NotificationType> PersistNotificationLevel { get; private set; }
+
 
         public GameConfiguration()
         {
@@ -95,14 +101,14 @@ namespace PBGame.Configurations
                 DisplayMessages.OnNewValue += (display) =>
                 {
                     // Automatically disable messages in game if message displaying is false.
-                    if(!display)
+                    if (!display)
                         DisplayMessagesInGame.Value = false;
                 };
                 generalTab.AddEntry(new SettingsEntryBool("Show messages in game", DisplayMessagesInGame = InitBoolBindable(nameof(DisplayMessagesInGame), false)));
                 DisplayMessagesInGame.OnNewValue += (display) =>
                 {
                     // Turn off this configuration when toggled on but display message itself is turned off.
-                    if(display && !DisplayMessages.Value)
+                    if (display && !DisplayMessages.Value)
                         DisplayMessagesInGame.Value = false;
                 };
                 generalTab.AddEntry(new SettingsEntryBool("Use parallax", UseParallax = InitBoolBindable(nameof(UseParallax), true)));
@@ -153,6 +159,12 @@ namespace PBGame.Configurations
                 soundTab.AddEntry(new SettingsEntryBool("Button hover sound", UseButtonHoverSound = InitBoolBindable(nameof(UseButtonHoverSound), true)));
             }
 
+            // Other settings
+            SettingsTab otherTab = Settings.AddTabData(new SettingsTab("Other", "icon-misc"));
+            {
+                otherTab.AddEntry(new SettingsEntryEnum<NotificationType>("Persistent notification level", PersistNotificationLevel = InitEnumBindable(nameof(NotificationType), NotificationType.Warning)));
+            }
+
             // Version settings
             SettingsTab versionTab = Settings.AddTabData(new SettingsTab("Version", "icon-version"));
             {
@@ -169,7 +181,7 @@ namespace PBGame.Configurations
             // Trigger change for all configurations on load.
             OnLoad += delegate
             {
-                foreach(var entry in allSettings)
+                foreach (var entry in allSettings)
                     entry.Trigger();
             };
         }

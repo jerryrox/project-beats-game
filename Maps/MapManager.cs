@@ -124,7 +124,7 @@ namespace PBGame.Maps
                             notificationBox?.Add(new Notification()
                             {
                                 Message = $"Failed to load imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
-                                Type = NotificationType.Negative
+                                Type = NotificationType.Error
                             });
                         }
                     }
@@ -133,7 +133,7 @@ namespace PBGame.Maps
                         notificationBox?.Add(new Notification()
                         {
                             Message = $"Failed to import mapset at ({file.FullName})",
-                            Type = NotificationType.Negative
+                            Type = NotificationType.Error
                         });
                     }
                     listener?.SetFinished(mapset);

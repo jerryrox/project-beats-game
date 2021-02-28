@@ -16,7 +16,7 @@ namespace PBGame.Notifications
         public List<NotificationAction> Actions { get; set; }
         IReadOnlyList<NotificationAction> INotification.Actions => Actions?.AsReadOnly();
 
-        public NotificationType Type { get; set; } = NotificationType.Passive;
+        public NotificationType Type { get; set; } = NotificationType.Verbose;
 
         public ITask Task { get; set; }
 

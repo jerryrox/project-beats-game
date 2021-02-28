@@ -351,9 +351,9 @@ namespace PBGame.UI.Components.Common
         {
             switch (type)
             {
-                case NotificationType.Passive: return ColorPreset.Passive;
-                case NotificationType.Positive: return ColorPreset.Positive;
-                case NotificationType.Negative: return ColorPreset.Negative;
+                case NotificationType.Verbose: return ColorPreset.Passive;
+                case NotificationType.Info: return ColorPreset.Positive;
+                case NotificationType.Error: return ColorPreset.Negative;
                 case NotificationType.Warning: return ColorPreset.Warning;
             }
             Logger.LogWarning($"Unknown notification type: {type}");

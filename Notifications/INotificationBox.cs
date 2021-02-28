@@ -19,6 +19,11 @@ namespace PBGame.Notifications
         event Action<INotification> OnRemoveNotification;
 
         /// <summary>
+        /// If non-null, the minimum level of notification that should implicitly be treated as a stored-scope notification.
+        /// </summary>
+        NotificationType? ForceStoreLevel { get; set; }
+
+        /// <summary>
         /// Returns the list of notifications currently stored in the box.
         /// </summary>
         IReadOnlyList<INotification> Notifications { get; }
