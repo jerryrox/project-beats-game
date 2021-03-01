@@ -128,7 +128,7 @@ namespace PBGame
             Dependencies.CacheAs<IPlatformHost>(platformHost = PlatformHost.CreateHost());
             Dependencies.CacheAs<DeepLinker>(deepLinker = platformHost.CreateDeepLinker());
 
-            Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(EnvType.Development));
+            Dependencies.CacheAs<IEnvConfiguration>(envConfiguration = new EnvConfiguration(EnvType.Production));
 
             Dependencies.CacheAs<IModeManager>(modeManager = new ModeManager());
 
