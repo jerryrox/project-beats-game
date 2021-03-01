@@ -126,7 +126,7 @@ namespace PBGame.Rulesets.UI.Components
 
         protected void Update()
         {
-            float remainingTime = skipToTime - MusicController.CurrentTime;
+            float remainingTime = skipToTime - GameSession.GameProcessor.CurrentTime;
 
             // Automatically hide skip display if over skip time.
             if (remainingTime <= 0f && !IsAnimating)
@@ -144,7 +144,7 @@ namespace PBGame.Rulesets.UI.Components
             if(IsAnimating)
                 return;
 
-            MusicController.Seek(skipToTime);
+            GameSession.InvokeSkipped(skipToTime);
             hideAni.PlayFromStart();
         }
 

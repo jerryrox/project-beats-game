@@ -102,18 +102,24 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 float offset = GetHitOffset(curTime);
                 var resultType = hitObject.Timing.GetHitResult(offset);
                 if (resultType != HitResultType.None)
-                {
-                    hitAni.PlayFromStart();
                     return SetResult(resultType, offset);
-                }
             }
             return null;
+        }
+
+        public override JudgementResult SetResult(HitResultType hitResult, float offset)
+        {
+            var judgement = base.SetResult(hitResult, offset);
+            if (judgement.HitResult == HitResultType.Miss)
+                Active = false;
+            else
+                hitAni.PlayFromStart();
+            return judgement;
         }
 
         protected override void EvalPassiveJudgement()
         {
             SetResult(HitResultType.Miss, judgeEndTime);
-            Active = false;
         }
     }
 }

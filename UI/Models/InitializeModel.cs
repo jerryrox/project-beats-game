@@ -71,6 +71,9 @@ namespace PBGame.UI.Models
         [ReceivesDependency]
         private IDownloadStore DownloadStore { get; set; }
 
+        [ReceivesDependency]
+        private ITemporaryStore TemporaryStore { get; set; }
+
 
         /// <summary>
         /// Starts the game loading process.
@@ -106,6 +109,8 @@ namespace PBGame.UI.Models
             GameConfiguration.UseParallax.Trigger();
             GameConfiguration.ResolutionQuality.Trigger();
             GameConfiguration.GlobalOffset.Trigger();
+            GameConfiguration.PersistNotificationLevel.Trigger();
+            GameConfiguration.LogToNotificationLevel.Trigger();
 
             LoadMapManager();
         }
@@ -162,6 +167,8 @@ namespace PBGame.UI.Models
         {
             UnityThread.DispatchUnattended(() =>
             {
+                TemporaryStore.Clear();
+
                 isComplete.Value = true;
                 return null;
             });

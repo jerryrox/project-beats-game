@@ -4,8 +4,10 @@ using PBGame.Data.Rankings;
 using PBGame.Rulesets;
 using PBGame.Graphics;
 using PBGame.Networking.API;
+using PBGame.Notifications;
 using PBGame.Configurations.Settings;
 using PBFramework.Data.Bindables;
+using PBFramework.Debugging;
 
 namespace PBGame.Configurations
 {
@@ -150,5 +152,17 @@ namespace PBGame.Configurations
         /// Whether button hover sounds should be played.
         /// </summary>
 		ProxyBindable<bool> UseButtonHoverSound { get; }
+
+        // ============================================================
+        // Other settings
+        // ============================================================
+        /// <summary>
+        /// The minimum level of notification type which makes the notification be sent to the stored scope.
+        /// </summary>
+        ProxyBindable<NotificationType> PersistNotificationLevel { get; }
+        /// <summary>
+        /// The minimum level of log message type which makes it displayed as a notification.
+        /// </summary>
+        ProxyBindable<LogType> LogToNotificationLevel { get; }
     }
 }

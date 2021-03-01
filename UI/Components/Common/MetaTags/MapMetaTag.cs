@@ -1,19 +1,13 @@
-using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Rulesets;
-using PBGame.Networking.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
-using UnityEngine.UI;
 
 using Logger = PBFramework.Debugging.Logger;
 
-namespace PBGame.UI.Components.Download.Result
+namespace PBGame.UI.Components.Common.MetaTags
 {
     public class MapMetaTag : BaseMetaTag, IRecyclable<MapMetaTag> {
 
@@ -49,7 +43,7 @@ namespace PBGame.UI.Components.Download.Result
             var service = ModeManager.GetService(gameMode);
             if (service == null)
             {
-                Logger.Log($"Encountered an unsupported gameMode: {gameMode}");
+                Logger.LogInfo($"Encountered an unsupported gameMode: {gameMode}");
                 return;
             }
 

@@ -1,9 +1,7 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
-using PBGame.Rulesets.Judgements;
-using PBFramework.Inputs;
-using UnityEngine;
 
 namespace PBGame.Rulesets.Beats.Standard.Inputs
 {
@@ -39,11 +37,5 @@ namespace PBGame.Rulesets.Beats.Standard.Inputs
         /// List of inputs serving press/hold/release actions.
         /// </summary>
         List<BeatsKey> KeyInputs { get; }
-
-
-        /// <summary>
-        /// Handles passive judgements for the specified object.
-        /// </summary>
-        void JudgePassive(float curTime, HitObjectView view);
     }
 }

@@ -10,9 +10,19 @@ namespace PBGame.Data.Records
     public interface IRecord
     {
         /// <summary>
+        /// Returns the ID of this record.
+        /// </summary>
+        Guid Id { get; }
+
+        /// <summary>
         /// Returns the ID of the user who made this record.
         /// </summary>
         Guid UserId { get; }
+
+        /// <summary>
+        /// The version of the replay data associated with this record.
+        /// </summary>
+        int ReplayVersion { get; set; }
 
         /// <summary>
         /// Returns the hashcode of the map.
@@ -53,11 +63,6 @@ namespace PBGame.Data.Records
         /// Returns the accuracy of the play.
         /// </summary>
         float Accuracy { get; }
-
-        /// <summary>
-        /// List of judgements made.
-        /// </summary>
-        IReadOnlyList<JudgementRecord> Judgements { get; }
 
         /// <summary>
         /// Returns the number of hits recorded for each hit result types.

@@ -4,6 +4,7 @@ using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Dependencies;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PBGame.UI.Components.Result
 {
@@ -41,42 +42,68 @@ namespace PBGame.UI.Components.Result
 
                 backButton.OnTriggered += Model.ToPrepare;
             }
-            retryButton = CreateChild<IconButton>("retry");
-            {
-                retryButton.Anchor = AnchorType.RightStretch;
-                retryButton.Pivot = PivotType.Right;
-                retryButton.Width = 100f;
-                retryButton.X = 0f;
-                retryButton.IconName = "icon-retry";
-                
-                retryButton.SetOffsetVertical(0f);
 
-                retryButton.OnTriggered += Model.Retry;
-            }
-            replayButton = CreateChild<IconButton>("replay");
+            var rightGrid = CreateChild<UguiGrid>("right-grid");
             {
-                replayButton.Anchor = AnchorType.RightStretch;
-                replayButton.Pivot = PivotType.Right;
-                replayButton.Width = 100f;
-                replayButton.X = 100f;
-                replayButton.IconName = "icon-replay";
-                
-                replayButton.SetOffsetVertical(0f);
+                rightGrid.Limit = 0;
+                rightGrid.Anchor = AnchorType.Fill;
+                rightGrid.Offset = Offset.Zero;
+                rightGrid.Alignment = TextAnchor.MiddleRight;
+                rightGrid.Axis = GridLayoutGroup.Axis.Horizontal;
+                rightGrid.CellWidth = 100f;
 
-                replayButton.OnTriggered += Model.Replay;
-            }
-            shareButton = CreateChild<IconButton>("share");
-            {
-                shareButton.Anchor = AnchorType.RightStretch;
-                shareButton.Pivot = PivotType.Right;
-                shareButton.Width = 100f;
-                shareButton.X = 200f;
-                shareButton.IconName = "icon-share";
-                
-                shareButton.SetOffsetVertical(0f);
+                shareButton = rightGrid.CreateChild<IconButton>("share");
+                {
+                    shareButton.IconName = "icon-share";
+                    shareButton.OnTriggered += Model.Share;
+                }
+                replayButton = rightGrid.CreateChild<IconButton>("replay");
+                {
+                    replayButton.IconName = "icon-replay";
+                    replayButton.OnTriggered += Model.Replay;
+                }
+                retryButton = rightGrid.CreateChild<IconButton>("retry");
+                {
+                    retryButton.IconName = "icon-retry";
+                    retryButton.OnTriggered += Model.Retry;
+                }
 
-                shareButton.OnTriggered += Model.Share;
+                InvokeAfterFrames(1, () => rightGrid.CellHeight = rightGrid.Height);
             }
+
+            OnEnableInited();
+        }
+
+        protected override void OnEnableInited()
+        {
+            base.OnEnableInited();
+
+            Model.AllowsRetry.BindAndTrigger(OnAllowsRetryChanged);
+            Model.HasReplay.BindAndTrigger(OnHasReplayChanged);
+        }
+        
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            Model.AllowsRetry.Unbind(OnAllowsRetryChanged);
+            Model.HasReplay.Unbind(OnHasReplayChanged);
+        }
+
+        /// <summary>
+        /// Event called when the retry allow flag has changed.
+        /// </summary>
+        private void OnAllowsRetryChanged(bool allowsRetry)
+        {
+            retryButton.Active = allowsRetry;
+        }
+
+        /// <summary>
+        /// Event called when the replay existence flag has changed.
+        /// </summary>
+        private void OnHasReplayChanged(bool hasReplay)
+        {
+            replayButton.Active = hasReplay;
         }
     }
 }

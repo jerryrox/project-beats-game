@@ -44,6 +44,11 @@ namespace PBGame.IO
         /// </summary>
         public static readonly DirectoryInfo Replays;
 
+        /// <summary>
+        /// Temporary data directory.
+        /// </summary>
+        public static readonly DirectoryInfo Temporary;
+
 
         static GameDirectory()
         {
@@ -54,6 +59,7 @@ namespace PBGame.IO
             Users = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "users"));
             Records = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "records"));
             Replays = Records.GetSubdirectory("replays");
+            Temporary = new DirectoryInfo(Path.Combine(Application.persistentDataPath, "temp"));
 
             Maps.Create();
             Configs.Create();
@@ -62,6 +68,7 @@ namespace PBGame.IO
             Users.Create();
             Records.Create();
             Replays.Create();
+            Temporary.Create();
         }
     }
 }

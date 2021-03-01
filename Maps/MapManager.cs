@@ -2,8 +2,6 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using PBGame.Stores;
 using PBGame.Rulesets.Maps;
 using PBGame.Notifications;
@@ -126,7 +124,7 @@ namespace PBGame.Maps
                             notificationBox?.Add(new Notification()
                             {
                                 Message = $"Failed to load imported mapset ({mapset.Metadata.Artist} - {mapset.Metadata.Title})",
-                                Type = NotificationType.Negative
+                                Type = NotificationType.Error
                             });
                         }
                     }
@@ -135,7 +133,7 @@ namespace PBGame.Maps
                         notificationBox?.Add(new Notification()
                         {
                             Message = $"Failed to import mapset at ({file.FullName})",
-                            Type = NotificationType.Negative
+                            Type = NotificationType.Error
                         });
                     }
                     listener?.SetFinished(mapset);

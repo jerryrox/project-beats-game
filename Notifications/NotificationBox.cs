@@ -13,6 +13,9 @@ namespace PBGame.Notifications
         private List<INotification> notifications = new List<INotification>();
 
 
+
+        public NotificationType? ForceStoreLevel { get; set; } = null;
+
         public IReadOnlyList<INotification> Notifications => notifications.AsReadOnly();
 
 
@@ -67,7 +70,8 @@ namespace PBGame.Notifications
         private void PostProcessNotification(Notification notification)
         {
             // Force-set notification scope to true under certain conditions.
-            if (notification.Task != null || notification.HasActions())
+            if (notification.Task != null || notification.HasActions() ||
+                (ForceStoreLevel.HasValue && notification.Type >= ForceStoreLevel.Value))
             {
                 notification.Scope = NotificationScope.Stored;
             }

@@ -5,9 +5,7 @@ using PBGame.Data;
 using PBGame.Graphics;
 using PBGame.Rulesets.Objects;
 using PBGame.Rulesets.Beats.Standard.UI.Components;
-using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Objects;
-using PBGame.Rulesets.Judgements;
 using PBFramework.Audio;
 using PBFramework.Graphics;
 using PBFramework.Threading;
@@ -17,8 +15,8 @@ using UnityEngine;
 
 namespace PBGame.Rulesets.Beats.Standard.UI
 {
-    public class HitObjectHolder : UguiObject {
-
+    public class HitObjectHolder : UguiObject
+    {
         private ManagedRecycler<HitCircleView> hitCircleRecycler;
         private ManagedRecycler<DraggerCircleView> draggerCircleRecycler;
         private ManagedRecycler<DraggerTickView> tickRecycler;
@@ -29,13 +27,13 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         private int curComboOffset;
         private List<Color> comboColors;
 
-        private IGameInputter gameInputter;
+        private BeatsStandardProcessor gameProcessor;
 
 
         /// <summary>
-        /// Returns the current music play time.
+        /// Returns the list of views currently being managed.
         /// </summary>
-        public float CurrentTime => MusicController.CurrentTime;
+        public RangedList<HitObjectView> HitObjectViews => hitObjectViews;
 
         [ReceivesDependency]
         private IGameSession GameSession { get; set; }
@@ -79,6 +77,14 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         }
 
         /// <summary>
+        /// Sets the current game processor instance.
+        /// </summary>
+        public void SetGameProcessor(BeatsStandardProcessor gameProcessor)
+        {
+            this.gameProcessor = gameProcessor;
+        }
+
+        /// <summary>
         /// Returns all active hit object views in the holder.
         /// </summary>
         public IEnumerable<HitObjectView> GetActiveObjects()
@@ -88,26 +94,22 @@ namespace PBGame.Rulesets.Beats.Standard.UI
         }
 
         /// <summary>
-        /// Sets the inputter to use for handling passive judgements.
+        /// Updates the contained hit objects based on the specified time.
         /// </summary>
-        public void SetInputter(IGameInputter gameInputter)
+        public void UpdateObjects(float curTime)
         {
-            this.gameInputter = gameInputter;
-        }
-
-        protected void Update()
-        {
-            if(!GameSession.IsPlaying)
-                return;
-                
-            float curTime = CurrentTime;
             bool advanceLowIndex = true;
             for (int i = hitObjectViews.LowIndex; i < hitObjectViews.Count; i++)
             {
                 var view = hitObjectViews[i];
 
+                // Record dragging flag.
+                // Ensure we don't apply the generous release handicap here as it'll screw up the replay score sync.
+                if(view.IsHoldable)
+                    gameProcessor.RecordDraggerHoldFlag(view.ObjectIndex, view.IsHolding(null));
+
                 // Process any passive judgements to be made.
-                gameInputter.JudgePassive(curTime, view);
+                gameProcessor.JudgePassive(curTime, view);
 
                 if (view.IsFullyJudged)
                 {
@@ -194,6 +196,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     var hitCircleView = hitCircleRecycler.GetNext();
                     hitCircleView.Depth = hitObjectViews.Count;
+                    hitCircleView.ObjectIndex = hitObjectViews.Count;
                     hitCircleView.SetHitObject(hitCircle);
 
                     hitObjectViews.Add(hitCircleView);
@@ -203,6 +206,7 @@ namespace PBGame.Rulesets.Beats.Standard.UI
                 {
                     var draggerView = draggerRecycler.GetNext();
                     draggerView.Depth = hitObjectViews.Count;
+                    draggerView.ObjectIndex = hitObjectViews.Count;
                     draggerView.SetHitObject(dragger);
 
                     hitObjectViews.Add(draggerView);

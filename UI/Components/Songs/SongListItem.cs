@@ -1,13 +1,17 @@
+using System.Linq;
 using PBGame.UI.Models;
 using PBGame.UI.Components.Common;
+using PBGame.UI.Components.Common.MetaTags;
 using PBGame.Maps;
 using PBGame.Assets.Caching;
+using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBFramework.UI;
 using PBFramework.Graphics;
 using PBFramework.Graphics.Effects.Shaders;
 using PBFramework.Graphics.Effects.Components;
 using PBFramework.Allocation.Caching;
+using PBFramework.Allocation.Recyclers;
 using PBFramework.Dependencies;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,6 +40,8 @@ namespace PBGame.UI.Components.Songs
         private static readonly Color UnfocusedThumbColor = Color.gray;
         private static readonly Color FocusedThumbColor = Color.white;
 
+        private static readonly Vector2 MapTagCellSize = new Vector2(68f, 24f);
+
         private IGraphicObject container;
         private ISprite highlight;
         private ISprite glow;
@@ -44,11 +50,13 @@ namespace PBGame.UI.Components.Songs
         private ILabel titleLabel;
         private ILabel artistLabel;
         private ILabel creatorLabel;
+        private IGrid mapTagGrid;
 
         private UIShadow titleShadow;
         private UIShadow artistShadow;
         private UIShadow creatorShadow;
 
+        private ManagedRecycler<MapMetaTag> mapTagRecycler;
         private CacherAgent<IMap, IMapBackground> backgroundAgent;
         private bool isAnimating = false;
         private bool isFocused = false;
@@ -74,6 +82,8 @@ namespace PBGame.UI.Components.Songs
         [InitWithDependency]
         private void Init()
         {
+            mapTagRecycler = new ManagedRecycler<MapMetaTag>(CreateMapTag);
+
             OnTriggered += () =>
             {
                 if (Active && Mapset != null)
@@ -85,13 +95,13 @@ namespace PBGame.UI.Components.Songs
                 }
             };
 
-            container = CreateChild<UguiObject>("container", 0);
+            container = CreateChild<UguiObject>("container");
             {
                 container.Anchor = AnchorType.CenterStretch;
                 container.SetOffsetVertical(5f);
                 container.Width = UnfocusedWidth;
 
-                highlight = container.CreateChild<UguiSprite>("highlight", 0);
+                highlight = container.CreateChild<UguiSprite>("highlight");
                 {
                     highlight.Size = new Vector2(1920f, 144f);
                     highlight.SpriteName = "glow-128";
@@ -101,7 +111,7 @@ namespace PBGame.UI.Components.Songs
 
                     highlight.AddEffect(new AdditiveShaderEffect());
                 }
-                glow = container.CreateChild<UguiSprite>("glow", 1);
+                glow = container.CreateChild<UguiSprite>("glow");
                 {
                     glow.Anchor = AnchorType.Fill;
                     glow.RawSize = new Vector2(30f, 30f);
@@ -109,7 +119,7 @@ namespace PBGame.UI.Components.Songs
                     glow.ImageType = Image.Type.Sliced;
                     glow.Color = UnfocusedGlowColor;
                 }
-                thumbContainer = container.CreateChild<UguiSprite>("thumb", 2);
+                thumbContainer = container.CreateChild<UguiSprite>("thumb");
                 {
                     thumbContainer.Anchor = AnchorType.Fill;
                     thumbContainer.RawSize = Vector2.zero;
@@ -126,7 +136,7 @@ namespace PBGame.UI.Components.Songs
                         thumbImage.Color = UnfocusedThumbColor;
                     }
                 }
-                titleLabel = container.CreateChild<Label>("title", 3);
+                titleLabel = container.CreateChild<Label>("title");
                 {
                     titleLabel.Anchor = AnchorType.TopStretch;
                     titleLabel.Pivot = PivotType.Top;
@@ -144,7 +154,7 @@ namespace PBGame.UI.Components.Songs
                     titleShadow.effectColor = Color.black;
                     titleShadow.enabled = false;
                 }
-                artistLabel = container.CreateChild<Label>("artist", 4);
+                artistLabel = container.CreateChild<Label>("artist");
                 {
                     artistLabel.Anchor = AnchorType.BottomStretch;
                     artistLabel.Pivot = PivotType.Bottom;
@@ -160,7 +170,7 @@ namespace PBGame.UI.Components.Songs
                     artistShadow.effectColor = Color.black;
                     artistShadow.enabled = false;
                 }
-                creatorLabel = container.CreateChild<Label>("creator", 5);
+                creatorLabel = container.CreateChild<Label>("creator");
                 {
                     creatorLabel.Anchor = AnchorType.BottomStretch;
                     creatorLabel.Pivot = PivotType.Bottom;
@@ -175,6 +185,19 @@ namespace PBGame.UI.Components.Songs
                     creatorShadow.style = ShadowStyle.Shadow;
                     creatorShadow.effectColor = Color.black;
                     creatorShadow.enabled = false;
+                }
+                mapTagGrid = container.CreateChild<UguiGrid>("map-tag-grid");
+                {
+                    mapTagGrid.Anchor = AnchorType.TopStretch;
+                    mapTagGrid.Pivot = PivotType.Top;
+                    mapTagGrid.Y = -8f;
+                    mapTagGrid.Height = MapTagCellSize.y;
+                    mapTagGrid.SetOffsetHorizontal(20f);
+                    mapTagGrid.Alignment = TextAnchor.MiddleRight;
+                    mapTagGrid.Axis = GridLayoutGroup.Axis.Horizontal;
+                    mapTagGrid.SpaceWidth = 8f;
+                    mapTagGrid.CellSize = MapTagCellSize;
+                    mapTagGrid.Limit = 0;
                 }
             }
 
@@ -194,14 +217,16 @@ namespace PBGame.UI.Components.Songs
 
             Model.SelectedMapset.BindAndTrigger(OnMapsetChanged);
             Model.PreferUnicode.BindAndTrigger(OnPreferUnicode);
+            Model.GameMode.Bind(OnGameModeChanged);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             
-            Model.SelectedMapset.OnNewValue -= OnMapsetChanged;
-            Model.PreferUnicode.OnNewValue -= OnPreferUnicode;
+            Model.SelectedMapset.Unbind(OnMapsetChanged);
+            Model.PreferUnicode.Unbind(OnPreferUnicode);
+            Model.GameMode.Unbind(OnGameModeChanged);
 
             SetMapset(null);
         }
@@ -213,8 +238,8 @@ namespace PBGame.UI.Components.Songs
         {
             this.Mapset = mapset;
 
-            // Set info label texts.
             SetLabelText();
+            SetMapTags();
 
             // Start loading mapset backgrond.
             LoadBackground();
@@ -296,6 +321,33 @@ namespace PBGame.UI.Components.Songs
         }
 
         /// <summary>
+        /// Sets map meta tag cells to display map count for each available game modes.
+        /// </summary>
+        private void SetMapTags()
+        {
+            // Clear all map tags first
+            mapTagRecycler.ReturnAll();
+
+            if (Mapset == null)
+                return;
+
+            var gameMode = Model.GameMode.Value;
+            foreach (var mode in Mapset.Maps.GroupBy(m => m.GetPlayable(gameMode).PlayableMode))
+            {
+                var tag = mapTagRecycler.GetNext();
+                tag.SetMapCount(mode.Key, mode.Count());
+            }
+        }
+
+        /// <summary>
+        /// Creates a new map meta tag cell.
+        /// </summary>
+        private MapMetaTag CreateMapTag()
+        {
+            return mapTagGrid.CreateChild<MapMetaTag>("tag");
+        }
+
+        /// <summary>
         /// Event called on mapset selection change.
         /// </summary>
         private void OnMapsetChanged(IMapset mapset)
@@ -307,6 +359,11 @@ namespace PBGame.UI.Components.Songs
         /// Event called on unicode preference option change.
         /// </summary>
         private void OnPreferUnicode(bool useUnicode) => SetLabelText();
+
+        /// <summary>
+        /// Event called on current game mode change.
+        /// </summary>
+        private void OnGameModeChanged(GameModeType type) => SetMapTags();
 
         /// <summary>
         /// Event called from cacher agent when the mapset background has been loaded.
