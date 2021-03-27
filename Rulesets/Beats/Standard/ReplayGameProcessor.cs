@@ -119,18 +119,6 @@ namespace PBGame.Rulesets.Beats.Standard
                 AddJudgement(
                     hitObjectView.SetResult(judgement.HitResult, judgement.HitOffset)
                 );
-                // if (judgement.IsPassive)
-                // {
-                //     foreach (var passiveJudgement in hitObjectView.JudgePassive(frame.Time))
-                //         AddJudgement(passiveJudgement.Value);
-                // }
-                // else
-                // {
-                //     var input = frame.Inputs.Find((i) => i.Key == judgement.InputKey);
-                //     AddJudgement(
-                //         (hitObjectView as HitObjectView).JudgeInput(frame.Time, input)
-                //     );
-                // }
             }
         }
 

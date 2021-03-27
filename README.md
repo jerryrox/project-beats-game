@@ -18,6 +18,10 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.14.1 (WIP)
+#### Fixes
+- Fixed inconsistent dragger final hit effect.
+
 ### 0.14.0
 #### New features
 - Implemented displayal of map count for their playable mode on `SongListItem`.
