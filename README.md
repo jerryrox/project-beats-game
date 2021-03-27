@@ -19,6 +19,8 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.14.1 (WIP)
+#### Fixes
+- Fixed inconsistent dragger final hit effect.
 
 ### 0.14.0
 #### New features

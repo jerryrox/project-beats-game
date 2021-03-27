@@ -155,8 +155,11 @@ namespace PBGame.Rulesets.Beats.Standard.UI.Components
                 isHolding = false;
                 releaseTime = curTime;
 
-                holdAni.Stop();
-                releaseAni.PlayFromStart();
+                if (!draggerView.IsFullyJudged)
+                {
+                    holdAni.Stop();
+                    releaseAni.PlayFromStart();
+                }
             }
 
             wasHolding = isHolding;
