@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Maps;
 using PBGame.Data.Rankings;
@@ -179,12 +178,10 @@ namespace PBGame.Configurations
                 versionTab.AddEntry(new SettingsEntryAction($"Game version ({App.GameVersion})", () =>
                 {
                     OnRequestGameRepo?.Invoke();
-                    UnityEngine.Application.OpenURL(App.GameRepository);
                 }));
                 versionTab.AddEntry(new SettingsEntryAction($"Framework version ({App.FrameworkVersion})", () =>
                 {
                     OnRequestFrameworkRepo?.Invoke();
-                    UnityEngine.Application.OpenURL(App.FrameworkRepository);
                 }));
             }
 
