@@ -18,8 +18,9 @@ namespace PBGame.Configurations
         public event Action<IGameConfiguration> OnLoad;
 
         public event Action OnRequestGameRepo;
-
         public event Action OnRequestFrameworkRepo;
+        public event Action OnRequestMapsetReload;
+        public event Action OnRequestMapsetCheck;
 
         private const string ConfigName = "game-configuration";
 
@@ -169,7 +170,14 @@ namespace PBGame.Configurations
             {
                 otherTab.AddEntry(new SettingsEntryEnum<NotificationType>("Persistent notification level", PersistNotificationLevel = InitEnumBindable(nameof(NotificationType), NotificationType.Warning)));
                 otherTab.AddEntry(new SettingsEntryEnum<LogType>("Log to notification level", LogToNotificationLevel = InitEnumBindable(nameof(LogType), LogType.Warning)));
-                otherTab.AddEntry(new SettingsEntryAction("", ));
+                otherTab.AddEntry(new SettingsEntryAction("Reload all mapsets", () =>
+                {
+                    OnRequestMapsetReload?.Invoke();
+                }));
+                otherTab.AddEntry(new SettingsEntryAction("Load mapsets in downloads", () =>
+                {
+                    OnRequestMapsetCheck?.Invoke();
+                }));
             }
 
             // Version settings

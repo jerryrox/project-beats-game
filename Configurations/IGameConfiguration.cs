@@ -19,6 +19,16 @@ namespace PBGame.Configurations
         event Action<IGameConfiguration> OnLoad;
 
         /// <summary>
+        /// Event called on request for reloading all mapsets.
+        /// </summary>
+        event Action OnRequestMapsetReload;
+
+        /// <summary>
+        /// Event called on request for checking new mapsets in the download folder.
+        /// </summary>
+        event Action OnRequestMapsetCheck;
+
+        /// <summary>
         /// Event called on request for opening game repository on browser.
         /// </summary>
         event Action OnRequestGameRepo;

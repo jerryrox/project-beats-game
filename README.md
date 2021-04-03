@@ -19,6 +19,8 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.14.1 (WIP)
+#### New features
+- Implemented ability to load downloaded maps manually via settings.
 #### Changes
 - Upgraded Unity version to 2019.4.23f1.
 #### Fixes

@@ -9,7 +9,7 @@ using PBGame.Rulesets.Maps;
 using PBGame.Graphics;
 using PBGame.Networking.API;
 using PBGame.Notifications;
-using PBFramework.Data;
+using PBFramework.Threading;
 using UnityEngine;
 
 using Logger = PBFramework.Debugging.Logger;
@@ -289,6 +289,14 @@ namespace PBGame
             {
                 Application.OpenURL(App.FrameworkRepository);
             };
+            gameConfiguration.OnRequestMapsetReload += () =>
+            {
+                // TODO:
+            };
+            gameConfiguration.OnRequestMapsetCheck += () =>
+            {
+                LoadMapsetsInDownloads();
+            };
 
             // Game volume change events
             gameConfiguration.MasterVolume.OnNewValue += (volume) =>
@@ -479,6 +487,50 @@ namespace PBGame
         }
 
         /// <summary>
+        /// Loads all mapsets in the downloads folder.
+        /// </summary>
+        private void LoadMapsetsInDownloads()
+        {
+            TaskListener listener = new TaskListener();
+            string id = new Guid().ToString();
+            listener.OnFinished += () =>
+            {
+                notificationBox.RemoveById(id, false);
+            };
+
+            foreach (var archive in downloadStore.MapStorage.GetAllFiles())
+                mapManager.Import(archive, listener.CreateSubListener<IMapset>());
+
+            if (listener.SubListenerCount == 0)
+            {
+                notificationBox.Add(new Notification()
+                {
+                    Message = "There are no mapsets to load.",
+                });
+            }
+            else
+            {
+                notificationBox.Add(new Notification()
+                {
+                    Listener = listener,
+                    Message = $"Loading {listener.SubListenerCount} mapsets in downloads directory.",
+                    Type = NotificationType.Info,
+                    Id = id,
+                });
+            }
+        }
+
+        /// <summary>
+        /// Returns the total music offset applied.
+        /// </summary>
+        private float GetMusicOffset()
+        {
+            return gameConfiguration.GlobalOffset.Value +
+                (mapOffset != null ? mapOffset.Offset.Value : 0) +
+                (mapsetOffset != null ? mapsetOffset.Offset.Value : 0);
+        }
+
+        /// <summary>
         /// Event called when the user in API has become online.
         /// </summary>
         private void OnApiUserChange(IOnlineUser user)
@@ -493,16 +545,6 @@ namespace PBGame
         private void OnMusicOffsetChange(int offset, int prevOffset)
         {
             ApplyMusicOffset();
-        }
-
-        /// <summary>
-        /// Returns the total music offset applied.
-        /// </summary>
-        private float GetMusicOffset()
-        {
-            return gameConfiguration.GlobalOffset.Value +
-                (mapOffset != null ? mapOffset.Offset.Value : 0) +
-                (mapsetOffset != null ? mapsetOffset.Offset.Value : 0);
         }
     }
 }
