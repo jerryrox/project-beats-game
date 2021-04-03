@@ -19,8 +19,11 @@ Slowly making progress 🧩
 
 ## Versions
 ### 0.14.1 (WIP)
+#### Changes
+- Upgraded Unity version to 2019.4.23f1.
 #### Fixes
 - Fixed inconsistent dragger final hit effect.
+- Fixed issue where the UI root resolution didn't resize at the desired timing, which caused certain effects be out of position.
 
 ### 0.14.0
 #### New features
