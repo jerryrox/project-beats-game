@@ -19,6 +19,16 @@ namespace PBGame.Configurations
         event Action<IGameConfiguration> OnLoad;
 
         /// <summary>
+        /// Event called on request for opening game repository on browser.
+        /// </summary>
+        event Action OnRequestGameRepo;
+
+        /// <summary>
+        /// Event called on request for opening framework repository on browser.
+        /// </summary>
+        event Action OnRequestFrameworkRepo;
+
+        /// <summary>
         /// Returns the settings data based on game configurations.
         /// </summary>
         ISettingsData Settings { get; }

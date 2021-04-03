@@ -18,6 +18,10 @@ namespace PBGame.Configurations
 
         public event Action<IGameConfiguration> OnLoad;
 
+        public event Action OnRequestGameRepo;
+
+        public event Action OnRequestFrameworkRepo;
+
         private const string ConfigName = "game-configuration";
 
         private PrefStorage storage;
@@ -166,6 +170,7 @@ namespace PBGame.Configurations
             {
                 otherTab.AddEntry(new SettingsEntryEnum<NotificationType>("Persistent notification level", PersistNotificationLevel = InitEnumBindable(nameof(NotificationType), NotificationType.Warning)));
                 otherTab.AddEntry(new SettingsEntryEnum<LogType>("Log to notification level", LogToNotificationLevel = InitEnumBindable(nameof(LogType), LogType.Warning)));
+                otherTab.AddEntry(new SettingsEntryAction("", ));
             }
 
             // Version settings
@@ -173,10 +178,12 @@ namespace PBGame.Configurations
             {
                 versionTab.AddEntry(new SettingsEntryAction($"Game version ({App.GameVersion})", () =>
                 {
+                    OnRequestGameRepo?.Invoke();
                     UnityEngine.Application.OpenURL(App.GameRepository);
                 }));
                 versionTab.AddEntry(new SettingsEntryAction($"Framework version ({App.FrameworkVersion})", () =>
                 {
+                    OnRequestFrameworkRepo?.Invoke();
                     UnityEngine.Application.OpenURL(App.FrameworkRepository);
                 }));
             }

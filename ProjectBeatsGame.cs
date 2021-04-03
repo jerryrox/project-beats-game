@@ -280,6 +280,16 @@ namespace PBGame
         /// </summary>
         private void HookConfigurations()
         {
+            // Action request events
+            gameConfiguration.OnRequestGameRepo += () =>
+            {
+                Application.OpenURL(App.GameRepository);
+            };
+            gameConfiguration.OnRequestFrameworkRepo += () =>
+            {
+                Application.OpenURL(App.FrameworkRepository);
+            };
+
             // Game volume change events
             gameConfiguration.MasterVolume.OnNewValue += (volume) =>
             {
