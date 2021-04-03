@@ -289,10 +289,6 @@ namespace PBGame
             {
                 Application.OpenURL(App.FrameworkRepository);
             };
-            gameConfiguration.OnRequestMapsetReload += () =>
-            {
-                // TODO:
-            };
             gameConfiguration.OnRequestMapsetCheck += () =>
             {
                 LoadMapsetsInDownloads();
