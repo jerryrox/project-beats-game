@@ -8,6 +8,7 @@ using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
 using PBGame.Rulesets.Judgements;
+using PBGame.Platform;
 using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
@@ -70,6 +71,9 @@ namespace PBGame.UI.Models
         private IRecordStore RecordStore { get; set; }
 
         [ReceivesDependency]
+        private ITemporaryStore TemporaryStore { get; set; }
+
+        [ReceivesDependency]
         private IGameConfiguration GameConfiguration { get; set; }
 
         [ReceivesDependency]
@@ -106,7 +110,8 @@ namespace PBGame.UI.Models
         /// </summary>
         public void Share()
         {
-            // TODO:
+            new NativeSharer(TemporaryStore.BaseDirectory.FullName)
+                .ShareResult(Map.Value, Record.Value);
         }
 
         /// <summary>
