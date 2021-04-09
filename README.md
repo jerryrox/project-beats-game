@@ -21,6 +21,7 @@ Slowly making progress 🧩
 ### 0.14.1 (WIP)
 #### New features
 - Implemented ability to load downloaded maps manually via settings.
+- Implemented sharing result to external targets via native interface.
 #### Changes
 - Upgraded Unity version to 2019.4.23f1.
 #### Fixes
