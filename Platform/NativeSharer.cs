@@ -46,7 +46,7 @@ namespace PBGame.Platform
 
             NativeShare sharer = new NativeShare();
             sharer.AddFile(path);
-            sharer.SetSubject(subject);
+            sharer.SetText(subject);
             sharer.Share();
         }
     }
