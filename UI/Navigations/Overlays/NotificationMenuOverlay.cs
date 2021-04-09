@@ -38,7 +38,7 @@ namespace PBGame.UI.Navigations.Overlays
                 scrollView.Offset = Offset.Zero;
                 scrollView.Background.Color = new Color(1f, 1f, 1f, 0.0625f);
 
-                var clearButton = scrollView.CreateChild<BoxButton>("clear");
+                var clearButton = scrollView.CreateChild<LabelButton>("clear");
                 {
                     clearButton.Anchor = AnchorType.TopStretch;
                     clearButton.Pivot = PivotType.Top;
@@ -50,10 +50,12 @@ namespace PBGame.UI.Navigations.Overlays
                     clearButton.OnTriggered += OnClearButton;
                 }
 
+                scrollView.Viewport.SetOffsetTop(clearButton.Height);
+
                 notificationList = scrollView.Container.CreateChild<NotificationList>("list");
                 {
                     notificationList.Anchor = AnchorType.Fill;
-                    notificationList.Offset = new Offset(0, clearButton.Height, 0, 0);
+                    notificationList.Offset = Offset.Zero;
                     notificationList.Scope = NotificationScope.Stored;
 
                     notificationList.OnDismiss += OnDismissed;
