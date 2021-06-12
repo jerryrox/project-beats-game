@@ -41,6 +41,7 @@ namespace PBGame.Graphics
             { RankType.B, new ColorPalette(HexColor.Create("EAD500")) },
             { RankType.C, new ColorPalette(HexColor.Create("FF8400")) },
             { RankType.D, new ColorPalette(HexColor.Create("D20000")) },
+            { RankType.F, new ColorPalette(HexColor.Create("D20000")) },
         };
 
         public List<Color> DefaultComboColors { get; private set; } = new List<Color>()

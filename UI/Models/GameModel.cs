@@ -11,6 +11,7 @@ using PBGame.Rulesets;
 using PBGame.Rulesets.Maps;
 using PBGame.Rulesets.Scoring;
 using PBGame.Notifications;
+using PBGame.Configurations;
 using PBFramework.UI.Navigations;
 using PBFramework.Data.Bindables;
 using PBFramework.Threading;
@@ -75,6 +76,9 @@ namespace PBGame.UI.Models
 
         [ReceivesDependency]
         private IRecordStore RecordStore { get; set; }
+
+        [ReceivesDependency]
+        private IGameConfiguration GameConfiguration { get; set; }
 
 
         /// <summary>
@@ -157,15 +161,23 @@ namespace PBGame.UI.Models
                     // Retrieve user and user stats.
                     var currentMap = currentParameter.Map;
                     var user = UserManager.CurrentUser.Value;
-                    var userStats = user.GetStatistics(currentMap.PlayableMode);
 
                     // Record the play result to records database and user statistics.
                     Record newRecord = new Record(currentMap, user, scoreProcessor, playTime);
                     lastRecord = newRecord;
+
+                    // Ensure the record isn't saved if failed and the user doesn't want to save if it's the case.
+                    if (!newRecord.IsClear && !GameConfiguration.SaveFailedRecords.Value)
+                    {
+                        listener?.SetFinished();
+                        return null;
+                    }
+
                     // Retrieve old records for the map and user.
                     var records = await RecordStore.GetTopRecords(currentMap, user, limit: null, listener: listener?.CreateSubListener<List<IRecord>>());
 
                     // Save as cleared play.
+                    var userStats = user.GetStatistics(currentMap.PlayableMode);
                     if (scoreProcessor.IsFinished)
                     {
                         RecordStore.SaveRecord(newRecord);
@@ -196,6 +208,8 @@ namespace PBGame.UI.Models
         public void SaveReplay(FileInfo replayFile)
         {
             if (replayFile == null || lastRecord == null || !lastRecord.IsClear)
+                return;
+            if(!lastRecord.IsClear && !GameConfiguration.SaveFailedReplays.Value)
                 return;
 
             var replayFileDest = RecordStore.GetReplayFile(lastRecord);

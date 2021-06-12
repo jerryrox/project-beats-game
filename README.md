@@ -24,6 +24,9 @@ Slowly making progress 🧩
 - Implemented sharing result to external targets via native interface.
 - Implemented notification clear button.
 - Implemented `LabelButton` based on `HoverableTrigger` for general purpose.
+- Implemented representing a failed play by making rank type to "F".
+- Implemented settings to discard records and replays of failed plays.
+- Implemented option to toggle saving replays.
 #### Changes
 - Upgraded Unity version to 2019.4.23f1.
 #### Fixes
