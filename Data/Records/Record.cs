@@ -73,16 +73,16 @@ namespace PBGame.Data.Records
             Username = user.Username;
             AvatarUrl = user.OnlineUser?.AvatarImage ?? "";
 
+            IsClear = scoreProcessor.IsFinished && !scoreProcessor.IsFailed;
+
             MapHash = map.Detail.Hash;
             GameMode = map.PlayableMode;
-            Rank = scoreProcessor.Ranking.Value;
+            Rank = IsClear ? scoreProcessor.Ranking.Value : RankType.F;
             Score = scoreProcessor.Score.Value;
             MaxCombo = scoreProcessor.HighestCombo.Value;
             Accuracy = (float)scoreProcessor.Accuracy.Value;
             Time = playTime;
             Date = DateTime.Now;
-
-            IsClear = scoreProcessor.IsFinished && !scoreProcessor.IsFailed;
 
             ExtractJudgements(scoreProcessor.Judgements);
         }
