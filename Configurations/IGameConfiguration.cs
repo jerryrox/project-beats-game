@@ -136,6 +136,10 @@ namespace PBGame.Configurations
         /// </summary>
 		ProxyBindableFloat BackgroundDim { get; }
         /// <summary>
+        /// Whether to save replays along with records.
+        /// </summary>
+		ProxyBindable<bool> SaveReplays { get; }
+        /// <summary>
         /// Whether failed records should be saved to the database.
         /// </summary>
 		ProxyBindable<bool> SaveFailedRecords { get; }
