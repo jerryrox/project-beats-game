@@ -40,6 +40,11 @@ namespace PBGame.Notifications
         void Remove(INotification notification);
 
         /// <summary>
+        /// Removes all dismissible notifications from the list.
+        /// </summary>
+        void RemoveAllDismissible();
+
+        /// <summary>
         /// Removes the notification of specified id.
         /// </summary>
         void RemoveById(string id, bool multiple);

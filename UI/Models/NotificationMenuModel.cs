@@ -40,6 +40,14 @@ namespace PBGame.UI.Models
             NotificationBox.Remove(notification);
         }
 
+        /// <summary>
+        /// Clears all dismissible notifications.
+        /// </summary>
+        public void ClearNotifications()
+        {
+            NotificationBox.RemoveAllDismissible();
+        }
+
         protected override void OnPreShow()
         {
             base.OnPreShow();

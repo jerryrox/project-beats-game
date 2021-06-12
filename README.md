@@ -22,6 +22,8 @@ Slowly making progress 🧩
 #### New features
 - Implemented ability to load downloaded maps manually via settings.
 - Implemented sharing result to external targets via native interface.
+- Implemented notification clear button.
+- Implemented `LabelButton` based on `HoverableTrigger` for general purpose.
 #### Changes
 - Upgraded Unity version to 2019.4.23f1.
 #### Fixes
