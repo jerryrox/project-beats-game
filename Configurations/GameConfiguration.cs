@@ -67,6 +67,9 @@ namespace PBGame.Configurations
         public ProxyBindable<bool> ShowVideo { get; private set; }
         public ProxyBindable<bool> UseBeatmapSkins { get; private set; }
         public ProxyBindableFloat BackgroundDim { get; private set; }
+        public ProxyBindable<bool> SaveFailedRecords { get; private set; }
+        public ProxyBindable<bool> SaveFailedReplays { get; private set; }
+
 
         // ============================================================
         // Sound settings
@@ -138,6 +141,18 @@ namespace PBGame.Configurations
                 {
                     Formatter = "P0"
                 });
+                gameplayTab.AddEntry(new SettingsEntryBool("Save failed results", SaveFailedRecords = InitBoolBindable(nameof(SaveFailedRecords), false)));
+                SaveFailedRecords.OnNewValue += (value) =>
+                {
+                    if (!value)
+                        SaveFailedReplays.Value = false;
+                };
+                gameplayTab.AddEntry(new SettingsEntryBool("Save failed results' replay", SaveFailedReplays = InitBoolBindable(nameof(SaveFailedReplays), false)));
+                SaveFailedReplays.OnNewValue += (value) =>
+                {
+                    if(value && !SaveFailedRecords.Value)
+                        SaveFailedReplays.Value = false;
+                };
             }
 
             // Sound settings
