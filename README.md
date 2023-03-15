@@ -18,7 +18,7 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.14.1 (WIP)
+### 0.14.1
 #### New features
 - Implemented ability to load downloaded maps manually via settings.
 - Implemented sharing result to external targets via native interface.
