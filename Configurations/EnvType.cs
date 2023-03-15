@@ -7,6 +7,5 @@ namespace PBGame.Configurations
     
         Production = 0,
         Development = 1,
-        LocalDevelopment = 2
     }
 }

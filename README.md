@@ -29,6 +29,7 @@ Slowly making progress 🧩
 - Implemented option to toggle saving replays.
 #### Changes
 - Upgraded Unity version to 2019.4.23f1.
+- Changed api request URLs due to discontinued Heroku free tier.
 #### Fixes
 - Fixed inconsistent dragger final hit effect.
 - Fixed issue where the UI root resolution didn't resize at the desired timing, which caused certain effects be out of position.

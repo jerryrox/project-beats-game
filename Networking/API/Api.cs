@@ -61,9 +61,9 @@ namespace PBGame.Networking.API
 
         public IApiProvider GetProvider(ApiProviderType type) => providers[type];
 
-        public string GetUrl(IApiProvider provider, string path)
+        public string GetUrl(IApiProvider provider, string name)
         {
-            return $"{envConfig.Variables.BaseApiUrl}/{provider.InternalName}{path}";
+            return $"{envConfig.Variables.BaseApiUrl}/{provider.InternalName.ToLower()}{name}";
         }
 
         public void Logout()

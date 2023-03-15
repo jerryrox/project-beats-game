@@ -12,7 +12,7 @@ namespace PBGame.Networking.API.Requests
         {
         }
 
-        protected override IHttpRequest CreateRequest() => new HttpGetRequest(api.GetUrl(provider, "/me"));
+        protected override IHttpRequest CreateRequest() => new HttpGetRequest(api.GetUrl(provider, "Me"));
 
         protected override MeResponse CreateResponse(IHttpRequest request) => new MeResponse(request.Response, provider);
     }
