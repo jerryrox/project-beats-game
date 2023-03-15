@@ -13,7 +13,6 @@ namespace PBGame.Notifications
         private List<INotification> notifications = new List<INotification>();
 
 
-
         public NotificationType? ForceStoreLevel { get; set; } = null;
 
         public IReadOnlyList<INotification> Notifications => notifications.AsReadOnly();
@@ -38,6 +37,23 @@ namespace PBGame.Notifications
             {
                 if (notifications.Remove(notification))
                     OnRemoveNotification?.Invoke(notification);
+                return null;
+            });
+        }
+
+        public void RemoveAllDismissible()
+        {
+            UnityThread.DispatchUnattended(() =>
+            {
+                for (int i = notifications.Count - 1; i >= 0; i--)
+                {
+                    var notification = notifications[i];
+                    if (notification.IsDismissible())
+                    {
+                        notifications.RemoveAt(i);
+                        OnRemoveNotification?.Invoke(notification);
+                    }
+                }
                 return null;
             });
         }

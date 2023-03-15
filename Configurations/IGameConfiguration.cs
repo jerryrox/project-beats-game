@@ -19,6 +19,21 @@ namespace PBGame.Configurations
         event Action<IGameConfiguration> OnLoad;
 
         /// <summary>
+        /// Event called on request for checking new mapsets in the download folder.
+        /// </summary>
+        event Action OnRequestMapsetCheck;
+
+        /// <summary>
+        /// Event called on request for opening game repository on browser.
+        /// </summary>
+        event Action OnRequestGameRepo;
+
+        /// <summary>
+        /// Event called on request for opening framework repository on browser.
+        /// </summary>
+        event Action OnRequestFrameworkRepo;
+
+        /// <summary>
         /// Returns the settings data based on game configurations.
         /// </summary>
         ISettingsData Settings { get; }
@@ -120,6 +135,18 @@ namespace PBGame.Configurations
         /// The global setting for background darkness, if not overridden by map configuration.
         /// </summary>
 		ProxyBindableFloat BackgroundDim { get; }
+        /// <summary>
+        /// Whether to save replays along with records.
+        /// </summary>
+		ProxyBindable<bool> SaveReplays { get; }
+        /// <summary>
+        /// Whether failed records should be saved to the database.
+        /// </summary>
+		ProxyBindable<bool> SaveFailedRecords { get; }
+        /// <summary>
+        /// Whether replays should be saved for failed records.
+        /// </summary>
+		ProxyBindable<bool> SaveFailedReplays { get; }
 
         // ============================================================
         // Sound settings

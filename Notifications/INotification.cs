@@ -52,6 +52,15 @@ namespace PBGame.Notifications
     public static class INotificationExtension
     {
         /// <summary>
+        /// Returns whether the notification is potentially safe to be dismissed without affecting
+        /// other processes.
+        /// </summary>
+        public static bool IsDismissible(this INotification context)
+        {
+            return !HasActions(context) && context.Task == null && context.Listener == null;
+        }
+
+        /// <summary>
         /// Returns whether the notification has any associated actions.
         /// </summary>
         public static bool HasActions(this INotification context)

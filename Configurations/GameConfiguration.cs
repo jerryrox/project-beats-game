@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using PBGame.Maps;
 using PBGame.Data.Rankings;
@@ -17,6 +16,10 @@ namespace PBGame.Configurations
     public class GameConfiguration : IGameConfiguration {
 
         public event Action<IGameConfiguration> OnLoad;
+
+        public event Action OnRequestGameRepo;
+        public event Action OnRequestFrameworkRepo;
+        public event Action OnRequestMapsetCheck;
 
         private const string ConfigName = "game-configuration";
 
@@ -64,6 +67,10 @@ namespace PBGame.Configurations
         public ProxyBindable<bool> ShowVideo { get; private set; }
         public ProxyBindable<bool> UseBeatmapSkins { get; private set; }
         public ProxyBindableFloat BackgroundDim { get; private set; }
+        public ProxyBindable<bool> SaveReplays{ get; private set; }
+        public ProxyBindable<bool> SaveFailedRecords { get; private set; }
+        public ProxyBindable<bool> SaveFailedReplays { get; private set; }
+
 
         // ============================================================
         // Sound settings
@@ -135,6 +142,24 @@ namespace PBGame.Configurations
                 {
                     Formatter = "P0"
                 });
+                gameplayTab.AddEntry(new SettingsEntryBool("Save replays", SaveReplays = InitBoolBindable(nameof(SaveReplays), true)));
+                SaveReplays.OnNewValue += (value) =>
+                {
+                    if(!value)
+                        SaveFailedReplays.Value = false;
+                };
+                gameplayTab.AddEntry(new SettingsEntryBool("Save failed results", SaveFailedRecords = InitBoolBindable(nameof(SaveFailedRecords), false)));
+                SaveFailedRecords.OnNewValue += (value) =>
+                {
+                    if (!value)
+                        SaveFailedReplays.Value = false;
+                };
+                gameplayTab.AddEntry(new SettingsEntryBool("Save failed results' replay", SaveFailedReplays = InitBoolBindable(nameof(SaveFailedReplays), false)));
+                SaveFailedReplays.OnNewValue += (value) =>
+                {
+                    if(value && (!SaveFailedRecords.Value || !SaveReplays.Value))
+                        SaveFailedReplays.Value = false;
+                };
             }
 
             // Sound settings
@@ -166,6 +191,10 @@ namespace PBGame.Configurations
             {
                 otherTab.AddEntry(new SettingsEntryEnum<NotificationType>("Persistent notification level", PersistNotificationLevel = InitEnumBindable(nameof(NotificationType), NotificationType.Warning)));
                 otherTab.AddEntry(new SettingsEntryEnum<LogType>("Log to notification level", LogToNotificationLevel = InitEnumBindable(nameof(LogType), LogType.Warning)));
+                otherTab.AddEntry(new SettingsEntryAction("Load mapsets in downloads", () =>
+                {
+                    OnRequestMapsetCheck?.Invoke();
+                }));
             }
 
             // Version settings
@@ -173,11 +202,11 @@ namespace PBGame.Configurations
             {
                 versionTab.AddEntry(new SettingsEntryAction($"Game version ({App.GameVersion})", () =>
                 {
-                    UnityEngine.Application.OpenURL(App.GameRepository);
+                    OnRequestGameRepo?.Invoke();
                 }));
                 versionTab.AddEntry(new SettingsEntryAction($"Framework version ({App.FrameworkVersion})", () =>
                 {
-                    UnityEngine.Application.OpenURL(App.FrameworkRepository);
+                    OnRequestFrameworkRepo?.Invoke();
                 }));
             }
 

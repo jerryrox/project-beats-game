@@ -51,8 +51,7 @@ namespace PBGame.Stores
                 // Perform internal reloading routine.
                 await base.Reload(listener?.CreateSubListener());
 
-                // Retrieve processor count.
-
+                // TODO: Retrieve processor count.
                 // Load all mapsets from the storage.
                 var rawMapsets = GetAll().ToList();
                 var threadedLoader = new ThreadedLoader<Mapset, Mapset>(ProcessMapsetLoad);

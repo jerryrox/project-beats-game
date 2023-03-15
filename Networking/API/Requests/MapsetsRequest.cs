@@ -69,7 +69,7 @@ namespace PBGame.Networking.API.Requests
         {
         }
 
-        protected override IHttpRequest CreateRequest() => new HttpGetRequest(api.GetUrl(provider, $"/mapsets"));
+        protected override IHttpRequest CreateRequest() => new HttpGetRequest(api.GetUrl(provider, "Mapsets"));
 
         protected override MapsetsResponse CreateResponse(IHttpRequest request) => new MapsetsResponse(request.Response);
 

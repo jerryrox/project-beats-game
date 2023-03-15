@@ -31,9 +31,6 @@ namespace PBGame.Configurations
                 case EnvType.Development:
                     path += "Dev";
                     break;
-                case EnvType.LocalDevelopment:
-                    path += "Local";
-                    break;
             }
 
             var textAsset = Resources.Load(path, typeof(TextAsset)) as TextAsset;

@@ -18,9 +18,21 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
-### 0.14.1 (WIP)
+### 0.14.1
+#### New features
+- Implemented ability to load downloaded maps manually via settings.
+- Implemented sharing result to external targets via native interface.
+- Implemented notification clear button.
+- Implemented `LabelButton` based on `HoverableTrigger` for general purpose.
+- Implemented representing a failed play by making rank type to "F".
+- Implemented settings to discard records and replays of failed plays.
+- Implemented option to toggle saving replays.
+#### Changes
+- Upgraded Unity version to 2019.4.23f1.
+- Changed api request URLs due to discontinued Heroku free tier.
 #### Fixes
 - Fixed inconsistent dragger final hit effect.
+- Fixed issue where the UI root resolution didn't resize at the desired timing, which caused certain effects be out of position.
 
 ### 0.14.0
 #### New features

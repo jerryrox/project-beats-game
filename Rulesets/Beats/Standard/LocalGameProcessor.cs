@@ -6,6 +6,7 @@ using PBGame.Rulesets.UI.Components;
 using PBGame.Rulesets.Beats.Standard.Inputs;
 using PBGame.Rulesets.Beats.Standard.Replays;
 using PBGame.Rulesets.Judgements;
+using PBGame.Configurations;
 using PBFramework.Inputs;
 using PBFramework.Dependencies;
 using UnityEngine;
@@ -37,15 +38,17 @@ namespace PBGame.Rulesets.Beats.Standard
         [ReceivesDependency]
         private IRecordStore RecordStore { get; set; }
 
-
         [InitWithDependency]
-        private void Init()
+        private void Init(IGameConfiguration gameConfiguration)
         {
-            replayWriter = new DataStreamWriter<ReplayFrame>(
-                ReplayFrameRecycler.GetNext,
-                60 * 2,
-                writeInterval: 100
-            );
+            if (gameConfiguration.SaveReplays.Value)
+            {
+                replayWriter = new DataStreamWriter<ReplayFrame>(
+                    ReplayFrameRecycler.GetNext,
+                    60 * 2,
+                    writeInterval: 100
+                );
+            }
 
             GameSession.OnSoftInit += OnSoftInit;
             GameSession.OnSoftDispose += OnSoftDispose;
@@ -147,8 +150,6 @@ namespace PBGame.Rulesets.Beats.Standard
         /// </summary>
         private void InitReplayWriter()
         {
-            // TODO: Check whether replay save option is enabled.
-
             if (replayWriter != null)
             {
                 replayFile = TemporaryStore.GetReplayDataFile(Guid.NewGuid().ToString());

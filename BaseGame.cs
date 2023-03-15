@@ -97,10 +97,9 @@ namespace PBGame
         {
             InitializeModules();
 
-            var timer = new SynchronizedTimer()
+            var timer = new FramedTimer()
             {
-                Limit = 0.01f,
-                WaitFrameOnStart = true,
+                Limit = 3,
             };
             timer.OnFinished += PostInitialize;
             timer.Start();
