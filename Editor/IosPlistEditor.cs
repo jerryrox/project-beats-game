@@ -16,6 +16,7 @@ public class IosPlistEditor {
             PlistElementDict rootDict = plist.root;
 
             rootDict.SetBoolean("UIFileSharingEnabled", true);
+            rootDict.SetBoolean("LSSupportsOpeningDocumentsInPlace", true);
             rootDict.SetString("NSPhotoLibraryUsageDescription", "Used for saving screenshots / map backgrounds / etc.");
             
             File.WriteAllText(plistPath, plist.WriteToString());

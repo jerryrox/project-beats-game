@@ -9,7 +9,7 @@ namespace PBGame
         public const string GameRepository = "https://github.com/jerryrox/project-beats-game";
         public const string FrameworkRepository = "https://github.com/jerryrox/project-beats-framework";
 
-        public const string GameVersion = "0.14.1";
+        public const string GameVersion = "0.14.1.1";
         public const string FrameworkVersion = "1.3.0";
     }
 }
