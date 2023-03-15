@@ -18,6 +18,10 @@ Slowly making progress 🧩
 [https://trello.com/b/5gpuJrRa/project-beats-renewed]
 
 ## Versions
+### 0.14.1.1
+#### New features
+- Made app files be available directly from the device's file browser app.
+
 ### 0.14.1
 #### New features
 - Implemented ability to load downloaded maps manually via settings.
